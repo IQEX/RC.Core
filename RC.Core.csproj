@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{35A23B54-4D7B-43A0-8FA5-133FEEDC8C6A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rc.Framework</RootNamespace>
+    <AssemblyName>RC.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Standart</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>CertificateVOX_ErisPrixe.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityVersion|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\UnityVersion\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\Algoritm\Noise.cs" />
+    <Compile Include="Collections\Box.cs" />
+    <Compile Include="Collections\Matrix.cs" />
+    <Compile Include="Collections\SFormatter.cs" />
+    <Compile Include="Collections\SList.cs" />
+    <Compile Include="Compress\Dlu.cs" />
+    <Compile Include="Compress\Lonic\BitWriter.cs" />
+    <Compile Include="Compress\Lonic\BZip2Compressor.cs" />
+    <Compile Include="Compress\Lonic\BZip2InputStream.cs" />
+    <Compile Include="Compress\Lonic\BZip2OutputStream.cs" />
+    <Compile Include="Compress\Lonic\ComHelper.cs" />
+    <Compile Include="Compress\Lonic\CRC32.cs" />
+    <Compile Include="Compress\Lonic\Deflate.cs" />
+    <Compile Include="Compress\Lonic\DeflateStream.cs" />
+    <Compile Include="Compress\Lonic\EncryptionAlgorithm.cs" />
+    <Compile Include="Compress\Lonic\Events.cs" />
+    <Compile Include="Compress\Lonic\Exceptions.cs" />
+    <Compile Include="Compress\Lonic\ExtractExistingFileAction.cs" />
+    <Compile Include="Compress\Lonic\FileSelector.cs" />
+    <Compile Include="Compress\Lonic\GZipStream.cs" />
+    <Compile Include="Compress\Lonic\Inflate.cs" />
+    <Compile Include="Compress\Lonic\InfTree.cs" />
+    <Compile Include="Compress\Lonic\Iso8859Dash1Encoding.cs" />
+    <Compile Include="Compress\Lonic\OffsetStream.cs" />
+    <Compile Include="Compress\Lonic\ParallelBZip2OutputStream.cs" />
+    <Compile Include="Compress\Lonic\ParallelDeflateOutputStream.cs" />
+    <Compile Include="Compress\Lonic\Rand.cs" />
+    <Compile Include="Compress\Lonic\Shared.cs" />
+    <Compile Include="Compress\Lonic\Tree.cs" />
+    <Compile Include="Compress\Lonic\WinZipAes.cs" />
+    <Compile Include="Compress\Lonic\ZipConstants.cs" />
+    <Compile Include="Compress\Lonic\ZipCrypto.cs" />
+    <Compile Include="Compress\Lonic\ZipDirEntry.cs" />
+    <Compile Include="Compress\Lonic\ZipEntry.cs" />
+    <Compile Include="Compress\Lonic\ZipEntry.Extract.cs" />
+    <Compile Include="Compress\Lonic\ZipEntry.Read.cs" />
+    <Compile Include="Compress\Lonic\ZipEntry.Write.cs" />
+    <Compile Include="Compress\Lonic\ZipEntrySource.cs" />
+    <Compile Include="Compress\Lonic\ZipErrorAction.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.AddUpdate.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.Check.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.Events.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.Extract.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.Read.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.Save.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.SaveSelfExtractor.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.Selector.cs" />
+    <Compile Include="Compress\Lonic\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="Compress\Lonic\ZipInputStream.cs" />
+    <Compile Include="Compress\Lonic\ZipOutputStream.cs" />
+    <Compile Include="Compress\Lonic\ZipSegmentedStream.cs" />
+    <Compile Include="Compress\Lonic\Zlib.cs" />
+    <Compile Include="Compress\Lonic\ZlibBaseStream.cs" />
+    <Compile Include="Compress\Lonic\ZlibCodec.cs" />
+    <Compile Include="Compress\Lonic\ZlibConstants.cs" />
+    <Compile Include="Compress\Lonic\ZlibStream.cs" />
+    <Compile Include="Compress\zip.cs" />
+    <Compile Include="Conf\PrivateProfile.cs" />
+    <Compile Include="Direct\Dir.cs" />
+    <Compile Include="Framework.cs" />
+    <Compile Include="IO\ExLogging.cs" />
+    <Compile Include="Native\NativeMethod.cs" />
+    <Compile Include="Native\SystemTools.cs" />
+    <Compile Include="Net\ArchByte.cs" />
+    <Compile Include="Net\FtpManager.cs" />
+    <Compile Include="Net\IArchByteBoxReader.cs" />
+    <Compile Include="Net\IArchByteBoxWriter.cs" />
+    <Compile Include="Net\IPTool.cs" />
+    <Compile Include="Net\NAT\Discovery\ISearcher.cs" />
+    <Compile Include="Net\NAT\Discovery\Searcher.cs" />
+    <Compile Include="Net\NAT\Enums\ProtocolType.cs" />
+    <Compile Include="Net\NAT\EventArgs\DeviceEventArgs.cs" />
+    <Compile Include="Net\NAT\Exceptions\MappingException.cs" />
+    <Compile Include="Net\NAT\Exceptions\NatDeviceNotFoundException.cs" />
+    <Compile Include="Net\NAT\Finalizer.cs" />
+    <Compile Include="Net\NAT\Mapping.cs" />
+    <Compile Include="Net\NAT\NatDevice.cs" />
+    <Compile Include="Net\NAT\NatDiscoverer.cs" />
+    <Compile Include="Net\NAT\Pmp\PmpConstants.cs" />
+    <Compile Include="Net\NAT\Pmp\PmpNatDevice.cs" />
+    <Compile Include="Net\NAT\Pmp\PmpSearcher.cs" />
+    <Compile Include="Net\NAT\PortMapper.cs" />
+    <Compile Include="Net\NAT\Upnp\DiscoveryResponseMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\DiscoverDeviceMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\CreatePortMappingMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\DeletePortMappingMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\GetExternalIPAddressMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\GetGenericPortMappingEntry.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\GetSpecificPortMappingEntryMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Responses\GetExternalIPAddressResponseMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Responses\GetGenericPortMappingEntryResponseMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\RequestMessageBase.cs" />
+    <Compile Include="Net\NAT\Upnp\ResponseMessageBase.cs" />
+    <Compile Include="Net\NAT\Upnp\SoapClient.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpConstants.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpNatDevice.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpNatDeviceInfo.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpSearcher.cs" />
+    <Compile Include="Net\NAT\Utils\Extensions.cs" />
+    <Compile Include="Net\NAT\Utils\Guard.cs" />
+    <Compile Include="Net\NAT\Utils\IIPAddressesProvider.cs" />
+    <Compile Include="Net\NAT\Utils\IPAddressesProvider.cs" />
+    <Compile Include="Net\NAT\Utils\WellKnownConstants.cs" />
+    <Compile Include="Net\Protocol\RawNet.cs" />
+    <Compile Include="Net\Protocol\TcpServer.cs" />
+    <Compile Include="Net\Protocol\TcpServerConnection.cs" />
+    <Compile Include="RMath\Complex.cs" />
+    <Compile Include="RMath\Gaussian.cs" />
+    <Compile Include="RMath\IntRange.cs" />
+    <Compile Include="RMath\PerlinNoise.cs" />
+    <Compile Include="RMath\Range.cs" />
+    <Compile Include="RMath\RMath.cs" />
+    <Compile Include="RMath\Statistics.cs" />
+    <Compile Include="RMath\Vector2.cs" />
+    <Compile Include="RMath\Vector3.cs" />
+    <Compile Include="RMath\Vector4.cs" />
+    <Compile Include="Security\CryptByte.cs" />
+    <Compile Include="Security\HashCheck.cs" />
+    <Compile Include="Security\RSA.cs" />
+    <Compile Include="Security\Rule.cs" />
+    <Compile Include="SystemInfo.cs" />
+    <Compile Include="Terminal.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Types\bColor.cs" />
+    <Compile Include="Types\Dword.cs" />
+    <Compile Include="Types\Handle.cs" />
+    <Compile Include="Yaml\Yamli.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CertificateVOX_ErisPrixe.pfx" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
