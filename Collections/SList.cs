@@ -1,4 +1,13 @@
-﻿using System;
+﻿// =====================================//==============================================================//
+//                                      //                                                              //
+// Source="root\\Collection\\SList.cs"  //                Copyright © Of Fire Twins Wesp 2015           //
+// Author= {"Callada", "Another"}       //                                                              //
+// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Version File="1.0"                   //                                                              //
+// License="root\\LICENSE"              //                                                              //
+// LicenseType="MIT"                    //                                                              //
+// =====================================//==============================================================//
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;

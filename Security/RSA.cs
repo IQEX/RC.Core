@@ -4,6 +4,8 @@
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="7.5"                   //                                                              //
+// License="root\\LICENSE"              //                                                              //
+// LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
 using Rc.Framework.Collections;
 using System;

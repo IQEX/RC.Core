@@ -4,6 +4,8 @@
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="5.0"                   //                                                              //
+// License="root\\LICENSE"              //                                                              //
+// LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
 using System;
 using System.Management;
@@ -30,6 +32,11 @@ namespace Rc.Framework.Net
             }
             return MACAddress;
         }
+        /// <summary>
+        /// Чертов костыль!
+        /// </summary>
+        /// <param name="ipend"></param>
+        /// <returns></returns>
         public static string IPHash(IPEndPoint ipend)
         {
             return BitConverter.ToString(
