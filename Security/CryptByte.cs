@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 namespace Rc.Framework.Security
 {
+    [Obsolete("Необходимый нам костыль, не используйте это!")]
     internal class CryptByte
     {
         internal string ToCrypt(byte[] clr)

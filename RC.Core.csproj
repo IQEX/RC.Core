@@ -182,7 +182,8 @@
     <Compile Include="RMath\Vector3.cs" />
     <Compile Include="RMath\Vector4.cs" />
     <Compile Include="Security\CryptByte.cs" />
-    <Compile Include="Security\HashCheck.cs" />
+    <Compile Include="Security\Cryptology.cs" />
+    <Compile Include="Security\HashSum.cs" />
     <Compile Include="Security\RSA.cs" />
     <Compile Include="Security\Rule.cs" />
     <Compile Include="SystemInfo.cs" />

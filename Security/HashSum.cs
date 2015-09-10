@@ -17,17 +17,7 @@ using System.IO;
 
 namespace Rc.Framework.Security
 {
-    public class Hash
-    {
-        public static string Check(string str)
-        {
-            return BitConverter.ToString(
-                new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(BitConverter.ToString(
-                    new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(BitConverter.ToString(
-                        new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(str))).Replace("-", String.Empty)))).Replace("-", String.Empty)))).Replace("-", String.Empty);
-        }
-    }
-    public class HashCheck
+    public class HashSum
     {
         public static string Checksum(string path)
         {
@@ -45,7 +35,7 @@ namespace Rc.Framework.Security
             Dictionary<string, string> temp = new Dictionary<string, string>();
             for (int i = 0; i != pathes.Length; i++)
             {
-                temp.Add(pathes[i], HashCheck.Checksum(pathes[i]));
+                temp.Add(pathes[i], HashSum.Checksum(pathes[i]));
             }
             return null;
         }
