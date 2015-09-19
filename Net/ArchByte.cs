@@ -38,36 +38,36 @@ namespace Rc.Framework.Net
     {
         internal ArchByteBoxWriter() : base()
         { }
-        void IArchByteBoxWriter.wQ(string str)
+        void IArchByteBoxWriter.wString(string str)
         {
             if (str.Length > short.MaxValue - 1)
                 throw new Exception("Length > short.MaxValue");
             Byte[] @Byte = Encoding.UTF8.GetBytes(str);
-            ((IArchByteBoxWriter)this).wS((short)@Byte.Length);
+            ((IArchByteBoxWriter)this).wShort((short)@Byte.Length);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
-        void IArchByteBoxWriter.wS(short sht)
+        void IArchByteBoxWriter.wShort(short sht)
         {
             Byte[] @Byte = BitConverter.GetBytes(sht);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
-        void IArchByteBoxWriter.wG(byte[] data)
+        void IArchByteBoxWriter.wByte(byte[] data)
         {
             if (data.Length > short.MaxValue / 2 - 1)
                 throw new Exception("Length > short.MaxValue / 2");
-            ((IArchByteBoxWriter)this).wS((short)data.Length);
+            ((IArchByteBoxWriter)this).wShort((short)data.Length);
             nMStream.Write(data, 0, data.Length);
         }
         byte[] IArchByteBoxWriter.GetAll()
         {
             return nMStream.ToArray();
         }
-        void IArchByteBoxWriter.wF(float flt)
+        void IArchByteBoxWriter.wFloat(float flt)
         {
             Byte[] @Byte = BitConverter.GetBytes(flt);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
-        void IArchByteBoxWriter.wL(long lng)
+        void IArchByteBoxWriter.wLong(long lng)
         {
             Byte[] @Byte = BitConverter.GetBytes(lng);
             nMStream.Write(@Byte, 0, @Byte.Length);
@@ -80,9 +80,19 @@ namespace Rc.Framework.Net
         {
             return (IArchByteBoxWriter)this.MemberwiseClone();
         }
-        void IArchByteBoxWriter.wDT(DateTime DT)
+        void IArchByteBoxWriter.wDateTime(DateTime DT)
         {
             Byte[] @Byte = BitConverter.GetBytes(DT.Ticks);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
+        void IArchByteBoxWriter.wInt(int it)
+        {
+            Byte[] @Byte = BitConverter.GetBytes(it);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
+        void IArchByteBoxWriter.wULong(ulong ulng)
+        {
+            Byte[] @Byte = BitConverter.GetBytes(ulng);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
     }
@@ -90,43 +100,41 @@ namespace Rc.Framework.Net
     {
         internal ArchByteBoxReader(byte[] bt) : base(bt)
         { }
-        string IArchByteBoxReader.rQ()
+        string IArchByteBoxReader.rString()
         {
-            Byte[] @Byte = new byte[((IArchByteBoxReader)this).rS()];
+            Byte[] @Byte = new byte[((IArchByteBoxReader)this).rShort()];
             nMStream.Read(@Byte, 0, @Byte.Length);
             return Encoding.UTF8.GetString(@Byte);
         }
-        short IArchByteBoxReader.rS()
+        short IArchByteBoxReader.rShort()
         {
             byte[] @Byte = new byte[sizeof(short)];
             nMStream.Read(@Byte, 0, sizeof(short));
             return BitConverter.ToInt16(@Byte, 0);
         }
-        byte[] IArchByteBoxReader.rG()
+        byte[] IArchByteBoxReader.rByte()
         {
-            Byte[] @Byte = new byte[((IArchByteBoxReader)this).rS()];
+            Byte[] @Byte = new byte[((IArchByteBoxReader)this).rShort()];
             nMStream.Read(@Byte, 0, @Byte.Length);
             return @Byte;
         }
-        float IArchByteBoxReader.rF()
+        float IArchByteBoxReader.rFloat()
         {
             byte[] @Byte = new byte[sizeof(float)];
             nMStream.Read(@Byte, 0, sizeof(float));
             return BitConverter.ToSingle(@Byte, 0);
         }
-        int IArchByteBoxReader.rI()
+        int IArchByteBoxReader.rInt()
         {
             byte[] @Byte = new byte[sizeof(int)];
             nMStream.Read(@Byte, 0, sizeof(int));
-            int surs = BitConverter.ToInt32(@Byte, 0);
-            return surs;
+            return BitConverter.ToInt32(@Byte, 0);
         }
-        long IArchByteBoxReader.rL()
+        long IArchByteBoxReader.rLong()
         {
             byte[] @Byte = new byte[sizeof(long)];
             nMStream.Read(@Byte, 0, sizeof(long));
-            long surs = BitConverter.ToInt64(@Byte, 0);
-            return surs;
+            return BitConverter.ToInt64(@Byte, 0);
         }
         Guid IArchByteBoxReader.rGUID()
         {
@@ -138,11 +146,17 @@ namespace Rc.Framework.Net
         {
             return (IArchByteBoxReader)this.MemberwiseClone();
         }
-        DateTime IArchByteBoxReader.rDT()
+        DateTime IArchByteBoxReader.rDateTime()
         {
             byte[] @Byte = new byte[sizeof(long)];
             nMStream.Read(@Byte, 0, sizeof(long));
             return new DateTime(BitConverter.ToInt64(@Byte, 0));
+        }
+        ulong IArchByteBoxReader.rULong()
+        {
+            byte[] @Byte = new byte[sizeof(ulong)];
+            nMStream.Read(@Byte, 0, sizeof(ulong));
+            return BitConverter.ToUInt64(@Byte, 0);
         }
     }
 }
