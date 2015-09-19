@@ -17,6 +17,7 @@ namespace Rc.Framework.Net
         float rF();
         int rI();
         long rL();
+        System.DateTime rDT();
         System.Guid rGUID();
         IArchByteBoxReader Clone();
     }

@@ -18,6 +18,7 @@ namespace Rc.Framework.Net
         void wF(float flt);
         void wL(long lng);
         void wGUID(System.Guid g);
+        void wDT(System.DateTime DT);
         IArchByteBoxWriter Clone();
     }
 }
