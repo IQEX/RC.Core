@@ -10,6 +10,8 @@
 using System;
 using System.IO;
 using System.Text;
+using Rc.Framework.RMath;
+using Rc.Framework.Security.X05h;
 
 namespace Rc.Framework.Net
 {
@@ -95,6 +97,37 @@ namespace Rc.Framework.Net
             Byte[] @Byte = BitConverter.GetBytes(ulng);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
+        void IArchByteBoxWriter.wUInt(uint uit)
+        {
+            Byte[] @Byte = BitConverter.GetBytes(uit);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
+        void IArchByteBoxWriter.wUShort(ushort ushrt)
+        {
+            Byte[] @Byte = BitConverter.GetBytes(ushrt);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
+        void IArchByteBoxWriter.wBool(bool bo)
+        {
+            Byte[] @Byte = BitConverter.GetBytes(bo);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
+        void IArchByteBoxWriter.wFRange(Range r)
+        {
+            Byte[] @Byte;
+            @Byte = BitConverter.GetBytes(r.Min);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+            @Byte = BitConverter.GetBytes(r.Max);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
+        void IArchByteBoxWriter.wIRange(IntRange iR)
+        {
+            Byte[] @Byte;
+            @Byte = BitConverter.GetBytes(iR.Min);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+            @Byte = BitConverter.GetBytes(iR.Max);
+            nMStream.Write(@Byte, 0, @Byte.Length);
+        }
     }
     public class ArchByteBoxReader : ArchByteBox, IArchByteBoxReader
     {
@@ -157,6 +190,44 @@ namespace Rc.Framework.Net
             byte[] @Byte = new byte[sizeof(ulong)];
             nMStream.Read(@Byte, 0, sizeof(ulong));
             return BitConverter.ToUInt64(@Byte, 0);
+        }
+        bool IArchByteBoxReader.rBool()
+        {
+            byte[] @Byte = new byte[sizeof(bool)];
+            nMStream.Read(@Byte, 0, sizeof(bool));
+            return BitConverter.ToBoolean(@Byte, 0);
+        }
+        ushort IArchByteBoxReader.rUShort()
+        {
+            byte[] @Byte = new byte[sizeof(ushort)];
+            nMStream.Read(@Byte, 0, sizeof(ushort));
+            return BitConverter.ToUInt16(@Byte, 0);
+        }
+        uint IArchByteBoxReader.rUInt()
+        {
+            byte[] @Byte = new byte[sizeof(uint)];
+            nMStream.Read(@Byte, 0, sizeof(uint));
+            return BitConverter.ToUInt32(@Byte, 0);
+        }
+        IntRange IArchByteBoxReader.rIRange()
+        {
+            IntRange ir = new IntRange();
+            byte[] @Byte = new byte[sizeof(int)];
+            nMStream.Read(@Byte, 0, sizeof(int));
+            ir.Min = BitConverter.ToInt32(@Byte, 0);
+            nMStream.Read(@Byte, 0, sizeof(int));
+            ir.Max = BitConverter.ToInt32(@Byte, 0);
+            return ir;
+        }
+        Range IArchByteBoxReader.rFRange()
+        {
+            Range ir = new Range();
+            byte[] @Byte = new byte[sizeof(float)];
+            nMStream.Read(@Byte, 0, sizeof(float));
+            ir.Min = BitConverter.ToSingle(@Byte, 0);
+            nMStream.Read(@Byte, 0, sizeof(float));
+            ir.Max = BitConverter.ToSingle(@Byte, 0);
+            return ir;
         }
     }
 }

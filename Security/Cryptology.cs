@@ -30,9 +30,10 @@ namespace Rc.Framework.Security.X05h
             h.CountShaHashing = h.isSHA ? int.Parse(hCode.Split('-')[1][1].ToString()) : 0;
             h.isSoul = hCode.Split('-')[2][0] == 'S' ? true : false;
             h.isAssembly = hCode.Split('-')[2][4] == 'A' && hCode.Split('-')[2][5] == 'A' ? true : false;
+            h.RawCode = hCode;
             return h;
         }
-
+        public string RawCode;
         public hMxCode xCode;
         public int CountMD5Hashing; public bool isMD5;
         public int CountRsaHashing; public bool isRSA;

@@ -3,7 +3,7 @@
 // Source="root\\Framework.cs"          //             Copyright © Of Fire Twins Wesp 2015              //
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="7.5"                   //                                                              //
+// Version File="7.6"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
@@ -13,7 +13,7 @@ namespace Rc.Framework
     {
         static Framework()
         {
-            Version = "Live-7.5 CAT #S";
+            Version = "Live-7.6 CAT #S";
         }
         public readonly static string Version;
     }
