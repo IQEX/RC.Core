@@ -15,7 +15,7 @@ namespace Rc.Framework.Security.X05h
     }
     public class hMake
     {
-        //x public const string hPassGameMD5 = "X1-M5479A-S8BFAA";
+        // public const string hPassGameMD5 = "X1-M5479A-S8BFAA";
         //x public const string hPassGameRSA = "X1-R58C32-S8BFAA";
         //x public const string hPassGameSHA = "X1-S5A6DF-S8BFAA";
         public static hMake Parse(string hCode)
@@ -41,10 +41,11 @@ namespace Rc.Framework.Security.X05h
     }
     public class hPassword
     {
-        public static string Assembling(string str, string hCode)
+        public static string Assembling(string str, string hCode, out object data)
         {
             string h1 = str;
-            if(hMake.Parse(hCode).isMD5)
+            data = null;
+            if (hMake.Parse(hCode).isMD5)
             {
                 for(int i = 0; i != hMake.Parse(hCode).CountMD5Hashing; i++)
                     h1 = BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(h1)));
@@ -67,7 +68,11 @@ namespace Rc.Framework.Security.X05h
                 h1 = h2;
             }
             if (hMake.Parse(hCode).isSoul)
-                h1 += $"-{Guid.NewGuid().ToString().Split('-')[4].ToUpper()}";
+            {
+                char[] ar = hCode.ToUpper().ToCharArray();
+                Array.Reverse(ar);
+                h1 += $"-{new string(ar)}";
+            }
             if (!hMake.Parse(hCode).isAssembly)
                 h1.Replace("-", default(string));
             return h1;

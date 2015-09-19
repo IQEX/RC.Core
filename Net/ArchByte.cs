@@ -53,8 +53,8 @@ namespace Rc.Framework.Net
         }
         void IArchByteBoxWriter.wG(byte[] data)
         {
-            if (data.Length > short.MaxValue - 1)
-                throw new Exception("Length > short.MaxValue");
+            if (data.Length > short.MaxValue / 2 - 1)
+                throw new Exception("Length > short.MaxValue / 2");
             ((IArchByteBoxWriter)this).wS((short)data.Length);
             nMStream.Write(data, 0, data.Length);
         }
@@ -62,7 +62,20 @@ namespace Rc.Framework.Net
         {
             return nMStream.ToArray();
         }
-
+        void IArchByteBoxWriter.wF(float flt)
+        {
+            Byte[] trsf = BitConverter.GetBytes(flt);
+            nMStream.Write(trsf, 0, trsf.Length);
+        }
+        void IArchByteBoxWriter.wL(long lng)
+        {
+            Byte[] trsf = BitConverter.GetBytes(lng);
+            nMStream.Write(trsf, 0, trsf.Length);
+        }
+        void IArchByteBoxWriter.wGUID(Guid g)
+        {
+            nMStream.Write(g.ToByteArray(), 0, g.ToByteArray().Length);
+        }
         IArchByteBoxWriter IArchByteBoxWriter.Clone()
         {
             return (IArchByteBoxWriter)this.MemberwiseClone();
@@ -74,22 +87,47 @@ namespace Rc.Framework.Net
         { }
         string IArchByteBoxReader.rQ()
         {
-            Byte[] trsf = new byte[((IArchByteBoxReader)this).rS()];
-            nMStream.Read(trsf, 0, trsf.Length);
-            return Encoding.UTF8.GetString(trsf);
+            Byte[] @Byte = new byte[((IArchByteBoxReader)this).rS()];
+            nMStream.Read(@Byte, 0, @Byte.Length);
+            return Encoding.UTF8.GetString(@Byte);
         }
         short IArchByteBoxReader.rS()
         {
-            byte[] bt = new byte[2];
-            nMStream.Read(bt, 0, 2);
-            short surs = BitConverter.ToInt16(bt, 0);
-            return surs;
+            byte[] @Byte = new byte[sizeof(short)];
+            nMStream.Read(@Byte, 0, sizeof(short));
+            return BitConverter.ToInt16(@Byte, 0);
         }
         byte[] IArchByteBoxReader.rG()
         {
-            Byte[] trsf = new byte[((IArchByteBoxReader)this).rS()];
-            nMStream.Read(trsf, 0, trsf.Length);
-            return trsf;
+            Byte[] @Byte = new byte[((IArchByteBoxReader)this).rS()];
+            nMStream.Read(@Byte, 0, @Byte.Length);
+            return @Byte;
+        }
+        float IArchByteBoxReader.rF()
+        {
+            byte[] bt = new byte[sizeof(float)];
+            nMStream.Read(bt, 0, sizeof(float));
+            return BitConverter.ToSingle(bt, 0);
+        }
+        int IArchByteBoxReader.rI()
+        {
+            byte[] bt = new byte[sizeof(int)];
+            nMStream.Read(bt, 0, sizeof(int));
+            int surs = BitConverter.ToInt32(bt, 0);
+            return surs;
+        }
+        long IArchByteBoxReader.rL()
+        {
+            byte[] bt = new byte[sizeof(long)];
+            nMStream.Read(bt, 0, sizeof(long));
+            long surs = BitConverter.ToInt64(bt, 0);
+            return surs;
+        }
+        Guid IArchByteBoxReader.rGUID()
+        {
+            byte[] @Byte = new byte[Guid.Empty.ToByteArray().Length];
+            nMStream.Read(@Byte, 0, Guid.Empty.ToByteArray().Length);
+            return new Guid(@Byte);
         }
         IArchByteBoxReader IArchByteBoxReader.Clone()
         {

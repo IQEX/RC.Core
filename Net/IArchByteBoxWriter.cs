@@ -3,12 +3,10 @@
 // Source="root\\Net\\IArchByteBoxWriter.cs"           Copyright © Of Fire Twins Wesp 2015              //
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="1.0"                   //                                                              //
+// Version File="1.2"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-using System;
-
 namespace Rc.Framework.Net
 {
     public interface IArchByteBoxWriter
@@ -17,6 +15,9 @@ namespace Rc.Framework.Net
         void wG(byte[] data);
         void wQ(string str);
         void wS(short sht);
+        void wF(float flt);
+        void wL(long lng);
+        void wGUID(System.Guid g);
         IArchByteBoxWriter Clone();
     }
 }
