@@ -7,17 +7,37 @@ using System.Threading.Tasks;
 
 namespace Rc.Framework.Security.X05h
 {
+    /// <summary>
+    /// Mixed Code
+    /// </summary>
     public enum hMxCode
     {
+        /// <summary>
+        /// X1 Type
+        /// </summary>
         X1,
+        /// <summary>
+        /// X2 Type
+        /// </summary>
         X2,
+        /// <summary>
+        /// X3 Type
+        /// </summary>
         X3
     }
+    /// <summary>
+    /// h Manager Class
+    /// </summary>
     public class hMake
     {
         // public const string hPassGameMD5 = "X1-M5479A-S8BFAA";
         //x public const string hPassGameRSA = "X1-R58C32-S8BFAA";
         //x public const string hPassGameSHA = "X1-S5A6DF-S8BFAA";
+        /// <summary>
+        /// Parse hCode
+        /// </summary>
+        /// <param name="hCode"></param>
+        /// <returns></returns>
         public static hMake Parse(string hCode)
         {
             hMake h = new hMake();
@@ -33,15 +53,31 @@ namespace Rc.Framework.Security.X05h
             h.RawCode = hCode;
             return h;
         }
+        /// <summary>
+        /// Raw Data Code
+        /// </summary>
         public string RawCode;
+        /// <summary>
+        /// Mixed Type
+        /// </summary>
         public hMxCode xCode;
         public int CountMD5Hashing; public bool isMD5;
         public int CountRsaHashing; public bool isRSA;
         public int CountShaHashing; public bool isSHA;
         public bool isSoul; public bool isAssembly;
     }
+    /// <summary>
+    /// hPass Manager
+    /// </summary>
     public class hPassword
     {
+        /// <summary>
+        /// Assembly Password
+        /// </summary>
+        /// <param name="str">Password</param>
+        /// <param name="hCode">hCode</param>
+        /// <param name="data">data output</param>
+        /// <returns></returns>
         public static string Assembling(string str, string hCode, out object data)
         {
             string h1 = str;

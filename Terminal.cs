@@ -42,15 +42,45 @@ namespace Rc.Framework
         /// </summary>
         public enum eColor
         {
+            /// <summary>
+            /// Blue Color
+            /// </summary>
             Blue,
+            /// <summary>
+            /// Cyan Color
+            /// </summary>
             Cyan,
+            /// <summary>
+            /// Gray Color
+            /// </summary>
             Gray,
+            /// <summary>
+            /// Green Color
+            /// </summary>
             Green,
+            /// <summary>
+            /// Magenta Color
+            /// </summary>
             Magenta,
+            /// <summary>
+            /// Red Color
+            /// </summary>
             Red,
+            /// <summary>
+            /// Yellow Color
+            /// </summary>
             Yellow,
+            /// <summary>
+            /// DarkRed Color
+            /// </summary>
             DarkRed,
+            /// <summary>
+            /// DarkMagenta Color
+            /// </summary>
             DarkMagenta,
+            /// <summary>
+            /// White Color
+            /// </summary>
             White
         }
         /// <summary>
@@ -68,17 +98,51 @@ namespace Rc.Framework
             private readonly static string strDarkRed            = "+g8 ";
             private readonly static string strDarkMagenta        = "+g9 ";
             private readonly static string strWhite              = "+g0 ";
+            /// <summary>
+            /// Blue Singelton
+            /// </summary>
             public readonly static Color Blue           = new Color(eColor.Blue)        ;
+            /// <summary>
+            /// Cyan Singelton
+            /// </summary>
             public readonly static Color Cyan           = new Color(eColor.Cyan)        ;
+            /// <summary>
+            /// Gray Singelton
+            /// </summary>
             public readonly static Color Gray           = new Color(eColor.Gray)        ;
+            /// <summary>
+            /// Green Singelton
+            /// </summary>
             public readonly static Color Green          = new Color(eColor.Green)       ;
+            /// <summary>
+            /// Magenta Singelton
+            /// </summary>
             public readonly static Color Magenta        = new Color(eColor.Magenta)     ;
+            /// <summary>
+            /// Magenta Singelton
+            /// </summary>
             public readonly static Color Red            = new Color(eColor.Red)         ;
+            /// <summary>
+            /// Yellow Singelton
+            /// </summary>
             public readonly static Color Yellow         = new Color(eColor.Yellow)      ;
+            /// <summary>
+            /// DarkRed Singelton
+            /// </summary>
             public readonly static Color DarkRed        = new Color(eColor.DarkRed)     ;
+            /// <summary>
+            /// DarkMagenta Singelton
+            /// </summary>
             public readonly static Color DarkMagenta    = new Color(eColor.DarkMagenta) ;
+            /// <summary>
+            /// White Singelton
+            /// </summary>
             public readonly static Color White          = new Color(eColor.White)       ;
             private string rawStringColor;
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="e">Type Color</param>
             public Color(eColor e)
             {
                 if (e == eColor.Blue)
@@ -102,10 +166,18 @@ namespace Rc.Framework
                 else if (e == eColor.White)
                     rawStringColor = strWhite;
             }
+            /// <summary>
+            /// Regex String to Color
+            /// </summary>
+            /// <param name="a"></param>
             public static implicit operator Color(String a)
             {
                 return impOperation(a);
             }
+            /// <summary>
+            /// Color to regex string
+            /// </summary>
+            /// <param name="d"></param>
             public static implicit operator String(Color d)
             {
                 return d.rawStringColor;

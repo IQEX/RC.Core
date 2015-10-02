@@ -24,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>RC.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -69,6 +70,7 @@
     <Compile Include="Collections\Matrix.cs" />
     <Compile Include="Collections\SFormatter.cs" />
     <Compile Include="Collections\SList.cs" />
+    <Compile Include="Collections\SortMode.cs" />
     <Compile Include="Compress\Dlu.cs" />
     <Compile Include="Compress\Lonic\BitWriter.cs" />
     <Compile Include="Compress\Lonic\BZip2Compressor.cs" />
@@ -189,9 +191,6 @@
     <Compile Include="SystemInfo.cs" />
     <Compile Include="Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\bColor.cs" />
-    <Compile Include="Types\Dword.cs" />
-    <Compile Include="Types\Handle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CertificateVOX_ErisPrixe.pfx" />

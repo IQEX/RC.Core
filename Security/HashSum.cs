@@ -17,8 +17,16 @@ using System.IO;
 
 namespace Rc.Framework.Security
 {
+    /// <summary>
+    /// Class hash Manager
+    /// </summary>
     public class HashSum
     {
+        /// <summary>
+        /// Check Sum Hash File
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string Checksum(string path)
         {
             byte[] fileData;
@@ -30,6 +38,11 @@ namespace Rc.Framework.Security
             fs.Close();
             return BitConverter.ToString(md5.ComputeHash(fileData)).Replace("-", String.Empty);
         }
+        /// <summary>
+        /// Hash Sum File's in directory
+        /// </summary>
+        /// <param name="pathes"></param>
+        /// <returns></returns>
         public static Dictionary<string, string> SearchDirectory(string[] pathes)
         {
             Dictionary<string, string> temp = new Dictionary<string, string>();

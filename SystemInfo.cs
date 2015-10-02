@@ -21,77 +21,165 @@ using System.IO;
 
 namespace Rc.Framework
 {
+    /// <summary>
+    /// Class to structure Video Adapter
+    /// </summary>
     [Serializable]
     public class VideoAdapter
     {
+        /// <summary>
+        /// Заполнено?
+        /// </summary>
         public bool isPool;
-        // имя компьютера
+        /// <summary>
+        /// имя компьютера
+        /// </summary>
         public string SystemName;
-        // наименование устройства
+        /// <summary>
+        /// наименование устройства
+        /// </summary>
         public string Caption;
-        // описание устройства
+        /// <summary>
+        /// описание устройства
+        /// </summary>
         public string Description;
-        // идентификатор устройства
+        /// <summary>
+        /// идентификатор устройства
+        /// </summary>
         public string DeviceID;
-        // размер памяти видеоадаптера
+        /// <summary>
+        /// Размер памяти видеоадаптера
+        /// </summary>
         public string AdapterRAM;
-        // текущее разрешение экрана по горизонтали (точек)
+        /// <summary>
+        /// текущее разрешение экрана по горизонтали (точек)
+        /// </summary>
         public string CurrentHorizontalResolution;
-        // текущее разрешение экрана по вертикали (точек)
+        /// <summary>
+        /// текущее разрешение экрана по вертикали (точек)
+        /// </summary>
         public string CurrentVerticalResolution;
-        // число цветов в текущем разрешении экрана
+        /// <summary>
+        /// число цветов в текущем разрешении экрана
+        /// </summary>
         public string CurrentNumberOfColors;
-        // текущее разрешение экрана и число цветов
+        /// <summary>
+        /// текущее разрешение экрана и число цветов
+        /// </summary>
         public string VideoModeDescription;
-        // качество цветопередачи (количество бит на пиксель)
+        /// <summary>
+        /// качество цветопередачи (количество бит на пиксель)
+        /// </summary>
         public string CurrentBitsPerPixel;
-        // частота обновления экрана, Гц - (0 - по умолчанию, 0xFFFFFFFF - оптимальная)
+        /// <summary>
+        /// частота обновления экрана, Гц - (0 - по умолчанию, 0xFFFFFFFF - оптимальная)
+        /// </summary>
         public string CurrentRefreshRate;
-        // дата-время последней модификации текущего видеодрайвера
+        /// <summary>
+        /// дата-время последней модификации текущего видеодрайвера
+        /// </summary>
         public string DriverDate;
-        // версия текущего видеодрайвера
+        /// <summary>
+        /// версия текущего видеодрайвера
+        /// </summary>
         public string DriverVersion;
-        // идентификатор устройства Plug-and-Play
+        /// <summary>
+        /// идентификатор устройства Plug-and-Play
+        /// </summary>
         public string PNPDeviceID;
-        // описание видеопроцессора
+        /// <summary>
+        /// описание видеопроцессора
+        /// </summary>
         public string VideoProcessor;
     }
+    /// <summary>
+    /// Class to structure Mother Board
+    /// </summary>
     [Serializable]
     public class BaseBoard
     {
+        /// <summary>
+        /// Заполнено?
+        /// </summary>
         public bool isPool;
+        /// <summary>
+        /// Описание платы
+        /// </summary>
         public string Description;
+        /// <summary>
+        /// Производитель
+        /// </summary>
         public string Manufacturer;
+        /// <summary>
+        /// Номер продукта
+        /// </summary>
         public string Product;
+        /// <summary>
+        /// Серийный номер
+        /// </summary>
         public string SerialNumber;
+        /// <summary>
+        /// Тэг
+        /// </summary>
         public string Tag;
+        /// <summary>
+        /// Версия
+        /// </summary>
         public string Version;
     }
+    /// <summary>
+    /// Class to structure Network Adapter
+    /// </summary>
     [Serializable]
     public class NetworkAdapter
     {
+        /// <summary>
+        /// Заполнено?
+        /// </summary>
         public bool isPool;
-        // имя компьютера
+        /// <summary>
+        /// имя компьютера
+        /// </summary>
         public string SystemName;
-        // наименование устройства
+        /// <summary>
+        /// описание устройства
+        /// </summary>
         public string Caption;
-        // наименование устройства
+        /// <summary>
+        /// наименование устройства
+        /// </summary>
         public string Name;
-        // краткое наименование устройства
+        /// <summary>
+        /// Сервисное наименование устройства
+        /// </summary>
         public string ServiceName;
-        // описание устройства
+        /// <summary>
+        /// описание устройства
+        /// </summary>
         public string Description;
-        // производитель
+        /// <summary>
+        /// производитель
+        /// </summary>
         public string Manufacturer;
-        // тип устройства
+        /// <summary>
+        /// тип устройства
+        /// </summary>
         public string AdapterType;
-        // идентификатор устройства
+        /// <summary>
+        /// идентификатор устройства
+        /// </summary>
         public string DeviceID;
-        // идентификатор устройства Plug-and-Play
+        /// <summary>
+        /// идентификатор устройства Plug-and-Play
+        /// </summary>
         public string PNPDeviceID;
-        // индекс сетевого адаптера в системном реестре
+        /// <summary>
+        /// индекс сетевого адаптера в системном реестре
+        /// </summary>
         public string Index;
-        // MAC - адрес
+        /// <summary>
+        /// MAC - адрес
+        /// </summary>
         public string MACAddress;
     }
     internal static class SystemInfo

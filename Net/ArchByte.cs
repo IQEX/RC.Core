@@ -7,12 +7,8 @@
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-using System;
-using System.IO;
-using System.Text;
-using Rc.Framework.RMath;
-using Rc.Framework.Security.X05h;
-
+using System;      using System.IO;
+using System.Text; using Rc.Framework.RMath;
 namespace Rc.Framework.Net
 {
     public class ArchByteBox

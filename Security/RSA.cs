@@ -18,9 +18,17 @@ using System.Threading.Tasks;
 
 namespace Rc.Framework.Security
 {
+    /// <summary>
+    /// Class Pair Key
+    /// </summary>
     [Serializable]
     public class RSAKeyPair
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="privatekey">Private Key</param>
+        /// <param name="publickey">Public Key</param>
         public RSAKeyPair(string privatekey, string publickey)
         {
             this.XML_PrivateKey = privatekey;
@@ -35,6 +43,9 @@ namespace Rc.Framework.Security
         /// </summary>
         public readonly string XML_PublicKey;
     }
+    /// <summary>
+    /// Engine RSA
+    /// </summary>
     public class RSA
     {
         /// <summary>
