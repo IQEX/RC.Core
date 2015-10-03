@@ -1,6 +1,6 @@
 ﻿// =====================================//==============================================================//
 //                                      //                                                              //         
-// Source="root\\Security\\CryptByte.cs"//             Copyright © Of Fire Twins Wesp 2015              //
+// Source="root\\Security\\CryptByte.cs"//     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="6.3"                   //                                                              //

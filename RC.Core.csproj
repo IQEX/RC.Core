@@ -191,6 +191,23 @@
     <Compile Include="SystemInfo.cs" />
     <Compile Include="Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Yaml\EasyTypeConverter.cs" />
+    <Compile Include="Yaml\ObjectMemberAccessor.cs" />
+    <Compile Include="Yaml\Parser.cs" />
+    <Compile Include="Yaml\RehashableDictionary.cs" />
+    <Compile Include="Yaml\TypeUtils.cs" />
+    <Compile Include="Yaml\UriEncoding.cs" />
+    <Compile Include="Yaml\YamlAnchorDictionary.cs" />
+    <Compile Include="Yaml\YamlConstructor.cs" />
+    <Compile Include="Yaml\YamlDoubleQuoteEscaping.cs" />
+    <Compile Include="Yaml\YamlNode.cs" />
+    <Compile Include="Yaml\YamlParser.cs" />
+    <Compile Include="Yaml\YamlPresenter.cs" />
+    <Compile Include="Yaml\YamlRepresenter.cs" />
+    <Compile Include="Yaml\YamlSerializer.cs" />
+    <Compile Include="Yaml\YamlTagPrefixes.cs" />
+    <Compile Include="Yaml\YamlTagResolutionScheme.cs" />
+    <Compile Include="Yaml\YamlTagValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CertificateVOX_ErisPrixe.pfx" />

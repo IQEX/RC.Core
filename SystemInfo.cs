@@ -1,6 +1,6 @@
 ﻿// =====================================//==============================================================//
 //                                      //                                                              //         
-// Source="root\\SystemInfo.cs"         //             Copyright © Of Fire Twins Wesp 2015              //
+// Source="root\\SystemInfo.cs"         //     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="7.5"                   //                                                              //
