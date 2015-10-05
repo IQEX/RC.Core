@@ -59,10 +59,9 @@ namespace Rc.Framework.Net.Protocol
                 return rnt.Connected;
             }
         }
-
+        public bool isExit;
 
         private NetworkStream NetStream;
-        private bool isExit;
         // ======================================
         // Event
         // ======================================

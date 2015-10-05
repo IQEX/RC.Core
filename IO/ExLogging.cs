@@ -94,7 +94,7 @@ namespace Rc.Framework.IO
         /// <summary>
         /// !! TEST !!
         /// !! Работа nameof с перечеслением не проверялась
-        /// Запись в лог по собственной конфигурации
+        /// Запись в лог по стандартной конфигурации
         /// </summary>
         /// <param name="Type"></param>
         /// <param name="str"></param>

@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("RC.Core")]
 [assembly: AssemblyDescription("Rc.Framework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Eris")]
+[assembly: AssemblyCompany("AGT-Soul")]
 [assembly: AssemblyProduct("RC.Core")]
 [assembly: AssemblyCopyright("Copyright © Yuuki Wesp 2015")]
-[assembly: AssemblyTrademark("RC")]
+[assembly: AssemblyTrademark("RC Soul")]
 [assembly: AssemblyCulture("")]
 
 // Параметр ComVisible со значением FALSE делает типы в сборке невидимыми 
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("7.7.0.0")]
+[assembly: AssemblyVersion("7.7.2466.0")]
 [assembly: AssemblyFileVersion("7.7.0.0")]
 [assembly: InternalsVisibleTo("AppUnitTest, PublicKey=002400000480000094000000060200000024000052534131000400000100010039e50bf6193da3" +
                                                   "93d5cf03d6abd2363f45f1488a851109ff0a9185e3a83d7fce98c133945e4775877e0c48a7c9ce" +
