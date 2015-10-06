@@ -126,6 +126,7 @@
     <Compile Include="Compress\zip.cs" />
     <Compile Include="Conf\PrivateProfile.cs" />
     <Compile Include="Direct\Dir.cs" />
+    <Compile Include="Extension\ExtensionMethod.cs" />
     <Compile Include="Framework.cs" />
     <Compile Include="IO\ExLogging.cs" />
     <Compile Include="Native\NativeMethod.cs" />

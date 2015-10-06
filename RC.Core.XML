@@ -26706,6 +26706,11 @@
             only supports single byte encodings (1 byte == 256 possible values).
             </summary>
         </member>
+        <member name="T:ExtensionMethods">
+            <summary>
+            Класс расширений
+            </summary>
+        </member>
         <member name="M:System.YAML.CharacterAnalyzer`1.IsAlpha(System.Int32)">
             <summary>
             Check if the character at the specified position is an alphabetical
