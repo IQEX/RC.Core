@@ -10,10 +10,45 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using static Rc.Framework.Native.NativeDelegate;
 
 namespace Rc.Framework.Native
 {
+    public class KeyEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Инициализирует новый экземпляр класса KeyEventArgs.
+        /// </summary>
+        /// <param name="keyData"></param>
+        public KeyEventArgs(Keys keyData)
+        {
+            this.KeyData = keyData;
+        }
+        /// <summary>
+        /// Получает значение, показывающее, была ли нажата клавиша ALT.
+        /// </summary>
+        public bool Alt;
+        /// <summary>
+        /// Получает значение, показывающее, была ли нажата клавиша CTRL.
+        /// </summary>
+        public bool Control;
+        /// <summary>
+        /// Получает или задает значение, определяющее, было ли обработано событие.
+        /// </summary>
+        public bool Handled;
+        /// <summary>
+        /// Получает данные, касающиеся клавиш
+        /// </summary>
+        public Keys KeyData { get; }
+        /// <summary>
+        /// Получает значение, показывающее, была ли нажата клавиша SHIFT.
+        /// </summary>
+        public bool Shift;
+        /// <summary>
+        /// Получает или задает значение, указывающее, следует ли передавать события нажатия
+        /// клавиши базовому элементу управления.
+        /// </summary>
+        public bool SuppressKeyPress { get; set; }
+    }
     public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
     public delegate int KeyBoardHookProc(int code, int wParam, ref NativeStruct.KeyBoardHookStruct lParam);
     public delegate void KeyEventHandler(object sender, KeyEventArgs e);
@@ -837,45 +872,6 @@ namespace Rc.Framework.Native
             public int flags;
             public int time;
             public int dwExtraInfo;
-        }
-    }
-    public static class NativeDelegate
-    {
-        public class KeyEventArgs : EventArgs
-        {
-            /// <summary>
-            /// Инициализирует новый экземпляр класса KeyEventArgs.
-            /// </summary>
-            /// <param name="keyData"></param>
-            public KeyEventArgs(Keys keyData)
-            {
-                this.KeyData = keyData;
-            }
-            /// <summary>
-            /// Получает значение, показывающее, была ли нажата клавиша ALT.
-            /// </summary>
-            public bool Alt;
-            /// <summary>
-            /// Получает значение, показывающее, была ли нажата клавиша CTRL.
-            /// </summary>
-            public bool Control;
-            /// <summary>
-            /// Получает или задает значение, определяющее, было ли обработано событие.
-            /// </summary>
-            public bool Handled;
-            /// <summary>
-            /// Получает данные, касающиеся клавиш
-            /// </summary>
-            public Keys KeyData { get; }
-            /// <summary>
-            /// Получает значение, показывающее, была ли нажата клавиша SHIFT.
-            /// </summary>
-            public bool Shift;
-            /// <summary>
-            /// Получает или задает значение, указывающее, следует ли передавать события нажатия
-            /// клавиши базовому элементу управления.
-            /// </summary>
-            public bool SuppressKeyPress { get; set; }
         }
     }
     public static class NativeMethods
