@@ -8,5 +8,6 @@ Rc.Framework
 [![Status](https://img.shields.io/badge/status-beta-red.svg)](https://ru.wikipedia.org/wiki/Бета)   
 ![Platform](https://img.shields.io/badge/platform-win%20%7C%20NET.Core%204.5-lightgrey.svg)   
 ![version](https://img.shields.io/badge/version-7.8-green.svg)   
+[![Coverage Status](https://coveralls.io/repos/AnotherAltr/Rc.Core/badge.svg?branch=master&service=github)](https://coveralls.io/github/AnotherAltr/Rc.Core?branch=master)    
 
 
