@@ -26711,6 +26711,52 @@
             Класс расширений
             </summary>
         </member>
+        <member name="M:ExtensionMethods.AsList``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Переводит в лист
+            </summary>
+            <typeparam name="T">Тип</typeparam>
+            <param name="source">Исходная</param>
+            <returns></returns>
+        </member>
+        <member name="M:ExtensionMethods.Contains(System.String,System.String,System.StringComparison)">
+            <summary>
+            Returns a value indicating whether a specified substring occurs within this string.
+            </summary>
+            <param name="text">Text</param>
+            <param name="value">The string to seek.</param>
+            <param name="comparison">Setting</param>
+            <returns></returns>
+        </member>
+        <member name="M:ExtensionMethods.StartsWith(System.String,System.String,System.Int32,System.StringComparison)">
+            <summary>
+            null
+            </summary>
+            <param name="text"></param>
+            <param name="value"></param>
+            <param name="startIndex"></param>
+            <param name="comparison"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ExtensionMethods.StartsWithOneOf(System.String,System.String[],System.StringComparison)">
+            <summary>
+            null
+            </summary>
+            <param name="text"></param>
+            <param name="strings"></param>
+            <param name="comparison"></param>
+            <returns></returns>
+        </member>
+        <member name="M:ExtensionMethods.StartsWithOneOf(System.String,System.Int32,System.String[],System.StringComparison)">
+            <summary>
+            null
+            </summary>
+            <param name="text"></param>
+            <param name="startIndex"></param>
+            <param name="strings"></param>
+            <param name="comparison"></param>
+            <returns></returns>
+        </member>
         <member name="M:System.YAML.CharacterAnalyzer`1.IsAlpha(System.Int32)">
             <summary>
             Check if the character at the specified position is an alphabetical
