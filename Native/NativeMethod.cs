@@ -14,6 +14,9 @@ using static Rc.Framework.Native.NativeDelegate;
 
 namespace Rc.Framework.Native
 {
+    public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+    public delegate int KeyBoardHookProc(int code, int wParam, ref NativeStruct.KeyBoardHookStruct lParam);
+    public delegate void KeyEventHandler(object sender, KeyEventArgs e);
     public enum Keys
     {
         //
@@ -838,9 +841,6 @@ namespace Rc.Framework.Native
     }
     public static class NativeDelegate
     {
-        public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
-        public delegate int KeyBoardHookProc(int code, int wParam, ref NativeStruct.KeyBoardHookStruct lParam);
-        public delegate void KeyEventHandler(object sender, KeyEventArgs e);
         public class KeyEventArgs : EventArgs
         {
             /// <summary>
