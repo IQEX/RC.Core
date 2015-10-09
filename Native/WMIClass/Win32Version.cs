@@ -75,7 +75,10 @@ namespace Rc.Framework.Native.WMIClass
         /// Тип
         /// </summary>
         public Win32Type TypeWin;
-
+        /// <summary>
+        /// This class to Byte array
+        /// </summary>
+        /// <returns></returns>
         public override byte[] ToByte()
         {
             IArchByteBoxWriter writer = ArchByteBox.InvokeWriter();
@@ -86,7 +89,10 @@ namespace Rc.Framework.Native.WMIClass
             //@ End
             return writer.GetAll();
         }
-
+        /// <summary>
+        /// Byte Array to this class
+        /// </summary>
+        /// <param name="bitBox">Content class</param>
         public override void outByte(byte[] bitBox)
         {
             IArchByteBoxReader reader = ArchByteBox.InvokeReader(bitBox);
@@ -94,7 +100,6 @@ namespace Rc.Framework.Native.WMIClass
             Version = reader.rString();
             Build = reader.rString();
             TypeWin = reader.rString().ToEnum<Win32Type>();
-
             //@ End
         }
     }
