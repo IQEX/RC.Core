@@ -101,5 +101,38 @@ namespace Rc.Framework.Extension
         {
             return double.Parse(t);
         }
+        /// <summary>
+        /// Конвертация строки в <typeparamref name="TEnum"/>
+        /// </summary>
+        /// <typeparam name="TEnum">строка содержащие значение для преобразования.</typeparam>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static TEnum ToEnum<TEnum>(this string t)
+        {
+            return (TEnum)Enum.Parse(typeof(TEnum), t);
+        }
+        /// <summary>
+        ///  конвертация строки в  <typeparamref name="TEnum"/>
+        /// </summary>
+        /// <typeparam name="TEnum"></typeparam>
+        /// <param name="t"></param>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static bool TryToEnum<TEnum>(this string t, out TEnum obj)
+        {
+            //& При использовании Enum.TryParse происходит ошибка
+            //# Ошибка CS0453
+            //# Я хз как её исправить, не умею я генерики переводить
+            obj = default(TEnum);
+            try
+            {
+                obj = (TEnum)Enum.Parse(typeof(TEnum), t);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
