@@ -37,7 +37,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>CertificateVOX_ErisPrixe.pfx</AssemblyOriginatorKeyFile>
@@ -131,6 +131,7 @@
     <Compile Include="IO\ExLogging.cs" />
     <Compile Include="Native\NativeMethod.cs" />
     <Compile Include="Native\SystemTools.cs" />
+    <Compile Include="Native\WMI.cs" />
     <Compile Include="Net\ArchByte.cs" />
     <Compile Include="Net\FtpManager.cs" />
     <Compile Include="Net\IArchByteBoxReader.cs" />
