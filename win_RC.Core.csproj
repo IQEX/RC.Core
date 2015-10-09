@@ -129,12 +129,14 @@
     <Compile Include="Compress\zip.cs" />
     <Compile Include="Conf\PrivateProfile.cs" />
     <Compile Include="Direct\Dir.cs" />
+    <Compile Include="Extension\ExtensionConvert.cs" />
     <Compile Include="Extension\ExtensionMethod.cs" />
     <Compile Include="Framework.cs" />
     <Compile Include="IO\ExLogging.cs" />
     <Compile Include="Native\NativeMethod.cs" />
     <Compile Include="Native\SystemTools.cs" />
     <Compile Include="Native\WMI.cs" />
+    <Compile Include="Native\WMIClass\Win32Version.cs" />
     <Compile Include="Net\ArchByte.cs" />
     <Compile Include="Net\FtpManager.cs" />
     <Compile Include="Net\IArchByteBoxReader.cs" />
@@ -175,6 +177,7 @@
     <Compile Include="Net\NAT\Utils\IIPAddressesProvider.cs" />
     <Compile Include="Net\NAT\Utils\IPAddressesProvider.cs" />
     <Compile Include="Net\NAT\Utils\WellKnownConstants.cs" />
+    <Compile Include="Net\NT\NetworkObject.cs" />
     <Compile Include="Net\Protocol\TcpServer.cs" />
     <Compile Include="Net\Protocol\TcpServerConnection.cs" />
     <Compile Include="RMath\Complex.cs" />
