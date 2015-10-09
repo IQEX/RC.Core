@@ -1,4 +1,5 @@
-﻿using Rc.Framework.Net;
+﻿using Rc.Framework.Extension;
+using Rc.Framework.Net;
 using Rc.Framework.Net.NTCore;
 using Rc.Framework.Yaml.Serialization;
 using System;
@@ -81,7 +82,7 @@ namespace Rc.Framework.Native.WMIClass
             //@ Begin
             writer.wString(Version);
             writer.wString(Build);
-            writer.wShort((short)TypeWin);
+            writer.wString(TypeWin.ToString());
             //@ End
             return writer.GetAll();
         }
@@ -92,7 +93,7 @@ namespace Rc.Framework.Native.WMIClass
             //@ Begin
             Version = reader.rString();
             Build = reader.rString();
-            TypeWin = reader.rString();
+            TypeWin = reader.rString().ToEnum<Win32Type>();
 
             //@ End
         }
