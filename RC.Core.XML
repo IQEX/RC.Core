@@ -349,44 +349,44 @@
             <param name="member">don't touch, this auto generated</param>
             <param name="line">don't touch, this auto generated</param>
         </member>
-        <member name="M:Rc.Framework.Native.NativeDelegate.KeyEventArgs.#ctor(Rc.Framework.Native.Keys)">
+        <member name="M:Rc.Framework.Native.KeyEventArgs.#ctor(Rc.Framework.Native.Keys)">
             <summary>
             Инициализирует новый экземпляр класса KeyEventArgs.
             </summary>
             <param name="keyData"></param>
         </member>
-        <member name="F:Rc.Framework.Native.NativeDelegate.KeyEventArgs.Alt">
+        <member name="F:Rc.Framework.Native.KeyEventArgs.Alt">
             <summary>
             Получает значение, показывающее, была ли нажата клавиша ALT.
             </summary>
         </member>
-        <member name="F:Rc.Framework.Native.NativeDelegate.KeyEventArgs.Control">
+        <member name="F:Rc.Framework.Native.KeyEventArgs.Control">
             <summary>
             Получает значение, показывающее, была ли нажата клавиша CTRL.
             </summary>
         </member>
-        <member name="F:Rc.Framework.Native.NativeDelegate.KeyEventArgs.Handled">
+        <member name="F:Rc.Framework.Native.KeyEventArgs.Handled">
             <summary>
             Получает или задает значение, определяющее, было ли обработано событие.
             </summary>
         </member>
-        <member name="P:Rc.Framework.Native.NativeDelegate.KeyEventArgs.KeyData">
+        <member name="P:Rc.Framework.Native.KeyEventArgs.KeyData">
             <summary>
             Получает данные, касающиеся клавиш
             </summary>
         </member>
-        <member name="F:Rc.Framework.Native.NativeDelegate.KeyEventArgs.Shift">
+        <member name="F:Rc.Framework.Native.KeyEventArgs.Shift">
             <summary>
             Получает значение, показывающее, была ли нажата клавиша SHIFT.
             </summary>
         </member>
-        <member name="P:Rc.Framework.Native.NativeDelegate.KeyEventArgs.SuppressKeyPress">
+        <member name="P:Rc.Framework.Native.KeyEventArgs.SuppressKeyPress">
             <summary>
             Получает или задает значение, указывающее, следует ли передавать события нажатия
             клавиши базовому элементу управления.
             </summary>
         </member>
-        <member name="M:Rc.Framework.Native.NativeMethods.SetWindowsHookEx(System.Int32,Rc.Framework.Native.NativeDelegate.KeyBoardHookProc,System.IntPtr,System.UInt32)">
+        <member name="M:Rc.Framework.Native.NativeMethods.SetWindowsHookEx(System.Int32,Rc.Framework.Native.KeyBoardHookProc,System.IntPtr,System.UInt32)">
             <summary>
             Sets the windows hook, do the desired event, one of hInstance or threadId must be non-null
             </summary>
