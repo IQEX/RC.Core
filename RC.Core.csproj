@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>G:\packages\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Standart</DefineConstants>
+    <DefineConstants>DEBUG;Standart</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -172,7 +172,6 @@
     <Compile Include="Net\NAT\Utils\IIPAddressesProvider.cs" />
     <Compile Include="Net\NAT\Utils\IPAddressesProvider.cs" />
     <Compile Include="Net\NAT\Utils\WellKnownConstants.cs" />
-    <Compile Include="Net\Protocol\RawNet.cs" />
     <Compile Include="Net\Protocol\TcpServer.cs" />
     <Compile Include="Net\Protocol\TcpServerConnection.cs" />
     <Compile Include="RMath\Complex.cs" />
