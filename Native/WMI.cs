@@ -7,9 +7,21 @@ using System.Threading.Tasks;
 
 namespace Rc.Framework.Native
 {
+    /// <summary>
+    /// Windows Management Instrumentation
+    /// </summary>
     public class WMI
     {
+        /// <summary>
+        /// Version Win32
+        /// </summary>
         public const string SelectVersionWindows = "SELECT Version FROM Win32_OperatingSystem";
+        /// <summary>
+        /// Query method
+        /// </summary>
+        /// <param name="qu">Query</param>
+        /// <param name="xBase">result</param>
+        /// <returns></returns>
         public bool Query(string qu, out Dictionary<String, String> xBase)
         {
             xBase = new Dictionary<string, string>();
@@ -27,7 +39,7 @@ namespace Rc.Framework.Native
 
                 return true;
             }
-            catch(Exception ex)
+            catch
             {
                 return false;
             }
