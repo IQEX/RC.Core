@@ -1,0 +1,14 @@
+version: 7.7.{build}
+
+
+branches:
+  only:
+    - master
+platform:
+  - x64
+configuration:
+  - Debug
+  
+environment:
+  VS_VERSION: vs2015
+  BUILD_PLATFORM: 'x64'
