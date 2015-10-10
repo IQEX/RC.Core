@@ -14,4 +14,4 @@ environment:
   BUILD_PLATFORM: 'x64'
 build:
   parallel: true                  # enable MSBuild parallel builds
-  project: MyTestAzureCS.sln      # path to Visual Studio solution or project
+  project: Rc.Core.sln      # path to Visual Studio solution or project
