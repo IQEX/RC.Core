@@ -27,7 +27,23 @@ namespace Rc.Framework.Native
         /// <summary>
         /// Info Network Adapter
         /// </summary>
-        public const string QueryNetworkAdapter = "SELECT * FROM Win32_NetworkAdapter";
+        public const string QueryVirtualNetworkAdapter = "SELECT * FROM Win32_NetworkAdapter WHERE PhysicalAdapter = False";
+        /// <summary>
+        /// Info Network Adapter
+        /// </summary>
+        public const string QueryPhysicalNetworkAdapter = "SELECT * FROM Win32_NetworkAdapter WHERE PhysicalAdapter = True";
+        /// <summary>
+        /// Info Logical Disk
+        /// </summary>
+        public const string QueryLogicalDisk = "SELECT * FROM Win32_LogicalDisk WHERE NOT FileSystem = \"NTFS\"";
+        /// <summary>
+        /// Info Physical Disk
+        /// </summary>
+        public const string QueryPhysicalDisk = "SELECT * FROM Win32_LogicalDisk WHERE FileSystem = \"NTFS\"";
+        /// <summary>
+        /// Info Physical Memory
+        /// </summary>
+        public const string QueryPhysicalMemory = "SELECT * FROM Win32_PhysicalMemory";
         /// <summary>
         /// Query method
         /// </summary>
