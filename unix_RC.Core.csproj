@@ -135,6 +135,11 @@
     <Compile Include="IO\ExLogging.cs" />
     <Compile Include="Native\NativeMethod.cs" />
     <Compile Include="Native\SystemTools.cs" />
+    <Compile Include="Native\Win32\Win32BaseBoard.cs" />
+    <Compile Include="Native\Win32\Win32Bios.cs" />
+    <Compile Include="Native\Win32\Win32BootConfiguration.cs" />
+    <Compile Include="Native\Win32\Win32CDROMDrive.cs" />
+    <Compile Include="Native\Win32\Win32DiskDrive.cs" />
     <Compile Include="Native\WMI.cs" />
     <Compile Include="Native\WMIClass\Win32Version.cs" />
     <Compile Include="Net\ArchByte.cs" />
