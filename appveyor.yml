@@ -5,13 +5,12 @@ branches:
   only:
     - master
 platform:
-  - x64
+  - Any CPU
 configuration:
   - Debug
   
 environment:
   VS_VERSION: vs2014
-  BUILD_PLATFORM: 'x64'
 build:
   parallel: true                  # enable MSBuild parallel builds
   project: Rc.Core.sln      # path to Visual Studio solution or project
