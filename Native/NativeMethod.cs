@@ -848,10 +848,6 @@ namespace Rc.Framework.Native
     }
     public static class NativeConstat
     {
-        public const int MOUSEEVENTF_LEFTDOWN = 0x02;
-        public const int MOUSEEVENTF_LEFTUP = 0x04;
-        public const int MOUSEEVENTF_RIGHTDOWN = 0x08;
-        public const int MOUSEEVENTF_RIGHTUP = 0x10;
         public const int WH_KEYBOARD_LL = 13;
         public const int WM_KEYDOWN = 0x100;
         public const int WM_KEYUP = 0x101;
@@ -862,6 +858,18 @@ namespace Rc.Framework.Native
         public const int SW_Min = 0x2;
         public const int SW_Max = 0x3;
         public const int SW_Norm = 0x4;
+    }
+    [Flags]
+    public enum MouseEventFlags
+    {
+        LeftDown = 0x00000002,
+        LeftUp = 0x00000004,
+        MiddleDown = 0x00000020,
+        MiddleUp = 0x00000040,
+        Move = 0x00000001,
+        Absolute = 0x00008000,
+        RightDown = 0x00000008,
+        RightUp = 0x00000010
     }
     public static class NativeStruct
     {
@@ -874,8 +882,31 @@ namespace Rc.Framework.Native
             public int dwExtraInfo;
         }
     }
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MousePoint
+    {
+        public int X;
+        public int Y;
+
+        public MousePoint(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
     public static class NativeMethods
     {
+        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool SetCursorPos(int X, int Y);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetCursorPos(out MousePoint lpMousePoint);
+
+        [DllImport("user32.dll")]
+        private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
+
         /// <summary>
         /// Sets the windows hook, do the desired event, one of hInstance or threadId must be non-null
         /// </summary>
