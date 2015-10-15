@@ -78,9 +78,13 @@ namespace Rc.Framework.Net
         {
             return (IArchByteBoxWriter)this.MemberwiseClone();
         }
-        void IArchByteBoxWriter.wDateTime(DateTime DT)
+        void IArchByteBoxWriter.wDateTime(DateTime DT, bool isBinary = false)
         {
-            Byte[] @Byte = BitConverter.GetBytes(DT.Ticks);
+            Byte[] @Byte = null;
+            if (isBinary)
+                @Byte = BitConverter.GetBytes(DT.ToBinary());
+            else
+                @Byte = BitConverter.GetBytes(DT.Ticks);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
         void IArchByteBoxWriter.wInt(int it)

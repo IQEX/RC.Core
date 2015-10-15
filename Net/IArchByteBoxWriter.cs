@@ -23,7 +23,7 @@ namespace Rc.Framework.Net
         void wUShort(ushort ushrt);
         void wBool(bool bo);
         void wGUID(System.Guid g);
-        void wDateTime(System.DateTime DT);
+        void wDateTime(System.DateTime DT, bool isBinary = false);
         void wFRange(RMath.Range r);
         void wIRange(RMath.IntRange iR);
         IArchByteBoxWriter Clone();
