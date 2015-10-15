@@ -853,6 +853,7 @@ namespace Rc.Framework.Native
         public const int WM_KEYUP = 0x101;
         public const int WM_SYSKEYDOWN = 0x104;
         public const int WM_SYSKEYUP = 0x105;
+
         public const int SW_HIDE = 0x0;
         public const int SW_SHOW = 0x5;
         public const int SW_Min = 0x2;
