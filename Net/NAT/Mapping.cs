@@ -68,8 +68,8 @@ namespace Rc.Framework.Net.Nat
         public Protocol Protocol { get; internal set; }
         /// <summary>
         /// The PrivatePort parameter specifies the port on a client machine to which all traffic 
-        /// coming in on <see cref="#PublicPort">PublicPort</see> for the protocol specified by 
-        /// <see cref="#Protocol">Protocol</see> should be forwarded to.
+        /// coming in on <see cref="PublicPort">PublicPort</see> for the protocol specified by 
+        /// <see cref="Protocol">Protocol</see> should be forwarded to.
         /// </summary>
         /// <see cref="Protocol">Protocol enum</see>
         public int PrivatePort { get; internal set; }
@@ -120,7 +120,7 @@ namespace Rc.Framework.Net.Nat
         }
 
         /// <summary>
-        /// Gets the expiration. The property value is calculated using <see cref="#Lifetime">Lifetime</see> property.
+        /// Gets the expiration. The property value is calculated using <see cref="Lifetime">Lifetime</see> property.
         /// </summary>
         public DateTime Expiration
         {

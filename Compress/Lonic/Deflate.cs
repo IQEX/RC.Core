@@ -651,12 +651,13 @@ namespace Ionic.Zlib
             {
                 if (bi_valid > (int)Buf_size - len)
                 {
-                    //int val = value;
-                    //      bi_buf |= (val << bi_valid);
-
+#pragma warning disable CS0675 // Битовая операция или оператор, использовавшийся в операнде с расширением знака
+                              //int val = value;
+                              //      bi_buf |= (val << bi_valid);
                     bi_buf |= (short)((value << bi_valid) & 0xffff);
-                    //put_short(bi_buf);
-                        pending[pendingCount++] = (byte)bi_buf;
+#pragma warning restore CS0675 // Битовая операция или оператор, использовавшийся в операнде с расширением знака
+                              //put_short(bi_buf);
+                    pending[pendingCount++] = (byte)bi_buf;
                         pending[pendingCount++] = (byte)(bi_buf >> 8);
 
 
@@ -665,8 +666,10 @@ namespace Ionic.Zlib
                 }
                 else
                 {
-                    //      bi_buf |= (value) << bi_valid;
+#pragma warning disable CS0675 // Битовая операция или оператор, использовавшийся в операнде с расширением знака
+                              //      bi_buf |= (value) << bi_valid;
                     bi_buf |= (short)((value << bi_valid) & 0xffff);
+#pragma warning restore CS0675 // Битовая операция или оператор, использовавшийся в операнде с расширением знака
                     bi_valid += len;
                 }
             }
