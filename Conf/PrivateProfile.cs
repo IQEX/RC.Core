@@ -18,10 +18,6 @@ namespace Rc.Framework.Conf
     public class PrivateProfile
     {
         public string path;
-        [System.Runtime.InteropServices.DllImport("kernel32")]
-        private static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
-        [System.Runtime.InteropServices.DllImport("kernel32")]
-        private static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
         /// <summary>
         /// INIFile Constructor.
         /// </summary>
@@ -48,7 +44,7 @@ namespace Rc.Framework.Conf
         /// </summary>
         /// <PARAM name="Section"></PARAM>
         /// <PARAM name="Key"></PARAM>
-        /// <PARAM name="Path"></PARAM>
+        /// <PARAM name="Default"></PARAM>
         /// <returns></returns>
         public string Read(string Section, string Key, string Default)
         {
