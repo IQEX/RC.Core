@@ -15,8 +15,18 @@ using System.Security.Cryptography;
 
 namespace Rc.Framework.Net
 {
+    //# Необходима документация!
+    /// <summary>
+    /// null
+    /// </summary>
+    [Obsolete("old worker IP (MAC & [?]Hash)")]
     public class IPTool
     {
+        /// <summary>
+        /// Получение MAC адресса основной сетевой карты
+        /// </summary>
+        /// <returns></returns>
+        [Obsolete("old sol., use Rc.Framework.Native.WMI.QueryPhysicalNetworkAdapter")]
         public static string MACAddress()
         {
             ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
@@ -32,8 +42,9 @@ namespace Rc.Framework.Net
             }
             return MACAddress;
         }
+        //# ЧЕРТОВ КОСТЫЛЬ!
         /// <summary>
-        /// Чертов костыль!
+        /// null
         /// </summary>
         /// <param name="ipend"></param>
         /// <returns></returns>
