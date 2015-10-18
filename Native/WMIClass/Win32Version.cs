@@ -3,10 +3,6 @@ using Rc.Framework.Net;
 using Rc.Framework.Net.NTCore;
 using Rc.Framework.Yaml.Serialization;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rc.Framework.Native.WMIClass
 {
