@@ -45,8 +45,10 @@ namespace Rc.Framework.Net
         /// Port | defaultValue = 21
         /// </summary>
         public int Port { get; set; }
+        //# DO NOT USE: ftp://192.168.0.1, ftp://www.myftpserver.com
         /// <summary>
-        /// URL of your ftpServer e.g. 192.168.0.1, www.myftpserver.com ! DO NOT USE: ftp://192.168.0.1, ftp://www.myftpserver.com
+        /// URL of your ftpServer e.g. 192.168.0.1, www.myftpserver.com 
+        /// !DO NOT USE: ftp://192.168.0.1, ftp://www.myftpserver.com
         /// </summary>
         public string Host { get { return _host; } set { this.SetHost(value); } }
         /// <summary>
