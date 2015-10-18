@@ -3,7 +3,7 @@
 // Source="root\\Net\\IArchByteBoxReader.cs"           Copyright © Of Fire Twins Wesp 2015              //
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="3.2"                   //                                                              //
+// Version File="7.7"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
