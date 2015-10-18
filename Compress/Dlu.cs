@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Rc.Framework.Compress
 {
+    /// <summary>
+    /// null
+    /// </summary>
+    [Obsolete("", true)]
     public class Dlu : Zip
     {
         internal Dlu(CompressionLevel level = CompressionLevel.Level0, Encoding encoding = null)

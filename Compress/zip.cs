@@ -20,8 +20,8 @@ using Rc.Framework.IO;
 
 namespace Rc.Framework.Compress
 {
-    public delegate void DError(Exception ex);
-    public class Zip
+    internal delegate void DError(Exception ex);
+    internal class Zip
     {
         public event EventHandler<ExtractProgressEventArgs> ExtractProgress;
         public event DError ExtractError;
