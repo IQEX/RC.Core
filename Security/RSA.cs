@@ -8,6 +8,7 @@
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
 using Rc.Framework.Collections;
+using Rc.Framework.Yaml.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Rc.Framework.Security
     /// Class Pair Key
     /// </summary>
     [Serializable]
+    [YamlSerialize(YamlSerializeMethod.Content)]
     public class RSAKeyPair
     {
         /// <summary>
@@ -37,11 +39,11 @@ namespace Rc.Framework.Security
         /// <summary>
         /// Приватный ключ
         /// </summary>
-        public readonly string XML_PrivateKey;
+        public string XML_PrivateKey;
         /// <summary>
         /// Публичный ключ
         /// </summary>
-        public readonly string XML_PublicKey;
+        public string XML_PublicKey;
     }
     /// <summary>
     /// Engine RSA
@@ -69,6 +71,12 @@ namespace Rc.Framework.Security
             rsa.FromXmlString(xmlPublicKey);
             return Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(Phrase), false));
         }
+        /// <summary>
+        /// Шифрует массив байтов используя публичный ключ
+        /// </summary>
+        /// <param name="xmlPublicKey">публичный ключ в виде xml</param>
+        /// <param name="Phrase">Фраза для шифрования</param>
+        /// <returns>зашифрованная строка</returns>
         public string CryptByte(string xmlPublicKey, byte[] Phrase)
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
@@ -80,13 +88,19 @@ namespace Rc.Framework.Security
         /// </summary>
         /// <param name="xmlPrivateKey">Приватный ключ</param>
         /// <param name="Phrase">Шифрованная фраза</param>
-        /// <returns></returns>
+        /// <returns>шифрованная строка</returns>
         public string Encrypt(string xmlPrivateKey, string Phrase)
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(xmlPrivateKey);
             return Encoding.UTF8.GetString(rsa.Decrypt(Convert.FromBase64String(Phrase), false));
         }
+        /// <summary>
+        /// Расшифровывает строку используя приватный ключ
+        /// </summary>
+        /// <param name="xmlPrivateKey">Приватный ключ</param>
+        /// <param name="Phrase">Шифрованная фраза</param>
+        /// <returns>массив байтов</returns>
         public byte[] EncryptByte(string xmlPrivateKey, string Phrase)
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
