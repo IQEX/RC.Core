@@ -9,10 +9,13 @@
 // =====================================//==============================================================//
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Rc.Framework.Native
 {
+    
     public class KeyEventArgs : EventArgs
     {
         /// <summary>
@@ -988,6 +991,12 @@ namespace Rc.Framework.Native
         public static extern bool PostMessage(HandleRef hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+
+        [DllImport("kernel32")]
+        public static extern long WritePrivateProfileString(string section, string key, string val, string filePath);
+        [DllImport("kernel32")]
+        public static extern int GetPrivateProfileString(string section, string key, string def, StringBuilder retVal, int size, string filePath);
     }
     public class GlobalKeyboardHook
     {
