@@ -3,16 +3,12 @@
 // Source="root\\Direct\\Dir.cs"        //                Copyright © Of Fire Twins Wesp 2015           //
 // Author= {"Callada", "Another"}       //                                                              //
 // Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="5.0"                   //                                                              //
+// Version File="7.7"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rc.Framework.Direct
 {
@@ -27,6 +23,7 @@ namespace Rc.Framework.Direct
         /// </summary>
         /// <param name="Path"> Путь </param>
         /// <returns> Связанный путь </returns>
+        [Obsolete("Use wrap path \'STRING_OF_PATH\'")]
         public static string CompPath(string Path)
         {
             return Path.Replace(' ', '@');
@@ -37,6 +34,7 @@ namespace Rc.Framework.Direct
         /// </summary>
         /// <param name="CompPath"> Связанный путь </param>
         /// <returns> Развязанный путь </returns>
+        /// [Obsolete("Use wrap path \'STRING_OF_PATH\'")]
         public static string UnmpPath(string CompPath)
         {
             return CompPath.Replace('@', ' ');
