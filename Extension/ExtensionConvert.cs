@@ -11,15 +11,6 @@ namespace Rc.Framework.Extension
     /// </summary>
     public static class ExtensionConvert
     {
-        /// <summary> 
-        /// Конвертация <see cref="double"/> в <see cref="Int32"/>
-        /// </summary>
-        /// <param name="t"><see cref="double"/> содержащие число для преобразования.</param>
-        /// <returns>Преобразованное число.</returns>
-        public static Int32 ToInt32(this double t)
-        {
-            return (Int32)t;
-        }
         /// <summary>
         /// Конвертация строки в <see cref="Int32"/>
         /// </summary>
