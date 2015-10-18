@@ -37,7 +37,7 @@ namespace Rc.Framework.Conf
         /// Value Name
         public void Write(string Section, string Key, string Value)
         {
-            WritePrivateProfileString(Section, Key, Value, this.path);
+            Native.NativeMethods.WritePrivateProfileString(Section, Key, Value, this.path);
         }
         /// <summary>
         /// Read Data Value From the Ini File
@@ -49,7 +49,7 @@ namespace Rc.Framework.Conf
         public string Read(string Section, string Key, string Default)
         {
             StringBuilder temp = new StringBuilder(255);
-            int i = GetPrivateProfileString(Section, Key, Default, temp, 255, this.path);
+            int i = Native.NativeMethods.GetPrivateProfileString(Section, Key, Default, temp, 255, this.path);
             return temp.ToString();
         }
     }
