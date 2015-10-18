@@ -88,7 +88,7 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Complex" /> class.
+        /// Initializes a new instance of the <see cref="Complex" /> class.
         /// </summary>
         ///
         /// <param name="re">Real part.</param>
@@ -99,7 +99,7 @@ namespace Rc.Framework.RMath
             this.Im = im;
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Complex" /> class.
+        /// Initializes a new instance of the <see cref="Complex" /> class.
         /// </summary>
         ///
         /// <param name="c">Source complex number.</param>
@@ -112,10 +112,10 @@ namespace Rc.Framework.RMath
         /// Adds two complex numbers.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the sum of specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the sum of specified
         /// complex numbers.</returns>
         public static Complex Add(Complex a, Complex b)
         {
@@ -125,10 +125,10 @@ namespace Rc.Framework.RMath
         /// Adds scalar value to a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the sum of specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the sum of specified
         /// complex number and scalar value.</returns>
         public static Complex Add(Complex a, double s)
         {
@@ -138,9 +138,9 @@ namespace Rc.Framework.RMath
         /// Adds two complex numbers and puts the result into the third complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Add(Complex a, Complex b, ref Complex result)
         {
             result.Re = a.Re + b.Re;
@@ -150,9 +150,9 @@ namespace Rc.Framework.RMath
         /// Adds scalar value to a complex number and puts the result into another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Add(Complex a, double s, ref Complex result)
         {
             result.Re = a.Re + s;
@@ -162,10 +162,10 @@ namespace Rc.Framework.RMath
         /// Subtracts one complex number from another.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance to subtract from.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance to be subtracted.</param>
+        /// <param name="a">A <see cref="Complex" /> instance to subtract from.</param>
+        /// <param name="b">A <see cref="Complex" /> instance to be subtracted.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the subtraction result (<b>a - b</b>).</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the subtraction result (<b>a - b</b>).</returns>
         public static Complex Subtract(Complex a, Complex b)
         {
             return new Complex(a.Re - b.Re, a.Im - b.Im);
@@ -174,10 +174,10 @@ namespace Rc.Framework.RMath
         /// Subtracts a scalar from a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance to subtract from.</param>
+        /// <param name="a">A <see cref="Complex" /> instance to subtract from.</param>
         /// <param name="s">A scalar value to be subtracted.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the subtraction result (<b>a - s</b>).</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the subtraction result (<b>a - s</b>).</returns>
         public static Complex Subtract(Complex a, double s)
         {
             return new Complex(a.Re - s, a.Im);
@@ -187,9 +187,9 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <param name="s">A scalar value to subtract from.</param>
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance to be subtracted.</param>
+        /// <param name="a">A <see cref="Complex" /> instance to be subtracted.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the subtraction result (<b>s - a</b>).</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the subtraction result (<b>s - a</b>).</returns>
         public static Complex Subtract(double s, Complex a)
         {
             return new Complex(s - a.Re, a.Im);
@@ -198,9 +198,9 @@ namespace Rc.Framework.RMath
         /// Subtracts one complex number from another and puts the result in the third complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance to subtract from.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance to be subtracted.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="a">A <see cref="Complex" /> instance to subtract from.</param>
+        /// <param name="b">A <see cref="Complex" /> instance to be subtracted.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Subtract(Complex a, Complex b, ref Complex result)
         {
             result.Re = a.Re - b.Re;
@@ -210,9 +210,9 @@ namespace Rc.Framework.RMath
         /// Subtracts a scalar value from a complex number and puts the result into another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance to subtract from.</param>
+        /// <param name="a">A <see cref="Complex" /> instance to subtract from.</param>
         /// <param name="s">A scalar value to be subtracted.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Subtract(Complex a, double s, ref Complex result)
         {
             result.Re = a.Re - s;
@@ -223,8 +223,8 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <param name="s">A scalar value to subtract from.</param>
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance to be subtracted.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="a">A <see cref="Complex" /> instance to be subtracted.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Subtract(double s, Complex a, ref Complex result)
         {
             result.Re = s - a.Re;
@@ -234,10 +234,10 @@ namespace Rc.Framework.RMath
         /// Multiplies two complex numbers.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of multiplication.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of multiplication.</returns>
         public static Complex Multiply(Complex a, Complex b)
         {
             double re = a.Re;
@@ -250,10 +250,10 @@ namespace Rc.Framework.RMath
         /// Multiplies a complex number by a scalar value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of multiplication.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of multiplication.</returns>
         public static Complex Multiply(Complex a, double s)
         {
             return new Complex(a.Re * s, a.Im * s);
@@ -262,9 +262,9 @@ namespace Rc.Framework.RMath
         /// Multiplies two complex numbers and puts the result in a third complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Multiply(Complex a, Complex b, ref Complex result)
         {
             double re = a.Re;
@@ -278,9 +278,9 @@ namespace Rc.Framework.RMath
         /// Multiplies a complex number by a scalar value and puts the result into another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         public static void Multiply(Complex a, double s, ref Complex result)
         {
             result.Re = a.Re * s;
@@ -290,10 +290,10 @@ namespace Rc.Framework.RMath
         /// Divides one complex number by another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result.</returns>
         ///
         /// <exception cref="T:System.DivideByZeroException">Can not divide by zero.</exception>
         public static Complex Divide(Complex a, Complex b)
@@ -314,10 +314,10 @@ namespace Rc.Framework.RMath
         /// Divides a complex number by a scalar value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result.</returns>
         ///
         /// <exception cref="T:System.DivideByZeroException">Can not divide by zero.</exception>
         public static Complex Divide(Complex a, double s)
@@ -333,9 +333,9 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <param name="s">A scalar value.</param>
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result.</returns>
         ///
         /// <exception cref="T:System.DivideByZeroException">Can not divide by zero.</exception>
         public static Complex Divide(double s, Complex a)
@@ -350,9 +350,9 @@ namespace Rc.Framework.RMath
         /// Divides one complex number by another complex number and puts the result in a third complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         ///
         /// <exception cref="T:System.DivideByZeroException">Can not divide by zero.</exception>
         public static void Divide(Complex a, Complex b, ref Complex result)
@@ -374,9 +374,9 @@ namespace Rc.Framework.RMath
         /// Divides a complex number by a scalar value and puts the result into another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         ///
         /// <exception cref="T:System.DivideByZeroException">Can not divide by zero.</exception>
         public static void Divide(Complex a, double s, ref Complex result)
@@ -392,9 +392,9 @@ namespace Rc.Framework.RMath
         /// Divides a scalar value by a complex number and puts the result into another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
-        /// <param name="result">A <see cref="T:AForge.Math.Complex" /> instance to hold the result.</param>
+        /// <param name="result">A <see cref="Complex" /> instance to hold the result.</param>
         ///
         /// <exception cref="T:System.DivideByZeroException">Can not divide by zero.</exception>
         public static void Divide(double s, Complex a, ref Complex result)
@@ -410,9 +410,9 @@ namespace Rc.Framework.RMath
         /// Negates a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the negated values.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the negated values.</returns>
         public static Complex Negate(Complex a)
         {
             return new Complex(-a.Re, -a.Im);
@@ -421,8 +421,8 @@ namespace Rc.Framework.RMath
         /// Tests whether two complex numbers are approximately equal using default tolerance value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
         /// <returns>Return <see langword="true" /> if the two vectors are approximately equal or <see langword="false" /> otherwise.</returns>
         ///
@@ -435,8 +435,8 @@ namespace Rc.Framework.RMath
         /// Tests whether two complex numbers are approximately equal given a tolerance value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         /// <param name="tolerance">The tolerance value used to test approximate equality.</param>
         ///
         /// <remarks><para>The default tolerance value, which is used for the test, equals to 8.8817841970012523233891E-16.</para></remarks>
@@ -445,12 +445,12 @@ namespace Rc.Framework.RMath
             return Math.Abs(a.Re - b.Re) <= tolerance && Math.Abs(a.Im - b.Im) <= tolerance;
         }
         /// <summary>
-        /// Converts the specified string to its <see cref="T:AForge.Math.Complex" /> equivalent.
+        /// Converts the specified string to its <see cref="Complex" /> equivalent.
         /// </summary>
         ///
         /// <param name="s">A string representation of a complex number.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance that represents the complex number
+        /// <returns>Returns new <see cref="Complex" /> instance that represents the complex number
         /// specified by the <paramref name="s" /> parameter.</returns>
         ///
         /// <exception cref="T:System.FormatException">String representation of the complex number is not correctly formatted.</exception>
@@ -465,12 +465,12 @@ namespace Rc.Framework.RMath
             throw new FormatException("String representation of the complex number is not correctly formatted.");
         }
         /// <summary>
-        /// Try to convert the specified string to its <see cref="T:AForge.Math.Complex" /> equivalent.
+        /// Try to convert the specified string to its <see cref="Complex" /> equivalent.
         /// </summary>
         ///
         /// <param name="s">A string representation of a complex number.</param>
         ///
-        /// <param name="result"><see cref="T:AForge.Math.Complex" /> instance to output the result to.</param>
+        /// <param name="result"><see cref="Complex" /> instance to output the result to.</param>
         ///
         /// <returns>Returns boolean value that indicates if the parse was successful or not.</returns>
         public static bool TryParse(string s, out Complex result)
@@ -493,9 +493,9 @@ namespace Rc.Framework.RMath
         /// Calculates square root of a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the square root of the specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the square root of the specified
         /// complex number.</returns>
         public static Complex Sqrt(Complex a)
         {
@@ -525,9 +525,9 @@ namespace Rc.Framework.RMath
         /// Calculates natural (base <b>e</b>) logarithm of a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the natural logarithm of the specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the natural logarithm of the specified
         /// complex number.</returns>
         public static Complex Log(Complex a)
         {
@@ -561,9 +561,9 @@ namespace Rc.Framework.RMath
         /// Calculates exponent (<b>e</b> raised to the specified power) of a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the exponent of the specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the exponent of the specified
         /// complex number.</returns>
         public static Complex Exp(Complex a)
         {
@@ -577,9 +577,9 @@ namespace Rc.Framework.RMath
         /// Calculates Sine value of the complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the Sine value of the specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the Sine value of the specified
         /// complex number.</returns>
         public static Complex Sin(Complex a)
         {
@@ -600,9 +600,9 @@ namespace Rc.Framework.RMath
         /// Calculates Cosine value of the complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the Cosine value of the specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the Cosine value of the specified
         /// complex number.</returns>
         public static Complex Cos(Complex a)
         {
@@ -623,9 +623,9 @@ namespace Rc.Framework.RMath
         /// Calculates Tangent value of the complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the Tangent value of the specified
+        /// <returns>Returns new <see cref="Complex" /> instance containing the Tangent value of the specified
         /// complex number.</returns>
         public static Complex Tan(Complex a)
         {
@@ -660,7 +660,7 @@ namespace Rc.Framework.RMath
         ///
         /// <param name="obj">An object to compare to this instance.</param>
         ///
-        /// <returns>Returns <see langword="true" /> if <paramref name="obj" /> is a <see cref="T:AForge.Math.Complex" /> and has the same values as this instance or <see langword="false" /> otherwise.</returns>
+        /// <returns>Returns <see langword="true" /> if <paramref name="obj" /> is a <see cref="Complex" /> and has the same values as this instance or <see langword="false" /> otherwise.</returns>
         public override bool Equals(object obj)
         {
             return obj is Complex && this == (Complex)obj;
@@ -702,9 +702,9 @@ namespace Rc.Framework.RMath
         /// Negates the complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" />  instance.</param>
+        /// <param name="a">A <see cref="Complex" />  instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the negated values.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the negated values.</returns>
         public static Complex operator -(Complex a)
         {
             return Complex.Negate(a);
@@ -713,10 +713,10 @@ namespace Rc.Framework.RMath
         /// Adds two complex numbers.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the sum.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the sum.</returns>
         public static Complex operator +(Complex a, Complex b)
         {
             return Complex.Add(a, b);
@@ -725,10 +725,10 @@ namespace Rc.Framework.RMath
         /// Adds a complex number and a scalar value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the sum.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the sum.</returns>
         public static Complex operator +(Complex a, double s)
         {
             return Complex.Add(a, s);
@@ -737,10 +737,10 @@ namespace Rc.Framework.RMath
         /// Adds a complex number and a scalar value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the sum.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the sum.</returns>
         public static Complex operator +(double s, Complex a)
         {
             return Complex.Add(a, s);
@@ -749,10 +749,10 @@ namespace Rc.Framework.RMath
         /// Subtracts one complex number from another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the difference.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the difference.</returns>
         public static Complex operator -(Complex a, Complex b)
         {
             return Complex.Subtract(a, b);
@@ -761,10 +761,10 @@ namespace Rc.Framework.RMath
         /// Subtracts a scalar value from a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the difference.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the difference.</returns>
         public static Complex operator -(Complex a, double s)
         {
             return Complex.Subtract(a, s);
@@ -774,9 +774,9 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <param name="s">A scalar value.</param>
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the difference.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the difference.</returns>
         public static Complex operator -(double s, Complex a)
         {
             return Complex.Subtract(s, a);
@@ -785,10 +785,10 @@ namespace Rc.Framework.RMath
         /// Multiplies two complex numbers.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of multiplication.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of multiplication.</returns>
         public static Complex operator *(Complex a, Complex b)
         {
             return Complex.Multiply(a, b);
@@ -798,9 +798,9 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <param name="s">A scalar value.</param>
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of multiplication.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of multiplication.</returns>
         public static Complex operator *(double s, Complex a)
         {
             return Complex.Multiply(a, s);
@@ -809,10 +809,10 @@ namespace Rc.Framework.RMath
         /// Multiplies a complex number by a scalar value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of multiplication.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of multiplication.</returns>
         public static Complex operator *(Complex a, double s)
         {
             return Complex.Multiply(a, s);
@@ -821,11 +821,11 @@ namespace Rc.Framework.RMath
         /// Divides one complex number by another complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
-        /// <param name="b">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
+        /// <param name="b">A <see cref="Complex" /> instance.</param>
         ///
         /// <returns>A new Complex instance containing the result.</returns>
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of division.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of division.</returns>
         public static Complex operator /(Complex a, Complex b)
         {
             return Complex.Divide(a, b);
@@ -834,10 +834,10 @@ namespace Rc.Framework.RMath
         /// Divides a complex number by a scalar value.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of division.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of division.</returns>
         public static Complex operator /(Complex a, double s)
         {
             return Complex.Divide(a, s);
@@ -846,10 +846,10 @@ namespace Rc.Framework.RMath
         /// Divides a scalar value by a complex number.
         /// </summary>
         ///
-        /// <param name="a">A <see cref="T:AForge.Math.Complex" /> instance.</param>
+        /// <param name="a">A <see cref="Complex" /> instance.</param>
         /// <param name="s">A scalar value.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing the result of division.</returns>
+        /// <returns>Returns new <see cref="Complex" /> instance containing the result of division.</returns>
         public static Complex operator /(double s, Complex a)
         {
             return Complex.Divide(s, a);
@@ -860,7 +860,7 @@ namespace Rc.Framework.RMath
         ///
         /// <param name="value">Single-precision real number to convert to complex number.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing complex number with
+        /// <returns>Returns new <see cref="Complex" /> instance containing complex number with
         /// real part initialized to the specified value.</returns>
         public static explicit operator Complex(float value)
         {
@@ -872,14 +872,14 @@ namespace Rc.Framework.RMath
         ///
         /// <param name="value">Double-precision real number to convert to complex number.</param>
         ///
-        /// <returns>Returns new <see cref="T:AForge.Math.Complex" /> instance containing complex number with
+        /// <returns>Returns new <see cref="Complex" /> instance containing complex number with
         /// real part initialized to the specified value.</returns>
         public static explicit operator Complex(double value)
         {
             return new Complex(value, 0.0);
         }
         /// <summary>
-        /// Creates an exact copy of this <see cref="T:AForge.Math.Complex" /> object.
+        /// Creates an exact copy of this <see cref="Complex" /> object.
         /// </summary>
         ///
         /// <returns>Returns clone of the complex number.</returns>
@@ -888,7 +888,7 @@ namespace Rc.Framework.RMath
             return new Complex(this);
         }
         /// <summary>
-        /// Creates an exact copy of this <see cref="T:AForge.Math.Complex" /> object.
+        /// Creates an exact copy of this <see cref="Complex" /> object.
         /// </summary>
         ///
         /// <returns>Returns clone of the complex number.</returns>

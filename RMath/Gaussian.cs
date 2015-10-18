@@ -11,7 +11,7 @@ namespace Rc.Framework.RMath
 	/// </summary>
 	///
 	/// <remarks><para>The class is used to calculate 1D and 2D Gaussian functions for
-	/// specified <see cref="P:AForge.Math.Gaussian.Sigma" /> (s) value:</para>
+	/// specified <see cref="Gaussian.Sigma" /> (s) value:</para>
 	///
 	/// <code lang="none">
 	/// 1-D: f(x) = exp( x * x / ( -2 * s * s ) ) / ( s * sqrt( 2 * PI ) )
@@ -45,13 +45,13 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Gaussian" /> class.
+        /// Initializes a new instance of the <see cref="Gaussian" /> class.
         /// </summary>
         public Gaussian()
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Gaussian" /> class.
+        /// Initializes a new instance of the <see cref="Gaussian" /> class.
         /// </summary>
         ///
         /// <param name="sigma">Sigma value.</param>
@@ -109,7 +109,7 @@ namespace Rc.Framework.RMath
         /// r=floor(<paramref name="size" />/2).
         /// </para></remarks>
         ///
-        /// <exception cref="T:System.ArgumentException">Wrong kernel size.</exception>
+        /// <exception cref="ArgumentException">Wrong kernel size.</exception>
         public double[] Kernel(int size)
         {
             if (size % 2 == 0 || size < 3 || size > 101)
@@ -139,7 +139,7 @@ namespace Rc.Framework.RMath
         /// r=floor(<paramref name="size" />/2).
         /// </para></remarks>
         ///
-        /// <exception cref="T:System.ArgumentException">Wrong kernel size.</exception>
+        /// <exception cref="ArgumentException">Wrong kernel size.</exception>
         public double[,] Kernel2D(int size)
         {
             if (size % 2 == 0 || size < 3 || size > 101)

@@ -17,8 +17,8 @@ namespace Rc.Framework.RMath
 	/// </para>
 	///
 	/// <para>The number of noise functions, which comprise the resulting Perlin noise function, is
-	/// set by <see cref="P:AForge.Math.PerlinNoise.Octaves" /> property. Amplitude and frequency values for each octave
-	/// start from values, which are set by <see cref="P:AForge.Math.PerlinNoise.InitFrequency" /> and <see cref="P:AForge.Math.PerlinNoise.InitAmplitude" />
+	/// set by <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Octaves" /> property. Amplitude and frequency values for each octave
+	/// start from values, which are set by <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitFrequency" /> and <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitAmplitude" />
 	/// properties.</para>
 	///
 	/// <para>Sample usage (clouds effect):</para>
@@ -52,8 +52,8 @@ namespace Rc.Framework.RMath
         ///
         /// <remarks><para>The property sets initial frequency of the first octave. Frequencies for
         /// next octaves are calculated using the next equation:<br />
-        /// frequency<sub>i</sub> = <see cref="P:AForge.Math.PerlinNoise.InitFrequency" /> * 2<sup>i</sup>,
-        /// where i = [0, <see cref="P:AForge.Math.PerlinNoise.Octaves" />).
+        /// frequency<sub>i</sub> = <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitFrequency" /> * 2<sup>i</sup>,
+        /// where i = [0, <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Octaves" />).
         /// </para>
         ///
         /// <para>Default value is set to <b>1</b>.</para>
@@ -75,8 +75,8 @@ namespace Rc.Framework.RMath
         ///
         /// <remarks><para>The property sets initial amplitude of the first octave. Amplitudes for
         /// next octaves are calculated using the next equation:<br />
-        /// amplitude<sub>i</sub> = <see cref="P:AForge.Math.PerlinNoise.InitAmplitude" /> * <see cref="P:AForge.Math.PerlinNoise.Persistence" /><sup>i</sup>,
-        /// where i = [0, <see cref="P:AForge.Math.PerlinNoise.Octaves" />).
+        /// amplitude<sub>i</sub> = <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitAmplitude" /> * <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Persistence" /><sup>i</sup>,
+        /// where i = [0, <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Octaves" />).
         /// </para>
         ///
         /// <para>Default value is set to <b>1</b>.</para>
@@ -97,7 +97,7 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <remarks><para>The property sets so called persistence value, which controls the way
-        /// how <see cref="P:AForge.Math.PerlinNoise.InitAmplitude">amplitude</see> is calculated for each octave comprising
+        /// how <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitAmplitude">amplitude</see> is calculated for each octave comprising
         /// the Perlin noise function.</para>
         ///
         /// <para>Default value is set to <b>0.65</b>.</para>
@@ -134,30 +134,30 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.PerlinNoise" /> class.
+        /// Initializes a new instance of the <see cref="PerlinNoise" /> class.
         /// </summary>
         public PerlinNoise()
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.PerlinNoise" /> class.
+        /// Initializes a new instance of the <see cref="PerlinNoise" /> class.
         /// </summary>
         ///
-        /// <param name="octaves">Number of octaves (see <see cref="P:AForge.Math.PerlinNoise.Octaves" /> property).</param>
-        /// <param name="persistence">Persistence value (see <see cref="P:AForge.Math.PerlinNoise.Persistence" /> property).</param>
+        /// <param name="octaves">Number of octaves (see <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Octaves" /> property).</param>
+        /// <param name="persistence">Persistence value (see <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Persistence" /> property).</param>
         public PerlinNoise(int octaves, double persistence)
         {
             this.octaves = octaves;
             this.persistence = persistence;
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.PerlinNoise" /> class.
+        /// Initializes a new instance of the <see cref="PerlinNoise" /> class.
         /// </summary>
         ///
-        /// <param name="octaves">Number of octaves (see <see cref="P:AForge.Math.PerlinNoise.Octaves" /> property).</param>
-        /// <param name="persistence">Persistence value (see <see cref="P:AForge.Math.PerlinNoise.Persistence" /> property).</param>
-        /// <param name="initFrequency">Initial frequency (see <see cref="P:AForge.Math.PerlinNoise.InitFrequency" /> property).</param>
-        /// <param name="initAmplitude">Initial amplitude (see <see cref="P:AForge.Math.PerlinNoise.InitAmplitude" /> property).</param>
+        /// <param name="octaves">Number of octaves (see <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Octaves" /> property).</param>
+        /// <param name="persistence">Persistence value (see <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.Persistence" /> property).</param>
+        /// <param name="initFrequency">Initial frequency (see <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitFrequency" /> property).</param>
+        /// <param name="initAmplitude">Initial amplitude (see <see cref="P:Rc.Framework.RMath.Math.PerlinNoise.InitAmplitude" /> property).</param>
         public PerlinNoise(int octaves, double persistence, double initFrequency, double initAmplitude)
         {
             this.octaves = octaves;

@@ -89,7 +89,7 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.IntRange" /> structure.
+        /// Initializes a new instance of the <see cref="T:Rc.Framework.RMath.IntRange" /> structure.
         /// </summary>
         ///
         /// <param name="min">Minimum value of the range.</param>
@@ -136,7 +136,7 @@ namespace Rc.Framework.RMath
             return this.IsInside(range.min) || this.IsInside(range.max) || range.IsInside(this.min) || range.IsInside(this.max);
         }
         /// <summary>
-        /// Implicit conversion to <see cref="T:AForge.Range" />.
+        /// Implicit conversion to <see cref="T:Rc.Framework.RMath.Range" />.
         /// </summary>
         ///
         /// <param name="range">Integer range to convert to single precision range.</param>
@@ -174,7 +174,7 @@ namespace Rc.Framework.RMath
             return range1.min != range2.min || range1.max != range2.max;
         }
         /// <summary>
-        /// Check if this instance of <see cref="T:AForge.Range" /> equal to the specified one.
+        /// Check if this instance of <see cref="T:Rc.Framework.RMath.Range" /> equal to the specified one.
         /// </summary>
         ///
         /// <param name="obj">Another range to check equalty to.</param>

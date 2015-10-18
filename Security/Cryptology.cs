@@ -83,18 +83,12 @@ namespace Rc.Framework.Security.X05h
             string h1 = str;
             data = null;
             if (hMake.Parse(hCode).isMD5)
-            {
-                for(int i = 0; i != hMake.Parse(hCode).CountMD5Hashing; i++)
+                for (int i = 0; i != hMake.Parse(hCode).CountMD5Hashing; i++)
                     h1 = BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(h1)));
-            }
             else if(hMake.Parse(hCode).isRSA)
-            {
                 throw new Exception("Not implemented - RSA Crypt");
-            }
             else if (hMake.Parse(hCode).isSHA)
-            {
                 throw new Exception("Not implemented - SHA Crypt");
-            }
             if (hMake.Parse(hCode).isAssembly)
             {
                 string h2 = default(string);

@@ -177,7 +177,7 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <remarks><para>Return X<sup>2</sup>+Y<sup>2</sup>+Z<sup>2</sup>+W<sup>2</sup>, which is
-        /// a square of <see cref="P:AForge.Math.Vector4.Norm">vector's norm</see> or a <see cref="M:AForge.Math.Vector4.Dot(AForge.Math.Vector4,AForge.Math.Vector4)">dot product</see> of this vector
+        /// a square of <see cref="P:Rc.Framework.RMath.Math.Vector4.Norm">vector's norm</see> or a <see cref="M:Rc.Framework.RMath.Math.Vector4.Dot(Rc.Framework.RMath.Math.Vector4,Rc.Framework.RMath.Math.Vector4)">dot product</see> of this vector
         /// with itself.</para></remarks>
         public float Square
         {
@@ -187,7 +187,7 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Vector4" /> structure.
+        /// Initializes a new instance of the <see cref="Vector4" /> structure.
         /// </summary>
         ///
         /// <param name="x">X coordinate of the vector.</param>
@@ -202,7 +202,7 @@ namespace Rc.Framework.RMath
             this.W = w;
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Vector4" /> structure.
+        /// Initializes a new instance of the <see cref="Vector4" /> structure.
         /// </summary>
         ///
         /// <param name="value">Value, which is set to all 4 coordinates of the vector.</param>
@@ -549,7 +549,7 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <returns>Returns 3D vector which has X/Y/Z coordinates equal to X/Y/Z coordinates
-        /// of this vector divided by <see cref="F:AForge.Math.Vector4.W" />.</returns>
+        /// of this vector divided by <see cref="F:Rc.Framework.RMath.Math.Vector4.W" />.</returns>
         public Vector3 ToVector3()
         {
             return new Vector3(this.X / this.W, this.Y / this.W, this.Z / this.W);

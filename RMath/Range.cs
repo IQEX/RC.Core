@@ -89,7 +89,7 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Range" /> structure.
+        /// Initializes a new instance of the <see cref="T:Rc.Framework.RMath.Range" /> structure.
         /// </summary>
         ///
         /// <param name="min">Minimum value of the range.</param>
@@ -190,7 +190,7 @@ namespace Rc.Framework.RMath
             return range1.min != range2.min || range1.max != range2.max;
         }
         /// <summary>
-        /// Check if this instance of <see cref="T:AForge.Range" /> equal to the specified one.
+        /// Check if this instance of <see cref="T:Rc.Framework.RMath.Range" /> equal to the specified one.
         /// </summary>
         ///
         /// <param name="obj">Another range to check equalty to.</param>

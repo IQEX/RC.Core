@@ -165,7 +165,7 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <remarks><para>Return X<sup>2</sup>+Y<sup>2</sup>+Z<sup>2</sup>, which is
-        /// a square of <see cref="P:AForge.Math.Vector3.Norm">vector's norm</see> or a <see cref="M:AForge.Math.Vector3.Dot(AForge.Math.Vector3,AForge.Math.Vector3)">dot product</see> of this vector
+        /// a square of <see cref="P:Rc.Framework.RMath.Math.Vector3.Norm">vector's norm</see> or a <see cref="M:Rc.Framework.RMath.Math.Vector3.Dot(Rc.Framework.RMath.Math.Vector3,Rc.Framework.RMath.Math.Vector3)">dot product</see> of this vector
         /// with itself.</para></remarks>
         public float Square
         {
@@ -175,7 +175,7 @@ namespace Rc.Framework.RMath
             }
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Vector3" /> structure.
+        /// Initializes a new instance of the <see cref="Vector3" /> structure.
         /// </summary>
         ///
         /// <param name="x">X coordinate of the vector.</param>
@@ -188,7 +188,7 @@ namespace Rc.Framework.RMath
             this.Z = z;
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:AForge.Math.Vector3" /> structure.
+        /// Initializes a new instance of the <see cref="Vector3" /> structure.
         /// </summary>
         ///
         /// <param name="value">Value, which is set to all 3 coordinates of the vector.</param>
@@ -545,7 +545,7 @@ namespace Rc.Framework.RMath
         /// <returns>Returns 4D vector which is an extension of the 3D vector.</returns>
         ///
         /// <remarks><para>The method returns a 4D vector which has X, Y and Z coordinates equal to the
-        /// coordinates of this 3D vector and <see cref="F:AForge.Math.Vector4.W">W</see> coordinate set to 1.0.</para>
+        /// coordinates of this 3D vector and <see cref="F:Rc.Framework.RMath.Math.Vector4.W">W</see> coordinate set to 1.0.</para>
         /// </remarks>
         public Vector4 ToVector4()
         {
