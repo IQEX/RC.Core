@@ -11,7 +11,7 @@ namespace Rc.Framework.Compress
     /// null
     /// </summary>
     [Obsolete("", true)]
-    public class Dlu : Zip
+    internal class Dlu : Zip
     {
         internal Dlu(CompressionLevel level = CompressionLevel.Level0, Encoding encoding = null)
         {
