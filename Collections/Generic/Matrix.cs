@@ -7,11 +7,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
-namespace Rc.Framework.Collections
+namespace Rc.Framework.Collections.Generic
 {
-    [Serializable] public class Matrix<T> : IEnumerator<T>, IEnumerable<T>
+    [Serializable]
+    public class Matrix<T> : IEnumerator<T>, IEnumerable<T>
     {
         /// <summary>
         /// Размерность матрицы. X - количество строк, Y - количество столбцов(полей)

@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-namespace Rc.Framework.Collections
+namespace Rc.Framework.Collections.Generic
 {
     public interface IRcList<T> : ICollection<T>
     {

@@ -5,7 +5,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Soap;
 
-namespace Rc.Framework.Collections
+namespace Rc.Framework.Collections.Generic
 {
     /// <summary>
     /// Содержит методы работы с soap
