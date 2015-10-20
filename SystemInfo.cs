@@ -1,24 +1,8 @@
 ﻿// =====================================//==============================================================//
-//                                      //                                                              //         
-// Source="root\\SystemInfo.cs"         //     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
-// Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="7.5"                   //                                                              //
-// License="root\\LICENSE"              //                                                              //
-// LicenseType="MIT"                    //                                                              //
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-
-
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Management;
-using System.Diagnostics;
-using System.Runtime.Serialization.Formatters.Soap;
-using System.IO;
-
 namespace Rc.Framework
 {
     /// <summary>

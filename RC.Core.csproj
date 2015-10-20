@@ -150,11 +150,14 @@
     <Compile Include="Compress\Lonic\ZlibStream.cs" />
     <Compile Include="Compress\zip.cs" />
     <Compile Include="Conf\PrivateProfile.cs" />
+    <Compile Include="Design\ImageFormat\DDS.cs" />
     <Compile Include="Direct\Dir.cs" />
     <Compile Include="Extension\ExtensionConvert.cs" />
     <Compile Include="Extension\ExtensionMethod.cs" />
     <Compile Include="Framework.cs" />
     <Compile Include="IO\ExLogging.cs" />
+    <Compile Include="IO\StreamPtr.cs" />
+    <Compile Include="IO\UnSafe\StreamExtension.cs" />
     <Compile Include="Native\NativeMethod.cs" />
     <Compile Include="Native\SystemTools.cs" />
     <Compile Include="Native\WMI.cs" />

@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿// =====================================//==============================================================//
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
+// =====================================//==============================================================//
+using System;
 namespace Rc.Framework.Extension
 {
     /// <summary>

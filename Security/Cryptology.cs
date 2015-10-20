@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// =====================================//==============================================================//
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
+// =====================================//==============================================================//
+using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-
 namespace Rc.Framework.Security.X05h
 {
     /// <summary>

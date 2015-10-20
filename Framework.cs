@@ -1,11 +1,6 @@
 ﻿// =====================================//==============================================================//
-//                                      //                                                              //         
-// Source="root\\Framework.cs"          //     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
-// Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="7.7"                   //                                                              //
-// License="root\\LICENSE"              //                                                              //
-// LicenseType="MIT"                    //                                                              //
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 namespace Rc.Framework
 {
