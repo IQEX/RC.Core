@@ -875,6 +875,31 @@ namespace Rc.Framework.Native
         RightDown = 0x00000008,
         RightUp = 0x00000010
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SYSTEM_INFO
+    {
+        internal _PROCESSOR_INFO_UNION uProcessorInfo;
+        public uint dwPageSize;
+        public IntPtr lpMinimumApplicationAddress;
+        public IntPtr lpMaximumApplicationAddress;
+        public IntPtr dwActiveProcessorMask;
+        public uint dwNumberOfProcessors;
+        public uint dwProcessorType;
+        public uint dwAllocationGranularity;
+        public ushort dwProcessorLevel;
+        public ushort dwProcessorRevision;
+    }
+    [StructLayout(LayoutKind.Explicit)]
+    public struct _PROCESSOR_INFO_UNION
+    {
+        [FieldOffset(0)]
+        internal uint dwOemId;
+        [FieldOffset(0)]
+        internal ushort wProcessorArchitecture;
+        [FieldOffset(2)]
+        internal ushort wReserved;
+    }
     public static class NativeStruct
     {
         public struct KeyBoardHookStruct
@@ -900,6 +925,9 @@ namespace Rc.Framework.Native
     }
     public static class NativeMethods
     {
+        [DllImport("kernel32.dll")]
+        public static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] out SYSTEM_INFO lpSystemInfo);
+
         [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetCursorPos(int X, int Y);
