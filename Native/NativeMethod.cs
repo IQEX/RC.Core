@@ -2,6 +2,7 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
+using Rc.Framework.Windows.Win32;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -920,6 +921,21 @@ namespace Rc.Framework.Native
     }
     public static class NativeMethods
     {
+        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int OleGetClipboard(ref IDataObject data);
+
+        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int OleFlushClipboard();
+
+        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int OleSetClipboard(IDataObject pDataObj);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int GetClipboardFormatName(int format, StringBuilder lpString, int cchMax);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int RegisterClipboardFormat(string format);
+
         [DllImport("kernel32.dll")]
         public static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] out SYSTEM_INFO lpSystemInfo);
 

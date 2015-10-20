@@ -91,9 +91,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Generic\Box.cs" />
+    <Compile Include="Collections\Generic\IBox.cs" />
+    <Compile Include="Collections\Generic\IMatrix.cs" />
     <Compile Include="Collections\Generic\IncDictionary.cs" />
     <Compile Include="Collections\Generic\IRList.cs" />
     <Compile Include="Collections\Generic\Matrix.cs" />
+    <Compile Include="Collections\IRBuffer.cs" />
     <Compile Include="Collections\RBuffer.cs" />
     <Compile Include="Collections\Generic\SoapSerializer.cs" />
     <Compile Include="Collections\Generic\SList.cs" />
@@ -149,13 +152,15 @@
     <Compile Include="Compress\Lonic\ZlibCodec.cs" />
     <Compile Include="Compress\Lonic\ZlibConstants.cs" />
     <Compile Include="Compress\Lonic\ZlibStream.cs" />
+    <Compile Include="Configure\IPrivateProfile.cs" />
     <Compile Include="Configure\PrivateProfile.cs" />
     <Compile Include="Design\ImageFormat\DDS.cs" />
     <Compile Include="IO\Dir.cs" />
     <Compile Include="Extension\ExtensionConvert.cs" />
     <Compile Include="Extension\ExtensionMethod.cs" />
     <Compile Include="Framework.cs" />
-    <Compile Include="IO\ExLogging.cs" />
+    <Compile Include="IO\Log.cs" />
+    <Compile Include="IO\ILog.cs" />
     <Compile Include="IO\StreamPtr.cs" />
     <Compile Include="IO\UnSafe\Memory\Disposer.cs" />
     <Compile Include="IO\UnSafe\StreamExtension.cs" />
@@ -388,6 +393,10 @@
     <Compile Include="Configure\Yaml\System\Version.cs" />
     <Compile Include="Configure\Yaml\System\YamlException.cs" />
     <Compile Include="Configure\Yaml\System\YamlStyle.cs" />
+    <Compile Include="Windows\Clipboard.cs" />
+    <Compile Include="Windows\Win32\DataFormats.cs" />
+    <Compile Include="Windows\Win32\DataObject.cs" />
+    <Compile Include="Windows\Win32\IDataObject.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

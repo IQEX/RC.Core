@@ -33,7 +33,7 @@ namespace Rc.Framework.IO
     /// <summary>
     /// Класс логирования
     /// </summary>
-    public class Log
+    public class Log : ILog
     {
         private string BasePath;
         private readonly Dictionary<string, string> Path = new Dictionary<string, string>();
