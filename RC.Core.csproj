@@ -393,10 +393,10 @@
     <Compile Include="Configure\Yaml\System\Version.cs" />
     <Compile Include="Configure\Yaml\System\YamlException.cs" />
     <Compile Include="Configure\Yaml\System\YamlStyle.cs" />
+    <Compile Include="Windows\Clipboard.cs" />
     <Compile Include="Windows\Win32\DataFormats.cs" />
+    <Compile Include="Windows\Win32\DataObject.cs" />
     <Compile Include="Windows\Win32\IDataObject.cs" />
-    <Compile Include="Windows\Win32\IntSecurity.cs" />
-    <Compile Include="Windows\Win32\PrintingPermission.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
