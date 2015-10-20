@@ -74,7 +74,7 @@ namespace Rc.Framework.IO
         {
             StringBuilder b = new StringBuilder();
             b.Append($"[{member}:{line}({DateTime.Now})]: ");
-            b.Append(str);
+            b.Append(str.Replace('\n', ','));
             b.Append("\n");
             File.AppendAllText(Path[Type], b.ToString());
         }
@@ -87,7 +87,7 @@ namespace Rc.Framework.IO
         {
             StringBuilder b = new StringBuilder();
             b.Append($"[{DateTime.Now.ToString("s")}] ");
-            b.Append(str);
+            b.Append(str.Replace('\n', ','));
             b.Append("\n");
             File.AppendAllText(Path[Type.ToString()], b.ToString());
         }
@@ -102,7 +102,7 @@ namespace Rc.Framework.IO
         {
             StringBuilder b = new StringBuilder();
             b.Append($"[{member}:{line}({DateTime.Now})]: ");
-            b.Append(str);
+            b.Append(str.Replace('\n', ','));
             b.Append("\n");
             File.AppendAllText(Path[Type.ToString()], b.ToString());
         }
