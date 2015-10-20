@@ -1,11 +1,6 @@
 ﻿// =====================================//==============================================================//
-//                                      //                                                              //
-// Source="root\\Collection\\SFormatter.cs"               Copyright © Of Fire Twins Wesp 2015           //
-// Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="1.0"                   //                                                              //
-// License="root\\LICENSE"              //                                                              //
-// LicenseType="MIT"                    //                                                              //
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
 using System.Collections.Generic;
@@ -16,77 +11,217 @@ using System.Threading.Tasks;
 
 namespace Rc.Framework.Collections
 {
-    // TODO Надо проверить мля!
-    public class Box2s2s2<TKey, TValue, T>
+    /// <summary>
+    /// Box Type
+    /// </summary>
+    /// <typeparam name="T1">Field Generic</typeparam>
+    /// <typeparam name="T2">Field Generic</typeparam>
+    /// <typeparam name="T3">Field Generic</typeparam>
+    /// <typeparam name="T4">Field Generic</typeparam>
+    public class Box<T1, T2, T3, T4>
     {
-        public readonly T t;
-        public readonly TKey key;
-        public readonly TValue val;
-        public Box2s2s2(TKey key, TValue val, T t)
+        private T1 _t1;
+        private T2 _t2;
+        private T3 _t3;
+        private T4 _t4;
+        /// <summary>
+        /// is Read Only Field
+        /// </summary>
+        public readonly bool isReadOnly;
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T1 t1
         {
-            this.key = key;
-            this.t = t;
-            this.val = val;
+            get
+            {
+                return _t1;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t1 = value;
+            }
+        }
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T2 t2
+        {
+            get
+            {
+                return _t2;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t2 = value;
+            }
+        }
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T3 t3
+        {
+            get
+            {
+                return _t3;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t3 = value;
+            }
+        }
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T4 t4
+        {
+            get
+            {
+                return _t4;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t4 = value;
+            }
+        }
+        public Box(T1 t1, T2 t2, T3 t3, T4 t4, bool ReadOnly = true)
+        {
+            this.isReadOnly = ReadOnly;
+            this._t1 = t1;
+            this._t2 = t2;
+            this._t3 = t3;
+            this._t4 = t4;
         }
     }
-    public class Box2s2<TKey, TValue>
+    /// <summary>
+    /// Box Type
+    /// </summary>
+    /// <typeparam name="T1">Field Generic</typeparam>
+    /// <typeparam name="T2">Field Generic</typeparam>
+    /// <typeparam name="T3">Field Generic</typeparam>
+    public class Box<T1, T2, T3>
     {
-        public readonly TKey key;
-        public readonly TValue val;
-        public Box2s2(TKey key, TValue val)
+        private T1 _t1;
+        private T2 _t2;
+        private T3 _t3;
+        /// <summary>
+        /// is Read Only Field
+        /// </summary>
+        public readonly bool isReadOnly;
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T1 t1
         {
-            this.key = key;
-            this.val = val;
+            get
+            {
+                return _t1;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t1 = value;
+            }
+        }
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T2 t2
+        {
+            get
+            {
+                return _t2;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t2 = value;
+            }
+        }
+        /// <summary>
+        /// Field Generic
+        /// </summary>
+        public T3 t3
+        {
+            get
+            {
+                return _t3;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t3 = value;
+            }
+        }
+        public Box(T1 t1, T2 t2, T3 t3, bool ReadOnly = true)
+        {
+            this.isReadOnly = ReadOnly;
+            this._t1 = t1;
+            this._t2 = t2;
+            this._t3 = t3;
         }
     }
-    public class Box2<T>
+    /// <summary>
+    /// Box Type
+    /// </summary>
+    /// <typeparam name="T1">Field Generic</typeparam>
+    /// <typeparam name="T2">Field Generic</typeparam>
+    public class Box<T1, T2>
     {
-        public readonly T T1, T2;
-        public Box2(T t1, T t2)
+        private T1 _t1;
+        private T2 _t2;
+        /// <summary>
+        /// is Read Only Field
+        /// </summary>
+        public readonly bool isReadOnly;
+        /// <summary>
+        /// Field Generic T1
+        /// </summary>
+        public T1 t1
         {
-            this.T1 = t1;
-            this.T2 = t2;
+            get
+            {
+                return _t1;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t1 = value;
+            }
         }
-    }
-    public class Box3<T>
-    {
-        public readonly T T1, T2, T3;
-        public Box3(T t1, T t2, T t3)
+        /// <summary>
+        /// Field Generic T1
+        /// </summary>
+        public T2 t2
         {
-            this.T1 = t1;
-            this.T2 = t2;
-            this.T3 = t3;
+            get
+            {
+                return _t2;
+            }
+            set
+            {
+                if (isReadOnly)
+                    throw new FieldAccessException("this Field is readonly");
+                _t2 = value;
+            }
         }
-        public Box3(Box2<T> ts, T t3)
+        public Box(T1 t1, T2 t2, bool ReadOnly = true)
         {
-            this.T1 = ts.T1;
-            this.T2 = ts.T2;
-            this.T3 = t3;
-        }
-    }
-    public class Box4<T>
-    {
-        public readonly T T1, T2, T3, T4;
-        public Box4(T t1, T t2, T t3, T t4)
-        {
-            this.T1 = t1;
-            this.T2 = t2;
-            this.T3 = t3;
-            this.T4 = t4;
-        }
-        public Box4(Box2<T> ts, T t3, T t4)
-        {
-            this.T1 = ts.T1;
-            this.T2 = ts.T2;
-            this.T3 = t3;
-            this.T4 = t4;
-        }
-        public Box4(Box3<T> ts, T t4)
-        {
-            this.T1 = ts.T1;
-            this.T2 = ts.T2;
-            this.T3 = ts.T3;
-            this.T4 = t4;
+            this.isReadOnly = ReadOnly;
+            this._t1 = t1;
+            this._t2 = t2;
         }
     }
 }
