@@ -64,19 +64,6 @@ namespace Rc.Framework.IO
             this.Path.Add(Type, Path);
         }
         /// <summary>
-        /// Запись в лог по собственной конфигурации
-        /// </summary>
-        /// <param name="Type"></param>
-        /// <param name="str"></param>
-        public void Write(string Type, string str)
-        {
-            StringBuilder b = new StringBuilder();
-            b.Append($"[{DateTime.Now.ToString("s")}] ");
-            b.Append(str);
-            b.Append("\n");
-            File.AppendAllText(Path[Type], b.ToString());
-        }
-        /// <summary>
         /// Запись в лог по собственной конфигурации, с определением метода и номера строки кода
         /// </summary>
         /// <param name="Type">Тип конфигурации</param>
