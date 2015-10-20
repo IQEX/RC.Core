@@ -14,8 +14,10 @@ namespace Rc.Framework.Collections
 	/// appropriately tagged for interop) from and to a Stream.
 	/// </summary>
 	/// <remarks>It runs some specially optimized code with native stream.</remarks>
-	public unsafe class RBuffer
+	public unsafe class RBuffer : IRBuffer
     {
+        //# Описание методов не готово, временно
+        //@ "да да, то что временно - то на вечно" :с
         #region GetBuffer(), CurrentLength
         byte[] buffer;
         /// <summary>
@@ -27,6 +29,9 @@ namespace Rc.Framework.Collections
                 buffer = new byte[len];
             return buffer;
         }
+        /// <summary>
+        /// Current <see cref="RBuffer"/> Length
+        /// </summary>
         public int CurrentLength { get { return buffer != null ? buffer.Length : 0; } }
         #endregion
         #region CopyMemory()
@@ -55,25 +60,56 @@ namespace Rc.Framework.Collections
         }
         #endregion
         #region ToBytes<T>(), ToValue()
-        public static void ToBytes<T>(T value, byte[] buf, ref int offset)
-            where T : struct
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="value">
+        /// 
+        /// </param>
+        /// <param name="buf">
+        /// 
+        /// </param>
+        /// <param name="offset">
+        /// 
+        /// </param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// 
+        /// </exception>
+        public static void ToBytes<T>(T value, byte[] buf, ref int offset) where T : struct
         {
             int n = Marshal.SizeOf(typeof(T));
             if (offset < 0 || offset + n > buf.Length)
-                throw new ArgumentOutOfRangeException();
-
+                throw new ArgumentOutOfRangeException("offset");
             fixed (byte* dst = &buf[offset])
                 Marshal.StructureToPtr(value, (IntPtr)dst, false);
             offset += n;
         }
-
-        public static T ToValue<T>(byte[] buf, ref int offset)
-            where T : struct
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="buf">
+        /// 
+        /// </param>
+        /// <param name="offset">
+        /// 
+        /// </param>
+        /// <returns>
+        /// 
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// 
+        /// </exception>
+        public static T ToValue<T>(byte[] buf, ref int offset) where T : struct
         {
             int n = Marshal.SizeOf(typeof(T));
             if (offset < 0 || offset + n > buf.Length)
-                throw new ArgumentException();
-
+                throw new ArgumentException("offset");
             fixed (byte* pbuf = &buf[offset])
             {
                 var result = (T)Marshal.PtrToStructure((IntPtr)pbuf, typeof(T));
@@ -83,39 +119,122 @@ namespace Rc.Framework.Collections
         }
         #endregion
         #region Write<T>(), Read<T>()
-        public void Write<T>(Stream str, params T[] values)
-            where T : struct
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="str">
+        /// 
+        /// </param>
+        /// <param name="values">
+        /// 
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// 
+        /// </exception>
+        public void Write<T>(Stream str, params T[] values) where T : struct
         {
             if (values == null)
-                return;
+                throw new ArgumentException("values");
             Write<T>(str, values, 0, values.Length);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="str">
+        /// 
+        /// </param>
+        /// <param name="values">
+        /// 
+        /// </param>
+        /// <param name="offset">
+        /// 
+        /// </param>
+        /// <param name="count">
+        /// 
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// 
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// 
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// 
+        /// </exception>
         public void Write<T>(Stream str, T[] values, int offset, int count) where T : struct
         {
-            if (values == null || count == 0)
-                return;
+            if (values == null) throw new ArgumentException("values");
+            if (count == 0)     throw new ArgumentNullException("count");
             if (count < 0 || offset < 0 || offset + count > values.Length)
-                throw new ArgumentOutOfRangeException();
-
+                throw new ArgumentOutOfRangeException("offset");
             int n = Marshal.SizeOf(typeof(T));
             var buf = GetBuffer(n * count);
             int bufoffset = 0;
             for (int i = 0; i < values.Length; i++)
                 ToBytes(values[offset + i], buf, ref bufoffset);
-
             str.Write(buf, 0, bufoffset);
         }
-        public T Read<T>(Stream str)
-            where T : struct
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="str">
+        /// 
+        /// </param>
+        /// <returns>
+        /// 
+        /// </returns>
+        /// <exception cref="ArgumentException">
+        /// 
+        /// </exception>
+        public T Read<T>(Stream str) where T : struct
         {
+            if (str == null)
+                throw new ArgumentException("str");
             int n = Marshal.SizeOf(typeof(T));
             var buf = GetBuffer(n);
             str.Read(buf, 0, n);
             int offset = 0;
             return ToValue<T>(buf, ref offset);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="str">
+        /// 
+        /// </param>
+        /// <param name="values">
+        /// 
+        /// </param>
+        /// <param name="offset">
+        /// 
+        /// </param>
+        /// <param name="count">
+        /// 
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// 
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// 
+        /// </exception>
         public void Read<T>(Stream str, T[] values, int offset, int count) where T : struct
         {
+            if (str == null)
+                throw new ArgumentNullException("str");
+            if (values == null)
+                throw new ArgumentNullException("values");
             if (count < 0 || offset < 0 || offset + count > values.Length)
                 throw new ArgumentOutOfRangeException("offset");
             int n = Marshal.SizeOf(typeof(T));
@@ -126,8 +245,33 @@ namespace Rc.Framework.Collections
             for (int i = 0; i < count; i++)
                 values[offset + i] = ToValue<T>(buf, ref bufoffset);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">
+        /// 
+        /// </typeparam>
+        /// <param name="str">
+        /// 
+        /// </param>
+        /// <param name="count">
+        /// 
+        /// </param>
+        /// <returns>
+        /// 
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// 
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// 
+        /// </exception>
         public T[] Read<T>(Stream str, int count) where T : struct
         {
+            if (str == null)
+                throw new ArgumentNullException("str");
+            if (count < 0)
+                throw new ArgumentOutOfRangeException("count");
             var result = new T[count];
             Read<T>(str, result, 0, count);
             return result;
