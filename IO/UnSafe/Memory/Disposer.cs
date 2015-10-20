@@ -2,22 +2,26 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-namespace Rc.Framework.Net.NTCore
+using System;
+namespace Rc.Framework.IO.UnSafe.Memory
 {
     /// <summary>
-    /// Class of Network Object
+    /// null
     /// </summary>
-    public abstract class NetworkObject
+    public static class Disposer
     {
         /// <summary>
-        /// Class to Byte Array
+        /// Безопасное очищение
         /// </summary>
-        /// <returns></returns>
-        public abstract byte[] ToByte();
-        /// <summary>
-        /// Byte Array To Content Class
-        /// </summary>
-        /// <param name="bitBox">Content</param>
-        public abstract void outByte(byte[] bitBox);
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        public static void SafeDispose<T>(ref T obj) where T : class, IDisposable
+        {
+            if (obj != null)
+            {
+                obj.Dispose();
+                obj = null;
+            }
+        }
     }
 }

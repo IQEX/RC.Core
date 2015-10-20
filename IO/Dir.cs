@@ -10,12 +10,12 @@
 using System;
 using System.IO;
 
-namespace Rc.Framework.Direct
+namespace Rc.Framework.IO
 {
     /// <summary>
     /// Класс допольнительных инструментов для работы с директориями 
     /// </summary>
-    public class Dir
+    public class RDir
     {
         /// <summary>
         /// Связание путей, для заполнение пустот.
