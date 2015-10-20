@@ -12,7 +12,7 @@ namespace Rc.Framework.Collections.Generic
     /// <typeparam name="T2">Field Generic</typeparam>
     /// <typeparam name="T3">Field Generic</typeparam>
     /// <typeparam name="T4">Field Generic</typeparam>
-    public class Box<T1, T2, T3, T4>
+    public class Box<T1, T2, T3, T4> : IBox<T1, T2, T3, T4>
     {
         private T1 _t1;
         private T2 _t2;
@@ -101,7 +101,7 @@ namespace Rc.Framework.Collections.Generic
     /// <typeparam name="T1">Field Generic</typeparam>
     /// <typeparam name="T2">Field Generic</typeparam>
     /// <typeparam name="T3">Field Generic</typeparam>
-    public class Box<T1, T2, T3>
+    public class Box<T1, T2, T3> : IBox1<T1, T2, T3>
     {
         private T1 _t1;
         private T2 _t2;
@@ -171,7 +171,7 @@ namespace Rc.Framework.Collections.Generic
     /// </summary>
     /// <typeparam name="T1">Field Generic</typeparam>
     /// <typeparam name="T2">Field Generic</typeparam>
-    public class Box<T1, T2>
+    public class Box<T1, T2> : IBox2<T1, T2>
     {
         private T1 _t1;
         private T2 _t2;
@@ -180,7 +180,7 @@ namespace Rc.Framework.Collections.Generic
         /// </summary>
         public readonly bool isReadOnly;
         /// <summary>
-        /// Field Generic T1
+        /// Field Generic
         /// </summary>
         public T1 t1
         {
@@ -196,7 +196,7 @@ namespace Rc.Framework.Collections.Generic
             }
         }
         /// <summary>
-        /// Field Generic T1
+        /// Field Generic
         /// </summary>
         public T2 t2
         {
