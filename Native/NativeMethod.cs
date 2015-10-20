@@ -921,31 +921,279 @@ namespace Rc.Framework.Native
     }
     public static class NativeMethods
     {
-        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern int OleGetClipboard(ref IDataObject data);
-
-        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern int OleFlushClipboard();
-
-        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern int OleSetClipboard(IDataObject pDataObj);
-
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int GetClipboardFormatName(int format, StringBuilder lpString, int cchMax);
-
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int RegisterClipboardFormat(string format);
-
-        [DllImport("kernel32.dll")]
-        public static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] out SYSTEM_INFO lpSystemInfo);
-
-        [DllImport("user32.dll", EntryPoint = "SetCursorPos")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool SetCursorPos(int X, int Y);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetCursorPos(out MousePoint lpMousePoint);
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr ShellExecute(HandleRef hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
+        [DllImport("shell32.dll", BestFitMapping = false, CharSet = CharSet.Auto, EntryPoint = "ShellExecute")]
+        public static extern IntPtr ShellExecute_NoBFM(HandleRef hwnd, string lpOperation, string lpFile, string lpParameters, string lpDirectory, int nShowCmd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern int SetScrollPos(HandleRef hWnd, int nBar, int nPos, bool bRedraw);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern bool EnableScrollBar(HandleRef hWnd, int nBar, int value);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "CreateMenu", ExactSpelling = true)]
+        private static extern IntPtr IntCreateMenu();
+        [DllImport("user32.dll", ExactSpelling = true)]
+        public static extern bool EndDialog(HandleRef hWnd, IntPtr result);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true, SetLastError = true)]
+        public static extern int MultiByteToWideChar(int CodePage, int dwFlags, byte[] lpMultiByteStr, int cchMultiByte, char[] lpWideCharStr, int cchWideChar);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, ExactSpelling = true)]
+        public static extern int WideCharToMultiByte(int codePage, int flags, [MarshalAs(UnmanagedType.LPWStr)] string wideStr, int chars, [In] [Out] byte[] pOutBytes, int bufferBytes, IntPtr defaultChar, IntPtr pDefaultUsed);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, EntryPoint = "RtlMoveMemory", ExactSpelling = true, SetLastError = true)]
+        public static extern void CopyMemory(HandleRef destData, HandleRef srcData, int size);
+        [DllImport("kernel32.dll", EntryPoint = "RtlMoveMemory", ExactSpelling = true)]
+        public static extern void CopyMemory(IntPtr pdst, byte[] psrc, int cb);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, EntryPoint = "RtlMoveMemory", ExactSpelling = true)]
+        public static extern void CopyMemoryW(IntPtr pdst, string psrc, int cb);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, EntryPoint = "RtlMoveMemory", ExactSpelling = true)]
+        public static extern void CopyMemoryW(IntPtr pdst, char[] psrc, int cb);
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, EntryPoint = "RtlMoveMemory", ExactSpelling = true)]
+        public static extern void CopyMemoryA(IntPtr pdst, string psrc, int cb);
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, EntryPoint = "RtlMoveMemory", ExactSpelling = true)]
+        public static extern void CopyMemoryA(IntPtr pdst, char[] psrc, int cb);
+        [DllImport("kernel32.dll", EntryPoint = "DuplicateHandle", ExactSpelling = true, SetLastError = true)]
+        private static extern IntPtr IntDuplicateHandle(HandleRef processSource, HandleRef handleSource, HandleRef processTarget, ref IntPtr handleTarget, int desiredAccess, bool inheritHandle, int options);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int GetKeyboardState(byte[] keystate);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "keybd_event", ExactSpelling = true)]
+        public static extern void Keybd_event(byte vk, byte scan, int flags, int extrainfo);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int SetKeyboardState(byte[] keystate);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool UnhookWindowsHookEx(HandleRef hhook);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern short GetAsyncKeyState(int vkey);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr CallNextHookEx(HandleRef hhook, int code, IntPtr wparam, IntPtr lparam);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetObject(HandleRef hObject, int nSize, ref int nEntries);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int GetObject(HandleRef hObject, int nSize, int[] nEntries);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern int GetObjectType(HandleRef hObject);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "CreateAcceleratorTable")]
+        private static extern IntPtr IntCreateAcceleratorTable(HandleRef pentries, int cCount);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "DestroyAcceleratorTable", ExactSpelling = true)]
+        private static extern bool IntDestroyAcceleratorTable(HandleRef hAccel);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern short VkKeyScan(char key);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetCapture();
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr SetCapture(HandleRef hwnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetFocus();
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern short GetKeyState(int keyCode);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern uint GetShortPathName(string lpszLongPath, StringBuilder lpszShortPath, uint cchBuffer);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "SetWindowRgn", ExactSpelling = true)]
+        private static extern int IntSetWindowRgn(HandleRef hwnd, HandleRef hrgn, bool fRedraw);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int GetWindowText(HandleRef hWnd, StringBuilder lpString, int nMaxCount);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern void GetTempFileName(string tempDirName, string prefixName, int unique, StringBuilder sb);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SetWindowText(HandleRef hWnd, string text);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GlobalAlloc(int uFlags, int dwBytes);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GlobalReAlloc(HandleRef handle, int bytes, int flags);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GlobalLock(HandleRef handle);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool GlobalUnlock(HandleRef handle);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GlobalFree(HandleRef handle);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int GlobalSize(HandleRef handle);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmSetConversionStatus(HandleRef hIMC, int conversion, int sentence);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmGetConversionStatus(HandleRef hIMC, ref int conversion, ref int sentence);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr ImmGetContext(HandleRef hWnd);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmReleaseContext(HandleRef hWnd, HandleRef hIMC);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr ImmAssociateContext(HandleRef hWnd, HandleRef hIMC);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmDestroyContext(HandleRef hIMC);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr ImmCreateContext();
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmSetOpenStatus(HandleRef hIMC, bool open);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmGetOpenStatus(HandleRef hIMC);
+        [DllImport("imm32.dll", CharSet = CharSet.Auto)]
+        public static extern bool ImmNotifyIME(HandleRef hIMC, int dwAction, int dwIndex, int dwValue);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr SetFocus(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetParent(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetAncestor(HandleRef hWnd, int flags);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool IsChild(HandleRef hWndParent, HandleRef hwnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool IsZoomed(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr FindWindow(string className, string windowName);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int msg, bool wParam, int lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int msg, int wParam, int[] lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int msg, int[] wParam, int[] lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int msg, ref int wParam, ref int lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int msg, int wParam, string lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int msg, IntPtr wParam, string lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int Msg, ref short wParam, ref short lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int Msg, [MarshalAs(UnmanagedType.Bool)] [In] [Out] ref bool wParam, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, int Msg, int wParam, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessageTimeout(HandleRef hWnd, int msg, IntPtr wParam, IntPtr lParam, int flags, int timeout, out IntPtr pdwResult);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr SetParent(HandleRef hWnd, HandleRef hWndParent);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetWindow(HandleRef hWnd, int uCmd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetDlgItem(HandleRef hWnd, int nIDDlgItem);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr GetModuleHandle(string modName);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr DefWindowProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr DefMDIChildProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr CallWindowProc(IntPtr wndProc, IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern short GlobalDeleteAtom(short atom);
+        [DllImport("kernel32.dll", CharSet = CharSet.Ansi, ExactSpelling = true)]
+        public static extern IntPtr GetProcAddress(HandleRef hModule, string lpProcName);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SystemParametersInfo(int nAction, int nParam, bool[] flag, bool nUpdate);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern bool GetComputerName(StringBuilder lpBuffer, int[] nSize);
+        [DllImport("advapi32.dll", CharSet = CharSet.Auto)]
+        public static extern bool GetUserName(StringBuilder lpBuffer, int[] nSize);
+        [DllImport("user32.dll", ExactSpelling = true)]
+        public static extern IntPtr GetProcessWindowStation();
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetForegroundWindow();
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int MsgWaitForMultipleObjectsEx(int nCount, IntPtr pHandles, int dwMilliseconds, int dwWakeMask, int dwFlags);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetDesktopWindow();
+        [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int RevokeDragDrop(HandleRef hwnd);
+        public static extern bool PostMessage(HandleRef hwnd, int msg, IntPtr wparam, IntPtr lparam);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern short GlobalAddAtom(string atomName);
+        [DllImport("oleacc.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr LresultFromObject(ref Guid refiid, IntPtr wParam, HandleRef pAcc);
+        [DllImport("oleacc.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int CreateStdAccessibleObject(HandleRef hWnd, int objID, ref Guid refiid, [MarshalAs(UnmanagedType.Interface)] [In] [Out] ref object pAcc);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern void NotifyWinEvent(int winEvent, HandleRef hwnd, int objType, int objID);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int GetMenuItemID(HandleRef hMenu, int nPos);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetSubMenu(HandleRef hwnd, int index);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int GetMenuItemCount(HandleRef hMenu);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "GetDC", ExactSpelling = true)]
+        private static extern IntPtr IntGetDC(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "GetWindowDC", ExactSpelling = true)]
+        private static extern IntPtr IntGetWindowDC(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "ReleaseDC", ExactSpelling = true)]
+        private static extern int IntReleaseDC(HandleRef hWnd, HandleRef hDC);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, EntryPoint = "CreateDC", SetLastError = true)]
+        private static extern IntPtr IntCreateDC(string lpszDriver, string lpszDeviceName, string lpszOutput, HandleRef devMode);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SystemParametersInfo(int nAction, int nParam, [In] [Out] IntPtr[] rc, int nUpdate);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "SendMessage")]
+        public static extern IntPtr SendCallbackMessage(HandleRef hWnd, int Msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("shell32.dll", CharSet = CharSet.Ansi, ExactSpelling = true)]
+        public static extern void DragAcceptFiles(HandleRef hWnd, bool fAccept);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern int GetDeviceCaps(HandleRef hDC, int nIndex);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetActiveWindow();
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool FreeLibrary(HandleRef hModule);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "GetWindowLong")]
+        public static extern IntPtr GetWindowLong32(HandleRef hWnd, int nIndex);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "GetWindowLongPtr")]
+        public static extern IntPtr GetWindowLongPtr64(HandleRef hWnd, int nIndex);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "SetWindowLong")]
+        public static extern IntPtr SetWindowLongPtr32(HandleRef hWnd, int nIndex, HandleRef dwNewLong);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "SetWindowLongPtr")]
+        public static extern IntPtr SetWindowLongPtr64(HandleRef hWnd, int nIndex, HandleRef dwNewLong);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "CreatePopupMenu", ExactSpelling = true)]
+        private static extern IntPtr IntCreatePopupMenu();
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool RemoveMenu(HandleRef hMenu, int uPosition, int uFlags);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "DestroyMenu", ExactSpelling = true)]
+        private static extern bool IntDestroyMenu(HandleRef hMenu);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetForegroundWindow(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr GetSystemMenu(HandleRef hWnd, bool bRevert);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr DefFrameProc(IntPtr hWnd, IntPtr hWndClient, int msg, IntPtr wParam, IntPtr lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern bool SetLayeredWindowAttributes(HandleRef hwnd, int crKey, byte bAlpha, int dwFlags);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetMenu(HandleRef hWnd, HandleRef hMenu);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetMenuDefaultItem(HandleRef hwnd, int nIndex, bool pos);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool EnableMenuItem(HandleRef hMenu, int UIDEnabledItem, int uEnable);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr SetActiveWindow(HandleRef hWnd);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, EntryPoint = "CreateIC", SetLastError = true)]
+        private static extern IntPtr IntCreateIC(string lpszDriverName, string lpszDeviceName, string lpszOutput, HandleRef lpInitData);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern IntPtr SetCursor(HandleRef hcursor);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetCursorPos(int x, int y);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern int ShowCursor(bool bShow);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "DestroyCursor", ExactSpelling = true)]
+        private static extern bool IntDestroyCursor(HandleRef hCurs);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool IsWindow(HandleRef hWnd);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, EntryPoint = "DeleteDC", ExactSpelling = true, SetLastError = true)]
+        private static extern bool IntDeleteDC(HandleRef hDC);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr PostMessage(HandleRef hwnd, int msg, int wparam, int lparam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr PostMessage(HandleRef hwnd, int msg, int wparam, IntPtr lparam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "CreateWindowEx", SetLastError = true)]
+        public static extern IntPtr IntCreateWindowEx(int dwExStyle, string lpszClassName, string lpszWindowName, int style, int x, int y, int width, int height, HandleRef hWndParent, HandleRef hMenu, HandleRef hInst, [MarshalAs(UnmanagedType.AsAny)] object pvParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, EntryPoint = "DestroyWindow", ExactSpelling = true)]
+        public static extern bool IntDestroyWindow(HandleRef hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool UnregisterClass(string className, HandleRef hInstance);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern IntPtr GetStockObject(int nIndex);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern void PostQuitMessage(int nExitCode);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern void WaitMessage();
+        [DllImport("Powrprof.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        public static extern bool SetSuspendState(bool hiberate, bool forceCritical, bool disableWakeEvent);
+        [DllImport("gdi32.dll", CharSet = CharSet.Auto, ExactSpelling = true, SetLastError = true)]
+        public static extern int GetRegionData(HandleRef hRgn, int size, IntPtr lpRgnData);
 
         [DllImport("user32.dll")]
         private static extern void mouse_event(int dwFlags, int dx, int dy, int dwData, int dwExtraInfo);
