@@ -93,7 +93,7 @@
     <Compile Include="Collections\Algoritm\Noise.cs" />
     <Compile Include="Collections\Box.cs" />
     <Compile Include="Collections\Matrix.cs" />
-    <Compile Include="Collections\SFormatter.cs" />
+    <Compile Include="Collections\SoapSerializer.cs" />
     <Compile Include="Collections\SList.cs" />
     <Compile Include="Collections\SortMode.cs" />
     <Compile Include="Compress\Dlu.cs" />
@@ -215,7 +215,6 @@
     <Compile Include="RMath\Vector2.cs" />
     <Compile Include="RMath\Vector3.cs" />
     <Compile Include="RMath\Vector4.cs" />
-    <Compile Include="Security\CryptByte.cs" />
     <Compile Include="Security\Cryptology.cs" />
     <Compile Include="Security\HashSum.cs" />
     <Compile Include="Security\RSA.cs" />

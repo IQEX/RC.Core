@@ -1,5 +1,8 @@
-﻿using System;
-
+﻿// =====================================//==============================================================//
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
+// =====================================//==============================================================//
+using System;
 namespace Rc.Framework.Collections.Algoritm
 {
     public class AlgNoise
