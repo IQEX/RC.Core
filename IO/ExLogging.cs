@@ -91,7 +91,7 @@ namespace Rc.Framework.IO
             b.Append($"[{DateTime.Now.ToString("s")}] ");
             b.Append(str);
             b.Append("\n");
-            File.AppendAllText(Path[nameof(Type)], b.ToString()); //! Работа nameof с перечеслением не проверялась
+            File.AppendAllText(Path[Type.ToString()], b.ToString());
         }
         /// <summary>
         /// !! TEST !!
@@ -108,7 +108,7 @@ namespace Rc.Framework.IO
             b.Append($"[{member}:{line}({DateTime.Now})]: ");
             b.Append(str);
             b.Append("\n");
-            File.AppendAllText(Path[nameof(Type)], b.ToString()); //! Работа nameof с перечеслением не проверялась
+            File.AppendAllText(Path[Type.ToString()], b.ToString());
         }
     }
 }
