@@ -79,8 +79,6 @@ namespace Rc.Framework.IO
             File.AppendAllText(Path[Type], b.ToString());
         }
         /// <summary>
-        /// !! TEST !!
-        /// !! Работа nameof с перечеслением не проверялась
         /// Запись в лог по стандартной конфигурации
         /// </summary>
         /// <param name="Type"></param>
@@ -94,8 +92,6 @@ namespace Rc.Framework.IO
             File.AppendAllText(Path[Type.ToString()], b.ToString());
         }
         /// <summary>
-        /// !! TEST !!
-        /// !! Работа nameof с перечеслением не проверялась
         /// Запись в лог по стандартной конфигурации, с определением метода и номера строки кода
         /// </summary>
         /// <param name="Type">Тип конфигурации</param>
