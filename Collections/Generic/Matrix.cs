@@ -9,32 +9,33 @@ using System.Linq;
 using System.Text;
 namespace Rc.Framework.Collections.Generic
 {
+    /// <summary>
+    ///     Matrix
+    /// </summary>
+    /// <typeparam name="T">
+    ///     Matrix value
+    /// </typeparam>
     [Serializable]
-    public class Matrix<T> : IEnumerator<T>, IEnumerable<T>
+    public class Matrix<T> : IMatrix<T>
     {
         /// <summary>
         /// Размерность матрицы. X - количество строк, Y - количество столбцов(полей)
         /// </summary>
         public SizeMatrix Size { get; private set; }
-
         /// <summary>
         /// Тип матрицы (квадратная, прямоугольная)
         /// </summary>
         public TypeMatrix TypeM { get; private set; }
-
         /// <summary>
         /// Размер матрицы создаваемой по умолчанию. Стартовое значение (5, 5)
         /// </summary>
         public static SizeMatrix DefaultSize = new SizeMatrix(5, 5);
-
         /// <summary>
         /// Массив представляющий матрицу. Использование не рекомендуется!!! (используйте индексаторы)
         /// </summary>
         public T[,] matrix;
-
         T current;
         int curIndex = -1;
-
         /// <summary>
         /// Конструктор класса. Если размерность не указана будет создана матрица размерностью DefaultSize. Если указан только один параметр будет создана квадратная матрица размерностью равной указанному параметру.
         /// </summary>
@@ -46,13 +47,14 @@ namespace Rc.Framework.Collections.Generic
             else
                 InitMatrix(new SizeMatrix((int)x, (int)y), TypeMatrix.Rectangle);
         }
-
+        /// <summary>
+        /// Индексатор представляющий матрицу.
+        /// </summary>
         public T this[int x, int y]
         {
             get { return matrix[x, y]; }
             set { matrix[x, y] = value; }
         }
-
         /// <summary>
         /// Инициализация матрицы. Вызывается при создании экземпляра класса. Ручной вызов нужен для изменения размера матрицы и заполнения значениями по-умолчанию.
         /// </summary>
@@ -75,7 +77,6 @@ namespace Rc.Framework.Collections.Generic
                     matrix[i, t] = default(T);
 
         }
-
         public override string ToString()
         {
             var ret = new StringBuilder();
@@ -91,7 +92,6 @@ namespace Rc.Framework.Collections.Generic
             }
             return ret.ToString();
         }
-
         /// <summary>
         /// Возвращает массив соответствующий указанной строке матрицы. Отсчет строк идет с 0.
         /// </summary>
@@ -104,7 +104,6 @@ namespace Rc.Framework.Collections.Generic
 
             return ret;
         }
-
         /// <summary>
         /// Возвращает массив соответствующий указанному столбцу матрицы. Отсчет столбцов идет с 0.
         /// </summary>
@@ -117,7 +116,6 @@ namespace Rc.Framework.Collections.Generic
 
             return ret;
         }
-
         /// <summary>
         /// Заполняет указанную строку матрицы значениями из массива. Если размер массива и размер строки не совпадают, то строка будет - либо заполнена не полностью, либо "лишние" значения массива будут проигнорированы.
         /// </summary>
@@ -127,7 +125,6 @@ namespace Rc.Framework.Collections.Generic
             for (int i = 0; i < (Size.Y > rowValues.Length ? rowValues.Length : Size.Y); i++)
                 matrix[row, i] = rowValues[i];
         }
-
         /// <summary>
         /// Заполняет указанный столбец значениями из массива. Если размеры столбца и массива не совпадают - столбец либо будет заполнен не полностью, либо "лишние" значения массива будут проигнорированы.
         /// </summary>
@@ -137,19 +134,10 @@ namespace Rc.Framework.Collections.Generic
             for (int i = 0; i < (Size.X > columnValues.Length ? columnValues.Length : Size.X); i++)
                 matrix[i, column] = columnValues[i];
         }
-
         #region Enumerabling...
-        void IDisposable.Dispose()
-        {
-
-        }
-
-        object IEnumerator.Current
-        {
-            get { return current; }
-        }
-
-        bool System.Collections.IEnumerator.MoveNext()
+        void IDisposable.Dispose() { }
+        object IEnumerator.Current { get { return current; } }
+        bool IEnumerator.MoveNext()
         {
             if (++curIndex >= Size.X * Size.Y)
             {
@@ -164,28 +152,21 @@ namespace Rc.Framework.Collections.Generic
             }
             return true;
         }
-
-        void System.Collections.IEnumerator.Reset()
+        void IEnumerator.Reset()
         {
             curIndex = -1;
         }
-
         T IEnumerator<T>.Current
-        {
-            get { return current; }
-        }
-
+        { get { return current; } }
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return this;
         }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this;
         }
         #endregion
-
         /// <summary>
         /// Создает копию матрицы
         /// </summary>
@@ -197,7 +178,6 @@ namespace Rc.Framework.Collections.Generic
             ret.matrix = (T[,])matrix.Clone();
             return ret;
         }
-
         /// <summary>
         /// Возвращает матрицу без указанных строки и столбца. Исходная матрица не изменяется.
         /// </summary>
@@ -219,7 +199,6 @@ namespace Rc.Framework.Collections.Generic
             }
             return ret;
         }
-
         /// <summary>
         /// Возвращает матрицу без указанной строки. Исходная матрица не изменяется.
         /// </summary>
@@ -243,7 +222,6 @@ namespace Rc.Framework.Collections.Generic
 
             return ret;
         }
-
         /// <summary>
         /// Возвращает матрицу без указанного столбца. Исходная матрица не изменяется.
         /// </summary>
@@ -267,7 +245,6 @@ namespace Rc.Framework.Collections.Generic
 
             return ret;
         }
-
         /// <summary>
         /// Возвращает индекс максимального элемента в указанной строке.
         /// </summary>
@@ -277,7 +254,6 @@ namespace Rc.Framework.Collections.Generic
             var array = this.GetRow(row);
             return Array.IndexOf(array, array.Max());
         }
-
         /// <summary>
         /// Возвращает индекс максимального элемента в указанном столбце.
         /// </summary>
@@ -288,7 +264,6 @@ namespace Rc.Framework.Collections.Generic
             return Array.IndexOf(array, array.Max());
 
         }
-
         /// <summary>
         /// Возвращает индекс минимального элемента в указанной строке.
         /// </summary>
@@ -299,7 +274,6 @@ namespace Rc.Framework.Collections.Generic
             return Array.IndexOf(array, array.Min());
 
         }
-
         /// <summary>
         /// Возвращает индекс минимального элемента в указанном столбце.
         /// </summary>
@@ -310,7 +284,6 @@ namespace Rc.Framework.Collections.Generic
             return Array.IndexOf(array, array.Min());
 
         }
-
         /// <summary>
         /// Возвращает позицию максимального элемента в матрице.
         /// </summary>
@@ -323,7 +296,6 @@ namespace Rc.Framework.Collections.Generic
             ret.Y = index - Size.Y * ret.X;
             return ret;
         }
-
         /// <summary>
         /// Возвращает позицию минимального элемента в матрице.
         /// </summary>
@@ -337,7 +309,6 @@ namespace Rc.Framework.Collections.Generic
             ret.Y = index - Size.Y * ret.X;
             return ret;
         }
-
         /// <summary>
         /// Преобразует матрицу в одномерный массив.
         /// </summary>
@@ -349,7 +320,6 @@ namespace Rc.Framework.Collections.Generic
                 ret[++i] = item;
             return ret;
         }
-
         /// <summary>
         /// Заполняет матрицу из одномерного массива.
         /// </summary>
@@ -363,7 +333,6 @@ namespace Rc.Framework.Collections.Generic
                 matrix[x, y] = array[curIndex++];
             }
         }
-
         /// <summary>
         /// Возвращает транспонированную матрицу. Исходная матрица не изменяется.
         /// </summary>
@@ -378,7 +347,6 @@ namespace Rc.Framework.Collections.Generic
                 return ret;
             }
         }
-
         /// <summary>
         /// Меняет указанные строки местами. Исходная матрица не изменяется.
         /// </summary>
@@ -397,7 +365,6 @@ namespace Rc.Framework.Collections.Generic
 
             return ret;
         }
-
         /// <summary>
         /// Меняет местами указанные столбцы. Исходная матрица не изменяется.
         /// </summary>
@@ -415,7 +382,6 @@ namespace Rc.Framework.Collections.Generic
             }
             return ret;
         }
-
         /// <summary>
         /// Меняет местами диагонали матрицы. Исходная матрица не изменяется.
         /// </summary>
@@ -458,7 +424,6 @@ namespace Rc.Framework.Collections.Generic
         /// Нулевая матрица
         /// </summary>
         public static SizeMatrix Zero { get { return new SizeMatrix(0, 0); } }
-
         /// <summary>
         /// Инициализация размера. 
         /// </summary>
@@ -482,26 +447,22 @@ namespace Rc.Framework.Collections.Generic
             else
                 Y = X;
         }
-
         public static bool operator ==(SizeMatrix s1, SizeMatrix s2)
         {
             if (s1.X != s2.X) return false;
             if (s1.Y != s2.Y) return false;
             return true;
         }
-
         public static bool operator !=(SizeMatrix s1, SizeMatrix s2)
         {
             if (s1.X == s2.X) return false;
             if (s1.Y == s2.Y) return false;
             return true;
         }
-
         public override int GetHashCode()
         {
             return ((X * Y) + X) - X % Y;
         }
-
         public override bool Equals(object obj)
         {
             SizeMatrix size = obj as SizeMatrix;
@@ -509,8 +470,6 @@ namespace Rc.Framework.Collections.Generic
             if (this.Y != size.Y) return false;
             return true;
         }
-
-
     }
     /// <summary>
     /// Тип матрицы (квадратная, прямоугольная)
