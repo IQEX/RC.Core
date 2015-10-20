@@ -12,6 +12,15 @@ namespace Rc.Framework.Extension
     public static class ExtensionConvert
     {
         /// <summary>
+        /// Конвертация строки в <see cref="Guid"/>
+        /// </summary>
+        /// <param name="t">строка содержащие <see cref="Guid"/> для преобразования.</param>
+        /// <returns>Преобразованное <see cref="Guid"/>.</returns>
+        public static Guid ToGUID(this string t)
+        {
+            return new Guid(t);
+        }
+        /// <summary>
         /// Конвертация строки в <see cref="Int32"/>
         /// </summary>
         /// <param name="t">строка содержащие число для преобразования.</param>
