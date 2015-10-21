@@ -79,7 +79,9 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationFramework">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -164,6 +166,22 @@
     <Compile Include="IO\StreamPtr.cs" />
     <Compile Include="IO\UnSafe\Memory\Disposer.cs" />
     <Compile Include="IO\UnSafe\StreamExtension.cs" />
+    <Compile Include="Native\CPPModel\CppCallingConvention.cs" />
+    <Compile Include="Native\CPPModel\CppConstant.cs" />
+    <Compile Include="Native\CPPModel\CppDefine.cs" />
+    <Compile Include="Native\CPPModel\CppElement.cs" />
+    <Compile Include="Native\CPPModel\CppEnum.cs" />
+    <Compile Include="Native\CPPModel\CppEnumItem.cs" />
+    <Compile Include="Native\CPPModel\CppField.cs" />
+    <Compile Include="Native\CPPModel\CppFunction.cs" />
+    <Compile Include="Native\CPPModel\CppGuid.cs" />
+    <Compile Include="Native\CPPModel\CppInclude.cs" />
+    <Compile Include="Native\CPPModel\CppInterface.cs" />
+    <Compile Include="Native\CPPModel\CppMethod.cs" />
+    <Compile Include="Native\CPPModel\CppModule.cs" />
+    <Compile Include="Native\CPPModel\CppParameter.cs" />
+    <Compile Include="Native\CPPModel\CppStruct.cs" />
+    <Compile Include="Native\CPPModel\CppType.cs" />
     <Compile Include="Native\NativeMethod.cs" />
     <Compile Include="Native\SystemTools.cs" />
     <Compile Include="Native\WMI.cs" />
