@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\EqualityComparer.cs" />
     <Compile Include="Collections\Generic\Box.cs" />
     <Compile Include="Collections\Generic\IBox.cs" />
     <Compile Include="Collections\Generic\IMatrix.cs" />
@@ -183,6 +184,26 @@
     <Compile Include="Native\CPPModel\CppStruct.cs" />
     <Compile Include="Native\CPPModel\CppType.cs" />
     <Compile Include="Native\NativeMethod.cs" />
+    <Compile Include="Native\Runtime\COMException.cs" />
+    <Compile Include="Native\Runtime\COMObject.cs" />
+    <Compile Include="Native\Runtime\Diagnostic\Configuration.cs" />
+    <Compile Include="Native\Runtime\CPPCom\CppObject.cs" />
+    <Compile Include="Native\Runtime\CPPCom\ICallbackable.cs" />
+    <Compile Include="Native\Runtime\Diagnostic\DisposeBase.cs" />
+    <Compile Include="Native\Runtime\Diagnostic\DisposeEventArgs.cs" />
+    <Compile Include="Native\Runtime\Diagnostic\Interop.cs" />
+    <Compile Include="Native\Runtime\IUnknown.cs" />
+    <Compile Include="Native\Runtime\Diagnostic\ObjectReference.cs" />
+    <Compile Include="Native\Runtime\Diagnostic\ObjectTracker.cs" />
+    <Compile Include="Native\Runtime\Result.cs" />
+    <Compile Include="Native\Runtime\ResultDescriptor.cs" />
+    <Compile Include="Native\Runtime\Shadow\Com\ComObjectShadow.cs" />
+    <Compile Include="Native\Runtime\Shadow\CppObjectShadow.cs" />
+    <Compile Include="Native\Runtime\Shadow\CppObjectVtbl.cs" />
+    <Compile Include="Native\Runtime\Shadow\Unmanaged\IInspectable.cs" />
+    <Compile Include="Native\Runtime\Shadow\ShadowAttribute.cs" />
+    <Compile Include="Native\Runtime\Shadow\ShadowContainer.cs" />
+    <Compile Include="Native\Runtime\Shadow\Unmanaged\InspectableShadow.cs" />
     <Compile Include="Native\SystemTools.cs" />
     <Compile Include="Native\WMI.cs" />
     <Compile Include="Native\WMIClass\Win32Version.cs" />
