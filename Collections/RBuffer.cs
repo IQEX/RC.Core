@@ -3,6 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 namespace Rc.Framework.Collections
@@ -170,7 +171,7 @@ namespace Rc.Framework.Collections
         public void Write<T>(Stream str, T[] values, int offset, int count) where T : struct
         {
             if (values == null) throw new ArgumentException("values");
-            if (count == 0)     throw new ArgumentNullException("count");
+            if (count == 0) throw new ArgumentNullException("count");
             if (count < 0 || offset < 0 || offset + count > values.Length)
                 throw new ArgumentOutOfRangeException("offset");
             int n = Marshal.SizeOf(typeof(T));
@@ -277,5 +278,54 @@ namespace Rc.Framework.Collections
             return result;
         }
         #endregion
+    }
+    public struct RBuffer<TElement>
+    {
+        public TElement[] items;
+        public int count;
+
+        public RBuffer(IEnumerable<TElement> source)
+        {
+            var array = (TElement[])null;
+            int length = 0;
+            var collection = source as ICollection<TElement>;
+            if (collection != null)
+            {
+                length = collection.Count;
+                if (length > 0)
+                {
+                    array = new TElement[length];
+                    collection.CopyTo(array, 0);
+                }
+            }
+            else
+            {
+                foreach (TElement element in source)
+                {
+                    if (array == null)
+                        array = new TElement[4];
+                    else if (array.Length == length)
+                    {
+                        var elementArray = new TElement[checked(length * 2)];
+                        Array.Copy(array, 0, elementArray, 0, length);
+                        array = elementArray;
+                    }
+                    array[length] = element;
+                    ++length;
+                }
+            }
+            items = array;
+            count = length;
+        }
+        public TElement[] ToArray()
+        {
+            if (count == 0)
+                return new TElement[0];
+            if (items.Length == count)
+                return items;
+            var elementArray = new TElement[count];
+            Array.Copy(items, 0, elementArray, 0, count);
+            return elementArray;
+        }
     }
 }
