@@ -6,9 +6,7 @@ using System;
 using System.IO;
 using Rc.Framework.IO;
 using Rc.Framework.RMath;
-/// <summary>
-/// The root namespace framework
-/// </summary>
+
 namespace Rc.Framework
 {
     /// <summary>
