@@ -56,7 +56,7 @@ namespace Rc.Framework.Native.WMIClass
     /// Класс версии Windows
     /// </summary>
     [Serializable]
-    [YamlSerialize(YamlSerializeMethod.Content)]
+    [Yaml(CompactMethod.Content)]
     public class Win32Version : NetworkObject
     {
         /// <summary>

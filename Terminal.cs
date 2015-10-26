@@ -26,23 +26,23 @@ namespace Rc.Framework
     {
         //x string pNone = "(?([0-9]|[a-zA-Z]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
         //x string pNone = "(?=§)";
-        public const string pBlack      = "(?<=\\§([0]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarpBlue   = "(?<=\\§([1]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkGreen  = "(?<=\\§([2]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkCyan   = "(?<=\\§([3]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkRed    = "(?<=\\§([4]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkMagenta= "(?<=\\§([5]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pBlack = "(?<=\\§([0]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarpBlue = "(?<=\\§([1]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkGreen = "(?<=\\§([2]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkCyan = "(?<=\\§([3]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkRed = "(?<=\\§([4]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkMagenta = "(?<=\\§([5]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
         public const string pDarkYellow = "(?<=\\§([6]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkGray   = "(?<=\\§([7]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pGray       = "(?<=\\§([8]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pBlue       = "(?<=\\§([9]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pGreen      = "(?<=\\§([a]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pCyan       = "(?<=\\§([b]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pRed        = "(?<=\\§([c]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pMagenta    = "(?<=\\§([d]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pYellow     = "(?<=\\§([e]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pWhite      = "(?<=\\§([f]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        
+        public const string pDarkGray = "(?<=\\§([7]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pGray = "(?<=\\§([8]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pBlue = "(?<=\\§([9]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pGreen = "(?<=\\§([a]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pCyan = "(?<=\\§([b]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pRed = "(?<=\\§([c]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pMagenta = "(?<=\\§([d]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pYellow = "(?<=\\§([e]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pWhite = "(?<=\\§([f]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+
         public const string Key = "§";
         public static string Cost(char c) { return $"§{c}"; }
         public static string Cost(this string c) { return $"§{c}"; }
@@ -69,10 +69,10 @@ namespace Rc.Framework
             ConfigTerminal conf = new ConfigTerminal();
             conf.Load();
 
-            header          = conf.Header;
-            isUseRCL        = conf.isUseRCL;
-            isUseHeader     = conf.isUseHeader;
-            isUseColor      = conf.isUseColor;
+            header = conf.Header;
+            isUseRCL = conf.isUseRCL;
+            isUseHeader = conf.isUseHeader;
+            isUseColor = conf.isUseColor;
             if (conf.VersionAPI == VTerminalAPI.v4_5)
                 isOldKeyParse = true;
             else
@@ -144,12 +144,12 @@ namespace Rc.Framework
                     Console.ForegroundColor = ConsoleColor.White;
                     _out.Write(">: ");
                 }
-                if(header != "" && isUseRCL)
+                if (header != "" && isUseRCL)
                 {
                     _out.Write($"<");
                     ParseAndWrite(header);
                     _out.Write($">: ");
-                } 
+                }
             }
             if (isUseRCL)
                 ParseAndWrite(s);
@@ -162,7 +162,7 @@ namespace Rc.Framework
         /// <param name="s">String Rcl</param>
         public static void WriteLine(string s)
         {
-            if(isOldKeyParse)
+            if (isOldKeyParse)
             {
                 old_WriteLine(s);
                 return;
@@ -193,10 +193,10 @@ namespace Rc.Framework
         /// Writes a new line, with the support of rcl
         /// and Trase Line or Member of called
         /// </summary>
-        /// <param name="s"></param>
-        /// <param name="isTrase"></param>
-        /// <param name="member"></param>
-        /// <param name="line"></param>
+        /// <param name="s">string text</param>
+        /// <param name="isTrase">is Print member or line to terminal?</param>
+        /// <param name="member">autogenerated</param>
+        /// <param name="line">autogenerated</param>
         public static void WriteLine(string s, bool isTrase, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0)
         {
             if (!isTrase)
@@ -237,8 +237,37 @@ namespace Rc.Framework
             else
                 _out.Write($"{s}{Environment.NewLine}");
         }
-
-        public static void ParseAndWrite(string str)
+        /// <summary>
+        /// Writes a new line, exception
+        /// </summary>
+        /// <param name="ex">Exception app</param>
+        /// <param name="member">autogenerated</param>
+        /// <param name="line">autogenerated</param>
+        /// <param name="file">autogenerated</param>
+        public static void WriteLine(Exception ex, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0, [CallerFilePath] string file = "")
+        {
+            if (isOldKeyParse)
+            {
+                old_WriteLine($"[{member}:{line}]{ex.ToString()}");
+                return;
+            }
+            ParseAndWrite($"[§2{ex.GetType().Name}§f] §4CallerFilePath§f: §7{file}§f{Environment.NewLine}");
+            ParseAndWrite($"[§2{ex.GetType().Name}§f] §4CallerMemberName§f: §7{member}§f{Environment.NewLine}");
+            ParseAndWrite($"[§2{ex.GetType().Name}§f] §4CallerLineNumber§f: §7{line}§f{Environment.NewLine}");
+            ParseAndWrite($"[§2{ex.GetType().Name}§f] §4Message§f: §7{ex.Message}§f{Environment.NewLine}");
+            ParseAndWrite($"[§2{ex.GetType().Name}§f] §4HResult§f: §7{ex.HResult}§f{Environment.NewLine}");
+            if(ex.HelpLink != null && ex.HelpLink != "")
+                ParseAndWrite($"[§2{ex.GetType().Name}§f] §4HelpLink§f: §7{ex.HelpLink}§f{Environment.NewLine}");
+            foreach (KeyValuePair<object, object> k in ex.Data)
+            {
+                ParseAndWrite($"[§2{ex.GetType().Name}§f] §eIData§f::§{k.Key}§f: §7{k.Value}§f{Environment.NewLine}");
+            }
+            if (ex.StackTrace != null && ex.StackTrace != "")
+                ParseAndWrite($"[§2{ex.GetType().Name}§f] §4StackTrace§f: §7{ex.StackTrace}§f{Environment.NewLine}");
+            if (ex.Source != null && ex.Source != "")
+                ParseAndWrite($"[§2{ex.GetType().Name}§f] §4Source§f: §7{ex.Source}§f{Environment.NewLine}");
+        }
+        private static void ParseAndWrite(string str)
         {
             //& Старая реализация
             foreach(string y in listOfRCL)
@@ -488,9 +517,16 @@ namespace Rc.Framework
             }
             public static void Init()
             {
-                if (inited)
-                    throw new InvalidOperationException("Terminal Windows aleready Inited!");
-                updateInf(false);
+                try
+                {
+                    if (inited)
+                        throw new InvalidOperationException("Terminal Windows aleready Inited!");
+                    updateInf(false);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
             public unsafe static void SetTransform(Transform traf)
             {
@@ -510,7 +546,7 @@ namespace Rc.Framework
                 if (!r)
                     throw new ContextMarshalException("declined");
             }
-            internal static void updateInf(bool throwOnNoCons)
+            public static void updateInf(bool throwOnNoCons)
             {
                 bool succeeded;
                 __screenInf = NativeMethods.GetBufferInfo(throwOnNoCons, out succeeded);
@@ -600,7 +636,7 @@ namespace Rc.Framework
             public short Left;
             public short Top;
         }
-        [YamlSerialize(YamlSerializeMethod.Assign)]
+        [Yaml(CompactMethod.Assign)]
         public class ConfigTerminal
         {
             public string Header;

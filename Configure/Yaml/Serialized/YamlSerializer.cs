@@ -143,24 +143,24 @@ namespace Rc.Framework.Yaml.Serialization
     /// assign a new value to them on deserialization, while readonly class-type members 
     /// are serialized. When deserializing, instead of creating a new object and assigning it 
     /// to the member, the child members of such class instance are restored independently. 
-    /// Such a deserializing method is refered to <see cref="YamlSerializeMethod.Content">
+    /// Such a deserializing method is refered to <see cref="CompactMethod.Content">
     /// YamlSerializeMethod.Content</see>. 
     /// </para>
     /// <para>
     /// On the other hand, when writeable fields/properties are deserialized, new objects are 
     /// created by using the parameters in the YAML description and assiend to the fields/properties. 
-    /// Such a deserializing method is refered to <see cref="YamlSerializeMethod.Assign">
+    /// Such a deserializing method is refered to <see cref="CompactMethod.Assign">
     /// YamlSerializeMethod.Assign</see>. Writeable properties can be explicitly specified to use 
-    /// <see cref="YamlSerializeMethod.Content"> YamlSerializeMethod.Content</see> method for 
-    /// deserialization, by adding <see cref="YamlSerializeAttribute"/> to its definition.
+    /// <see cref="CompactMethod.Content"> YamlSerializeMethod.Content</see> method for 
+    /// deserialization, by adding <see cref="YamlAttribute"/> to its definition.
     /// </para>
     /// 
-    /// <para>Another type of serializing method is <see cref="YamlSerializeMethod.Binary">
+    /// <para>Another type of serializing method is <see cref="CompactMethod.Binary">
     /// YamlSerializeMethod.Binary</see>. 
     /// This method is only applicable to an array-type field / property that contains
     /// only value-type members.</para>
     /// 
-    /// <para>If serializing method <see cref="YamlSerializeMethod.Never"/> is specified,
+    /// <para>If serializing method <see cref="CompactMethod.Never"/> is specified,
     /// the member is never serialized nor deserialized.</para>
     /// 
     /// <code>
@@ -713,10 +713,9 @@ namespace Rc.Framework.Yaml.Serialization
         /// <param name="obj">Object to be serialized.</param>
         public void SerializeToFile(string YamlFileName, object obj)
         {
-            using ( var s = new FileStream(YamlFileName, FileMode.Create, FileAccess.Write) )
+            using (var s = new FileStream(YamlFileName, FileMode.Create, FileAccess.Write))
                 Serialize(s, obj);
         }
-
         /// <summary>
         /// Deserialize C# object(s) from a YAML text. Since a YAML text can contain multiple YAML documents, each of which 
         /// represents a C# object, the result is returned as an array of <see cref="object"/>.
@@ -778,32 +777,26 @@ namespace Rc.Framework.Yaml.Serialization
             using ( var s = new FileStream(YamlFileName, FileMode.Open, FileAccess.Read) )
                 return Deserialize(s, types);
         }
-    }
-
-    /// <summary>
-    /// Add .DoFunction method to string
-    /// </summary>
-    internal static class StringExtention
-    {
         /// <summary>
-        /// Short expression of string.Format(XXX, arg1, arg2, ...)
+        /// Deserialize C# <typeparamref name="T"/> from a YAML text in a file named as <paramref name="YamlFile"/>. 
         /// </summary>
-        /// <param name="format"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public static string DoFormat(this string format, params object[] args)
+        /// <typeparam name="T">Serialized Type</typeparam>
+        /// <param name="YamlFile">The name of a file that contains YAML text from which C# objects are deserialized.</param>
+        /// <returns>Serialized object</returns>
+        public static T Deserialize<T>(string YamlFile)
         {
-            return string.Format(format, args);
+            object[] obj = new YamlSerializer().DeserializeFromFile(YamlFile);
+            return (T)obj[0];
         }
     }
-
+    
     /// <summary>
     /// <para>Specify the way to store a property or field of some class or structure.</para>
     /// <para>See <see cref="YamlSerializer"/> for detail.</para>
     /// </summary>
-    /// <seealso cref="YamlSerializeAttribute"/>
+    /// <seealso cref="YamlAttribute"/>
     /// <seealso cref="YamlSerializer"/>
-    public enum YamlSerializeMethod
+    public enum CompactMethod
     {
         /// <summary>
         /// The property / field will not be stored.
@@ -835,17 +828,17 @@ namespace Rc.Framework.Yaml.Serialization
     /// 
     /// See <see cref="YamlSerializer"/> for detail.
     /// </summary>
-    /// <seealso cref="YamlSerializeAttribute"/>
+    /// <seealso cref="YamlAttribute"/>
     /// <seealso cref="YamlSerializer"/>
-    public sealed class YamlSerializeAttribute: Attribute
+    public sealed class YamlAttribute : Attribute
     {
-        internal YamlSerializeMethod SerializeMethod;
+        internal CompactMethod SerializeMethod;
         /// <summary>
         /// Specify the way to store a property or field of some class or structure.
         /// 
         /// See <see cref="YamlSerializer"/> for detail.
         /// </summary>
-        /// <seealso cref="YamlSerializeAttribute"/>
+        /// <seealso cref="YamlAttribute"/>
         /// <seealso cref="YamlSerializer"/>
         /// <param name="SerializeMethod">
         ///  <para>
@@ -868,7 +861,7 @@ namespace Rc.Framework.Yaml.Serialization
         ///             format encoded in base64 style.</para>
         /// 
         /// </param>
-        public YamlSerializeAttribute(YamlSerializeMethod SerializeMethod)
+        public YamlAttribute(CompactMethod SerializeMethod)
         {
             this.SerializeMethod = SerializeMethod;
         }

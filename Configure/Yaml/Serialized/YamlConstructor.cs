@@ -283,13 +283,13 @@ namespace Rc.Framework.Yaml.Serialization
                     if(!access.ContainsKey(name))
                         throw new FormatException("{0} does not have a member {1}.".DoFormat(type.FullName, name));
                     switch ( access[name].SerializeMethod ) {
-                    case YamlSerializeMethod.Assign:
+                    case CompactMethod.Assign:
                         access[obj, name] = NodeToObjectInternal(entry.Value, access[name].Type, appeared);
                         break;
-                    case YamlSerializeMethod.Content:
+                    case CompactMethod.Content:
                         MappingToObject((YamlMapping)entry.Value, access[name].Type, access[obj, name], appeared);
                         break;
-                    case YamlSerializeMethod.Binary:
+                    case CompactMethod.Binary:
                         access[obj, name] = ScalarToObject((YamlScalar)entry.Value, access[name].Type);
                         break;
                     default:

@@ -3900,7 +3900,7 @@ namespace Rc.Framework.Native
     /// <summary>
     /// Представляет упорядоченную пару целых чисел — координат Х и Y, определяющую точку на двумерной плоскости.
     /// </summary>
-	[YamlSerialize(YamlSerializeMethod.Assign)]
+	[Yaml(CompactMethod.Assign)]
     public struct Point
     {
         /// <summary>Представляет объект <see cref="T:System.Drawing.Point" />, у которого значения <see cref="P:System.Drawing.Point.X" /> и <see cref="P:System.Drawing.Point.Y" /> установлены равными нулю. </summary>
@@ -5592,7 +5592,6 @@ namespace Rc.Framework.Native
         public static extern IntPtr GetDesktopWindow();
         [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         public static extern int RevokeDragDrop(HandleRef hwnd);
-        public static extern bool PostMessage(HandleRef hwnd, int msg, IntPtr wparam, IntPtr lparam);
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern short GlobalAddAtom(string atomName);
         [DllImport("oleacc.dll", CharSet = CharSet.Auto, ExactSpelling = true)]

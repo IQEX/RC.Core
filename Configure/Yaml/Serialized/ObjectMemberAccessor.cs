@@ -132,25 +132,25 @@ namespace Rc.Framework.Yaml.Serialization
             accessor.Set = set;
 
             if(set!=null){ // writeable ?
-                accessor.SerializeMethod = YamlSerializeMethod.Assign;
+                accessor.SerializeMethod = CompactMethod.Assign;
             } else {
-                accessor.SerializeMethod = YamlSerializeMethod.Never;
+                accessor.SerializeMethod = CompactMethod.Never;
                 if ( mType.IsClass )
-                    accessor.SerializeMethod = YamlSerializeMethod.Content;
+                    accessor.SerializeMethod = CompactMethod.Content;
             }
-            var attr1 = m.GetAttribute<YamlSerializeAttribute>();
+            var attr1 = m.GetAttribute<YamlAttribute>();
             if ( attr1 != null ) { // specified
                 if ( set == null ) { // read only member
-                    if ( attr1.SerializeMethod == YamlSerializeMethod.Assign ||
-                         ( mType.IsValueType && accessor.SerializeMethod == YamlSerializeMethod.Content ) )
+                    if ( attr1.SerializeMethod == CompactMethod.Assign ||
+                         ( mType.IsValueType && accessor.SerializeMethod == CompactMethod.Content ) )
                         throw new ArgumentException("{0} {1} is not writeable by {2}."
                             .DoFormat(mType.FullName, m.Name, attr1.SerializeMethod.ToString()));
                 }
                 accessor.SerializeMethod = attr1.SerializeMethod;
             }
-            if ( accessor.SerializeMethod == YamlSerializeMethod.Never )
+            if ( accessor.SerializeMethod == CompactMethod.Never )
                 return; // no need to register
-            if ( accessor.SerializeMethod == YamlSerializeMethod.Binary ) {
+            if ( accessor.SerializeMethod == CompactMethod.Binary ) {
                 if ( !mType.IsArray )
                     throw new InvalidOperationException("{0} {1} of {2} is not an array. Can not be serialized as binary."
                         .DoFormat(mType.FullName, m.Name, type.FullName));
@@ -192,7 +192,7 @@ namespace Rc.Framework.Yaml.Serialization
 
         public struct MemberInfo
         {
-            public YamlSerializeMethod SerializeMethod;
+            public CompactMethod SerializeMethod;
             public Func<object, object> Get;
             public Action<object, object> Set;
             public Func<object, bool> ShouldSeriealize;

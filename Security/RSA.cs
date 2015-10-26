@@ -11,7 +11,7 @@ namespace Rc.Framework.Security
     /// <summary>
     /// Class Pair Key
     /// </summary>
-    [Serializable] [YamlSerialize(YamlSerializeMethod.Content)]
+    [Serializable] [Yaml(CompactMethod.Content)]
     public class RSAKeyPair
     {
         /// <summary>

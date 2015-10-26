@@ -1464,7 +1464,7 @@ namespace Rc.Framework.Yaml
         /// <para>When this property is available, equality of the scalar node is evaluated by comparing the <see cref="NativeObject"/>
         /// properties by the language default equality operator.</para>
         /// </remarks>
-        [Yaml.Serialization.YamlSerialize(Rc.Framework.Yaml.Serialization.YamlSerializeMethod.Never)]
+        [Yaml.Serialization.Yaml(Rc.Framework.Yaml.Serialization.CompactMethod.Never)]
         public object NativeObject {
             get
             {

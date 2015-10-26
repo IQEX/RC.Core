@@ -243,7 +243,7 @@ namespace Rc.Framework.Yaml.Serialization
                 var access = entry.Value;
                 if ( !access.ShouldSeriealize(obj) )
                     continue;
-                if ( access.SerializeMethod == YamlSerializeMethod.Binary ) {
+                if ( access.SerializeMethod == CompactMethod.Binary ) {
                     var array = CreateBinaryArrayNode((Array)access.Get(obj));
                     AppendToAppeared(access.Get(obj), array);
                     array.Properties["expectedTag"] = TypeNameToYamlTag(access.Type);
@@ -251,7 +251,7 @@ namespace Rc.Framework.Yaml.Serialization
                 } else {
                     try {
                         var value = ObjectToNode(access.Get(obj), access.Type);
-                        if( (access.SerializeMethod != YamlSerializeMethod.Content) ||
+                        if( (access.SerializeMethod != CompactMethod.Content) ||
                             !(value is YamlMapping) || ((YamlMapping)value).Count>0 )
                         mapping.Add(MapKey(entry.Key), value);
                     } catch {

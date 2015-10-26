@@ -7,6 +7,16 @@ using System.Linq;
 public static class ExtensionMethods
 {
     /// <summary>
+    /// Short expression of string.Format(XXX, arg1, arg2, ...)
+    /// </summary>
+    /// <param name="format"></param>
+    /// <param name="args"></param>
+    /// <returns></returns>
+    public static string DoFormat(this string format, params object[] args)
+    {
+        return string.Format(format, args);
+    }
+    /// <summary>
     /// Переводит в лист
     /// </summary>
     /// <typeparam name="T">Тип</typeparam>
