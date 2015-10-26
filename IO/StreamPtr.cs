@@ -12,13 +12,9 @@ namespace Rc.Framework.IO
 	/// </summary>
 	public struct StreamPtr
     {
-        Stream stream;
-        long offset;
-
-        public StreamPtr(Stream s)
-            : this(s, s.Position)
-        {
-        }
+        private Stream stream;
+        private long offset;
+        public StreamPtr(Stream s) : this(s, s.Position) { }
         public StreamPtr(Stream s, long pos)
         {
             if (s == null)
