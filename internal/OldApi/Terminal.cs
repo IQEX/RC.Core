@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using Rc.Framework.IO;
 using Rc.Framework.RMath;
-
+#pragma warning disable CS0618
 namespace Rc.Framework
 {
     //! OLD API
@@ -15,17 +15,8 @@ namespace Rc.Framework
     /// </summary>
     public static partial class Terminal
     {
-        /// <summary>
-        /// A reference to the class logging
-        /// </summary>
         private static Log logger;
-        /// <summary>
-        /// The type of structure logging
-        /// </summary>
         private static string typeClassLogging;
-        /// <summary>
-        /// Is logging?
-        /// </summary>
         private static bool enabledlog = false;
         /// <summary>
         /// Locker to write
@@ -333,7 +324,7 @@ namespace Rc.Framework
             }
         }
         /// <summary>
-        /// Writes a clean line in the input stream
+        /// Writes a clean line in the output stream
         /// </summary>
         /// <param name="s">String</param>
         [Obsolete("[Old 3.5 api]")]
@@ -341,14 +332,9 @@ namespace Rc.Framework
         {
             rclWrite(s);
         }
-        /// <summary>
-        /// Writes a new line, with the support of rcl
-        /// </summary>
-        /// <param name="s">String Rcl</param>
-        [Obsolete("[Old 3.5 api], Use Stream.WriteLine()")]
-        public static void WriteLine(string s)
+        private static void old_WriteLine(string s)
         {
-            lock(Locker)
+            lock (Locker)
             {
                 Console.Write("[");
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -356,17 +342,12 @@ namespace Rc.Framework
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.Write("]: ");
                 rclWrite(s);
-                Console.Write(System.Environment.NewLine);
+                Console.Write(Environment.NewLine);
                 if (enabledlog)
                     logger.Write(typeClassLogging, $"[{Def}]: {Replasercl(s)}");
             }
         }
-        /// <summary>
-        /// Writes a new line, with the support of rcl, without symbol of the end-line
-        /// </summary>
-        /// <param name="s">String Rcl</param>
-        [Obsolete("[Old 3.5 api], Use Stream.Write()")]
-        public static void Write(string s)
+        private static void old_Write(string s)
         {
             lock (Locker)
             {

@@ -10,6 +10,11 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
+
+//! Я уберу старое API в 10 версии фреймворка
 namespace Rc.Framework
 {
     /// <summary>
@@ -17,6 +22,25 @@ namespace Rc.Framework
     /// </summary>
     public static partial class Terminal
     {
+        //x string pNone = "(?([0-9]|[a-zA-Z]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        //x string pNone = "(?=§)";
+        public const string pBlack      = "(?<=\\§([0]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarpBlue   = "(?<=\\§([1]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkGreen  = "(?<=\\§([2]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkCyan   = "(?<=\\§([3]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkRed    = "(?<=\\§([4]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkMagenta= "(?<=\\§([5]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkYellow = "(?<=\\§([6]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkGray   = "(?<=\\§([7]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pGray       = "(?<=\\§([8]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pBlue       = "(?<=\\§([9]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pGreen      = "(?<=\\§([a]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pCyan       = "(?<=\\§([b]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pRed        = "(?<=\\§([c]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pMagenta    = "(?<=\\§([d]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pYellow     = "(?<=\\§([e]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pWhite      = "(?<=\\§([f]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        
         public const string Key = "§";
         public static string Cost(char c) { return $"§{c}"; }
         public static string Cost(this string c) { return ""; }
@@ -62,7 +86,7 @@ namespace Rc.Framework
         }
         private static string defHeader = "§dEngine§c";
         private static string header = "";
-        private static RList<string> listOfRCL;
+        private static readonly RList<string> listOfRCL;
         private static bool isUseRCL;
         private static bool isUseHeader;
         private static bool isUseColor;
@@ -81,6 +105,305 @@ namespace Rc.Framework
             conf.isOldKeyParse = isOldKeyParse;
             conf.VersionAPI = VTerminalAPI.v8_1;
             return conf;
+        }
+        /// <summary>
+        /// Writes a new line, with the support of rcl, without symbol of the end-line
+        /// </summary>
+        /// <param name="s">String Rcl</param>
+        public static void Write(string s)
+        {
+            if (isOldKeyParse)
+            {
+                old_Write(s);
+                return;
+            }
+            if (isUseHeader)
+            {
+                if (header == "")
+                {
+                    _out.Write("<");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    _out.Write(defHeader.sReplaceRCL());
+                    Console.ForegroundColor = ConsoleColor.White;
+                    _out.Write(">: ");
+                }
+                if(header != "" && isUseRCL)
+                {
+                    _out.Write($"<");
+                    ParseAndWrite(header);
+                    _out.Write($">: ");
+                } 
+            }
+            if (isUseRCL)
+                ParseAndWrite(s);
+            else
+                _out.Write(s);
+        }
+        /// <summary>
+        /// Writes a new line, with the support of rcl
+        /// </summary>
+        /// <param name="s">String Rcl</param>
+        public static void WriteLine(string s)
+        {
+            if(isOldKeyParse)
+            {
+                old_WriteLine(s);
+                return;
+            }
+            if (isUseHeader)
+            {
+                if (header == "")
+                {
+                    _out.Write("<");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    _out.Write(defHeader.sReplaceRCL());
+                    Console.ForegroundColor = ConsoleColor.White;
+                    _out.Write(">: ");
+                }
+                if (header != "" && isUseRCL)
+                {
+                    _out.Write($"<");
+                    ParseAndWrite(header);
+                    _out.Write($">: ");
+                }
+            }
+            if (isUseRCL)
+                ParseAndWrite($"{s}{Environment.NewLine}");
+            else
+                _out.Write($"{s}{Environment.NewLine}");
+        }
+        public static void WriteLine(string s, bool isTrase, [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        {
+            if (!isTrase)
+            {
+                WriteLine(s);
+                return;
+            }
+            if (isOldKeyParse)
+            {
+                old_WriteLine($"[{member}:{line}]{s}");
+                return;
+            }
+            if (isUseHeader)
+            {
+                if (header == "")
+                {
+                    _out.Write("<");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    _out.Write(defHeader.sReplaceRCL());
+                    Console.ForegroundColor = ConsoleColor.White;
+                    _out.Write($">({member}:{line}): ");
+                }
+                if (header != "" && isUseRCL)
+                {
+                    _out.Write($"<");
+                    ParseAndWrite(header);
+                    _out.Write($">({member}:{line}): ");
+                }
+            }
+            if (isUseRCL)
+                ParseAndWrite($"{s}{Environment.NewLine}");
+            else
+                _out.Write($"{s}{Environment.NewLine}");
+        }
+
+        private static void ParseAndWrite(string str)
+        {
+            //& Старая реализация
+            foreach(string y in listOfRCL)
+            {
+                str.Replace(y, $"+{y}\0");
+            }
+            char[] chars = str.ToCharArray();
+            lock(_out)
+            {
+                //! Такой треш, просто жесть..
+                for (int i = 0; i != chars.Length; i++)
+                {
+                    if (i > chars.Length - 1)
+                        break;
+                    if (chars[i] == '+')
+                    {
+                        if (chars.Length > i + 1)
+                        {
+                            if (chars[i + 1] == '§')
+                            {
+                                if (chars.Length > i + 2)
+                                {
+                                    if (chars[i + 2] == '0')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Black;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '1')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkBlue;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '2')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '3')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '4')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '5')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '6')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '7')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '8')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Gray;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == '9')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Blue;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == 'a')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == 'b')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Cyan;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == 'c')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == 'd')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Magenta;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == 'e')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Yellow;
+                                        i = i + 3;
+                                    }
+                                    else if (chars[i + 2] == 'f')
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.White;
+                                        i = i + 3;
+                                    }
+                                    else
+                                        _out.Write(chars[i]);
+                                }
+                                else
+                                    _out.Write(chars[i]);
+                            }
+                            else
+                                _out.Write(chars[i]);
+                        }
+                        else
+                            _out.Write(chars[i]);
+                    }
+                    else
+                        _out.Write(chars[i]);
+                }
+            }
+            
+
+            //& новая
+            string textToWrite = $"Hello, it's test! Let's go! It's §0black§f, §1DarkBlue§f, §2DarkGreen§f, §3DarkCyan§f, §4DarkRed§f, §5pDarkMagenta§f, §6pDarkYellow§f, §7pDarkGray§f, §8pGray§f, §9pBlue§f, §apGreen§f, §bpCyan§f, §cpRed§f, §dpMagenta§f, §epYellow§f, wot i vse!~";
+            List<TextBoxColored> PColor = new List<TextBoxColored>();
+            Regex rex = new Regex("");
+            //Match s = rex.Match("§1[this][this2]§fasdassdasd asd sd as§0asdasdasdasd§eQWEQWE§c");
+            
+            while (true)
+            {
+                break;
+                //! Необходимо придумать реализацию по извлечению
+                //@ Точнее я уже её придумал, но у меня нет инормации по регулярным выражениям
+                //@ Мне необходимо достигать первого символа, а не последнего
+                //@ Как это делает эта регулярка - (?([0-9]|[a-zA-Z]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))
+                //@ Из строки 'Hello, it's test! Let's go! It's §0black§f' мне необходимо получить текст до символа §0, а не до §f
+
+                //@ По этому, я пока воспользуюсь старой реализацией записи по символам
+                //@ Как соберу информацию, так и перепешу этот отрезок
+#pragma warning disable CS0162
+                rex = new Regex("pNone"); //(?=§)
+                if (rex.IsMatch(textToWrite))
+                {
+                    if (rex.Match(textToWrite).Index != 0)
+                    {
+                        TextBoxColored pC = new TextBoxColored();
+                        Match m = rex.Match(textToWrite);
+                        pC.color = ConsoleColor.White;
+                        pC.Text = textToWrite.Substring(0, m.Index);
+                        PColor.Add(pC);
+                        textToWrite = textToWrite.Remove(0, m.Index);
+                    }
+                    TR_01:
+                    rex = new Regex(pBlack);
+                    if (rex.IsMatch(textToWrite))
+                    {
+                        TextBoxColored pC = new TextBoxColored();
+                        Match m = rex.Match(textToWrite);
+                        pC.color = ConsoleColor.Black;
+                        pC.Text = m.Value;
+                        PColor.Add(pC);
+                        textToWrite = textToWrite.Remove(m.Index, m.Length);
+                        goto TR_01;
+                    }
+                    rex = new Regex(pBlack);
+                    if (rex.IsMatch(textToWrite))
+                    {
+                        TextBoxColored pC = new TextBoxColored();
+                        Match m = rex.Match(textToWrite);
+                        pC.color = ConsoleColor.Black;
+                        pC.Text = m.Value;
+                        PColor.Add(pC);
+                        textToWrite = textToWrite.Remove(m.Index, m.Length);
+                        goto TR_01;
+                    }
+                }
+                else
+                {
+
+                }
+#pragma warning restore CS0162
+            }
+        }
+        private static string sReplaceRCL(this string s, string to = "")
+        {
+            string tr = s;
+            foreach (string y in listOfRCL)
+            {
+                tr = tr.Replace(y, to);
+            }
+            return tr;
+        }
+        private static void vReplaceRCL(this string s, string to = "")
+        {
+            foreach (string y in listOfRCL)
+            {
+                s = s.Replace(y, to);
+            }
         }
 
     }
@@ -290,6 +613,11 @@ namespace Rc.Framework
                     VersionAPI      = (VTerminalAPI.v8_1);
                 }
             }
+        }
+        internal class TextBoxColored
+        {
+            public string Text;
+            public ConsoleColor color;
         }
         public sealed class Screen
         {
