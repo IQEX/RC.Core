@@ -25,6 +25,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -266,7 +267,7 @@
     <Compile Include="Security\RSA.cs" />
     <Compile Include="Security\Rule.cs" />
     <Compile Include="Native\WMIClass\SystemInfo.cs" />
-    <Compile Include="Terminal.cs" />
+    <Compile Include="internal\OldApi\Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Configure\Yaml\Serialized\EasyTypeConverter.cs" />
     <Compile Include="Configure\Yaml\Serialized\ObjectMemberAccessor.cs" />
@@ -432,6 +433,7 @@
     <Compile Include="Configure\Yaml\System\Version.cs" />
     <Compile Include="Configure\Yaml\System\YamlException.cs" />
     <Compile Include="Configure\Yaml\System\YamlStyle.cs" />
+    <Compile Include="Terminal.cs" />
     <Compile Include="Windows\Win32\DataFormats.cs" />
     <Compile Include="Windows\Win32\IDataObject.cs" />
     <Compile Include="Windows\Win32\IntSecurity.cs" />

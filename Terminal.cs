@@ -2,537 +2,332 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
+
+using Rc.Framework.Collections.Generic;
+using Rc.Framework.Native;
+using Rc.Framework.Yaml.Serialization;
 using System;
 using System.IO;
-using Rc.Framework.IO;
-using Rc.Framework.RMath;
-
+using System.Runtime.InteropServices;
+using Microsoft.Win32;
 namespace Rc.Framework
 {
     /// <summary>
     /// Wrap the management console terminal
     /// </summary>
-    public static class Terminal
+    public static partial class Terminal
     {
-        /// <summary>
-        /// A reference to the class logging
-        /// </summary>
-        private static Log logger;
-        /// <summary>
-        /// The type of structure logging
-        /// </summary>
-        private static string typeClassLogging;
-        /// <summary>
-        /// Is logging?
-        /// </summary>
-        private static bool enabledlog = false;
-        /// <summary>
-        /// Locker to write
-        /// </summary>
-        public static object Locker = new object();
-        /// <summary>
-        /// Colors terminal
-        /// </summary>
-        public enum eColor
-        {
-            /// <summary>
-            /// Blue Color
-            /// </summary>
-            Blue,
-            /// <summary>
-            /// Cyan Color
-            /// </summary>
-            Cyan,
-            /// <summary>
-            /// Gray Color
-            /// </summary>
-            Gray,
-            /// <summary>
-            /// Green Color
-            /// </summary>
-            Green,
-            /// <summary>
-            /// Magenta Color
-            /// </summary>
-            Magenta,
-            /// <summary>
-            /// Red Color
-            /// </summary>
-            Red,
-            /// <summary>
-            /// Yellow Color
-            /// </summary>
-            Yellow,
-            /// <summary>
-            /// DarkRed Color
-            /// </summary>
-            DarkRed,
-            /// <summary>
-            /// DarkMagenta Color
-            /// </summary>
-            DarkMagenta,
-            /// <summary>
-            /// White Color
-            /// </summary>
-            White
-        }
-        /// <summary>
-        /// Class finished colors
-        /// </summary>
-        public class Color
-        {
-            private readonly static string strBlue               = "+g1 ";
-            private readonly static string strCyan               = "+g2 ";
-            private readonly static string strGray               = "+g3 ";
-            private readonly static string strGreen              = "+g4 ";
-            private readonly static string strMagenta            = "+g5 ";
-            private readonly static string strRed                = "+g6 ";
-            private readonly static string strYellow             = "+g7 ";
-            private readonly static string strDarkRed            = "+g8 ";
-            private readonly static string strDarkMagenta        = "+g9 ";
-            private readonly static string strWhite              = "+g0 ";
-            /// <summary>
-            /// Blue Singelton
-            /// </summary>
-            public readonly static Color Blue           = new Color(eColor.Blue)        ;
-            /// <summary>
-            /// Cyan Singelton
-            /// </summary>
-            public readonly static Color Cyan           = new Color(eColor.Cyan)        ;
-            /// <summary>
-            /// Gray Singelton
-            /// </summary>
-            public readonly static Color Gray           = new Color(eColor.Gray)        ;
-            /// <summary>
-            /// Green Singelton
-            /// </summary>
-            public readonly static Color Green          = new Color(eColor.Green)       ;
-            /// <summary>
-            /// Magenta Singelton
-            /// </summary>
-            public readonly static Color Magenta        = new Color(eColor.Magenta)     ;
-            /// <summary>
-            /// Magenta Singelton
-            /// </summary>
-            public readonly static Color Red            = new Color(eColor.Red)         ;
-            /// <summary>
-            /// Yellow Singelton
-            /// </summary>
-            public readonly static Color Yellow         = new Color(eColor.Yellow)      ;
-            /// <summary>
-            /// DarkRed Singelton
-            /// </summary>
-            public readonly static Color DarkRed        = new Color(eColor.DarkRed)     ;
-            /// <summary>
-            /// DarkMagenta Singelton
-            /// </summary>
-            public readonly static Color DarkMagenta    = new Color(eColor.DarkMagenta) ;
-            /// <summary>
-            /// White Singelton
-            /// </summary>
-            public readonly static Color White          = new Color(eColor.White)       ;
-            private string rawStringColor;
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="e">Type Color</param>
-            public Color(eColor e)
-            {
-                if (e == eColor.Blue)
-                    rawStringColor = strBlue;
-                else if (e == eColor.Cyan)
-                    rawStringColor = strCyan;
-                else if (e == eColor.Gray)
-                    rawStringColor = strGray;
-                else if (e == eColor.Green)
-                    rawStringColor = strGreen;
-                else if (e == eColor.Magenta)
-                    rawStringColor = strMagenta;
-                else if (e == eColor.Red)
-                    rawStringColor = strRed;
-                else if (e == eColor.Yellow)
-                    rawStringColor = strYellow;
-                else if (e == eColor.DarkRed)
-                    rawStringColor = strDarkRed;
-                else if (e == eColor.DarkMagenta)
-                    rawStringColor = strDarkMagenta;
-                else if (e == eColor.White)
-                    rawStringColor = strWhite;
-            }
-            /// <summary>
-            /// Regex String to Color
-            /// </summary>
-            /// <param name="a"></param>
-            public static implicit operator Color(String a)
-            {
-                return impOperation(a);
-            }
-            /// <summary>
-            /// Color to regex string
-            /// </summary>
-            /// <param name="d"></param>
-            public static implicit operator String(Color d)
-            {
-                return d.rawStringColor;
-            }
-            private static Color impOperation(String str)
-            {
-                char[] chars = str.ToCharArray();
-                if (chars.Length != 3)
-                    throw new Exception("Invalid format rcl color, pleas use \'+g{num color}\'");
-                if (chars[0] == '+')
-                {
-                    if (chars[1] == 'g')
-                    {
-                        if (chars[2] == '1')
-                            return new Color(eColor.Blue);
-                        else if (chars[2] == '2')
-                            return new Color(eColor.Cyan);
-                        else if (chars[2] == '3')
-                            return new Color(eColor.Gray);
-                        else if (chars[2] == '4')
-                            return new Color(eColor.Green);
-                        else if (chars[2] == '5')
-                            return new Color(eColor.Magenta);
-                        else if (chars[2] == '6')
-                            return new Color(eColor.Red);
-                        else if (chars[2] == '7')
-                            return new Color(eColor.Yellow);
-                        else if (chars[2] == '8')
-                            return new Color(eColor.DarkRed);
-                        else if (chars[2] == '9')
-                            return new Color(eColor.DarkMagenta);
-                        else if (chars[2] == '0')
-                            return new Color(eColor.White);
-                        else
-                            throw new Exception("Invalid num rcl color, pleas use \'+g{1 or 2 or 3.. or 9 or 0}\'");
-                    }
-                    else
-                        throw new Exception("Invalid format rcl color, pleas use \'+g{num color}\'");
-                }
-                else
-                    throw new Exception("Invalid format rcl color, pleas use \'+g{num color}\'");
-            }
-            public override string ToString()
-            {
-                return rawStringColor;
-            }
-        }
-        /// <summary>
-        /// Standard signature value
-        /// </summary>
-        public static string Def = "Engine";
-        /// <summary>
-        /// The value of the signature title window
-        /// </summary>
-        public static string Title
+        public const string Key = "§";
+        public static string Cost(char c) { return $"§{c}"; }
+        public static string Cost(this string c) { return ""; }
+
+        private static TextWriter _out
         {
             get
             {
-                return Console.Title;
-            }
-            set
-            {
-                Console.Title = value;
+                return Console.Out;
             }
         }
-        /// <summary>
-        /// Write rcl (Raw Color Line)
-        /// Without symbol of the end-line
-        /// Example:
-        ///     "White used standard, red color is used +g6 here+g0 , the green color is used +g4 here+g0 ."
-        /// Note:
-        ///     After the color numbers you need to retreat a single empty symbol, because it is eaten :D
-        /// p.s - "It's not a bug, it's a feature"
-        /// </summary>
-        /// <param name="rcl">
-        /// The usual line of characters 'rcl'
-        /// </param>
-        private static void rclWrite(string rcl)
+        private static TextReader _in
         {
-            char[] chars = rcl.ToCharArray();
-            for(int i = 0; i != chars.Length; i++)
+            get
             {
-                if (i > chars.Length - 1)
-                    break;
-                if(chars[i] == '+')
+                return Console.In;
+            }
+        }
+        static Terminal()
+        {
+            ConfigTerminal conf = new ConfigTerminal();
+            conf.Load();
+
+            header          = conf.Header;
+            isUseRCL        = conf.isUseRCL;
+            isUseHeader     = conf.isUseHeader;
+            isUseColor      = conf.isUseColor;
+            isOldKeyParse   = conf.isOldKeyParse;
+
+            listOfRCL = new RList<string>();
+            //&     Black           DarkBlue            DarkGreen
+            listOfRCL.Add("§0"); listOfRCL.Add("§1"); listOfRCL.Add("§2");
+            //&     DarkCyan        DarkRed             DarkMagenta
+            listOfRCL.Add("§3"); listOfRCL.Add("§4"); listOfRCL.Add("§5");
+            //&     DarkYellow      DarkGray            Gray
+            listOfRCL.Add("§6"); listOfRCL.Add("§7"); listOfRCL.Add("§8");
+            //&     Blue            Green               Cyan
+            listOfRCL.Add("§9"); listOfRCL.Add("§a"); listOfRCL.Add("§b");
+            //&     Red             Magenta             Yellow
+            listOfRCL.Add("§c"); listOfRCL.Add("§d"); listOfRCL.Add("§e");
+            //&     White
+            listOfRCL.Add("§f");
+        }
+        private static string defHeader = "§dEngine§c";
+        private static string header = "";
+        private static RList<string> listOfRCL;
+        private static bool isUseRCL;
+        private static bool isUseHeader;
+        private static bool isUseColor;
+        private static bool isOldKeyParse;
+
+
+        private static string RexMatherGTColor = "";
+
+        public static ConfigTerminal GetConfig()
+        {
+            ConfigTerminal conf = new ConfigTerminal();
+            conf.Header = header;
+            conf.isUseRCL = isUseRCL;
+            conf.isUseHeader = isUseHeader;
+            conf.isUseColor = isUseColor;
+            conf.isOldKeyParse = isOldKeyParse;
+            conf.VersionAPI = VTerminalAPI.v8_1;
+            return conf;
+        }
+
+    }
+    /// <summary>
+    /// Wrap the management console terminal
+    /// </summary>
+    public static partial class Terminal
+    {
+        public static class Windows
+        {
+            private static bool inited;
+
+            internal static CONSOLE_SCREEN_BUFFER_INFO __screenInf;
+            internal static readonly Transform defTransform;
+            internal static readonly Cursor.CursorPoint defPointCursor;
+            internal static readonly WinBuffer defBuffer;
+            
+            public static short WinWidth
+            {
+                get
                 {
-                    if(chars.Length > i + 1)
+                    updateInf(false);
+                    return ((Screen)__screenInf).Buff.Width;
+                }
+            }
+            public static short WinHeight
+            {
+                get
+                {
+                    updateInf(false);
+                    return ((Screen)__screenInf).Buff.Height;
+                }
+            }
+            public static string Title
+            {
+                set
+                {
+                    Console.Title = value;
+                }
+                get
+                {
+                    return Console.Title;
+                }
+            }
+            static Windows()
+            {
+                Init();
+                defTransform = ((Screen)__screenInf).Traf;
+                defPointCursor = ((Screen)__screenInf).CursorPosition;
+                defBuffer = ((Screen)__screenInf).Buff;
+            }
+            public static void Init()
+            {
+                if (inited)
+                    throw new InvalidOperationException("Terminal Windows aleready Inited!");
+                updateInf(false);
+            }
+            public unsafe static void SetTransform(Transform traf)
+            {
+                updateInf(false);
+                int newRight = traf.Left + __screenInf.srWindow.Right - Console.WindowLeft + 1;
+                if (traf.Left < 0 || newRight > __screenInf.dwSize.X || newRight < 0)
+                    throw new ArgumentOutOfRangeException("left", traf.Left, "");
+                int newBottom = traf.Top + __screenInf.srWindow.Bottom - __screenInf.srWindow.Top + 1;
+                if (traf.Top < 0 || newBottom > __screenInf.dwSize.Y || newBottom < 0)
+                    throw new ArgumentOutOfRangeException("top", traf.Top, "");
+                SMALL_RECT srWindow = __screenInf.srWindow;
+                bool r = NativeMethods.SetConsoleWindowInfo(NativeMethods.GetStdHandle(NativeConstat.STD_OUTPUT_HANDLE), true, &srWindow);
+                if (!r)
+                    r = NativeMethods.SetConsoleWindowInfo(NativeMethods.GetStdHandle(NativeConstat.STD_INPUT_HANDLE), true, &srWindow);
+                if (!r)
+                    r = NativeMethods.SetConsoleWindowInfo(NativeMethods.GetStdHandle(NativeConstat.STD_ERROR_HANDLE), true, &srWindow);
+                if (!r)
+                    throw new ContextMarshalException("declined");
+            }
+            internal static void updateInf(bool throwOnNoCons)
+            {
+                bool succeeded;
+                __screenInf = NativeMethods.GetBufferInfo(throwOnNoCons, out succeeded);
+                if(!succeeded)
+                    throw new AccessViolationException();
+            }
+        }
+        public static class Cursor
+        {
+            public static CursorPoint pos
+            {
+                get
+                {
+                    Windows.updateInf(false);
+                    return ((Screen)Windows.__screenInf).CursorPosition;
+                }
+                set
+                {
+                    Windows.updateInf(false);
+                    if (value.X < 0 || value.X >= Int16.MaxValue)
+                        throw new ArgumentOutOfRangeException("left", value.X, "ConsoleBufferBoundaries");
+                    if (value.Y < 0 || value.Y >= Int16.MaxValue)
+                        throw new ArgumentOutOfRangeException("top", value.Y, "ConsoleBufferBoundaries");
+                    
+                    COORD coords = new COORD();
+                    coords.X = (short)value.X;
+                    coords.Y = (short)value.Y;
+                    bool r = NativeMethods.SetConsoleCursorPosition(NativeMethods.GetStdHandle(NativeConstat.STD_OUTPUT_HANDLE), coords);
+                    if (!r)
+                        r = NativeMethods.SetConsoleCursorPosition(NativeMethods.GetStdHandle(NativeConstat.STD_INPUT_HANDLE), coords);
+                    if (!r)
+                        r = NativeMethods.SetConsoleCursorPosition(NativeMethods.GetStdHandle(NativeConstat.STD_ERROR_HANDLE), coords);
+                    if (!r)
                     {
-                        if(chars[i + 1] == 'g')
-                        {
-                            if (chars.Length > i + 2)
-                            {
-                                if (chars[i + 2] == '1')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Blue;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '2')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Cyan;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '3')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Gray;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '4')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Green;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '5')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Magenta;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '6')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Red;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '7')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.Yellow;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '8')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '9')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.DarkMagenta;
-                                    i = i + 3;
-                                }
-                                else if (chars[i + 2] == '0')
-                                {
-                                    Console.ForegroundColor = ConsoleColor.White;
-                                    i = i + 3;
-                                }
-                                else
-                                    Console.Write(chars[i]);
-                            }
-                            else
-                                Console.Write(chars[i]);
-                        }
-                        else
-                            Console.Write(chars[i]);
+                        int errorCode = Marshal.GetLastWin32Error();
+                        Windows.updateInf(false);
+                        CONSOLE_SCREEN_BUFFER_INFO csbi = Windows.__screenInf;
+                        if (value.X < 0 || value.X >= csbi.dwSize.X)
+                            throw new ArgumentOutOfRangeException("left", value.X, "ConsoleBufferBoundaries");
+                        if (value.Y < 0 || value.Y >= csbi.dwSize.Y)
+                            throw new ArgumentOutOfRangeException("top", value.Y, "ConsoleBufferBoundaries");
                     }
-                    else
-                        Console.Write(chars[i]);
+                }
+            }
+            public class CursorPoint
+            {
+                public short X;
+                public short Y;
+                public static implicit operator CursorPoint(SMALL_POINT po)
+                {
+                    var t = new CursorPoint();
+                    t.X = po.X;
+                    t.Y = po.Y;
+                    return t;
+                }
+                public static implicit operator CursorPoint(POINT po)
+                {
+                    if (po.x > short.MaxValue)
+                        throw new ArgumentOutOfRangeException("po.x", short.MaxValue, "po.x > short.MaxValue");
+                    if (po.y > short.MaxValue)
+                        throw new ArgumentOutOfRangeException("po.y", short.MaxValue, "po.y > short.MaxValue");
+
+                    var t = new CursorPoint();
+                    t.X = (short)po.x;
+                    t.Y = (short)po.y;
+                    return t;
+                }
+                public static implicit operator CursorPoint(COORD po)
+                {
+                    var t = new CursorPoint();
+                    t.X = po.X;
+                    t.Y = po.Y;
+                    return t;
+                }
+            }
+        }
+        public class WinBuffer
+        {
+            public short Width;
+            public short Height;
+            public short Derpth;
+        }
+        public class Transform
+        {
+            public short Bottom;
+            public short Right;
+            public short Left;
+            public short Top;
+        }
+        [YamlSerialize(YamlSerializeMethod.Assign)]
+        public class ConfigTerminal
+        {
+            public string Header;
+            public bool isUseRCL;
+            public bool isUseHeader;
+            public bool isUseColor;
+            public bool isOldKeyParse;
+            public VTerminalAPI VersionAPI;
+            public void AppendGlobal()
+            {
+                RegistryKey reg = Registry.CurrentUser.OpenSubKey("System\\RC\\Durability\\Terminal");
+                if (reg == null)
+                    reg = Registry.CurrentUser.CreateSubKey("System\\RC\\Durability\\Terminal");
+
+                reg.SetValue("Header", Header);
+                reg.SetValue("isUseRCL", isUseRCL);
+                reg.SetValue("isUseHeader", isUseHeader);
+                reg.SetValue("isUseColor", isUseColor);
+                reg.SetValue("isOldKeyParse", isOldKeyParse);
+                reg.SetValue("APIVersion", VersionAPI);
+            }
+            public void Load()
+            {
+                RegistryKey reg = Registry.CurrentUser.OpenSubKey("System\\RC\\Durability\\Terminal");
+                if (reg != null)
+                {
+                    Header = (string)reg.GetValue("Header", "§dEngine§c");
+                    isUseRCL = (bool)reg.GetValue("isUseRCL", true);
+                    isUseHeader = (bool)reg.GetValue("isUseHeader", true);
+                    isUseColor = (bool)reg.GetValue("isUseColor", true);
+                    isOldKeyParse = (bool)reg.GetValue("isOldKeyParse", false);
+                    VersionAPI = (VTerminalAPI)reg.GetValue("VersionAPI", VTerminalAPI.v8_1);
                 }
                 else
-                    Console.Write(chars[i]);
+                {
+                    Header          = ("§dEngine§c");
+                    isUseRCL        = (true);
+                    isUseHeader     = (true);
+                    isUseColor      = (true);
+                    isOldKeyParse   = (false);
+                    VersionAPI      = (VTerminalAPI.v8_1);
+                }
             }
         }
-        /// <summary>
-        /// Writes a clean line in the input stream
-        /// </summary>
-        /// <param name="s">String</param>
-        public static void Print(string s)
+        public sealed class Screen
         {
-            rclWrite(s);
-        }
-        /// <summary>
-        /// Writes a new line, with the support of rcl
-        /// </summary>
-        /// <param name="s">String Rcl</param>
-        public static void WriteLine(string s)
-        {
-            lock(Locker)
+            internal Screen()
             {
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(Def);
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("]: ");
-                rclWrite(s);
-                Console.Write(System.Environment.NewLine);
-                if (enabledlog)
-                    logger.Write(typeClassLogging, $"[{Def}]: {Replasercl(s)}");
+                Traf = new Transform();
+                Buff = new WinBuffer();
+                CursorPosition = new Cursor.CursorPoint();
             }
-        }
-        /// <summary>
-        /// Writes a new line, with the support of rcl, without symbol of the end-line
-        /// </summary>
-        /// <param name="s">String Rcl</param>
-        public static void Write(string s)
-        {
-            lock (Locker)
+            public Transform Traf;
+            public WinBuffer Buff;
+
+            public Cursor.CursorPoint CursorPosition;
+
+            public short wAttributes;
+
+            public short dwXMaximumWindowSize;
+            public short dwYMaximumWindowSize;
+
+            public static implicit operator Screen(CONSOLE_SCREEN_BUFFER_INFO WIN32_NATIVE_BUFFER_INFO)
             {
-                Console.Write("[");
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(Def);
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write("]: ");
-                rclWrite(s);
-                if (enabledlog)
-                    logger.Write(typeClassLogging, $"[{Def}]: {Replasercl(s)}");
+                Screen traf = new Screen();
+                traf.Buff.Width = WIN32_NATIVE_BUFFER_INFO.dwSize.X;
+                traf.Buff.Height = WIN32_NATIVE_BUFFER_INFO.dwSize.Y;
+
+                traf.dwXMaximumWindowSize = WIN32_NATIVE_BUFFER_INFO.dwMaximumWindowSize.X;
+                traf.dwYMaximumWindowSize = WIN32_NATIVE_BUFFER_INFO.dwMaximumWindowSize.Y;
+
+                traf.wAttributes = WIN32_NATIVE_BUFFER_INFO.wAttributes;
+
+                traf.Traf.Left = WIN32_NATIVE_BUFFER_INFO.srWindow.Left;
+                traf.Traf.Right = WIN32_NATIVE_BUFFER_INFO.srWindow.Right;
+                traf.Traf.Top = WIN32_NATIVE_BUFFER_INFO.srWindow.Top;
+                traf.Traf.Bottom = WIN32_NATIVE_BUFFER_INFO.srWindow.Bottom;
+
+                traf.CursorPosition = WIN32_NATIVE_BUFFER_INFO.dwCursorPosition;
+                return traf;
             }
-           
-        }
-        /// <summary>
-        /// Writes a new line, with the support of rcl
-        /// In addition, I write down the title block
-        /// </summary>
-        public static void WriteLine(string s, string Head)
-        {
-            lock (Locker)
-            {
-                Console.Write("[");
-                rclWrite(Head);
-                Console.Write("]: ");
-                rclWrite(s);
-                Console.Write(System.Environment.NewLine);
-                if (enabledlog)
-                    logger.Write(typeClassLogging, $"[{Replasercl(Head)}]: {Replasercl(s)}");
-            }
-        }
-        /// <summary>
-        /// Writes a new line, with the support of rcl, without symbol of the end-line
-        /// In addition, I write down the title block
-        /// </summary>
-        /// <param name="s"></param>
-        public static void Write(string s, string Head)
-        {
-            lock (Locker)
-            {
-                Console.Write("[");
-                rclWrite(Head);
-                Console.Write("]: ");
-                rclWrite(s);
-                if (enabledlog)
-                    logger.Write(typeClassLogging, $"[{Replasercl(Head)}]: {Replasercl(s)}");
-            }
-        }
-        /// <summary>
-        /// Set pause
-        /// </summary>
-        public static void Pause()
-        {
-            Console.ReadKey();
-        }
-        /// <summary>
-        /// Mounting logging function
-        /// </summary>
-        /// <param name="lgs"></param>
-        /// <param name="TyperLog"></param>
-        public static void OutLog(ref Log lgs, string TyperLog)
-        {
-            logger = lgs;
-            typeClassLogging = TyperLog;
-            enabledlog = true;
-        }
-        /// <summary>
-        /// Turn off the set value logging
-        /// </summary>
-        public static void OffLog()
-        {
-            logger = null;
-            typeClassLogging = null;
-            enabledlog = false;
-        }
-        /// <summary>
-        /// It reads the input value
-        /// </summary>
-        /// <returns></returns>
-        public static string OutStreamReadLine()
-        {
-            string str = Console.ReadLine();
-            if (enabledlog)
-                logger.Write(typeClassLogging, str);
-            return str;
-        }
-        /// <summary>
-        /// Get stream recording
-        /// </summary>
-        /// <returns></returns>
-        public static TextWriter StreamOut()
-        {
-            return Console.Out;
-        }
-        /// <summary>
-        /// Get Stream reading
-        /// </summary>
-        /// <returns></returns>
-        public static TextReader StreamInput()
-        {
-            return Console.In;
-        }
-        /// <summary>
-        /// It sends a message to the central terminal
-        /// 
-        /// Command:
-        ///     \clr - Clear a screen
-        ///     \a   - Play 'beep' signal
-        /// </summary>
-        /// <param name="command"></param>
-        public static void SendMessage(string command)
-        {
-            switch(command.ToLower())
-            {
-                case "\\clr":
-                    Console.Clear();
-                    break;
-                case "\\a":
-                    Console.Beep();
-                    break;
-                default:
-                    break;
-            }
-        }
-        /// <summary>
-        /// Set position of the cursor
-        /// </summary>
-        /// <param name="vec">Vector Point</param>
-        public static void SetPoint(Vector2 vec)
-        {
-            Console.SetCursorPosition((int)vec.X, (int)vec.Y);
-        }
-        /// <summary>
-        /// Set length of the buffer console
-        /// </summary>
-        /// <param name="vec">Vector Buffer</param>
-        public static void SetBuffer(Vector2 vec)
-        {
-            Console.SetBufferSize((int)vec.X, (int)vec.Y);
-        }
-        /// <summary>
-        /// Set position of the window
-        /// </summary>
-        /// <param name="vec">Vector Pint</param>
-        public static void SetPointWindows(Vector2 vec)
-        {
-            Console.SetWindowPosition((int)vec.X, (int)vec.Y);
-        }
-        /// <summary>
-        /// Set Conssole Windows sizw
-        /// </summary>
-        /// <param name="vec">Vector Size</param>
-        public static void SetWindowSize(Vector2 vec)
-        {
-            Console.SetWindowSize((int)vec.X, (int)vec.Y);
-        }
-        /// <summary>
-        /// It reads the position of the cursor
-        /// </summary>
-        /// <returns>Vecot Point Cursor</returns>
-        public static Vector2 ReadVectorPoint()
-        {
-            return new Vector2(Console.CursorLeft, Console.CursorTop);
-        }
-        /// <summary>
-        /// Remove rcl fragment
-        /// </summary>
-        /// <param name="rcl"></param>
-        /// <returns></returns>
-        private static string Replasercl(string rcl)
-        {
-            return rcl.Replace("+g0", "").Replace("+g1", "").Replace("+g2", "").Replace("+g3", "").Replace("+g4", "").Replace("+g5", "").Replace("+g6", "").Replace("+g7", "").Replace("+g8", "").Replace("+g9", "");
         }
     }
 }

@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 
 //! ВНИМАНИЕ !//
@@ -24,7 +25,6 @@ using System.Text;
 #pragma warning disable CS1591 // Без него, предупреждений более 2500 штук
 namespace Rc.Framework.Native
 {
-
     /// <summary>
     /// A Delegate to get a property value from an object.
     /// </summary>
@@ -876,6 +876,11 @@ namespace Rc.Framework.Native
     }
     public static class NativeConstat
     {
+        public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+        public const int STD_INPUT_HANDLE = -10;
+        public const int STD_OUTPUT_HANDLE = -11;
+        public const int STD_ERROR_HANDLE = -12;
+
         public static IntPtr InvalidIntPtr;
         public static IntPtr LPSTR_TEXTCALLBACK;
         public static HandleRef NullHandleRef;
@@ -3017,7 +3022,29 @@ namespace Rc.Framework.Native
             return !left.Equals(right);
         }
     }
-
+    [StructLayoutAttribute(LayoutKind.Sequential)]
+    public struct SMALL_RECT
+    {
+        public short Left;
+        public short Top;
+        public short Right;
+        public short Bottom;
+    }
+    [StructLayoutAttribute(LayoutKind.Sequential)]
+    public struct COORD
+    {
+        public short X;
+        public short Y;
+    }
+    [StructLayoutAttribute(LayoutKind.Sequential)]
+    public struct CONSOLE_SCREEN_BUFFER_INFO
+    {
+        public COORD dwSize;
+        public COORD dwCursorPosition;
+        public short wAttributes;
+        public SMALL_RECT srWindow;
+        public COORD dwMaximumWindowSize;
+    }
     [Flags]
     public enum MouseEventFlags
     {
@@ -3030,6 +3057,13 @@ namespace Rc.Framework.Native
         RightDown = 0x00000008,
         RightUp = 0x00000010
     }
+    [StructLayoutAttribute(LayoutKind.Sequential)]
+    public struct SMALL_POINT
+    {
+        public short X;
+        public short Y;
+    }
+
     public class POINT
     {
         public int x;
@@ -4180,6 +4214,30 @@ namespace Rc.Framework.Native
         public short wSecond2;
         public short wMilliseconds2;
     }
+    public struct StringHandleOnStack
+    {
+        public IntPtr m_ptr;
+        public StringHandleOnStack(IntPtr pString)
+        {
+            m_ptr = pString;
+        }
+    }
+    public struct ObjectHandleOnStack
+    {
+        public IntPtr m_ptr;
+        public ObjectHandleOnStack(IntPtr pObject)
+        {
+            m_ptr = pObject;
+        }
+    }
+    public struct StackCrawlMarkHandle
+    {
+        public IntPtr m_ptr;
+        public StackCrawlMarkHandle(IntPtr stackMark)
+        {
+            m_ptr = stackMark;
+        }
+    }
     public delegate bool EnumChildrenCallback(IntPtr hwnd, IntPtr lParam);
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public class HH_AKLINK
@@ -4200,7 +4258,7 @@ namespace Rc.Framework.Native
         public IntPtr hinst = IntPtr.Zero;
         public int idString;
         public IntPtr pszText;
-        public POINT pt;
+        public Point pt;
         public int clrForeground = -1;
         public int clrBackground = -1;
         public RECT rcMargins = RECT.FromXYWH(-1, -1, -1, -1);
@@ -4359,8 +4417,51 @@ namespace Rc.Framework.Native
             Y = y;
         }
     }
-    public static class NativeMethods
+    public unsafe static class NativeMethods
     {
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool SetConsoleCursorPosition(IntPtr hConsoleOutput, COORD cursorPosition);
+        [DllImport("kernel32", SetLastError = true)]
+        public static unsafe extern bool SetConsoleWindowInfo(IntPtr hConsoleOutput, bool absolute, SMALL_RECT* consoleWindow);
+        [DllImport("QCall", CharSet = CharSet.Ansi)]
+        [SuppressUnmanagedCodeSecurity]
+        private static extern Int32 GetTitleNative(StringHandleOnStack outTitle, out Int32 outTitleLength);
+        public static CONSOLE_SCREEN_BUFFER_INFO GetBufferInfo(bool throwOnNoConsole, out bool succeeded)
+        {
+            succeeded = false;
+            CONSOLE_SCREEN_BUFFER_INFO csbi;
+            bool success;
+
+            IntPtr hConsole = GetStdHandle(NativeConstat.STD_INPUT_HANDLE);
+            if (hConsole == NativeConstat.INVALID_HANDLE_VALUE)
+            {
+                if (!throwOnNoConsole)
+                    return new CONSOLE_SCREEN_BUFFER_INFO();
+                else
+                    throw new IOException("IO_NoConsole");
+            }
+            
+            success = GetConsoleScreenBufferInfo(hConsole, out csbi);
+            if (!success)
+            {
+                success = GetConsoleScreenBufferInfo(GetStdHandle(NativeConstat.STD_ERROR_HANDLE), out csbi);
+                if (!success)
+                    success = GetConsoleScreenBufferInfo(GetStdHandle(NativeConstat.STD_INPUT_HANDLE), out csbi);
+
+                if (!success)
+                {
+                    int errorCode = Marshal.GetLastWin32Error();
+                    if (errorCode == NativeConstat.ERROR_INVALID_HANDLE && !throwOnNoConsole)
+                        return new CONSOLE_SCREEN_BUFFER_INFO();
+                }
+            }
+            succeeded = true;
+            return csbi;
+        }
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool GetConsoleScreenBufferInfo(IntPtr hConsoleOutput, out CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern IntPtr GetStdHandle(int nStdHandle);
         /// <summary>
         /// Determines whether the type inherits from the specified type (used to determine a type without using an explicit type instance).
         /// </summary>
