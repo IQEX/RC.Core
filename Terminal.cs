@@ -13,6 +13,8 @@ using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Runtime.CompilerServices;
+using Rc.Framework.Extension;
+using System.Text;
 
 //! Я уберу старое API в 10 версии фреймворка
 namespace Rc.Framework
@@ -43,7 +45,7 @@ namespace Rc.Framework
         
         public const string Key = "§";
         public static string Cost(char c) { return $"§{c}"; }
-        public static string Cost(this string c) { return ""; }
+        public static string Cost(this string c) { return $"§{c}"; }
 
         private static TextWriter _out
         {
@@ -61,6 +63,9 @@ namespace Rc.Framework
         }
         static Terminal()
         {
+            Console.OutputEncoding = Encoding.UTF8;
+            Console.InputEncoding = Encoding.UTF8;
+
             ConfigTerminal conf = new ConfigTerminal();
             conf.Load();
 
@@ -68,7 +73,10 @@ namespace Rc.Framework
             isUseRCL        = conf.isUseRCL;
             isUseHeader     = conf.isUseHeader;
             isUseColor      = conf.isUseColor;
-            isOldKeyParse   = conf.isOldKeyParse;
+            if (conf.VersionAPI == VTerminalAPI.v4_5)
+                isOldKeyParse = true;
+            else
+                isOldKeyParse = false;
 
             listOfRCL = new RList<string>();
             //&     Black           DarkBlue            DarkGreen
@@ -94,7 +102,17 @@ namespace Rc.Framework
 
 
         private static string RexMatherGTColor = "";
-
+        public static void SetConfig(ConfigTerminal conf)
+        {
+            header = conf.Header;
+            isUseRCL = conf.isUseRCL;
+            isUseHeader = conf.isUseHeader;
+            isUseColor = conf.isUseColor;
+            if (conf.VersionAPI == VTerminalAPI.v4_5)
+                isOldKeyParse = true;
+            else
+                isOldKeyParse = false;
+        }
         public static ConfigTerminal GetConfig()
         {
             ConfigTerminal conf = new ConfigTerminal();
@@ -102,7 +120,6 @@ namespace Rc.Framework
             conf.isUseRCL = isUseRCL;
             conf.isUseHeader = isUseHeader;
             conf.isUseColor = isUseColor;
-            conf.isOldKeyParse = isOldKeyParse;
             conf.VersionAPI = VTerminalAPI.v8_1;
             return conf;
         }
@@ -172,7 +189,15 @@ namespace Rc.Framework
             else
                 _out.Write($"{s}{Environment.NewLine}");
         }
-        public static void WriteLine(string s, bool isTrase, [CallerMemberName] string member = "", [CallerLineNumber] int line = 0)
+        /// <summary>
+        /// Writes a new line, with the support of rcl
+        /// and Trase Line or Member of called
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="isTrase"></param>
+        /// <param name="member"></param>
+        /// <param name="line"></param>
+        public static void WriteLine(string s, bool isTrase, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0)
         {
             if (!isTrase)
             {
@@ -200,6 +225,12 @@ namespace Rc.Framework
                     ParseAndWrite(header);
                     _out.Write($">({member}:{line}): ");
                 }
+                else if (header != "" && !isUseRCL)
+                {
+                    _out.Write($"<");
+                    _out.Write(header);
+                    _out.Write($">({member}:{line}): ");
+                }
             }
             if (isUseRCL)
                 ParseAndWrite($"{s}{Environment.NewLine}");
@@ -207,12 +238,12 @@ namespace Rc.Framework
                 _out.Write($"{s}{Environment.NewLine}");
         }
 
-        private static void ParseAndWrite(string str)
+        public static void ParseAndWrite(string str)
         {
             //& Старая реализация
             foreach(string y in listOfRCL)
             {
-                str.Replace(y, $"+{y}\0");
+                str = str.Replace(y, $"+{y}\0");
             }
             char[] chars = str.ToCharArray();
             lock(_out)
@@ -326,7 +357,7 @@ namespace Rc.Framework
                         _out.Write(chars[i]);
                 }
             }
-            
+            Console.ForegroundColor = ConsoleColor.White;
 
             //& новая
             string textToWrite = $"Hello, it's test! Let's go! It's §0black§f, §1DarkBlue§f, §2DarkGreen§f, §3DarkCyan§f, §4DarkRed§f, §5pDarkMagenta§f, §6pDarkYellow§f, §7pDarkGray§f, §8pGray§f, §9pBlue§f, §apGreen§f, §bpCyan§f, §cpRed§f, §dpMagenta§f, §epYellow§f, wot i vse!~";
@@ -576,7 +607,6 @@ namespace Rc.Framework
             public bool isUseRCL;
             public bool isUseHeader;
             public bool isUseColor;
-            public bool isOldKeyParse;
             public VTerminalAPI VersionAPI;
             public void AppendGlobal()
             {
@@ -597,10 +627,9 @@ namespace Rc.Framework
                 if (reg != null)
                 {
                     Header = (string)reg.GetValue("Header", "§dEngine§c");
-                    isUseRCL = (bool)reg.GetValue("isUseRCL", true);
-                    isUseHeader = (bool)reg.GetValue("isUseHeader", true);
-                    isUseColor = (bool)reg.GetValue("isUseColor", true);
-                    isOldKeyParse = (bool)reg.GetValue("isOldKeyParse", false);
+                    isUseRCL = bool.Parse((string)reg.GetValue("isUseRCL", true));
+                    isUseHeader = bool.Parse((string)reg.GetValue("isUseHeader", true));
+                    isUseColor = bool.Parse((string)reg.GetValue("isUseColor", true));
                     VersionAPI = (VTerminalAPI)reg.GetValue("VersionAPI", VTerminalAPI.v8_1);
                 }
                 else
@@ -609,7 +638,6 @@ namespace Rc.Framework
                     isUseRCL        = (true);
                     isUseHeader     = (true);
                     isUseColor      = (true);
-                    isOldKeyParse   = (false);
                     VersionAPI      = (VTerminalAPI.v8_1);
                 }
             }
