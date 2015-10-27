@@ -17,7 +17,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>DEBUG;Standart</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -26,6 +26,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,7 +37,7 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
@@ -63,7 +64,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x64|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\</OutputPath>
-    <DefineConstants>DEBUG;Standart</DefineConstants>
+    <DefineConstants>DEBUG;x64</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\x64\RC.Core.XML</DocumentationFile>
     <DebugType>full</DebugType>
@@ -80,7 +81,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>app.ico</ApplicationIcon>
+    <ApplicationIcon>Resource\app.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework">
@@ -255,6 +256,11 @@
     <Compile Include="Net\NT\State.cs" />
     <Compile Include="Net\Protocol\TcpServer.cs" />
     <Compile Include="Net\Protocol\TcpServerConnection.cs" />
+    <Compile Include="Resource\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="RMath\Complex.cs" />
     <Compile Include="RMath\Gaussian.cs" />
     <Compile Include="RMath\IntRange.cs" />
@@ -443,7 +449,13 @@
     <Compile Include="Windows\Win32\PrintingPermission.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.ico" />
+    <Content Include="Resource\app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

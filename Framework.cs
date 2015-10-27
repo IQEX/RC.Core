@@ -16,14 +16,26 @@ namespace Rc.Framework
         /// <summary>
         /// Версия
         /// </summary>
-        public readonly static string Version = $"{GetInfoFramework().ver.Major}{GetInfoFramework().ver.Minor}{GetInfoFramework().ver.Build}";
+        public readonly static string Version = $"{GetInfoFramework().ver.Major}.{GetInfoFramework().ver.Minor}.{GetInfoFramework().ver.Build}.{GetInfoFramework().ver.Revision}";
         /// <summary>
         /// Получение информации о сборке фреймворка
         /// </summary>
         /// <returns></returns>
         public static RCAssemblyInfo GetInfoFramework()
         {
-            Assembly asm = AppDomain.CurrentDomain.Load(File.ReadAllBytes("Rc.Core.dll"));
+            if(!File.Exists(Environment.CurrentDirectory + "\\Rc.Core.dll"))
+            {
+                RCAssemblyInfo rc = new RCAssemblyInfo();
+                rc.CodeBase = "null";
+                rc.Name = "Rc.Core";
+#if !x32
+                rc.ProcArch = ProcessorArchitecture.Amd64;
+#else
+                rc.ProcArch = ProcessorArchitecture.X86;
+#endif
+                rc.ver = new System.Version(8, 1, 5525, 2);
+            }
+            Assembly asm = AppDomain.CurrentDomain.Load(File.ReadAllBytes(Environment.CurrentDirectory + "\\Rc.Core.dll"));
             RCAssemblyInfo rv = new RCAssemblyInfo();
             AssemblyName name = asm.GetName();
             rv.ver = name.Version;
