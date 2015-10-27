@@ -406,7 +406,7 @@ namespace Rc.Framework
             Console.ReadKey();
         }
         /// <summary>
-        /// Mounting logging function
+        /// Mounting logging func tion
         /// </summary>
         /// <param name="lgs"></param>
         /// <param name="TyperLog"></param>

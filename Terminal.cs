@@ -99,9 +99,6 @@ namespace Rc.Framework
         private static bool isUseHeader;
         private static bool isUseColor;
         private static bool isOldKeyParse;
-
-
-        private static string RexMatherGTColor = "";
         public static void SetConfig(ConfigTerminal conf)
         {
             header = conf.Header;
@@ -275,9 +272,9 @@ namespace Rc.Framework
                 str = str.Replace(y, $"+{y}\0");
             }
             char[] chars = str.ToCharArray();
-            lock(_out)
+            //# Такой жесткий костыль, но мля, так охеренно работает
+            lock (_out) 
             {
-                //! Такой треш, просто жесть..
                 for (int i = 0; i != chars.Length; i++)
                 {
                     if (i > chars.Length - 1)
