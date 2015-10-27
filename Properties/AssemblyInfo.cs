@@ -94,4 +94,4 @@ using System.Runtime.InteropServices;
                                                   "3fde4b0d2480aa60d65ab2c1247c2e3c37aab23b72ea9f386a83fe364f3c43c46f34abc2939420" +
                                                   "5a14b0fca6952bfdebc242198fc1520fee30e62e7c4fde6c2355736fa0ea8da90dfe7d5e087f1c" +
                                                   "3f36fd9f")]
-[assembly: InternalsVisibleTo("Internals.Rc.Core.dll")]
+[assembly: InternalsVisibleTo("Wrap.Rc.Core.dll")]
