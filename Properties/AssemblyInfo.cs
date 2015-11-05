@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("AGT-Soul")]
 [assembly: AssemblyProduct("RC.Core")]
-[assembly: AssemblyCopyright("Copyright © Yuuki Wesp 2015")]
-[assembly: AssemblyTrademark("RC Soul")]
+[assembly: AssemblyCopyright("Copyright © Yuuki Wesp (Whisper) 2015")]
+[assembly: AssemblyTrademark("RC")]
 [assembly: AssemblyCulture("")]
 
 // Параметр ComVisible со значением FALSE делает типы в сборке невидимыми 

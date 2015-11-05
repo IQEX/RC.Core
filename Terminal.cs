@@ -92,6 +92,24 @@ namespace Rc.Framework
             //&     White
             listOfRCL.Add("§f");
         }
+
+        public const string Black       = "§0";
+        public const string DarkBlue    = "§1";
+        public const string DarkGreen   = "§2";
+        public const string DarkCyan    = "§3";
+        public const string DarkRed     = "§4";
+        public const string DarkMagenta = "§5";
+        public const string DarkYellow  = "§6";
+        public const string DarkGray    = "§7";
+        public const string Gray        = "§8";
+        public const string Blue        = "§9";
+        public const string Green       = "§a";
+        public const string Cyan        = "§b";
+        public const string Red         = "§c";
+        public const string Magenta     = "§d";
+        public const string Yellow      = "§e";
+        public const string White       = "§f";
+
         private static string defHeader = "§dEngine§c";
         private static string header = "";
         private static readonly RList<string> listOfRCL;
@@ -266,15 +284,15 @@ namespace Rc.Framework
         }
         private static void ParseAndWrite(string str)
         {
-            //& Старая реализация
-            foreach(string y in listOfRCL)
+            lock (_out)
             {
-                str = str.Replace(y, $"+{y}\0");
-            }
-            char[] chars = str.ToCharArray();
-            //# Такой жесткий костыль, но мля, так охеренно работает
-            lock (_out) 
-            {
+                //& Старая реализация
+                foreach (string y in listOfRCL)
+                {
+                    str = str.Replace(y, $"+{y}\0");
+                }
+                char[] chars = str.ToCharArray();
+                //# Такой жесткий костыль, но мля, так охеренно работает
                 for (int i = 0; i != chars.Length; i++)
                 {
                     if (i > chars.Length - 1)
@@ -382,9 +400,8 @@ namespace Rc.Framework
                     else
                         _out.Write(chars[i]);
                 }
+                Console.ForegroundColor = ConsoleColor.White;
             }
-            Console.ForegroundColor = ConsoleColor.White;
-
             //& новая
             string textToWrite = $"Hello, it's test! Let's go! It's §0black§f, §1DarkBlue§f, §2DarkGreen§f, §3DarkCyan§f, §4DarkRed§f, §5pDarkMagenta§f, §6pDarkYellow§f, §7pDarkGray§f, §8pGray§f, §9pBlue§f, §apGreen§f, §bpCyan§f, §cpRed§f, §dpMagenta§f, §epYellow§f, wot i vse!~";
             List<TextBoxColored> PColor = new List<TextBoxColored>();
@@ -393,13 +410,12 @@ namespace Rc.Framework
             
             while (true)
             {
-                break;
                 //! Необходимо придумать реализацию по извлечению
                 //@ Точнее я уже её придумал, но у меня нет инормации по регулярным выражениям
                 //@ Мне необходимо достигать первого символа, а не последнего
                 //@ Как это делает эта регулярка - (?([0-9]|[a-zA-Z]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))
                 //@ Из строки 'Hello, it's test! Let's go! It's §0black§f' мне необходимо получить текст до символа §0, а не до §f
-
+                break;
                 //@ По этому, я пока воспользуюсь старой реализацией записи по символам
                 //@ Как соберу информацию, так и перепешу этот отрезок
 #pragma warning disable CS0162
