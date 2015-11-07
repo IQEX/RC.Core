@@ -11,7 +11,7 @@ namespace Rc.Framework.Collections.Generic
     /// </summary>
     /// <typeparam name="TKey">The type of the first dictionary.</typeparam>
     /// <typeparam name="TValue">The type of the second dictionary.</typeparam>
-    internal class IncDictionary<TKey, TValue>
+    public class ReflectDictionary<TKey, TValue> : IReflectDictionary<TKey, TValue>
     {
         private Dictionary<TKey, TValue> dictOne = new Dictionary<TKey, TValue>();
         private Dictionary<TValue, TKey> dictTwo = new Dictionary<TValue, TKey>();
@@ -36,11 +36,11 @@ namespace Rc.Framework.Collections.Generic
         /// <summary>
         /// Gets all the values for the A element.
         /// </summary>
-        public List<TKey> KeyElements { get { return dictTwo.Values.ToList<TKey>(); } }
+        public IRList<TKey> KeyElements { get { return (RList<TKey>)dictTwo.Values.ToList(); } }
         /// <summary>
         /// Gets all the values for the B element.
         /// </summary>
-        public List<TValue> ValueElements { get { return dictOne.Values.ToList<TValue>(); } }
+        public IRList<TValue> ValueElements { get { return (RList<TValue>)dictOne.Values.ToList(); } }
         /// <summary>
         /// Adds an element to the bidictinary
         /// </summary>
