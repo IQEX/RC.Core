@@ -2,6 +2,7 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
+using Rc.Framework.Yaml.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Rc.Framework.Collections.Generic
     ///  code for this type, see the Reference Source.
     /// </summary>
     /// <typeparam name="T">The type of elements in the list.</typeparam>
-    [Serializable]
+    [Serializable] [Yaml(CompactMethod.Content)]
     public class RList<T> : IReadOnlyList<T>, IReadOnlyCollection<T>, IEnumerable<T>, IEnumerable, IRList<T>
     {
         #region Internal
@@ -65,7 +66,16 @@ namespace Rc.Framework.Collections.Generic
                 }
             }
         }
-        IEnumerator IEnumerable.GetEnumerator() { throw new NotImplementedException(); } //! don't work, use IEnumerator<T> GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            if (buffer != null)
+            {
+                for (int i = 0; i < size; ++i)
+                {
+                    yield return buffer[i];
+                }
+            }
+        } 
         internal void AllocateMore()
         {
             int max = (buffer == null) ? 0 : (buffer.Length << 1);
@@ -307,6 +317,29 @@ namespace Rc.Framework.Collections.Generic
             if (array.Length < arrayIndex)
                 throw new ArgumentException("array.Length < arrayIndex");
             Array.Copy(this.buffer, 0, array, arrayIndex, this.size);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="netList"></param>
+        public static explicit operator RList<T>(List<T> netList)
+        {
+            RList<T> wariator = new RList<T>();
+            foreach(T i in netList)
+            {
+                wariator.Add(i);
+            }
+            return wariator;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rList"></param>
+        public static explicit operator List<T>(RList<T> rList)
+        {
+            return new List<T>(rList);
         }
     }
 }
