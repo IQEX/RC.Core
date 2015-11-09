@@ -6,15 +6,15 @@ using System;
 namespace Rc.Framework.IO.UnSafe.Memory
 {
     /// <summary>
-    /// null
+    /// Purifier
     /// </summary>
     public static class Disposer
     {
         /// <summary>
-        /// Безопасное очищение
+        /// Secure purification
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="obj"></param>
+        /// <typeparam name="T">Class instanse of IDisposable</typeparam>
+        /// <param name="obj">Object of purification class</param>
         public static void SafeDispose<T>(ref T obj) where T : class, IDisposable
         {
             if (obj != null)
