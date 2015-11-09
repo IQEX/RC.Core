@@ -1,4 +1,4 @@
-|![version](https://img.shields.io/badge/version-7.8%20Beta-green.svg)|![Platform_unix](https://img.shields.io/badge/Unix-Mono%204.0-lightgrey.svg)|![Platform_win](https://img.shields.io/badge/Windows-NET.Core%204.5-lightgrey.svg)|
+|![version](https://img.shields.io/badge/version-8.1.2%20Beta-green.svg)|![Platform_unix](https://img.shields.io/badge/Unix-Mono%204.0-lightgrey.svg)|![Platform_win](https://img.shields.io/badge/Windows-NET.Core%204.5-lightgrey.svg)|
 |:--|:--|:--|
 |![Project](https://img.shields.io/badge/Project-Rc.Core-lightgrey.svg)|[![BuildStatusUnix](https://travis-ci.org/AnotherAltr/Rc.Core.svg?branch=master)](https://travis-ci.org/AnotherAltr/Rc.Core)|[![BuildStatusWin](https://ci.appveyor.com/api/projects/status/4ad6ew61pp0lnxio?svg=true)](https://ci.appveyor.com/project/AnotherAltr/rc-core)| 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/AnotherAltr/Rc.Core/blob/master/LICENSE) 
