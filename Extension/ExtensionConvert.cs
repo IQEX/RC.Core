@@ -16,7 +16,7 @@ namespace Rc.Framework.Extension
         /// <typeparam name="T">Type of the collection.</typeparam>
         /// <param name="enumerator">The enumerator.</param>
         /// <returns>List</returns>
-        internal static Collections.Generic.RList<T> ToList<T>(this System.Collections.IEnumerator enumerator)
+        public static Collections.Generic.RList<T> ToList<T>(this System.Collections.IEnumerator enumerator)
         {
             Collections.Generic.RList<T> collection = new Collections.Generic.RList<T>();
             while (enumerator.MoveNext())

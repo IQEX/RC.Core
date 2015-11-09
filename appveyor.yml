@@ -1,4 +1,4 @@
-version: 7.8.{build}
+version: 8.1.2.{build}
 
 artifacts:
   - path: Framework.zip # pushing a single file
