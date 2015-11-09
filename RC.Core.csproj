@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{35A23B54-4D7B-43A0-8FA5-133FEEDC8C6A}</ProjectGuid>
-    <OutputType>module</OutputType>
+    <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rc.Framework</RootNamespace>
     <AssemblyName>RC.Core</AssemblyName>
