@@ -34,6 +34,7 @@ namespace Rc.Framework
                 rc.ProcArch = ProcessorArchitecture.X86;
 #endif
                 rc.ver = new System.Version(8, 1, 5525, 2);
+                return rc;
             }
             Assembly asm = AppDomain.CurrentDomain.Load(File.ReadAllBytes(Environment.CurrentDirectory + "\\Rc.Core.dll"));
             RCAssemblyInfo rv = new RCAssemblyInfo();

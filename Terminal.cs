@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Runtime.CompilerServices;
 using Rc.Framework.Extension;
 using System.Text;
+using System.Threading;
 
 //! Я уберу старое API в 10 версии фреймворка
 namespace Rc.Framework
@@ -26,22 +27,22 @@ namespace Rc.Framework
     {
         //x string pNone = "(?([0-9]|[a-zA-Z]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
         //x string pNone = "(?=§)";
-        public const string pBlack = "(?<=\\§([0]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarpBlue = "(?<=\\§([1]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkGreen = "(?<=\\§([2]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkCyan = "(?<=\\§([3]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkRed = "(?<=\\§([4]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkMagenta = "(?<=\\§([5]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pBlack      = "(?<=\\§([0]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarpBlue   = "(?<=\\§([1]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkGreen  = "(?<=\\§([2]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkCyan   = "(?<=\\§([3]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkRed    = "(?<=\\§([4]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkMagenta= "(?<=\\§([5]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
         public const string pDarkYellow = "(?<=\\§([6]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pDarkGray = "(?<=\\§([7]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pGray = "(?<=\\§([8]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pBlue = "(?<=\\§([9]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pGreen = "(?<=\\§([a]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pCyan = "(?<=\\§([b]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pRed = "(?<=\\§([c]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pMagenta = "(?<=\\§([d]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pYellow = "(?<=\\§([e]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
-        public const string pWhite = "(?<=\\§([f]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pDarkGray   = "(?<=\\§([7]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pGray       = "(?<=\\§([8]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pBlue       = "(?<=\\§([9]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pGreen      = "(?<=\\§([a]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pCyan       = "(?<=\\§([b]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pRed        = "(?<=\\§([c]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pMagenta    = "(?<=\\§([d]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pYellow     = "(?<=\\§([e]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
+        public const string pWhite      = "(?<=\\§([f]))[^\\§\\§]+(?=\\§([0-9]|[a-zA-Z]))";
 
         public const string Key = "§";
         public static string Cost(char c) { return $"§{c}"; }
@@ -71,7 +72,6 @@ namespace Rc.Framework
 
             header = conf.Header;
             isUseRCL = conf.isUseRCL;
-            isUseHeader = conf.isUseHeader;
             isUseColor = conf.isUseColor;
             if (conf.VersionAPI == VTerminalAPI.v4_5)
                 isOldKeyParse = true;
@@ -110,18 +110,16 @@ namespace Rc.Framework
         public const string Yellow      = "§e";
         public const string White       = "§f";
 
-        private static string defHeader = "§dEngine§c";
+        private static string defHeader = "§cEngine§c";
         private static string header = "";
         private static readonly RList<string> listOfRCL;
         private static bool isUseRCL;
-        private static bool isUseHeader;
         private static bool isUseColor;
         private static bool isOldKeyParse;
         public static void SetConfig(ConfigTerminal conf)
         {
             header = conf.Header;
             isUseRCL = conf.isUseRCL;
-            isUseHeader = conf.isUseHeader;
             isUseColor = conf.isUseColor;
             if (conf.VersionAPI == VTerminalAPI.v4_5)
                 isOldKeyParse = true;
@@ -133,7 +131,6 @@ namespace Rc.Framework
             ConfigTerminal conf = new ConfigTerminal();
             conf.Header = header;
             conf.isUseRCL = isUseRCL;
-            conf.isUseHeader = isUseHeader;
             conf.isUseColor = isUseColor;
             conf.VersionAPI = VTerminalAPI.v8_1;
             return conf;
@@ -142,7 +139,7 @@ namespace Rc.Framework
         /// Writes a new line, with the support of rcl, without symbol of the end-line
         /// </summary>
         /// <param name="s">String Rcl</param>
-        public static void Write(string s)
+        public static void Write(string s, bool isUseHeader = true)
         {
             if (isOldKeyParse)
             {
@@ -175,7 +172,7 @@ namespace Rc.Framework
         /// Writes a new line, with the support of rcl
         /// </summary>
         /// <param name="s">String Rcl</param>
-        public static void WriteLine(string s)
+        public static void WriteLine(string s, bool isUseHeader = true)
         {
             if (isOldKeyParse)
             {
@@ -212,7 +209,7 @@ namespace Rc.Framework
         /// <param name="isTrase">is Print member or line to terminal?</param>
         /// <param name="member">autogenerated</param>
         /// <param name="line">autogenerated</param>
-        public static void WriteLine(string s, bool isTrase, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0)
+        public static void WriteLine(string s, bool isTrase, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0, bool isUseHeader = true)
         {
             if (!isTrase)
             {
@@ -259,7 +256,7 @@ namespace Rc.Framework
         /// <param name="member">autogenerated</param>
         /// <param name="line">autogenerated</param>
         /// <param name="file">autogenerated</param>
-        public static void WriteLine(Exception ex, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0, [CallerFilePath] string file = "")
+        public static void WriteLine(Exception ex, [CallerMemberName] string member = "?", [CallerLineNumber] int line = 0, [CallerFilePath] string file = "", bool isUseHeader = true)
         {
             if (isOldKeyParse)
             {
@@ -284,6 +281,7 @@ namespace Rc.Framework
         }
         private static void ParseAndWrite(string str)
         {
+            Monitor.Wait()
             lock (_out)
             {
                 //& Старая реализация

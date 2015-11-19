@@ -5,10 +5,10 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{35A23B54-4D7B-43A0-8FA5-133FEEDC8C6A}</ProjectGuid>
-    <OutputType>library</OutputType>
+    <OutputType>module</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Rc.Framework</RootNamespace>
-    <AssemblyName>RC.Core</AssemblyName>
+    <AssemblyName>RC.Core.x64</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
@@ -18,13 +18,13 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\..\JNI\Bin\</OutputPath>
     <DefineConstants>DEBUG;Standart</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <DocumentationFile>C:\JNI\Bin\RC.Core.x64.xml</DocumentationFile>
     <PlatformTarget>x64</PlatformTarget>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
   </PropertyGroup>
@@ -38,7 +38,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
-    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\RC.Core.x64.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -63,10 +63,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x64|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Bin\x64\</OutputPath>
+    <OutputPath>..\..\..\JNI\RC.Core\8.1.2.5525\x64\</OutputPath>
     <DefineConstants>DEBUG;x64</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>C:\Git\RCFramework\Bin\x64\RC.Core.XML</DocumentationFile>
+    <DocumentationFile>C:\JNI\RC.Core\8.1.2.5525\x64\RC.Core.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -74,11 +74,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x86|AnyCPU'">
-    <OutputPath>..\Bin\x86\</OutputPath>
+    <OutputPath>..\..\..\JNI\RC.Core\8.1.2.5525\x86\</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
     <DefineConstants>x86;x32;</DefineConstants>
-    <DocumentationFile>C:\Git\RCFramework\Bin\x86\RC.Core.XML</DocumentationFile>
+    <DocumentationFile>C:\JNI\RC.Core\8.1.2.5525\x86\RC.Core.XML</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
@@ -86,10 +86,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
+    <OutputPath>..\..\..\JNI\Bin\</OutputPath>
     <DefineConstants>DEBUG;x64</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <DocumentationFile>C:\JNI\Bin\RC.Core.XML</DocumentationFile>
     <Optimize>false</Optimize>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
