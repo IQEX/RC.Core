@@ -281,7 +281,7 @@ namespace Rc.Framework
         }
         private static void ParseAndWrite(string str)
         {
-            Monitor.Wait()
+            //Monitor.Wait()
             lock (_out)
             {
                 //& Старая реализация

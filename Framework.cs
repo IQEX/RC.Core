@@ -28,11 +28,11 @@ namespace Rc.Framework
                 RCAssemblyInfo rc = new RCAssemblyInfo();
                 rc.CodeBase = "null";
                 rc.Name = "Rc.Core";
-#if !x32
+                #if !x32
                 rc.ProcArch = ProcessorArchitecture.Amd64;
-#else
+                #else
                 rc.ProcArch = ProcessorArchitecture.X86;
-#endif
+                #endif
                 rc.ver = new System.Version(8, 1, 5525, 2);
                 return rc;
             }
