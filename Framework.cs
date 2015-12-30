@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Rc.Framework
+namespace RC.Framework
 {
     /// <summary>
     /// основной класс управления фреймворка
@@ -16,7 +16,7 @@ namespace Rc.Framework
         /// <summary>
         /// Версия
         /// </summary>
-        public readonly static string Version = $"{GetInfoFramework().ver.Major}.{GetInfoFramework().ver.Minor}.{GetInfoFramework().ver.Build}.{GetInfoFramework().ver.Revision}";
+        public static readonly string Version = $"{GetInfoFramework().ver.Major}.{GetInfoFramework().ver.Minor}.{GetInfoFramework().ver.Build}.{GetInfoFramework().ver.Revision}";
         /// <summary>
         /// Получение информации о сборке фреймворка
         /// </summary>
@@ -33,7 +33,7 @@ namespace Rc.Framework
                 #else
                 rc.ProcArch = ProcessorArchitecture.X86;
                 #endif
-                rc.ver = new System.Version(8, 1, 5525, 2);
+                rc.ver = new System.Version(9, 0, 12250, 0);
                 return rc;
             }
             Assembly asm = AppDomain.CurrentDomain.Load(File.ReadAllBytes(Environment.CurrentDirectory + "\\Rc.Core.dll"));
@@ -48,7 +48,7 @@ namespace Rc.Framework
     }
 }
 
-namespace Rc
+namespace RC
 {
     /// <summary>
     /// class of version framework to rc line

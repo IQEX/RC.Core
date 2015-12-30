@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.RMath
+namespace RC.Framework.RMath
 {
     /// <summary>
 	/// Complex number wrapper class.

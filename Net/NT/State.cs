@@ -4,7 +4,7 @@
 // =====================================//==============================================================//
 using System.Net;
 using System.Net.Sockets;
-namespace Rc.Framework.Net.NTCore
+namespace RC.Framework.Net.NTCore
 {
     /// <summary>
     /// Simple implementation of the UdpState class mentioned on 

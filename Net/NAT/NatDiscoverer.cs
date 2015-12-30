@@ -1,14 +1,14 @@
-using Rc.Framework.Net.Nat.Exceptions;
-using Rc.Framework.Net.Nat.Pmp;
-using Rc.Framework.Net.Nat.Upnp;
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Exceptions;
+using RC.Framework.Net.Nat.Pmp;
+using RC.Framework.Net.Nat.Upnp;
+using RC.Framework.Net.Nat.Utils;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.Net.Nat
+namespace RC.Framework.Net.Nat
 {
     /// <summary>
     /// 
@@ -17,7 +17,7 @@ namespace Rc.Framework.Net.Nat
     {
         /// <summary>
         /// The <see cref="http://msdn.microsoft.com/en-us/library/vstudio/system.diagnostics.tracesource">TraceSource</see> instance
-        /// used for debugging and <see cref="https://github.com/lontivero/Rc.Framework.Net.Nat/wiki/Troubleshooting">Troubleshooting</see>
+        /// used for debugging and <see cref="https://github.com/lontivero/RC.Framework.Net.Nat/wiki/Troubleshooting">Troubleshooting</see>
         /// </summary>
         /// <example>
         /// NatUtility.TraceSource.Switch.Level = SourceLevels.Verbose;
@@ -28,9 +28,9 @@ namespace Rc.Framework.Net.Nat
         /// there will no be tracing to analyse.
         /// </remarks>
         /// <remarks>
-        /// Rc.Framework.Net.Nat only supports SourceLevels.Verbose, SourceLevels.Error, SourceLevels.Warning and SourceLevels.Information.
+        /// RC.Framework.Net.Nat only supports SourceLevels.Verbose, SourceLevels.Error, SourceLevels.Warning and SourceLevels.Information.
         /// </remarks>
-        public readonly static TraceSource TraceSource = new TraceSource("Rc.Framework.Net.Nat");
+        public readonly static TraceSource TraceSource = new TraceSource("RC.Framework.Net.Nat");
 
         private static readonly Dictionary<string, NatDevice> Devices = new Dictionary<string, NatDevice>();
 
@@ -133,7 +133,7 @@ namespace Rc.Framework.Net.Nat
         }
 
         /// <summary>
-        /// Release all ports opened by Rc.Framework.Net.Nat. 
+        /// Release all ports opened by RC.Framework.Net.Nat. 
         /// </summary>
         /// <remarks>
         /// If ReleaseOnShutdown value is true, it release all the mappings created through the library.

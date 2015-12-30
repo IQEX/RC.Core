@@ -2,43 +2,20 @@
 //                                      //                                                              //
 // Source="root\\Direct\\Dir.cs"        //                Copyright © Of Fire Twins Wesp 2015           //
 // Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="7.7"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-using System;
-using System.IO;
-
-namespace Rc.Framework.IO
+namespace RC.Framework.IO
 {
+    using System;
+    using System.IO;
     /// <summary>
     /// Класс допольнительных инструментов для работы с директориями 
     /// </summary>
     public class RDir
     {
-        /// <summary>
-        /// Связание путей, для заполнение пустот.
-        /// Необходимо для передачи пути через аргументы.
-        /// </summary>
-        /// <param name="Path"> Путь </param>
-        /// <returns> Связанный путь </returns>
-        [Obsolete("Use wrap path \'STRING_OF_PATH\'")]
-        public static string CompPath(string Path)
-        {
-            return Path.Replace(' ', '@');
-        }
-        /// <summary>
-        /// Развязка пути, возвращение пустот.
-        /// Необходимо для возвращения изначального вида пути пришедшего через аргументы.
-        /// </summary>
-        /// <param name="CompPath"> Связанный путь </param>
-        /// <returns> Развязанный путь </returns>
-        /// [Obsolete("Use wrap path \'STRING_OF_PATH\'")]
-        public static string UnmpPath(string CompPath)
-        {
-            return CompPath.Replace('@', ' ');
-        }
         /// <summary>
         /// Копирование директории
         /// </summary>
@@ -80,19 +57,16 @@ namespace Rc.Framework.IO
         /// <param name="path"></param>
         public static bool TryDelete(string path)
         {
-            if (Directory.Exists(path))
+            if (!Directory.Exists(path)) return false;
+            try
             {
-                try
-                {
-                    Directory.Delete(path, true);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                Directory.Delete(path, true);
+                return true;
             }
-            return false;
+            catch
+            {
+                return false;
+            }
         }
     }
 }

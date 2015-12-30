@@ -2,11 +2,11 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-using Rc.Framework.Yaml.Serialization;
+using RC.Framework.Yaml.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-namespace Rc.Framework.Collections.Generic
+namespace RC.Framework.Collections.Generic
 {
     /// <summary>
     /// Delegate for Compare method

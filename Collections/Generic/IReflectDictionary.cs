@@ -4,7 +4,7 @@
 // =====================================//==============================================================//
 using System.Collections.Generic;
 
-namespace Rc.Framework.Collections.Generic
+namespace RC.Framework.Collections.Generic
 {
     /// <summary>
     /// Same as a .net dictionary. But just working in both directions.

@@ -26,7 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Rc.Framework.Net.Nat.Pmp
+namespace RC.Framework.Net.Nat.Pmp
 {
     internal static class PmpConstants
     {

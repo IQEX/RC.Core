@@ -27,7 +27,7 @@
 using System;
 using System.Xml;
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     internal abstract class ResponseMessageBase
     {

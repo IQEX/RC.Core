@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-namespace Rc.Framework.Collections
+namespace RC.Framework.Collections
 {
     /// <summary>
 	/// A call which make repetitive (variable) buffer operation easier on memory

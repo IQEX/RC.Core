@@ -24,7 +24,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     internal static class UpnpConstants
     {

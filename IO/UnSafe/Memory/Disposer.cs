@@ -3,7 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
-namespace Rc.Framework.IO.UnSafe.Memory
+namespace RC.Framework.IO.UnSafe.Memory
 {
     /// <summary>
     /// Purifier
@@ -17,11 +17,9 @@ namespace Rc.Framework.IO.UnSafe.Memory
         /// <param name="obj">Object of purification class</param>
         public static void SafeDispose<T>(ref T obj) where T : class, IDisposable
         {
-            if (obj != null)
-            {
-                obj.Dispose();
-                obj = null;
-            }
+            if (obj == null) return;
+            obj.Dispose();
+            obj = null;
         }
     }
 }

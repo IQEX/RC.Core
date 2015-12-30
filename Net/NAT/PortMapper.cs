@@ -1,6 +1,6 @@
 using System;
 
-namespace Rc.Framework.Net.Nat
+namespace RC.Framework.Net.Nat
 {
     /// <summary>
     /// Protocol that should be used for searching a NAT device. 

@@ -30,7 +30,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace Rc.Framework.Net.Nat.Exceptions
+namespace RC.Framework.Net.Nat.Exceptions
 {
     /// <summary>
     /// 

@@ -2,32 +2,29 @@
 //                                      //                                                              //
 // Source="root\\Net\\FtpManager.cs"    //     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
 // Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="7.0"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Rc.Framework.Net
+namespace RC.Framework.Net
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.Runtime.CompilerServices;
+    using System.Text.RegularExpressions;
+    using System.Threading;
     /// <summary>
     /// Basic class of DotNetFtpLibrary
     /// </summary>
     public class FtpClient
     {
-        private const int BUFFER_SIZE = 32768;
+        private const int BufferSize = 32768;
         //private const int BUFFER_SIZE = 1024;
         private Thread _thread;
         private bool _abort = false;
@@ -167,11 +164,11 @@ namespace Rc.Framework.Net
                     using (FileStream fs = File.Open(Path.Combine(localDirectory, localFilename), FileMode.Open))
                     {
                         fs.Seek(0, SeekOrigin.Begin);
-                        byte[] buffer = new byte[BUFFER_SIZE];
+                        byte[] buffer = new byte[BufferSize];
                         int readBytes = 0;
                         do
                         {
-                            readBytes = fs.Read(buffer, 0, BUFFER_SIZE);
+                            readBytes = fs.Read(buffer, 0, BufferSize);
                             requestStream.Write(buffer, 0, readBytes);
                             if (UploadProgressChanged != null && !_abort)
                             {
@@ -240,7 +237,6 @@ namespace Rc.Framework.Net
         {
             _abort = false;
             FileInfo fi = new FileInfo(Path.Combine(localDirectory, localFilename));
-            long remoteFileSize = 0;
             FtpWebRequest request = null;
             long totalBytesSend = 0;
 
@@ -251,6 +247,7 @@ namespace Rc.Framework.Net
             request.KeepAlive = KeepAlive;
             try
             {
+                long remoteFileSize = 0;
                 if (this.FileExists(remoteDirectory, remoteFileName, out remoteFileSize))
                 {
                     request.Method = WebRequestMethods.Ftp.AppendFile;
@@ -274,11 +271,11 @@ namespace Rc.Framework.Net
                         StreamReader fs = new StreamReader(logFileStream);
 
                         fs.BaseStream.Seek(remoteFileSize, SeekOrigin.Begin);
-                        byte[] buffer = new byte[BUFFER_SIZE];
+                        byte[] buffer = new byte[BufferSize];
                         int readBytes = 0;
                         do
                         {
-                            readBytes = fs.BaseStream.Read(buffer, 0, BUFFER_SIZE);
+                            readBytes = fs.BaseStream.Read(buffer, 0, BufferSize);
                             requestStream.Write(buffer, 0, readBytes);
                             if (UploadProgressChanged != null && !_abort)
                             {
@@ -295,11 +292,9 @@ namespace Rc.Framework.Net
                     }
                 }
                 //Console.WriteLine( "Done" );
-                if (UploadFileCompleted != null && !_abort)
-                {
-                    var uploadFileCompleteArgs = new UploadFileCompletedEventLibArgs(totalBytesSend, TransmissionState.Success);
-                    UploadFileCompleted(this, uploadFileCompleteArgs);
-                }
+                if (UploadFileCompleted == null || _abort) return;
+                var uploadFileCompleteArgs = new UploadFileCompletedEventLibArgs(totalBytesSend, TransmissionState.Success);
+                UploadFileCompleted(this, uploadFileCompleteArgs);
             }
             catch (WebException webException)
             {
@@ -332,10 +327,12 @@ namespace Rc.Framework.Net
         {
             ThreadParameters parameters = new ThreadParameters(localDirectory, localFilename, remoteDirectory, remoteFileName);
             ParameterizedThreadStart pThreadStart = new ParameterizedThreadStart(this.DoUploadResumeAsync);
-            _thread = new Thread(pThreadStart);
-            _thread.Name = "UploadThread";
-            _thread.IsBackground = true;
-            _thread.Priority = ThreadPriority.Normal;
+            _thread = new Thread(pThreadStart)
+            {
+                Name = "UploadThread",
+                IsBackground = true,
+                Priority = ThreadPriority.Normal
+            };
             _thread.Start(parameters);
         }
 
@@ -359,40 +356,40 @@ namespace Rc.Framework.Net
             long totalBytesReceived = 0;
             try
             {
-                FtpWebRequest request = FtpWebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
-                request.Credentials = new NetworkCredential(UserName, Password);
-                request.UsePassive = UsePassive;
-                request.Timeout = TimeOut;
-                request.KeepAlive = KeepAlive;
-                request.Method = WebRequestMethods.Ftp.DownloadFile;
-
-                long remoteFileSize = this.GetFileSize(remoteDirectory, remoteFileName);
-                localfileStream = new FileStream(localFile, FileMode.Create, FileAccess.Write);
-
-                FtpWebResponse response = request.GetResponse() as FtpWebResponse;
-                using (Stream ftpStream = response.GetResponseStream())
+                FtpWebRequest request = WebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
+                if (request != null)
                 {
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int bytesRead = ftpStream.Read(buffer, 0, BUFFER_SIZE);
-                    totalBytesReceived = bytesRead;
-                    while (bytesRead != 0 && !_abort)
+                    request.Credentials = new NetworkCredential(UserName, Password);
+                    request.UsePassive = UsePassive;
+                    request.Timeout = TimeOut;
+                    request.KeepAlive = KeepAlive;
+                    request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+                    long remoteFileSize = this.GetFileSize(remoteDirectory, remoteFileName);
+                    localfileStream = new FileStream(localFile, FileMode.Create, FileAccess.Write);
+
+                    FtpWebResponse response = request.GetResponse() as FtpWebResponse;
+                    using (Stream ftpStream = response.GetResponseStream())
                     {
-                        localfileStream.Write(buffer, 0, bytesRead);
-                        bytesRead = ftpStream.Read(buffer, 0, BUFFER_SIZE);
-                        totalBytesReceived += bytesRead;
-                        if (DownloadProgressChanged != null && !_abort)
+                        byte[] buffer = new byte[BufferSize];
+                        int bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                        totalBytesReceived = bytesRead;
+                        while (bytesRead != 0 && !_abort)
                         {
-                            DownloadProgressChanged(this, new DownloadProgressChangedLibArgs(totalBytesReceived, remoteFileSize));
+                            localfileStream.Write(buffer, 0, bytesRead);
+                            bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                            totalBytesReceived += bytesRead;
+                            if (DownloadProgressChanged != null && !_abort)
+                            {
+                                DownloadProgressChanged(this, new DownloadProgressChangedLibArgs(totalBytesReceived, remoteFileSize));
+                            }
                         }
-                    }//while
-                    localfileStream.Close();
+                        localfileStream.Close();
+                    }
                 }
-                if (DownloadFileCompleted != null && !_abort)
-                {
-                    var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(totalBytesReceived, TransmissionState.Success);
-                    DownloadFileCompleted(this, downloadFileCompleteArgs);
-                }
-
+                if (DownloadFileCompleted == null || _abort) return;
+                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(totalBytesReceived, TransmissionState.Success);
+                DownloadFileCompleted(this, downloadFileCompleteArgs);
             }
             catch (WebException webException)
             {
@@ -411,72 +408,10 @@ namespace Rc.Framework.Net
             }
             finally
             {
-                if (localfileStream != null) localfileStream.Close();
+                localfileStream?.Close();
             }
         }
-        /*  public void Download(string localDirectory, string localFilename, string remoteDirectory, string remoteFileName)
-        {
-            _abort = false;
-            var localFile = Path.Combine(localDirectory, localFilename);
-            FileInfo file = new FileInfo(localFile);
-            long totalBytesReceived = 0;
-            try
-            {
-                FtpWebRequest request = FtpWebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
-                request.Credentials = new NetworkCredential(UserName, Password);
-                request.UsePassive = UsePassive;
-                request.Timeout = TimeOut;
-                request.KeepAlive = KeepAlive;
-                request.Method = WebRequestMethods.Ftp.DownloadFile;
-
-                long remoteFileSize = this.GetFileSize(remoteDirectory, remoteFileName);
-                FtpWebResponse response = request.GetResponse() as FtpWebResponse;
-                using (FileStream localfileStream = new FileStream(localFile, FileMode.Create, FileAccess.Write))
-                {
-                    using (Stream ftpStream = response.GetResponseStream())
-                    {
-                        byte[] buffer = new byte[BUFFER_SIZE];
-                        int bytesRead = ftpStream.Read(buffer, 0, BUFFER_SIZE);
-                        totalBytesReceived = bytesRead;
-                        while (bytesRead != 0 && !_abort)
-                        {
-                            localfileStream.Write(buffer, 0, bytesRead);
-                            bytesRead = ftpStream.Read(buffer, 0, BUFFER_SIZE);
-                            totalBytesReceived += bytesRead;
-                            if (DownloadProgressChanged != null && !_abort)
-                            {
-                                DownloadProgressChanged(this, new DownloadProgressChangedLibArgs(totalBytesReceived, remoteFileSize));
-                            }
-                        }
-                    }
-                }
-                if (DownloadFileCompleted != null && !_abort)
-                {
-                    var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(totalBytesReceived, TransmissionState.Success);
-                    DownloadFileCompleted(this, downloadFileCompleteArgs);
-                }
-            }
-            catch (WebException webException)
-            {
-                if (DownloadFileCompleted != null && !_abort)
-                {
-                    DownloadFileCompleted(this, new DownloadFileCompletedEventLibArgs(totalBytesReceived, TransmissionState.Failed, webException));
-                }
-            }
-            catch (Exception exp)
-            {
-                var webException = exp as WebException;
-                if (DownloadFileCompleted != null && !_abort)
-                {
-                    DownloadFileCompleted(this, new DownloadFileCompletedEventLibArgs(totalBytesReceived, TransmissionState.Failed, webException));
-                }
-            }
-        }
-        */
-        public void DownloadAsync(string Files, string FileToDisk)
-        {
-            this.DownloadAsync("", FileToDisk, "", Files);
-        }
+        public void DownloadAsync(string Files, string FileToDisk) => this.DownloadAsync("", FileToDisk, "", Files);
 
         /// <summary>
         /// Method downloads file to FtpServer
@@ -491,13 +426,15 @@ namespace Rc.Framework.Net
         public void DownloadAsync(string localDirectory, string localFilename, string remoteDirectory, string remoteFileName)
         {
             ThreadParameters parameters = new ThreadParameters(localDirectory, localFilename, remoteDirectory, remoteFileName);
-            ParameterizedThreadStart pThreadStart = new ParameterizedThreadStart(this.DoDownloadAsync);
-            _thread = new Thread(pThreadStart);
-            _thread.Name = "DownloadThread";
-            _thread.IsBackground = true;
-            _thread.Priority = ThreadPriority.Normal;
+            ParameterizedThreadStart pThreadStart = DoDownloadAsync;
+            _thread = new Thread(pThreadStart)
+            {
+                Name = "DownloadThread",
+                IsBackground = true,
+                Priority = ThreadPriority.Normal
+            };
             _thread.Start(parameters);
-        }// method
+        }
 
         /// <summary>
         /// Method downloads file to FtpServer
@@ -520,68 +457,71 @@ namespace Rc.Framework.Net
             long localFileSize = 0;
             try
             {
-                FtpWebRequest request = FtpWebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
-                request.Credentials = new NetworkCredential(UserName, Password);
-                request.UsePassive = UsePassive;
-                request.Timeout = TimeOut;
-                request.KeepAlive = KeepAlive;
-                request.Method = WebRequestMethods.Ftp.DownloadFile;
-                long remoteFileSize = this.GetFileSize(remoteDirectory, remoteFileName);
-                if (file.Exists)
+                FtpWebRequest request = WebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
+                if (request != null)
                 {
-                    if (file.Length == remoteFileSize)
+                    request.Credentials = new NetworkCredential(UserName, Password);
+                    request.UsePassive = UsePassive;
+                    request.Timeout = TimeOut;
+                    request.KeepAlive = KeepAlive;
+                    request.Method = WebRequestMethods.Ftp.DownloadFile;
+                    long remoteFileSize = this.GetFileSize(remoteDirectory, remoteFileName);
+                    if (file.Exists)
                     {
-                        if (DownloadFileCompleted != null)
+                        if (file.Length == remoteFileSize)
                         {
-                            var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(0, TransmissionState.Success);
-                            DownloadFileCompleted(this, downloadFileCompleteArgs);
-                            return;
+                            if (DownloadFileCompleted != null)
+                            {
+                                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(0, TransmissionState.Success);
+                                DownloadFileCompleted(this, downloadFileCompleteArgs);
+                                return;
+                            }
+                        }
+                        else if (file.Length > remoteFileSize)
+                        {
+                            if (DownloadFileCompleted != null)
+                            {
+                                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(0, TransmissionState.LocalFileBiggerAsRemoteFile);
+                                DownloadFileCompleted(this, downloadFileCompleteArgs);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            localfileStream = new FileStream(localFile, FileMode.Append, FileAccess.Write);
+                            request.ContentOffset = file.Length;
+                            localFileSize = file.Length;
                         }
                     }
-                    else if (file.Length > remoteFileSize)
-                    {
-                        if (DownloadFileCompleted != null)
-                        {
-                            var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(0, TransmissionState.LocalFileBiggerAsRemoteFile);
-                            DownloadFileCompleted(this, downloadFileCompleteArgs);
-                            return;
-                        }
-                    }//else if
                     else
                     {
-                        localfileStream = new FileStream(localFile, FileMode.Append, FileAccess.Write);
-                        request.ContentOffset = file.Length;
-                        localFileSize = file.Length;
-                    }//else
-                }
-                else
-                {
-                    localfileStream = new FileStream(localFile, FileMode.Create, FileAccess.Write);
-                }
-                FtpWebResponse response = request.GetResponse() as FtpWebResponse;
-                using (Stream ftpStream = response.GetResponseStream())
-                {
-                    byte[] buffer = new byte[BUFFER_SIZE];
-                    int bytesRead = ftpStream.Read(buffer, 0, BUFFER_SIZE);
-                    totalBytesReceived = localFileSize + bytesRead;
-                    while (bytesRead != 0 && !_abort)
-                    {
-                        localfileStream.Write(buffer, 0, bytesRead);
-                        bytesRead = ftpStream.Read(buffer, 0, BUFFER_SIZE);
-                        totalBytesReceived += bytesRead;
-                        if (DownloadProgressChanged != null && !_abort)
+                        localfileStream = new FileStream(localFile, FileMode.Create, FileAccess.Write);
+                    }
+                    FtpWebResponse response = request.GetResponse() as FtpWebResponse;
+                    if (response != null)
+                        using (Stream ftpStream = response.GetResponseStream())
                         {
-                            DownloadProgressChanged(this, new DownloadProgressChangedLibArgs(totalBytesReceived, remoteFileSize));
+                            byte[] buffer = new byte[BufferSize];
+                            int bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                            totalBytesReceived = localFileSize + bytesRead;
+                            while (bytesRead != 0 && !_abort)
+                            {
+                                localfileStream.Write(buffer, 0, bytesRead);
+                                bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                                totalBytesReceived += bytesRead;
+                                if (DownloadProgressChanged != null && !_abort)
+                                {
+                                    DownloadProgressChanged(this, new DownloadProgressChangedLibArgs(totalBytesReceived, remoteFileSize));
+                                }
+                            }
+                            localfileStream?.Close();
                         }
-                    }//while
-                    localfileStream.Close();
                 }
-                if (DownloadFileCompleted != null && !_abort)
+                if (DownloadFileCompleted == null || _abort) return;
                 {
                     var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(totalBytesReceived, TransmissionState.Success);
                     DownloadFileCompleted(this, downloadFileCompleteArgs);
                 }
-
             }
             catch (WebException webException)
             {
@@ -600,7 +540,7 @@ namespace Rc.Framework.Net
             }
             finally
             {
-                if (localfileStream != null) localfileStream.Close();
+                localfileStream?.Close();
             }
         }
 
@@ -619,10 +559,12 @@ namespace Rc.Framework.Net
         {
             ThreadParameters parameters = new ThreadParameters(localDirectory, localFilename, remoteDirectory, remoteFileName);
             ParameterizedThreadStart pThreadStart = new ParameterizedThreadStart(this.DoDownloadResumeAsync);
-            _thread = new Thread(pThreadStart);
-            _thread.Name = "DownloadThread";
-            _thread.IsBackground = true;
-            _thread.Priority = ThreadPriority.Normal;
+            _thread = new Thread(pThreadStart)
+            {
+                Name = "DownloadThread",
+                IsBackground = true,
+                Priority = ThreadPriority.Normal
+            };
             _thread.Start(parameters);
         }
 
@@ -639,26 +581,35 @@ namespace Rc.Framework.Net
         {
             var success = false;
             remFileSize = 0;
-            var request = (FtpWebRequest)FtpWebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
-            request.Credentials = new NetworkCredential(UserName, Password);
-            request.Timeout = TimeOut;
-            request.UsePassive = true;
-            request.KeepAlive = KeepAlive;
-            request.Method = WebRequestMethods.Ftp.GetFileSize;
-
-            try
+            var request = WebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory + "/" + remoteFileName)) as FtpWebRequest;
+            if (request != null)
             {
-                using (FtpWebResponse response = request.GetResponse() as FtpWebResponse)
+                request.Credentials = new NetworkCredential(UserName, Password);
+                request.Timeout = TimeOut;
+                request.UsePassive = true;
+                request.KeepAlive = KeepAlive;
+                request.Method = WebRequestMethods.Ftp.GetFileSize;
+
+                try
                 {
-                    FileStruct fstruct = new FileStruct();
-                    fstruct.Size = long.Parse(response.StatusDescription.Split(' ')[1].Replace("\r", "").Replace("\n", ""));
-                    response.Close();
+                    using (FtpWebResponse response = request.GetResponse() as FtpWebResponse)
+                    {
+                        FileStruct fstruct = new FileStruct
+                        {
+                            Size =
+                                long.Parse(response.StatusDescription.Split(' ')[1].Replace("\r", "").Replace("\n", ""))
+                        };
+                        response.Close();
                     
-                    remFileSize = fstruct.Size;
-                    success = true;
+                        remFileSize = fstruct.Size;
+                        success = true;
+                    }
+                }
+                catch
+                {
+                    // ignored
                 }
             }
-            catch { }
             return success;
         }
         /// <summary>
@@ -697,7 +648,7 @@ namespace Rc.Framework.Net
                 this.CreateDirectory(subDirectory, out webException);
                 Debug.WriteLine(DateTime.Now.ToString("HH:mm:ss"));
                 subDirectory += "/";
-            }//foreach
+            }
             return this.DirectoryExits(subDirectory, out webException);
         }
         /// <summary>
@@ -714,7 +665,7 @@ namespace Rc.Framework.Net
                 UploadProgressChanged(this, new UploadProgressChangedLibArgs(TransmissionState.CreatingDir));
             }
             webException = null;
-            var success = false;
+            const bool success = false;
             try
             {
                 var request = (FtpWebRequest)WebRequest.Create(new Uri("ftp://" + _host + ":" + Port + "/" + remoteDirectory));
@@ -835,7 +786,7 @@ namespace Rc.Framework.Net
         /// </summary>
         Uploading
     }
-    internal static class Procent_
+    internal static class Procent
     {
 
         internal static int Get(long sendBytes, long totalBytes)
@@ -923,40 +874,34 @@ namespace Rc.Framework.Net
             DateTime dateTimeTmp;
             var success = false;
             DateTime.TryParse(date + " " + time, out dateTimeTmp);
-            foreach (var cultureInfo in _cultureInfos)
+            if (CultureInfos.Any(cultureInfo => DateTime.TryParse(date + " " + time, out dateTimeTmp)))
             {
-                if (DateTime.TryParse(date + " " + time, out dateTimeTmp))
-                {
-                    dateTime = dateTimeTmp;
-                    success = true;
-                    break;
-                }
-            }//foreach
-
-            if (!success)
-            {
-                try
-                {
-                    // could be done in one line
-                    // using two lines makes it easy to find exception in parsing, in most cases only one part fails  
-                    var dateTimeTmp1 = DateTime.ParseExact(time, "hh:mmtt", CultureInfo.InvariantCulture);
-                    var dateTimeTmp2 = DateTime.ParseExact(date, "MM-dd-yyyy", CultureInfo.InvariantCulture);
-                    var ddd = dateTimeTmp2.ToShortDateString() + " " + dateTimeTmp1.TimeOfDay;
-                    dateTime = DateTime.Parse(dateTimeTmp2.ToShortDateString() + " " + dateTimeTmp1.TimeOfDay, CultureInfo.CurrentCulture);
-                    success = true;
-                }
-                catch { }
+                dateTime = dateTimeTmp;
+                success = true;
             }
+
+            if (success) return success;
+            try
+            {
+                // could be done in one line
+                // using two lines makes it easy to find exception in parsing, in most cases only one part fails  
+                var dateTimeTmp1 = DateTime.ParseExact(time, "hh:mmtt", CultureInfo.InvariantCulture);
+                var dateTimeTmp2 = DateTime.ParseExact(date, "MM-dd-yyyy", CultureInfo.InvariantCulture);
+                var ddd = dateTimeTmp2.ToShortDateString() + " " + dateTimeTmp1.TimeOfDay;
+                dateTime = DateTime.Parse(dateTimeTmp2.ToShortDateString() + " " + dateTimeTmp1.TimeOfDay, CultureInfo.CurrentCulture);
+                success = true;
+            }
+            catch { }
             return success;
         }
 
-        private static List<CultureInfo> _cultureInfos = new List<CultureInfo>()
+        private static readonly List<CultureInfo> CultureInfos = new List<CultureInfo>()
         {
             CultureInfo.InvariantCulture,
             new CultureInfo("en-US"),
             new CultureInfo("de-DE"),
             new CultureInfo("fr-FR"),
-            new CultureInfo( "ja-JP")
+            new CultureInfo("ja-JP")
         };
 
     }
@@ -966,33 +911,17 @@ namespace Rc.Framework.Net
     public class FtpListDirectoryDetails
     {
         /// <summary>
-        /// Provides information of directory
-        /// </summary>
-        public FtpListDirectoryDetails()
-        {
-        }
-
-        /// <summary>
         /// Parses list of strings to list of FileStruct
         /// </summary>
         /// <param name="ftpRecords">String including information of file/directory</param>
         /// <returns>List of FileStruct</returns>
         public List<FileStruct> Parse(List<string> ftpRecords)
         {
-            List<FileStruct> myListArray = new List<FileStruct>();
             //string[] dataRecords = datastring.Split( '\n' );
             //dataRecords[ 0 ] = "-rw-rw-rw- 1 user group 1171 Nov 26 00:43 blue.css\n";
-            FileListStyle _directoryListStyle = GuessFileListStyle(ftpRecords);
-            foreach (string s in ftpRecords)
-            {
-                FileStruct f = Parse(s);
-                if (!(f.Name == "." || f.Name == ".."))
-                {
-                    myListArray.Add(f);
-                }
-            }
-            return myListArray;
-        }// method
+            GuessFileListStyle(ftpRecords);
+            return ftpRecords.Select(Parse).Where(f => !(f.Name == "." || f.Name == "..")).ToList();
+        }
 
         /// <summary>
         /// Parses string to FileStruct
@@ -1002,22 +931,24 @@ namespace Rc.Framework.Net
         public FileStruct Parse(string ftpRecord)
         {
             FileStruct f = new FileStruct();
-            FileListStyle _directoryListStyle = GuessFileListStyle(ftpRecord);
-            if (_directoryListStyle != FileListStyle.Unknown && ftpRecord != "")
+            FileListStyle directoryListStyle = GuessFileListStyle(ftpRecord);
+            if (directoryListStyle == FileListStyle.Unknown || ftpRecord == "") return f;
+            f.Name = "..";
+            switch (directoryListStyle)
             {
-                f.Name = "..";
-                switch (_directoryListStyle)
-                {
-                    case FileListStyle.UnixStyle:
-                        f = ParseFileStructFromUnixStyleRecord(ftpRecord);
-                        break;
-                    case FileListStyle.WindowsStyle:
-                        f = ParseFileStructFromWindowsStyleRecord(ftpRecord);
-                        break;
-                }//switch
+                case FileListStyle.UnixStyle:
+                    f = ParseFileStructFromUnixStyleRecord(ftpRecord);
+                    break;
+                case FileListStyle.WindowsStyle:
+                    f = ParseFileStructFromWindowsStyleRecord(ftpRecord);
+                    break;
+                case FileListStyle.Unknown:
+                    throw new ArgumentOutOfRangeException();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
             return f;
-        }//
+        }
 
         private FileStruct ParseFileStructFromWindowsStyleRecord(string Record)
         {
@@ -1040,32 +971,30 @@ namespace Rc.Framework.Net
             else
             {
                 f.IsDirectory = false;
-                string[] strs = processstr.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] strs = processstr.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
                 long.TryParse(strs[0].Trim(), out f.Size);
                 processstr = strs[1].Trim();
             }
-            f.Name = processstr;  //Rest is name   
+            f.Name = processstr;  
             return f;
         }
 
-        private FileListStyle GuessFileListStyle(List<string> recordList)
+        private FileListStyle GuessFileListStyle(IEnumerable<string> recordList)
         {
             foreach (string s in recordList)
             {
                 return GuessFileListStyle(s);
-            }//foreach
+            }
             return FileListStyle.Unknown;
         }
 
-        private FileListStyle GuessFileListStyle(string record)
+        private static FileListStyle GuessFileListStyle(string record)
         {
-            if (record.Length > 10
-             && Regex.IsMatch(record.Substring(0, 10), "(-|d)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)"))
+            if (record.Length > 10 && Regex.IsMatch(record.Substring(0, 10), "(-|d)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)"))
             {
                 return FileListStyle.UnixStyle;
             }
-            else if (record.Length > 8
-             && Regex.IsMatch(record.Substring(0, 8), "[0-9][0-9]-[0-9][0-9]-[0-9][0-9]"))
+            else if (record.Length > 8 && Regex.IsMatch(record.Substring(0, 8), "[0-9][0-9]-[0-9][0-9]-[0-9][0-9]"))
             {
                 return FileListStyle.WindowsStyle;
             }
@@ -1081,12 +1010,12 @@ namespace Rc.Framework.Net
             f.Flags = processstr.Substring(0, 9);
             f.IsDirectory = (f.Flags[0] == 'd');
             processstr = (processstr.Substring(11)).Trim();
-            _cutSubstringFromStringWithTrim(ref processstr, ' ', 0);   //skip one part
+            _cutSubstringFromStringWithTrim(ref processstr, ' ', 0); //skip one part
             f.Owner = _cutSubstringFromStringWithTrim(ref processstr, ' ', 0);
             f.Group = _cutSubstringFromStringWithTrim(ref processstr, ' ', 0);
-            long.TryParse(_cutSubstringFromStringWithTrim(ref processstr, ' ', 0), out f.Size);   //skip one part
+            long.TryParse(_cutSubstringFromStringWithTrim(ref processstr, ' ', 0), out f.Size); //skip one part
             f.CreateTime = DateTime.Parse(_cutSubstringFromStringWithTrim(ref processstr, ' ', 8));
-            f.Name = processstr;   //Rest of the part is name
+            f.Name = processstr; //Rest of the part is name
             return f;
         }
 
@@ -1097,8 +1026,8 @@ namespace Rc.Framework.Net
             s = (s.Substring(pos1)).Trim();
             return retString;
         }
-
     }
+
     internal class ThreadParameters
     {
         internal string LocalDirectory { get; set; }
@@ -1114,6 +1043,7 @@ namespace Rc.Framework.Net
             RemoteFilename = remoteFileName;
         }
     }
+
     /// <summary>
     /// Provides data for DownloadFileCompleted event
     /// </summary>
@@ -1123,14 +1053,17 @@ namespace Rc.Framework.Net
         /// Get total bytes downloaded
         /// </summary>
         public long TotalBytesReceived { get; private set; }
+
         /// <summary>
         /// Get TransmissionState of download
         /// </summary>
         public TransmissionState TransmissionState { get; private set; }
+
         /// <summary>
         /// Get Webexception of download
         /// </summary>
         public WebException WebException { get; private set; }
+
         /// <summary>
         /// Get Exception of download
         /// </summary>
@@ -1176,8 +1109,8 @@ namespace Rc.Framework.Net
             WebException = null;
             Exception = exception;
         }
-
     }
+
     /// <summary>
     /// Provides data for DownloadFileChanged event
     /// </summary>
@@ -1207,10 +1140,10 @@ namespace Rc.Framework.Net
         {
             BytesReceived = bytesReceived;
             TotalBytesReceived = totalBytesReceived;
-            Procent = Procent_.Get(bytesReceived, totalBytesReceived);
+            Procent = Net.Procent.Get(bytesReceived, totalBytesReceived);
         }
-
     }
+
     /// <summary>
     /// Provides data for UploadFileCompleted event
     /// </summary>
@@ -1220,14 +1153,17 @@ namespace Rc.Framework.Net
         /// Gets totalBytes uploaded
         /// </summary>
         public long TotalBytesSend { get; private set; }
+
         /// <summary>
         /// Gets TransmissionState, e.g. Uploading, CreatingDir..
         /// </summary>
         public TransmissionState TransmissionState { get; set; }
+
         /// <summary>
         /// Webexception, in case of success Webexception = NULL
         /// </summary>
         public WebException WebException { get; private set; }
+
         /// <summary>
         /// Exception, in case of success Exception = NULL
         /// </summary>
@@ -1273,8 +1209,8 @@ namespace Rc.Framework.Net
             WebException = null;
             Exception = exception;
         }
-
     }
+
     /// <summary>
     /// Provides data for UploadFileChanged event
     /// </summary>
@@ -1310,7 +1246,7 @@ namespace Rc.Framework.Net
             TransmissionState = TransmissionState.Uploading;
             BytesSent = bytesSend;
             TotalBytesToSend = totalBytesToSend;
-            Procent = Procent_.Get(bytesSend, totalBytesToSend);
+            Procent = Net.Procent.Get(bytesSend, totalBytesToSend);
         }
 
         /// <summary>
@@ -1324,6 +1260,5 @@ namespace Rc.Framework.Net
             TotalBytesToSend = 0;
             Procent = 0;
         }
-
     }
 }

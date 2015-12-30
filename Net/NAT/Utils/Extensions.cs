@@ -32,7 +32,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Rc.Framework.Net.Nat.Utils
+namespace RC.Framework.Net.Nat.Utils
 {
     internal static class StreamExtensions
     {

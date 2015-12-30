@@ -5,7 +5,7 @@
 using System;
 using System.IO;
 
-namespace Rc.Framework.Collections
+namespace RC.Framework.Collections
 {
     /// <summary>
 	/// A call which make repetitive (variable) buffer operation easier on memory

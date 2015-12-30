@@ -24,11 +24,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Utils;
 using System;
 using System.Net;
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     internal class UpnpNatDeviceInfo
     {

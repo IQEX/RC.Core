@@ -28,16 +28,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Rc.Framework.Net.Nat.Exceptions;
-using Rc.Framework.Net.Nat.Upnp.Messages.Requests;
-using Rc.Framework.Net.Nat.Upnp.Messages.Responses;
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Exceptions;
+using RC.Framework.Net.Nat.Upnp.Messages.Requests;
+using RC.Framework.Net.Nat.Upnp.Messages.Responses;
+using RC.Framework.Net.Nat.Utils;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     internal sealed class UpnpNatDevice : NatDevice
 	{

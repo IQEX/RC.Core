@@ -2,11 +2,10 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-using System;
-using System.Collections.Generic;
-
-namespace Rc.Framework.Collections
+namespace RC.Framework.Collections
 {
+    using System;
+    using System.Collections.Generic;
     /// <summary>
     /// Provides <see cref="IEqualityComparer{T}"/> for default value types.
     /// </summary>
@@ -23,7 +22,6 @@ namespace Rc.Framework.Collections
             {
                 return x == y;
             }
-
             public override int GetHashCode(IntPtr obj)
             {
                 return obj.GetHashCode();

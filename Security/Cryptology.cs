@@ -5,7 +5,7 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
-namespace Rc.Framework.Security.X05h
+namespace RC.Framework.Security.X05h
 {
     /// <summary>
     /// Mixed Code
@@ -105,7 +105,7 @@ namespace Rc.Framework.Security.X05h
                 h1 += $"-{new string(ar)}";
             }
             if (!hMake.Parse(hCode).isAssembly)
-                h1.Replace("-", default(string));
+                h1 = h1.Replace("-", default(string));
             return h1;
         }
     }

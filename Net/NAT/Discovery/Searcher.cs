@@ -26,7 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Rc.Framework.Net.Nat.Event;
+using RC.Framework.Net.Nat.Event;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +35,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.Net.Nat.Discovery
+namespace RC.Framework.Net.Nat.Discovery
 {
     internal abstract class Searcher
     {

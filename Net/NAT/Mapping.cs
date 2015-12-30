@@ -28,11 +28,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Utils;
 using System;
 using System.Net;
 
-namespace Rc.Framework.Net.Nat
+namespace RC.Framework.Net.Nat
 {
     enum MappingLifetime
     {
@@ -90,7 +90,7 @@ namespace Rc.Framework.Net.Nat
         /// <remarks>
         /// All portmappings are release automatically as part of the shutdown process when <see cref="NatDiscoverer">NatUtility</see>.<see cref="NatUtility#releaseonshutdown">ReleaseOnShutdown</see> is true.
         /// Permanent portmappings will not be released if the process ends anormally.
-        /// Since most programs don't know the lifetime in advance, Rc.Framework.Net.Nat renew all the portmappings (except the permanents) before they expires. So, developers have to close explicitly those portmappings
+        /// Since most programs don't know the lifetime in advance, RC.Framework.Net.Nat renew all the portmappings (except the permanents) before they expires. So, developers have to close explicitly those portmappings
         /// they don't want to remain open for the session.
         /// </remarks>
         public int Lifetime 
@@ -133,7 +133,7 @@ namespace Rc.Framework.Net.Nat
         }
 
 	    internal Mapping(Protocol protocol, IPAddress privateIP, int privatePort, int publicPort)
-            : this(protocol, privateIP, privatePort, publicPort, 0, "Rc.Framework.Net.Nat")
+            : this(protocol, privateIP, privatePort, publicPort, 0, "RC.Framework.Net.Nat")
 		{
 		}
 
@@ -170,10 +170,10 @@ namespace Rc.Framework.Net.Nat
         /// <param name="privatePort">The private port.</param>
         /// <param name="publicPort">The public port.</param>
         /// <remarks>
-        /// This constructor initializes a Permanent mapping. The description by deafult is "Rc.Framework.Net.Nat"
+        /// This constructor initializes a Permanent mapping. The description by deafult is "RC.Framework.Net.Nat"
         /// </remarks>
         public Mapping(Protocol protocol, int privatePort, int publicPort)
-            : this(protocol, IPAddress.None, privatePort, publicPort, 0, "Rc.Framework.Net.Nat")
+            : this(protocol, IPAddress.None, privatePort, publicPort, 0, "RC.Framework.Net.Nat")
         {
         }
 

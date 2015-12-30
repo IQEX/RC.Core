@@ -4,7 +4,7 @@
 // =====================================//==============================================================//
 using System;
 using System.Collections.Generic;
-namespace Rc.Framework.Collections.Generic
+namespace RC.Framework.Collections.Generic
 {
     /// <summary>
     ///  Represents a strongly typed list of objects that can be accessed by index. Provides

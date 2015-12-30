@@ -2,12 +2,12 @@
 //                                      //                                                              //
 // Source="root\\Net\\IArchByteBoxReader.cs"           Copyright © Of Fire Twins Wesp 2015              //
 // Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="7.7"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-namespace Rc.Framework.Net
+namespace RC.Framework.Net
 {
     /// <summary>
     /// Интерфейс считывания с "коробки"

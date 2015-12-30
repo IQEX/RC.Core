@@ -2,7 +2,7 @@
 //                                      //                                                              //
 // Source="root\\Net\\IPTool.cs"        //     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
 // Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="5.0"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
@@ -10,10 +10,9 @@
 using System;
 using System.Management;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 
-namespace Rc.Framework.Net
+namespace RC.Framework.Net
 {
     //# Необходима документация!
     /// <summary>
@@ -26,7 +25,7 @@ namespace Rc.Framework.Net
         /// Получение MAC адресса основной сетевой карты
         /// </summary>
         /// <returns></returns>
-        [Obsolete("old sol., use Rc.Framework.Native.WMI.QueryPhysicalNetworkAdapter")]
+        [Obsolete("old sol., use RC.Framework.Native.WMI.QueryPhysicalNetworkAdapter")]
         public static string MACAddress()
         {
             ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
@@ -48,6 +47,7 @@ namespace Rc.Framework.Net
         /// </summary>
         /// <param name="ipend"></param>
         /// <returns></returns>
+        [Obsolete("2013")]
         public static string IPHash(IPEndPoint ipend)
         {
             return BitConverter.ToString(

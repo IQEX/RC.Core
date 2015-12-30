@@ -26,7 +26,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-namespace Rc.Framework.Net.Nat.Event
+namespace RC.Framework.Net.Nat.Event
 {
     internal class DeviceEventArgs : System.EventArgs
 	{

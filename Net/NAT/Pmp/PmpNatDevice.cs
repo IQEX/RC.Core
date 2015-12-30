@@ -26,8 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Rc.Framework.Net.Nat.Exceptions;
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Exceptions;
+using RC.Framework.Net.Nat.Utils;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -35,7 +35,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.Net.Nat.Pmp
+namespace RC.Framework.Net.Nat.Pmp
 {
     internal sealed class PmpNatDevice : NatDevice
     {

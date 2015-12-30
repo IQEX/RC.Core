@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.RMath
+namespace RC.Framework.RMath
 {
     /// <summary>
 	/// Gaussian function.

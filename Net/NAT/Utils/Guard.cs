@@ -1,6 +1,6 @@
 using System;
 
-namespace Rc.Framework.Net.Nat.Utils
+namespace RC.Framework.Net.Nat.Utils
 {
     internal class Guard
     {

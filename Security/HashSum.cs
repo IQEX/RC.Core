@@ -2,16 +2,12 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
-using System.IO;
-
-namespace Rc.Framework.Security
+namespace RC.Framework.Security
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Security.Cryptography;
+    using System.IO;
     /// <summary>
     /// Class hash Manager
     /// </summary>
@@ -24,14 +20,12 @@ namespace Rc.Framework.Security
         /// <returns></returns>
         public static string Checksum(string path)
         {
-            byte[] fileData;
-            MD5 md5;
-            FileStream fs = System.IO.File.OpenRead(path);
-            md5 = new MD5CryptoServiceProvider();
-            fileData = new byte[fs.Length];
+            FileStream fs = File.OpenRead(path);
+            MD5 md5 = new MD5CryptoServiceProvider();
+            var fileData = new byte[fs.Length];
             fs.Read(fileData, 0, (int)fs.Length);
             fs.Close();
-            return BitConverter.ToString(md5.ComputeHash(fileData)).Replace("-", String.Empty);
+            return BitConverter.ToString(md5.ComputeHash(fileData)).Replace("-", string.Empty);
         }
         /// <summary>
         /// Hash Sum File's in directory
@@ -43,7 +37,7 @@ namespace Rc.Framework.Security
             Dictionary<string, string> temp = new Dictionary<string, string>();
             for (int i = 0; i != pathes.Length; i++)
             {
-                temp.Add(pathes[i], HashSum.Checksum(pathes[i]));
+                temp.Add(pathes[i], Checksum(pathes[i]));
             }
             return null;
         }

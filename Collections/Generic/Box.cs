@@ -3,7 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
-namespace Rc.Framework.Collections.Generic
+namespace RC.Framework.Collections.Generic
 {
     /// <summary>
     /// Box Type

@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     class DiscoveryResponseMessage
     {

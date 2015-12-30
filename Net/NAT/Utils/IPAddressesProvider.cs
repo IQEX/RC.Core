@@ -31,7 +31,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace Rc.Framework.Net.Nat.Utils
+namespace RC.Framework.Net.Nat.Utils
 {
     internal class IPAddressesProvider : IIPAddressesProvider
     {

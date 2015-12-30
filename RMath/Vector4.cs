@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.RMath
+namespace RC.Framework.RMath
 {
     /// <summary>
 	/// 4D Vector structure with X, Y, Z and W coordinates.
@@ -43,11 +43,7 @@ namespace Rc.Framework.RMath
             {
                 float num = (this.X > this.Y) ? this.X : this.Y;
                 float num2 = (this.Z > this.W) ? this.Z : this.W;
-                if (num <= num2)
-                {
-                    return num2;
-                }
-                return num;
+                return num <= num2 ? num2 : num;
             }
         }
         /// <summary>
@@ -61,11 +57,7 @@ namespace Rc.Framework.RMath
             {
                 float num = (this.X < this.Y) ? this.X : this.Y;
                 float num2 = (this.Z < this.W) ? this.Z : this.W;
-                if (num >= num2)
-                {
-                    return num2;
-                }
-                return num;
+                return num >= num2 ? num2 : num;
             }
         }
         /// <summary>
@@ -106,11 +98,7 @@ namespace Rc.Framework.RMath
                     num2 = this.W;
                     result2 = 3;
                 }
-                if (num < num2)
-                {
-                    return result2;
-                }
-                return result;
+                return num < num2 ? result2 : result;
             }
         }
         /// <summary>
@@ -151,11 +139,7 @@ namespace Rc.Framework.RMath
                     num2 = this.W;
                     result2 = 3;
                 }
-                if (num > num2)
-                {
-                    return result2;
-                }
-                return result;
+                return num > num2 ? result2 : result;
             }
         }
         /// <summary>
@@ -165,27 +149,17 @@ namespace Rc.Framework.RMath
         /// <remarks><para>Returns Euclidean norm of the vector, which is a
         /// square root of the sum: X<sup>2</sup>+Y<sup>2</sup>+Z<sup>2</sup>+W<sup>2</sup>.</para>
         /// </remarks>
-        public float Norm
-        {
-            get
-            {
-                return (float)Math.Sqrt((double)(this.X * this.X + this.Y * this.Y + this.Z * this.Z + this.W * this.W));
-            }
-        }
+        public float Norm => (float)Math.Sqrt((double)(this.X * this.X + this.Y * this.Y + this.Z * this.Z + this.W * this.W));
+
         /// <summary>
         /// Returns square of the vector's norm.
         /// </summary>
         ///
         /// <remarks><para>Return X<sup>2</sup>+Y<sup>2</sup>+Z<sup>2</sup>+W<sup>2</sup>, which is
-        /// a square of <see cref="P:Rc.Framework.RMath.Math.Vector4.Norm">vector's norm</see> or a <see cref="M:Rc.Framework.RMath.Math.Vector4.Dot(Rc.Framework.RMath.Math.Vector4,Rc.Framework.RMath.Math.Vector4)">dot product</see> of this vector
+        /// a square of <see cref="P:RC.Framework.RMath.Math.Vector4.Norm">vector's norm</see> or a <see cref="M:RC.Framework.RMath.Math.Vector4.Dot(RC.Framework.RMath.Math.Vector4,RC.Framework.RMath.Math.Vector4)">dot product</see> of this vector
         /// with itself.</para></remarks>
-        public float Square
-        {
-            get
-            {
-                return this.X * this.X + this.Y * this.Y + this.Z * this.Z + this.W * this.W;
-            }
-        }
+        public float Square => this.X * this.X + this.Y * this.Y + this.Z * this.Z + this.W * this.W;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Vector4" /> structure.
         /// </summary>
@@ -549,7 +523,7 @@ namespace Rc.Framework.RMath
         /// </summary>
         ///
         /// <returns>Returns 3D vector which has X/Y/Z coordinates equal to X/Y/Z coordinates
-        /// of this vector divided by <see cref="F:Rc.Framework.RMath.Math.Vector4.W" />.</returns>
+        /// of this vector divided by <see cref="F:RC.Framework.RMath.Math.Vector4.W" />.</returns>
         public Vector3 ToVector3()
         {
             return new Vector3(this.X / this.W, this.Y / this.W, this.Z / this.W);

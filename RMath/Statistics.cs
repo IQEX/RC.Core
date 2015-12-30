@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.RMath
+namespace RC.Framework.RMath
 {
     /// <summary>
 	/// Set of statistics functions.
@@ -97,9 +97,9 @@ namespace Rc.Framework.RMath
         /// array values are treated as "probabilities" (total amount of
         /// hits).</para>
         ///
-        /// <para>The method is an equevalent to the <see cref="M:Rc.Framework.RMath.Math.Statistics.StdDev(System.Int32[])" /> method,
+        /// <para>The method is an equevalent to the <see cref="M:RC.Framework.RMath.Math.Statistics.StdDev(System.Int32[])" /> method,
         /// but it relieas on the passed mean value, which is previously calculated
-        /// using <see cref="M:Rc.Framework.RMath.Math.Statistics.Mean(System.Int32[])" /> method.</para>
+        /// using <see cref="M:RC.Framework.RMath.Math.Statistics.Mean(System.Int32[])" /> method.</para>
         /// </remarks>
         public static double StdDev(int[] values, double mean)
         {

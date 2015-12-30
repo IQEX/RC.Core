@@ -33,7 +33,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace Rc.Framework.Net.Nat.Exceptions
+namespace RC.Framework.Net.Nat.Exceptions
 {
     /// <summary>
     /// 

@@ -2,20 +2,22 @@
 //                                      //                                                              //
 // Source="root\\Net\\Protocol\\TcpServer.cs"             Copyright © Of Fire Twins Wesp 2015           //
 // Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="7.3"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 
-namespace Rc.Framework.Net.Protocol.Tcp
+using System.Linq;
+
+namespace RC.Framework.Net.Protocol.Tcp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
     public delegate void SConnection(TokenUserCollectionTransportSpace connection);
     public delegate void SError(TcpPlatform server, Exception e);
     public delegate void SDisconnect(TcpPlatform server, TokenUserCollectionTransportSpace connection);
@@ -190,12 +192,9 @@ namespace Rc.Framework.Net.Protocol.Tcp
             {
                 Encoding oldEncoding = m_encoding;
                 m_encoding = value;
-                foreach (TokenUserCollectionTransportSpace client in connections)
+                foreach (TokenUserCollectionTransportSpace client in connections.Where(client => client.Encoding == oldEncoding))
                 {
-                    if (client.Encoding == oldEncoding)
-                    {
-                        client.Encoding = m_encoding;
-                    }
+                    client.Encoding = m_encoding;
                 }
             }
         }
@@ -203,12 +202,10 @@ namespace Rc.Framework.Net.Protocol.Tcp
         {
             Encoding oldEncoding = m_encoding;
             m_encoding = encoding;
-            if (changeAllClients)
+            if (!changeAllClients) return;
+            foreach (TokenUserCollectionTransportSpace client in connections)
             {
-                foreach (TokenUserCollectionTransportSpace client in connections)
-                {
-                    client.Encoding = m_encoding;
-                }
+                client.Encoding = m_encoding;
             }
         }
         private void runListener()
@@ -242,15 +239,15 @@ namespace Rc.Framework.Net.Protocol.Tcp
                     }
                     else
                     {
-                        System.Threading.Thread.Sleep(m_idleTime);
+                        Thread.Sleep(m_idleTime);
                     }
                 }
                 catch (ThreadInterruptedException) { } //thread is interrupted when we quit
                 catch (Exception e)
                 {
-                    if (m_isOpen && OnError != null)
+                    if (m_isOpen)
                     {
-                        OnError(this, e);
+                        OnError?.Invoke(this, e);
                     }
                 }
             }
@@ -276,10 +273,7 @@ namespace Rc.Framework.Net.Protocol.Tcp
                             }
                             catch (Exception ex)
                             {
-                                if (OnError != null)
-                                {
-                                    OnError(this, ex);
-                                }
+                                OnError?.Invoke(this, ex);
                             }
                         }
 
@@ -294,73 +288,53 @@ namespace Rc.Framework.Net.Protocol.Tcp
                         {
                             lock (connections)
                             {
-                                if (OnDisconnect != null)
-                                    OnDisconnect(this, connections[i]);
+                                OnDisconnect?.Invoke(this, connections[i]);
                                 connections.RemoveAt(i);
                                 i--;
                             }
                         }
                     }
 
-                    if (!moreWork)
+                    if (moreWork) continue;
+                    Thread.Yield();
+                    lock (sem)
                     {
-                        System.Threading.Thread.Yield();
-                        lock (sem)
+                        if (connections.Any(conn => conn.hasMoreWork()))
                         {
-                            foreach (TokenUserCollectionTransportSpace conn in connections)
-                            {
-                                if (conn.hasMoreWork())
-                                {
-                                    moreWork = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!moreWork)
-                        {
-                            waiting = true;
-                            sem.Wait(m_idleTime);
-                            waiting = false;
+                            moreWork = true;
                         }
                     }
+                    if (moreWork) continue;
+                    waiting = true;
+                    sem.Wait(m_idleTime);
+                    waiting = false;
                 }
                 catch (ThreadInterruptedException ex)
                 {
-                    if (OnError != null)
-                    {
-                        OnError(this, ex);
-                    }
-                } //thread is interrupted when we quit
+                    OnError?.Invoke(this, ex);
+                }
                 catch (Exception e)
                 {
-                    if (m_isOpen && OnError != null)
-                    {
-                        OnError(this, e);
-                    }
+                    if (m_isOpen) OnError?.Invoke(this, e);
                 }
             }
         }
         private bool processConnection(TokenUserCollectionTransportSpace conn)
         {
-            bool moreWork = false;
-            if (conn.processOutgoing(m_maxSendAttempts))
-            {
-                moreWork = true;
-            }
+            bool moreWork = conn.processOutgoing(m_maxSendAttempts);
 
-            if (OnDataAvailable != null && activeThreads < m_maxCallbackThreads && conn.Socket.Available > 0)
+            if (OnDataAvailable == null || activeThreads >= m_maxCallbackThreads || conn.Socket.Available <= 0)
+                return moreWork;
+            lock (activeThreadsLock)
             {
-                lock (activeThreadsLock)
-                {
-                    activeThreads++;
-                }
-                conn.CallbackThread = new Thread(() =>
-                {
-                    OnDataAvailable(conn);
-                });
-                conn.CallbackThread.Start();
-                Thread.Yield();
+                activeThreads++;
             }
+            conn.CallbackThread = new Thread(() =>
+            {
+                OnDataAvailable(conn);
+            });
+            conn.CallbackThread.Start();
+            Thread.Yield();
             return moreWork;
         }
         public void Open()
@@ -390,10 +364,10 @@ namespace Rc.Framework.Net.Protocol.Tcp
 
                 m_isOpen = true;
 
-                listenThread = new Thread(new ThreadStart(runListener));
+                listenThread = new Thread(runListener);
                 listenThread.Start();
 
-                sendThread = new Thread(new ThreadStart(runSender));
+                sendThread = new Thread(runSender);
                 sendThread.Start();
             }
         }
@@ -426,10 +400,7 @@ namespace Rc.Framework.Net.Protocol.Tcp
                 }
                 catch (System.Security.SecurityException ex)
                 {
-                    if (OnError != null)
-                    {
-                        OnError(this, ex);
-                    }
+                    OnError?.Invoke(this, ex);
                 }
                 try
                 {
@@ -446,10 +417,7 @@ namespace Rc.Framework.Net.Protocol.Tcp
                 }
                 catch (System.Security.SecurityException ex)
                 {
-                    if (OnError != null)
-                    {
-                        OnError(this, ex);
-                    }
+                    OnError?.Invoke(this, ex);
                 }
             }
             listener.Stop();
@@ -472,11 +440,9 @@ namespace Rc.Framework.Net.Protocol.Tcp
                     conn.sendData(data);
                 }
                 Thread.Yield();
-                if (waiting)
-                {
-                    sem.Release();
-                    waiting = false;
-                }
+                if (!waiting) return;
+                sem.Release();
+                waiting = false;
             }
         }
     }

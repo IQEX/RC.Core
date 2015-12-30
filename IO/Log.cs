@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 
-namespace Rc.Framework.IO
+namespace RC.Framework.IO
 {
     /// <summary>
     /// Перечесление стандартных типов лога

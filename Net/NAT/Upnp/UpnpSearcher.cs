@@ -36,11 +36,11 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Threading;
 using System.Xml;
-using Rc.Framework.Net.Nat.Discovery;
-using Rc.Framework.Net.Nat.Utils;
-using Rc.Framework.Net.Nat.Upnp.Messages;
+using RC.Framework.Net.Nat.Discovery;
+using RC.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Upnp.Messages;
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     internal class UpnpSearcher : Searcher
     {
@@ -171,7 +171,7 @@ namespace Rc.Framework.Net.Nat.Upnp
             catch (Exception ex)
             {
                 NatDiscoverer.TraceSource.LogError("Unhandled exception when trying to decode a device's response. ");
-                NatDiscoverer.TraceSource.LogError("Report the issue in https://github.com/lontivero/Rc.Framework.Net.Nat/issues");
+                NatDiscoverer.TraceSource.LogError("Report the issue in https://github.com/lontivero/RC.Framework.Net.Nat/issues");
                 NatDiscoverer.TraceSource.LogError("Also copy and paste the following info:");
                 NatDiscoverer.TraceSource.LogError("-- beging ---------------------------------");
                 NatDiscoverer.TraceSource.LogError(ex.Message);

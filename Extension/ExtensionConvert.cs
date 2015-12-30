@@ -3,7 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
-namespace Rc.Framework.Extension
+namespace RC.Framework.Extension
 {
     /// <summary>
     /// Класс расширения конвертации

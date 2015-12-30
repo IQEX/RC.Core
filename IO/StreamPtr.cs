@@ -2,41 +2,40 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-using System;
-using System.IO;
-
-namespace Rc.Framework.IO
+#pragma warning disable CS1591
+namespace RC.Framework.IO
 {
+    using System;
+    using System.IO;
     /// <summary>
 	/// Manipulate a pointer to a stream.
 	/// </summary>
 	public struct StreamPtr
     {
-        private Stream stream;
-        private long offset;
+        private readonly Stream _stream;
+        private readonly long _offset;
         public StreamPtr(Stream s) : this(s, s.Position) { }
         public StreamPtr(Stream s, long pos)
         {
-            if (s == null)
-                throw new ArgumentNullException("stream");
-            stream = s;
-            offset = pos;
+            if (s == null) throw new ArgumentNullException(nameof(s));
+            _stream = s;
+            _offset = pos;
         }
 
-        public static StreamPtr operator +(StreamPtr sp, long plus) { return new StreamPtr(sp.stream, sp.offset + plus); }
-        public static StreamPtr operator -(StreamPtr sp, long plus) { return new StreamPtr(sp.stream, sp.offset - plus); }
+        public static StreamPtr operator +(StreamPtr sp, long plus) { return new StreamPtr(sp._stream, sp._offset + plus); }
+        public static StreamPtr operator -(StreamPtr sp, long plus) { return new StreamPtr(sp._stream, sp._offset - plus); }
 
         public static long operator -(StreamPtr sp, StreamPtr sp2)
         {
-            if (sp.stream != sp2.stream)
+            if (sp._stream != sp2._stream)
                 throw new ArgumentException();
-            return sp.offset - sp2.offset;
+            return sp._offset - sp2._offset;
         }
 
         public static explicit operator Stream(StreamPtr ptr)
         {
-            ptr.stream.Position = ptr.offset;
-            return ptr.stream;
+            ptr._stream.Position = ptr._offset;
+            return ptr._stream;
         }
     }
 }

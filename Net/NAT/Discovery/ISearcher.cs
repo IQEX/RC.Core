@@ -28,7 +28,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 
-namespace Rc.Framework.Net.Nat.Discovery
+namespace RC.Framework.Net.Nat.Discovery
 {
     internal interface ISearcher
     {

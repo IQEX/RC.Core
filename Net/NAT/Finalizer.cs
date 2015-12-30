@@ -23,10 +23,10 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using Rc.Framework.Net.Nat.Exceptions;
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Exceptions;
+using RC.Framework.Net.Nat.Utils;
 
-namespace Rc.Framework.Net.Nat
+namespace RC.Framework.Net.Nat
 {
     sealed class Finalizer 
     {

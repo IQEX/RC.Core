@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+
 /// <summary>
 /// Класс расширений
 /// </summary>
@@ -17,90 +17,69 @@ public static class ExtensionMethods
         return string.Format(format, args);
     }
     /// <summary>
-    /// Переводит в лист
-    /// </summary>
-    /// <typeparam name="T">Тип</typeparam>
-    /// <param name="source">Исходная</param>
-    /// <returns></returns>
-    public static List<T> AsList<T>(this IEnumerable<T> source)
-    {
-        List<T> list = source as List<T>;
-        if (list != null)
-        {
-            return list;
-        }
-        return source.ToList<T>();
-    }
-    /// <summary>
     /// Returns a value indicating whether a specified substring occurs within this string.
     /// </summary>
     /// <param name="text">Text</param>
     /// <param name="value">The string to seek.</param>
     /// <param name="comparison">Setting</param>
     /// <returns></returns>
-    public static bool Contains(this string text, string value, StringComparison comparison)
+    public static bool Contains(this string text, string value, StringComparison comparison = StringComparison.CurrentCulture)
     {
-        if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(value))
-            return false;
         return text.IndexOf(value, comparison) >= 0;
     }
+
     /// <summary>
-    /// null
+    /// Returns a value that belongs to an interface/attribute if the object
     /// </summary>
-    /// <param name="text"></param>
-    /// <param name="value"></param>
-    /// <param name="startIndex"></param>
-    /// <param name="comparison"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="t"></param>
     /// <returns></returns>
-    public static bool StartsWith(this string text, string value, int startIndex, StringComparison comparison = StringComparison.Ordinal)
+    public static bool InstanceOf<T>(this object t)
     {
-        return !string.IsNullOrEmpty(text) && startIndex <= text.Length && !string.IsNullOrEmpty(value) && text.IndexOf(value, startIndex, comparison) == startIndex;
+        if (typeof (T).IsInterface)
+            return t.GetType().GetInterfaces().Any(o => o == typeof (T));
+        return t.GetType().GetCustomAttributes(true).Any(y => y.GetType() == typeof (T));
     }
     /// <summary>
-    /// null
+    /// Short expression of string.IsNullOrWhiteSpace(<see cref="String"/>)
+    /// 
+    /// It indicates whether the specified string is null, the whether it is an empty string or a string consisting only of white space.
     /// </summary>
-    /// <param name="text"></param>
-    /// <param name="strings"></param>
-    /// <param name="comparison"></param>
-    /// <returns></returns>
-    public static string StartsWithOneOf(this string text, string[] strings, StringComparison comparison = StringComparison.Ordinal)
+    /// <param name="t">
+    /// The string for checking.
+    /// </param>
+    /// <returns>
+    /// Is true, if the parameter <paramref name="t"/> is null or <see cref="String.Empty"/>, or if the parameter is <paramref name="t"/> contains only simvoly - delimiters.
+    /// </returns>
+    public static bool IsNullOrWhiteSpace(this string t)
     {
-        if (string.IsNullOrEmpty(text) || strings == null || strings.Length == 0)
-        {
-            return null;
-        }
-        for (int i = 0; i < strings.Length; i++)
-        {
-            string text2 = strings[i];
-            if (text.StartsWith(text2, comparison))
-            {
-                return text2;
-            }
-        }
-        return null;
+        return string.IsNullOrWhiteSpace(t);
+    }
+
+    /// <summary>
+    /// Short expression of string.IsNullOrEmpty(<see cref="String"/>)
+    /// 
+    /// It indicates whether the specified string is null or the string <see cref="System.String.Empty"/>.
+    /// </summary>
+    /// <param name="t">
+    /// The string for checking.
+    /// </param>
+    /// <returns>
+    /// Is true, if the parameter <paramref name = "t" /> is null or empty string (""); otherwise - to false.
+    /// </returns>
+    public static bool IsNullOrEmpty(this string t)
+    {
+        return string.IsNullOrEmpty(t);
     }
     /// <summary>
-    /// null
+    /// Short expression of string.IsNullOrEmpty(<see cref="String"/>) or string.IsNullOrWhiteSpace(<see cref="String"/>)
     /// </summary>
-    /// <param name="text"></param>
-    /// <param name="startIndex"></param>
-    /// <param name="strings"></param>
-    /// <param name="comparison"></param>
+    /// <param name="t">
+    /// The string for checking.
+    /// </param>
     /// <returns></returns>
-    public static string StartsWithOneOf(this string text, int startIndex, string[] strings, StringComparison comparison = StringComparison.Ordinal)
+    public static bool IsNullOrEmptyOrWhiteSpace(this string t)
     {
-        if (string.IsNullOrEmpty(text) || strings == null || strings.Length == 0)
-        {
-            return null;
-        }
-        for (int i = 0; i < strings.Length; i++)
-        {
-            string text2 = strings[i];
-            if (text.StartsWith(text2, startIndex, comparison))
-            {
-                return text2;
-            }
-        }
-        return null;
+        return string.IsNullOrEmpty(t) && string.IsNullOrWhiteSpace(t);
     }
 }

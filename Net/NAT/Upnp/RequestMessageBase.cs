@@ -28,7 +28,7 @@
 
 using System.Collections.Generic;
 
-namespace Rc.Framework.Net.Nat.Upnp
+namespace RC.Framework.Net.Nat.Upnp
 {
     internal abstract class RequestMessageBase
     {

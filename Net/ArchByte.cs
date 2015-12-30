@@ -2,20 +2,22 @@
 //                                      //                                                              //
 // Source="root\\Net\\AtchByte.cs"      //     Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>    //
 // Author= {"Callada", "Another"}       //                                                              //
-// Project="Rc.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
+// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
 // Version File="4.0"                   //                                                              //
 // License="root\\LICENSE"              //                                                              //
 // LicenseType="MIT"                    //                                                              //
 // =====================================//==============================================================//
-using System;      using System.IO;
-using System.Text; using Rc.Framework.RMath;
-namespace Rc.Framework.Net
+namespace RC.Framework.Net
 {
+    using System;
+    using System.IO;
+    using System.Text;
+    using RMath;
     public class ArchByteBox
     {
         protected MemoryStream nMStream;
         protected int Index = 0;
-        protected ArchByteBox(Byte[] bt)
+        protected ArchByteBox(byte[] bt)
         {
             nMStream = new MemoryStream(bt);
         }
@@ -27,7 +29,7 @@ namespace Rc.Framework.Net
         {
             return new ArchByteBoxWriter();
         }
-        public static IArchByteBoxReader InvokeReader(Byte[] bt)
+        public static IArchByteBoxReader InvokeReader(byte[] bt)
         {
             return new ArchByteBoxReader(bt);
         }
@@ -40,7 +42,7 @@ namespace Rc.Framework.Net
         {
             if (str.Length > short.MaxValue - 1)
                 throw new Exception("Length > short.MaxValue");
-            Byte[] @Byte = Encoding.UTF8.GetBytes(str);
+            byte[] @Byte = Encoding.UTF8.GetBytes(str);
             ((IArchByteBoxWriter)this).wShort((short)@Byte.Length);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }

@@ -3,7 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System.Runtime.CompilerServices;
-namespace Rc.Framework.IO
+namespace RC.Framework.IO
 {
     /// <summary>
     /// interface <see cref="Log"/>.

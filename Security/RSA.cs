@@ -2,12 +2,12 @@
 // License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
-using Rc.Framework.Yaml.Serialization;
-using System;
-using System.Security.Cryptography;
-using System.Text;
-namespace Rc.Framework.Security
+namespace RC.Framework.Security
 {
+    using Yaml.Serialization;
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
     /// <summary>
     /// Class Pair Key
     /// </summary>

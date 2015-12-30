@@ -28,14 +28,14 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Rc.Framework.Net.Nat.Utils;
+using RC.Framework.Net.Nat.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Rc.Framework.Net.Nat
+namespace RC.Framework.Net.Nat
 {
     /// <summary>
     /// Represents a NAT device and provides access to the operation set that allows

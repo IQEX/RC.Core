@@ -3,7 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System.Security.Principal;
-namespace Rc.Framework.Security
+namespace RC.Framework.Security
 {
     /// <summary>
     /// Class manager rule app
@@ -14,9 +14,6 @@ namespace Rc.Framework.Security
         /// is Admin rule?
         /// </summary>
         /// <returns>rule</returns>
-        public static bool isProssesAdmin()
-        {
-            return new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
-        }
+        public static bool isProcessAdmin() => new WindowsPrincipal(ntIdentity: WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
     }
 }
