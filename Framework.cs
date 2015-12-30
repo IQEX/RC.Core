@@ -25,15 +25,17 @@ namespace RC.Framework
         {
             if(!File.Exists(Environment.CurrentDirectory + "\\Rc.Core.dll"))
             {
-                RCAssemblyInfo rc = new RCAssemblyInfo();
-                rc.CodeBase = "null";
-                rc.Name = "Rc.Core";
-                #if !x32
-                rc.ProcArch = ProcessorArchitecture.Amd64;
-                #else
+                RCAssemblyInfo rc = new RCAssemblyInfo
+                {
+                    CodeBase = "null",
+                    Name = "Rc.Core",
+                    ProcArch = ProcessorArchitecture.Amd64,
+                    ver = new System.Version(9, 0, 12250, 0)
+                };
+#if !x32
+#else
                 rc.ProcArch = ProcessorArchitecture.X86;
-                #endif
-                rc.ver = new System.Version(9, 0, 12250, 0);
+#endif
                 return rc;
             }
             Assembly asm = AppDomain.CurrentDomain.Load(File.ReadAllBytes(Environment.CurrentDirectory + "\\Rc.Core.dll"));

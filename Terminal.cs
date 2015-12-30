@@ -198,7 +198,11 @@ namespace RC.Framework
         }
         private static void ParseAndWrite(string str)
         {
+<<<<<<< HEAD
             lock (Out)
+=======
+            lock (_out)
+>>>>>>> c96f7595f7d6875d4eafbe81cdc2c01c9bab26bf
             {
                 str = listOfRCL.Aggregate(str, (current, y) => current.Replace(y, $"+{y}\0"));
                 char[] chars = str.ToCharArray();
