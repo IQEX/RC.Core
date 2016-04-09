@@ -13,57 +13,62 @@ namespace RC.Framework.Net
         /// Получение массива байтов "коробки"
         /// </summary>
         /// <returns>Массив "коробки"</returns>
-        byte[] GetAll();
+        byte[] toArray();
         /// <summary>
         /// Запись массива байтов
         /// </summary>
         /// <param name="value"></param>
-        void wByte(byte[] value);
+        void wB(byte[] value);
+        /// <summary>
+        /// Запись массива байтов
+        /// </summary>
+        /// <param name="value"></param>
+        void wNB(byte[] value);
         /// <summary>
         /// Запись строки
         /// </summary>
         /// <param name="value"></param>
-        void wString(string value);
+        void wSt(string value);
         /// <summary>
         /// Запись <see cref="System.Int16"/>
         /// </summary>
         /// <param name="value"><see cref="System.Int16"/></param>
-        void wShort(short value);
+        void wS(short value);
         /// <summary>
         /// Запись <see cref="System.Single"/>
         /// </summary>
         /// <param name="value"><see cref="System.Single"/></param>
-        void wFloat(float value);
+        void wF(float value);
         /// <summary>
         /// Запись <see cref="System.Int64"/>
         /// </summary>
         /// <param name="value"><see cref="System.Int64"/></param>
-        void wLong(long value);
+        void wL(long value);
         /// <summary>
         /// Запись <see cref="System.Int32"/>
         /// </summary>
         /// <param name="value"><see cref="System.Int32"/></param>
-        void wInt(int value);
+        void wI(int value);
         /// <summary>
         /// Запись <see cref="System.UInt64"/>
         /// </summary>
         /// <param name="value"><see cref="System.UInt64"/></param>
-        void wULong(ulong value);
+        void wUl(ulong value);
         /// <summary>
         /// Запись <see cref="System.UInt32"/>
         /// </summary>
         /// <param name="value"><see cref="System.UInt32"/></param>
-        void wUInt(uint value);
+        void wUI(uint value);
         /// <summary>
         /// Запись <see cref="ushort"/>
         /// </summary>
         /// <param name="value"><see cref="ushort"/></param>
-        void wUShort(ushort value);
+        void wUS(ushort value);
         /// <summary>
         /// Запись <see cref="bool"/>
         /// </summary>
         /// <param name="value"><see cref="bool"/></param>
-        void wBool(bool value);
+        void wB(bool value);
         /// <summary>
         /// Запись <see cref="System.Guid"/>
         /// </summary>

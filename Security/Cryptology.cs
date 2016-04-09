@@ -76,12 +76,10 @@ namespace RC.Framework.Security.X05h
         /// </summary>
         /// <param name="str">Password</param>
         /// <param name="hCode">hCode</param>
-        /// <param name="data">data output</param>
         /// <returns></returns>
-        public static string Assembling(string str, string hCode, out object data)
+        public static string Assembling(string str, string hCode)
         {
             string h1 = str;
-            data = null;
             if (hMake.Parse(hCode).isMD5)
                 for (int i = 0; i != hMake.Parse(hCode).CountMD5Hashing; i++)
                     h1 = BitConverter.ToString(new MD5CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(h1)));

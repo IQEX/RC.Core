@@ -4,18 +4,15 @@
 // =====================================//==============================================================//
 namespace RC.Framework.Security
 {
-    using Yaml.Serialization;
     using System;
     using System.Security.Cryptography;
     using System.Text;
     /// <summary>
     /// Class Pair Key
     /// </summary>
-    [Serializable] [Yaml(CompactMethod.Content)]
     public class RSAKeyPair
     {
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="privatekey">Private Key</param>
         /// <param name="publickey">Public Key</param>
@@ -25,11 +22,11 @@ namespace RC.Framework.Security
             this.XML_PublicKey = publickey;
         }
         /// <summary>
-        /// Приватный ключ
+        /// Private Key
         /// </summary>
         public string XML_PrivateKey;
         /// <summary>
-        /// Публичный ключ
+        /// Public Key
         /// </summary>
         public string XML_PublicKey;
     }

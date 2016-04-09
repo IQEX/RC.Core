@@ -27,19 +27,6 @@ public static class ExtensionMethods
     {
         return text.IndexOf(value, comparison) >= 0;
     }
-
-    /// <summary>
-    /// Returns a value that belongs to an interface/attribute if the object
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    public static bool InstanceOf<T>(this object t)
-    {
-        if (typeof (T).IsInterface)
-            return t.GetType().GetInterfaces().Any(o => o == typeof (T));
-        return t.GetType().GetCustomAttributes(true).Any(y => y.GetType() == typeof (T));
-    }
     /// <summary>
     /// Short expression of string.IsNullOrWhiteSpace(<see cref="String"/>)
     /// 

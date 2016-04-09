@@ -9,7 +9,9 @@
 // =====================================//==============================================================//
 
 using System.Linq;
+using RC.Framework.Net.Arch;
 
+#pragma warning disable CS1591
 namespace RC.Framework.Net.Protocol.Tcp
 {
     using System;
@@ -22,7 +24,8 @@ namespace RC.Framework.Net.Protocol.Tcp
     public delegate void SError(TcpPlatform server, Exception e);
     public delegate void SDisconnect(TcpPlatform server, TokenUserCollectionTransportSpace connection);
 
-    public partial class TcpPlatform 
+
+    public class TcpPlatform
     {
         private List<TokenUserCollectionTransportSpace> connections;
         private TcpListener listener;
@@ -41,7 +44,7 @@ namespace RC.Framework.Net.Protocol.Tcp
         private SemaphoreSlim sem;
         private bool waiting;
         private int activeThreads;
-        private object activeThreadsLock = new object();
+        private readonly object activeThreadsLock = new object();
         public event SConnection OnConnect = null;
         public event SConnection OnDataAvailable = null;
         public event SDisconnect OnDisconnect = null;
@@ -79,20 +82,10 @@ namespace RC.Framework.Net.Protocol.Tcp
             }
             set
             {
-                if (value < 0)
-                {
-                    return;
-                }
-
-                if (m_port == value)
-                {
-                    return;
-                }
-
-                if (m_isOpen)
-                {
-                    throw new Exception("Invalid attempt to change port while still open.\nPlease close port before changing.");
-                }
+                if (value < 0) return;
+                if (m_port == value) return;
+                if (m_isOpen) throw new Exception("Invalid attempt to change port while still open.\n" +
+                                                  "Please close port before changing.");
 
                 m_port = value;
                 if (listener == null)
@@ -109,13 +102,9 @@ namespace RC.Framework.Net.Protocol.Tcp
         public int MaxSendAttempts
         {
             get
-            {
-                return m_maxSendAttempts;
-            }
+            { return m_maxSendAttempts; }
             set
-            {
-                m_maxSendAttempts = value;
-            }
+            { m_maxSendAttempts = value; }
         }
         public bool IsOpen
         {
@@ -319,6 +308,26 @@ namespace RC.Framework.Net.Protocol.Tcp
                 }
             }
         }
+        public byte[] readStream(TcpClient client)
+        {
+            lock (this)
+            {
+                NetworkStream stream = client.GetStream();
+                while (stream.DataAvailable)
+                {
+
+                    byte[] arLength = new byte[sizeof(short)];
+                    stream.Read(arLength, 0, arLength.Length);
+                    IArchByteBoxReader reader = ArchManagedByte.InvokeReader(arLength);
+                    short Length = reader.rShort();
+                    byte[] byffer = new byte[Length];
+                    stream.Read(byffer, 0, byffer.Length);
+
+                    return byffer;
+                }
+                return null;
+            }
+        }
         private bool processConnection(TokenUserCollectionTransportSpace conn)
         {
             bool moreWork = conn.processOutgoing(m_maxSendAttempts);
@@ -341,15 +350,8 @@ namespace RC.Framework.Net.Protocol.Tcp
         {
             lock (this)
             {
-                if (m_isOpen)
-                {
-                    //already open, no work to do
-                    return;
-                }
-                if (m_port < 0)
-                {
-                    throw new Exception("Invalid port");
-                }
+                if (m_isOpen) return; //already open, no work to do
+                if (m_port < 0) throw new Exception("Invalid port");
 
                 try
                 {
@@ -373,10 +375,7 @@ namespace RC.Framework.Net.Protocol.Tcp
         }
         public void Close()
         {
-            if (!m_isOpen)
-            {
-                return;
-            }
+            if (!m_isOpen) return;
 
             lock (this)
             {

@@ -397,10 +397,14 @@
     <Compile Include="Native\Win32\WMIClass\Win32CDROMDrive.cs" />
     <Compile Include="Native\Win32\WMIClass\Win32DiskDrive.cs" />
     <Compile Include="Native\Win32\WMIClass\Win32Version.cs" />
-    <Compile Include="Net\ArchByte.cs" />
+    <Compile Include="Net\ArchBox\ArchByte.cs" />
+    <Compile Include="Net\ArchBox\ArchMBReader.cs" />
+    <Compile Include="Net\ArchBox\ArchMBWriter.cs" />
+    <Compile Include="Net\ArchBox\AsyncArchMBReader.cs" />
+    <Compile Include="Net\ArchBox\Interface\IAsyncArchMBReader.cs" />
     <Compile Include="Net\FtpManager.cs" />
-    <Compile Include="Net\IArchByteBoxReader.cs" />
-    <Compile Include="Net\IArchByteBoxWriter.cs" />
+    <Compile Include="Net\ArchBox\Interface\IArchByteBoxReader.cs" />
+    <Compile Include="Net\ArchBox\Interface\IArchByteBoxWriter.cs" />
     <Compile Include="Net\IPTool.cs" />
     <Compile Include="Net\NAT\Discovery\ISearcher.cs" />
     <Compile Include="Net\NAT\Discovery\Searcher.cs" />

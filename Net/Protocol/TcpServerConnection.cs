@@ -1,26 +1,17 @@
-﻿// =====================================//==============================================================//
-//                                      //                                                              //
-// Source="root\\Net\\Protocol\\TcpServerConnection.cs"   Copyright © Of Fire Twins Wesp 2015           //
-// Author= {"Callada", "Another"}       //                                                              //
-// Project="RC.Framework"               //                  Alise Wesp & Yuuki Wesp                     //
-// Version File="7.3"                   //                                                              //
-// License="root\\LICENSE"              //                                                              //
-// LicenseType="MIT"                    //                                                              //
-// =====================================//==============================================================//
-using System;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
-
+﻿#pragma warning disable CS1591 // Отсутствует комментарий XML для открытого видимого типа или члена
 namespace RC.Framework.Net.Protocol.Tcp
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading;
     public class TokenUserCollectionTransportSpace
     {
         private TcpClient m_socket;
-        private List<byte[]> messagesToSend;
+        private readonly List<byte[]> messagesToSend;
         private int attemptCount;
-        private Thread m_thread = null;
+        private Thread m_thread;
         private DateTime m_lastVerifyTime;
         private Encoding m_encoding;
         public string IP;
@@ -84,16 +75,14 @@ namespace RC.Framework.Net.Protocol.Tcp
                 {
                     //occurs when there's an error writing to network
                     attemptCount++;
-                    if (attemptCount >= maxSendAttempts)
-                    {
-                        //TODO log error
+                    if (attemptCount < maxSendAttempts) return messagesToSend.Count != 0;
+                    //TODO log error
 
-                        lock (messagesToSend)
-                        {
-                            messagesToSend.RemoveAt(0);
-                        }
-                        attemptCount = 0;
+                    lock (messagesToSend)
+                    {
+                        messagesToSend.RemoveAt(0);
                     }
+                    attemptCount = 0;
                 }
                 catch (ObjectDisposedException)
                 {
@@ -124,10 +113,7 @@ namespace RC.Framework.Net.Protocol.Tcp
         }
         private bool canStartNewThread()
         {
-            if (m_thread == null)
-            {
-                return true;
-            }
+            if (m_thread == null) return true;
             return (m_thread.ThreadState & (ThreadState.Aborted | ThreadState.Stopped)) != 0 &&
                    (m_thread.ThreadState & ThreadState.Unstarted) == 0;
         }
@@ -157,13 +143,8 @@ namespace RC.Framework.Net.Protocol.Tcp
                 m_thread = value;
             }
         }
-        public DateTime LastVerifyTime
-        {
-            get
-            {
-                return m_lastVerifyTime;
-            }
-        }
+        public DateTime LastVerifyTime => m_lastVerifyTime;
+
         public Encoding Encoding
         {
             get

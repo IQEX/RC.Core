@@ -1,4 +1,6 @@
-﻿#if WIN32
+﻿using RC.Framework.Net.Arch;
+
+#if WIN32
 namespace RC.Framework.Native.Win32
 {
     using Extension;
@@ -77,13 +79,13 @@ namespace RC.Framework.Native.Win32
         /// <returns></returns>
         public override byte[] ToByte()
         {
-            IArchByteBoxWriter writer = ArchByteBox.InvokeWriter();
+            IArchByteBoxWriter writer = ArchManagedByte.InvokeWriter();
             //@ Begin
-            writer.wString(Version);
-            writer.wString(Build);
-            writer.wString(TypeWin.ToString());
+            writer.wSt(Version);
+            writer.wSt(Build);
+            writer.wSt(TypeWin.ToString());
             //@ End
-            return writer.GetAll();
+            return writer.toArray();
         }
         /// <summary>
         /// Byte Array to this class
@@ -91,7 +93,7 @@ namespace RC.Framework.Native.Win32
         /// <param name="bitBox">Content class</param>
         public override void outByte(byte[] bitBox)
         {
-            IArchByteBoxReader reader = ArchByteBox.InvokeReader(bitBox);
+            IArchByteBoxReader reader = ArchManagedByte.InvokeReader(bitBox);
             //@ Begin
             Version = reader.rString();
             Build = reader.rString();

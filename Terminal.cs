@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-#pragma warning disable CS1591 
+﻿#pragma warning disable CS1591 
 namespace RC.Framework
 {
     using Collections.Generic;
@@ -8,7 +6,56 @@ namespace RC.Framework
     using System.IO;
     using System.Collections.Generic;
     using System.Runtime.CompilerServices;
+    using System.Linq;
     using System.Text;
+
+    public static class RCL
+    {
+        public static string Wrap(string text, ConsoleColor color) 
+        => $"{color.getValue()}{text}{ConsoleColor.White.getValue()}";
+
+        public static string getValue(this ConsoleColor c)
+        {
+            switch (c)
+            {
+                case ConsoleColor.Black:
+                    return Terminal.Black;
+                case ConsoleColor.DarkBlue:
+                    return Terminal.DarkBlue;
+                case ConsoleColor.DarkGreen:
+                    return Terminal.DarkGreen;
+                case ConsoleColor.DarkCyan:
+                    return Terminal.DarkCyan;
+                case ConsoleColor.DarkRed:
+                    return Terminal.DarkRed;
+                case ConsoleColor.DarkMagenta:
+                    return Terminal.DarkMagenta;
+                case ConsoleColor.DarkYellow:
+                    return Terminal.DarkYellow;
+                case ConsoleColor.Gray:
+                    return Terminal.Gray;
+                case ConsoleColor.DarkGray:
+                    return Terminal.DarkGray;
+                case ConsoleColor.Blue:
+                    return Terminal.Blue;
+                case ConsoleColor.Green:
+                    return Terminal.Green;
+                case ConsoleColor.Cyan:
+                    return Terminal.Cyan;
+                case ConsoleColor.Red:
+                    return Terminal.Red;
+                case ConsoleColor.Magenta:
+                    return Terminal.Magenta;
+                case ConsoleColor.Yellow:
+                    return Terminal.Yellow;
+                case ConsoleColor.White:
+                    return Terminal.White;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(c), c, null);
+            }
+        }
+    }
+
     /// <summary>
     /// Wrap the management console terminal
     /// </summary>
@@ -43,40 +90,40 @@ namespace RC.Framework
                 "§c", // Red
                 "§d", // Magenta
                 "§e", // Yellow
-                "§f"  // White
+                "§f" // White
             };
         }
 
-        public const string Black       = "§0";
-        public const string DarkBlue    = "§1";
-        public const string DarkGreen   = "§2";
-        public const string DarkCyan    = "§3";
-        public const string DarkRed     = "§4";
+        public const string Black = "§0";
+        public const string DarkBlue = "§1";
+        public const string DarkGreen = "§2";
+        public const string DarkCyan = "§3";
+        public const string DarkRed = "§4";
         public const string DarkMagenta = "§5";
-        public const string DarkYellow  = "§6";
-        public const string DarkGray    = "§7";
-        public const string Gray        = "§8";
-        public const string Blue        = "§9";
-        public const string Green       = "§a";
-        public const string Cyan        = "§b";
-        public const string Red         = "§c";
-        public const string Magenta     = "§d";
-        public const string Yellow      = "§e";
-        public const string White       = "§f";
+        public const string DarkYellow = "§6";
+        public const string DarkGray = "§7";
+        public const string Gray = "§8";
+        public const string Blue = "§9";
+        public const string Green = "§a";
+        public const string Cyan = "§b";
+        public const string Red = "§c";
+        public const string Magenta = "§d";
+        public const string Yellow = "§e";
+        public const string White = "§f";
 
         public static readonly RList<string> listOfRCL;
 
         private static readonly string defHeader = "§cEngine§c";
         private static string header = "";
-        private static bool isUseRCL;
-        private static bool isUseColor;
+        public static bool isUseRCL = true;
+        public static bool isUseColor = true;
+
         /// <summary>
         /// Writes a new line, with the support of rcl, without symbol of the end-line
         /// </summary>
         /// <param name="s">String Rcl</param>
         public static void Write(string s, bool isUseHeader = false)
         {
-
             if (isUseHeader)
             {
                 if (header == "")
@@ -99,6 +146,7 @@ namespace RC.Framework
             else
                 Out.Write(s);
         }
+
         /// <summary>
         /// Writes a new line, with the support of rcl
         /// </summary>
@@ -127,7 +175,7 @@ namespace RC.Framework
             else
                 Out.Write($"{s}{Environment.NewLine}");
         }
-        
+
         /// <summary>
         /// Writes a new line, with the support of rcl
         /// and Trase Line or Member of called
@@ -171,6 +219,7 @@ namespace RC.Framework
             else
                 Out.Write($"{s}{Environment.NewLine}");
         }
+
         /// <summary>
         /// Writes a new line, exception
         /// </summary>
@@ -185,7 +234,7 @@ namespace RC.Framework
             ParseAndWrite($"[§2{ex.GetType().Name}§f] §4CallerLineNumber§f: §7{line}§f{Environment.NewLine}");
             ParseAndWrite($"[§2{ex.GetType().Name}§f] §4Message§f: §7{ex.Message}§f{Environment.NewLine}");
             ParseAndWrite($"[§2{ex.GetType().Name}§f] §4HResult§f: §7{ex.HResult}§f{Environment.NewLine}");
-            if(!string.IsNullOrEmpty(ex.HelpLink))
+            if (!string.IsNullOrEmpty(ex.HelpLink))
                 ParseAndWrite($"[§2{ex.GetType().Name}§f] §4HelpLink§f: §7{ex.HelpLink}§f{Environment.NewLine}");
             foreach (KeyValuePair<object, object> k in ex.Data)
             {
@@ -196,13 +245,10 @@ namespace RC.Framework
             if (!string.IsNullOrEmpty(ex.Source))
                 ParseAndWrite($"[§2{ex.GetType().Name}§f] §4Source§f: §7{ex.Source}§f{Environment.NewLine}");
         }
+
         private static void ParseAndWrite(string str)
         {
-<<<<<<< HEAD
             lock (Out)
-=======
-            lock (_out)
->>>>>>> c96f7595f7d6875d4eafbe81cdc2c01c9bab26bf
             {
                 str = listOfRCL.Aggregate(str, (current, y) => current.Replace(y, $"+{y}\0"));
                 char[] chars = str.ToCharArray();
@@ -316,7 +362,8 @@ namespace RC.Framework
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
-        private static string   SReplaceRcl(this string s, string to = "") => listOfRCL.Aggregate(s, (current, y) => current.Replace(y, to));
-        private static void     VReplaceRcl(this string s, string to = "") => s = listOfRCL.Aggregate(s, (current, y) => current.Replace(y, to));
+
+        private static string SReplaceRcl(this string s, string to = "") => listOfRCL.Aggregate(s, (current, y) => current.Replace(y, to));
+        private static void VReplaceRcl(this string s, string to = "") => s = listOfRCL.Aggregate(s, (current, y) => current.Replace(y, to));
     }
 }
