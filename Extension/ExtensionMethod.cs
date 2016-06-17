@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 /// <summary>
 /// Класс расширений
@@ -68,5 +67,20 @@ public static class ExtensionMethods
     public static bool IsNullOrEmptyOrWhiteSpace(this string t)
     {
         return string.IsNullOrEmpty(t) && string.IsNullOrWhiteSpace(t);
+    }
+    /// <summary>
+    /// To get an ID(num) enumeration
+    /// </summary>
+    /// <typeparam name="TEnum">
+    /// Type of Enum
+    /// </typeparam>
+    /// <returns>
+    /// ID(num)
+    /// </returns>
+    public static int getID<TEnum>(this TEnum s) where TEnum : struct, IConvertible
+    {
+        if (!typeof(TEnum).IsEnum) throw new ArgumentException($"'{nameof(TEnum)}' must be an enumerated type!");
+
+        return (int)(object)s; // So shit :(
     }
 }
