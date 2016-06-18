@@ -278,6 +278,7 @@
     <Compile Include="Compress\Ionic\ZlibCodec.cs" />
     <Compile Include="Compress\Ionic\ZlibConstants.cs" />
     <Compile Include="Compress\Ionic\ZlibStream.cs" />
+    <Compile Include="Extension\Ater.cs" />
     <Compile Include="Extension\RException.cs" />
     <Compile Include="Extension\Utils\CMDLine.cs" />
     <Compile Include="IO\Dir.cs" />
