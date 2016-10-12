@@ -16,6 +16,9 @@ namespace RC.Framework.Native.Win32.API
         [SuppressUnmanagedCodeSecurity]
         class NativeMethods
         {
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int w, int h, bool repaint);
+
             [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
             public static extern uint GetWindowLong(IntPtr hWnd, WindowLong nIndex);
             
@@ -96,7 +99,7 @@ namespace RC.Framework.Native.Win32.API
 
             [DllImport("user32.dll", SetLastError = true)]
             [return: MarshalAs(UnmanagedType.Bool)]
-            public static extern bool GetWindowRect(IntPtr hWnd, ref RECT rect);
+            public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
 
             [DllImport("user32.dll", SetLastError = true)]
             public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
@@ -173,6 +176,8 @@ namespace RC.Framework.Native.Win32.API
         }
 
         #endregion
+
+        public static bool MoveWindow(IntPtr hWnd, int x, int y, int w, int h, bool repaint) => NativeMethods.MoveWindow(hWnd, x, y, w, h, repaint);
 
         /// <summary>
         /// Brings the thread that created the specified window into the foreground and activates the window. Keyboard input is directed to the window, and various visual cues are changed for the user. The system assigns a slightly higher priority to the thread that created the foreground window than it does to other threads.
@@ -355,9 +360,9 @@ namespace RC.Framework.Native.Win32.API
         /// <param name="hWnd">A handle to the window.</param>
         /// <param name="rect">RECT structure that receives the screen coordinates of the upper-left and lower-right corners of the window.</param>
         /// <returns></returns>
-        public static bool GetWindowRect(IntPtr hWnd, ref RECT rect)
+        public static bool GetWindowRect(IntPtr hWnd, out RECT rect)
         {
-            return NativeMethods.GetWindowRect(hWnd, ref rect);
+            return NativeMethods.GetWindowRect(hWnd, out rect);
         }
     }
 }

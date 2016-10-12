@@ -28,6 +28,8 @@ namespace RC.Framework.Native.Win32.API
             [DllImport("shell32.dll", EntryPoint = "#727")]
             public extern static HRESULT SHGetImageList(int iImageList, ref Guid riid, out IImageList ppv);
 
+
+
         }
 
         /// <summary>

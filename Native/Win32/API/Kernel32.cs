@@ -1,10 +1,16 @@
-﻿#if WIN32
+﻿using System.Drawing;
+using System.Windows.Forms;
+using RC.Framework.Native.Win32.Rectangles;
+
+#if WIN32
 namespace RC.Framework.Native.Win32.API
 {
     using SystemInformation;
     using System;
     using System.Runtime.InteropServices;
     using System.Text;
+    using System.Diagnostics;
+
     /// <summary>
     /// API methods in kernel32.dll.
     /// </summary>
@@ -12,11 +18,11 @@ namespace RC.Framework.Native.Win32.API
     {
         class NativeMethods
         {
-            //[DllImport("kernel32.dll")]
-            //public static extern IntPtr LoadLibrary(string lpFileName);
+            [DllImport("kernel32.dll")]
+            public static extern IntPtr LoadLibrary(string lpFileName);
 
-            //[DllImport("kernel32.dll", SetLastError = true)]
-            //public static extern bool FreeLibrary(IntPtr hModule);
+            [DllImport("kernel32.dll", SetLastError = true)]
+            public static extern bool FreeLibrary(IntPtr hModule);
 
             [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
             public static extern int GetPrivateProfileString(string lpAppName, string lpKeyName, string defaultValue, StringBuilder lpReturnedString, Int32 bufferSize, string lpFileName);
@@ -35,7 +41,42 @@ namespace RC.Framework.Native.Win32.API
 
             [DllImport("kernel32.dll")]
             public static extern ulong VerSetConditionMask(ulong dwlConditionMask, VersionTypeMask dwTypeBitMask, VersionConditionMask dwConditionMask);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool AllocConsole();
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool FreeConsole();
+
+            [DllImport("kernel32", SetLastError = true)]
+            public static extern bool AttachConsole(int dwProcessId);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetForegroundWindow();
+
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            public static extern IntPtr GetConsoleWindow();
         }
+
+        public static void CenterConsole()
+        {
+            IntPtr hWin = NativeMethods.GetConsoleWindow();
+            RECT rc;
+            User32.GetWindowRect(hWin, out rc);
+            Screen scr = Screen.FromPoint(new Point(rc.left, rc.top));
+            int x = scr.WorkingArea.Left + (scr.WorkingArea.Width - (rc.right - rc.left)) / 2;
+            int y = scr.WorkingArea.Top + (scr.WorkingArea.Height - (rc.bottom - rc.top)) / 2;
+            User32.MoveWindow(hWin, x, y, rc.right - rc.left, rc.bottom - rc.top, false);
+        }
+
+        public static bool AllocConsole() => NativeMethods.AllocConsole();
+
+        public static bool FreeConsole() => NativeMethods.FreeConsole();
 
         /// <summary>
         /// Retrieves a string from the specified section in an initialization file.
