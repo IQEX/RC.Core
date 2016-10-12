@@ -14,23 +14,24 @@
 [assembly: System.Reflection.AssemblyTrademark      (RC.AssemblyRT.Trademark)]
 [assembly: System.Runtime.InteropServices.ComVisible(true)]
 [assembly: System.Runtime.InteropServices.Guid      (RC.AssemblyRT.GUID)]
-[assembly: System.Reflection.AssemblyVersion        ("9.1.0.12250")]
-[assembly: System.Reflection.AssemblyFileVersion    ("9.1.0.12250")]
+[assembly: System.Reflection.AssemblyVersion        ("9.1.2.12250")]
+[assembly: System.Reflection.AssemblyFileVersion    ("9.1.2.12250")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Vox.Core, "      + RC.AssemblyRT.PubKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Constructor, "   + RC.AssemblyRT.PubKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Qurd, "          + RC.AssemblyRT.PubKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Launcher, "      + RC.AssemblyRT.PubKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Quantum.Driver, "+ RC.AssemblyRT.PubKey)]
 
 namespace RC
 {
     public class AssemblyRT
     {
         public const string Description = "RC.Framework for .NET";
-        public const string Company = "AGT-Soul";
+        public const string Company = "duo-flux.net";
         public const string Product = "RC.Core";
-        public const string Copyright = "Copyright © Yuuki Wesp (Callada & Another) 2013-2016 and Author Project Include's";
-        public const string Trademark = "RC#";
+        public const string Copyright = "Copyright © Yuuki Wesp & Alice Wesp (Callada & Another) 2013-2016 and Author Project Include's";
+        public const string Trademark = "Alfheim.CE";
         public const string GUID = "35a23b54-4d7b-43a0-8fa5-133feedc8c6a";
         public const string PubKey = "PublicKey=002400000480000094000000060200000024000052534131000400000100010039e50bf6193da3" +
                                                   "93d5cf03d6abd2363f45f1488a851109ff0a9185e3a83d7fce98c133945e4775877e0c48a7c9ce" +

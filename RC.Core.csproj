@@ -17,9 +17,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>..\Bin\Any\</OutputPath>
-    <DefineConstants>DEBUG;Standart; WIN32; UNIX</DefineConstants>
+    <DefineConstants>DEBUG;Standart; WIN32;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -402,7 +402,6 @@
     <Compile Include="Net\ArchBox\ArchByte.cs" />
     <Compile Include="Net\ArchBox\ArchMBReader.cs" />
     <Compile Include="Net\ArchBox\ArchMBWriter.cs" />
-    <Compile Include="Net\ArchBox\AsyncArchMBReader.cs" />
     <Compile Include="Net\ArchBox\Interface\IAsyncArchMBReader.cs" />
     <Compile Include="Net\FtpManager.cs" />
     <Compile Include="Net\ArchBox\Interface\IArchByteBoxReader.cs" />
