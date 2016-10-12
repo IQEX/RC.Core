@@ -81,16 +81,6 @@ namespace RC.Framework.Net
         /// <param name="isBinary">Бинарное?</param>
         void wDateTime(System.DateTime DT, bool isBinary = false);
         /// <summary>
-        /// Запись <see cref="RMath.Range"/>
-        /// </summary>
-        /// <param name="value"><see cref="RMath.Range"/></param>
-        void wFRange(RMath.Range value);
-        /// <summary>
-        /// Запись <see cref="RMath.IntRange"/>
-        /// </summary>
-        /// <param name="value"><see cref="RMath.IntRange"/></param>
-        void wIRange(RMath.IntRange value);
-        /// <summary>
         /// Создает неполную копию текущего объекта
         /// </summary>
         /// <returns></returns>

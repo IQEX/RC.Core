@@ -66,16 +66,6 @@
         /// </returns>
         uint rUInt();
         /// <summary>
-        /// Reading <see cref="RMath.IntRange"/>
-        /// </summary>
-        /// <returns><see cref="RMath.IntRange"/></returns>
-        RMath.IntRange rIRange();
-        /// <summary>
-        /// Reading <see cref="RMath.Range"/>
-        /// </summary>
-        /// <returns><see cref="RMath.Range"/></returns>
-        RMath.Range rFRange();
-        /// <summary>
         /// Reading <see cref="System.DateTime.Ticks"/>
         /// </summary>
         /// <returns><see cref="System.DateTime"/></returns>

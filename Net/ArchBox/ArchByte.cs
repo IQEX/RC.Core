@@ -49,15 +49,5 @@ namespace RC.Framework.Net.Arch
         /// Reader buffer
         /// </returns>
         public static IArchByteBoxReader InvokeReader(byte[] buffer) => new ArchMBReader(buffer);
-        /// <summary>
-        /// Invoke an create instance async reader
-        /// </summary>
-        /// <param name="buffer">
-        /// Buffer
-        /// </param>
-        /// <returns>
-        /// Reader buffer
-        /// </returns>
-        public static IAsyncArchMBReader InvokeAsyncReader(byte[] buffer) => new AsyncArchMBReader(buffer);
     }
 }

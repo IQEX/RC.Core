@@ -2,7 +2,6 @@
 {
     using System;
     using System.Text;
-    using RMath;
     /// <summary>
     /// wrap calss writing in "box"
     /// </summary>
@@ -98,22 +97,6 @@
         void IArchByteBoxWriter.wB(bool bo)
         {
             byte[] @Byte = BitConverter.GetBytes(bo);
-            nMStream.Write(@Byte, 0, @Byte.Length);
-        }
-        void IArchByteBoxWriter.wFRange(Range r)
-        {
-            byte[] @Byte;
-            @Byte = BitConverter.GetBytes(r.Min);
-            nMStream.Write(@Byte, 0, @Byte.Length);
-            @Byte = BitConverter.GetBytes(r.Max);
-            nMStream.Write(@Byte, 0, @Byte.Length);
-        }
-        void IArchByteBoxWriter.wIRange(IntRange iR)
-        {
-            byte[] @Byte;
-            @Byte = BitConverter.GetBytes(iR.Min);
-            nMStream.Write(@Byte, 0, @Byte.Length);
-            @Byte = BitConverter.GetBytes(iR.Max);
             nMStream.Write(@Byte, 0, @Byte.Length);
         }
     }

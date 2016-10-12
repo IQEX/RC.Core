@@ -2,7 +2,6 @@
 {
     using System;
     using System.Text;
-    using RMath;
     /// <summary>
     /// wrap class reader in "box"
     /// </summary>
@@ -163,36 +162,6 @@
             byte[] @Byte = new byte[sizeof(uint)];
             nMStream.Read(@Byte, 0, sizeof(uint));
             return BitConverter.ToUInt32(@Byte, 0);
-        }
-
-        /// <summary>
-        /// Reading <see cref="RC.Framework.RMath.IntRange"/>
-        /// </summary>
-        /// <returns><see cref="RC.Framework.RMath.IntRange"/></returns>
-        IntRange IArchByteBoxReader.rIRange()
-        {
-            IntRange ir = new IntRange();
-            byte[] @Byte = new byte[sizeof(int)];
-            nMStream.Read(@Byte, 0, sizeof(int));
-            ir.Min = BitConverter.ToInt32(@Byte, 0);
-            nMStream.Read(@Byte, 0, sizeof(int));
-            ir.Max = BitConverter.ToInt32(@Byte, 0);
-            return ir;
-        }
-
-        /// <summary>
-        /// Reading <see cref="RC.Framework.RMath.Range"/>
-        /// </summary>
-        /// <returns><see cref="RC.Framework.RMath.Range"/></returns>
-        Range IArchByteBoxReader.rFRange()
-        {
-            Range ir = new Range();
-            byte[] @Byte = new byte[sizeof(float)];
-            nMStream.Read(@Byte, 0, sizeof(float));
-            ir.Min = BitConverter.ToSingle(@Byte, 0);
-            nMStream.Read(@Byte, 0, sizeof(float));
-            ir.Max = BitConverter.ToSingle(@Byte, 0);
-            return ir;
         }
 
         /// <summary>
