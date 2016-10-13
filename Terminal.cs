@@ -256,7 +256,7 @@ namespace RC.Framework
         }
 
         private static string getHTime()
-            => $"[{RCL.Wrap(DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss'.'ms"), ConsoleColor.Gray)}]";
+            => $"[{RCL.Wrap(DateTime.Now.ToString("yyyy-MM-dd HH':'mm':'ss"), ConsoleColor.Gray)}]";
 
         private static void ParseAndWrite(string str)
         {
