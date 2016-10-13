@@ -24,14 +24,8 @@ namespace RC.Framework.Extension
         public override string Message { get; }
         public override string Source
         {
-            get
-            {
-                return source;
-            }
-            set
-            {
-                source = value;
-            }
+            get { return source; }
+            set { source = value; }
         }
         public override string StackTrace => !isConnectStackTrace ? base.StackTrace : "";
         public RException(string message, IDictionary<TKey, TVal> dic)
