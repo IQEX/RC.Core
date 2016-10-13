@@ -1,5 +1,5 @@
 ﻿// =====================================//==============================================================//
-// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru>      //
+// License="root\\LICENSE"              //   Copyright © Of Fire Twins Wesp 2015  <ls-micro@ya.ru> hui  //
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
