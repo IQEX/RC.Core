@@ -217,11 +217,11 @@
   <ItemGroup>
     <Compile Include="Collections\EqualityComparer.cs" />
     <Compile Include="Collections\Generic\Box.cs" />
-    <Compile Include="Collections\Generic\IBox.cs" />
-    <Compile Include="Collections\Generic\IReflectDictionary.cs" />
-    <Compile Include="Collections\Generic\IMatrix.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IBox.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
     <Compile Include="Collections\Generic\ReflectDictionary.cs" />
-    <Compile Include="Collections\Generic\IRList.cs" />
     <Compile Include="Collections\Generic\Matrix.cs" />
     <Compile Include="Collections\IRBuffer.cs" />
     <Compile Include="Collections\RBuffer.cs" />
@@ -286,8 +286,6 @@
     <Compile Include="Extension\ExtensionConvert.cs" />
     <Compile Include="Extension\ExtensionMethod.cs" />
     <Compile Include="Framework.cs" />
-    <Compile Include="IO\Log.cs" />
-    <Compile Include="IO\ILog.cs" />
     <Compile Include="IO\StreamPtr.cs" />
     <Compile Include="IO\UnSafe\Memory\Disposer.cs" />
     <Compile Include="IO\UnSafe\StreamExtension.cs" />
