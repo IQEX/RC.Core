@@ -222,7 +222,6 @@
     <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
     <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
     <Compile Include="Collections\Generic\ReflectDictionary.cs" />
-    <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
     <Compile Include="Collections\Generic\Matrix.cs" />
     <Compile Include="Collections\IRBuffer.cs" />
     <Compile Include="Collections\RBuffer.cs" />
