@@ -218,10 +218,17 @@
     <Compile Include="Collections\EqualityComparer.cs" />
     <Compile Include="Collections\Generic\Box.cs" />
     <Compile Include="Collections\Generic\Interfaces\IBox.cs" />
-    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
+<<<<<<< HEAD
     <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
     <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
     <Compile Include="Collections\Generic\ReflectDictionary.cs" />
+=======
+    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
+    <Compile Include="Collections\Generic\ReflectDictionary.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
+>>>>>>> 542f376f29526891f601a154db3c27a3a5995efa
     <Compile Include="Collections\Generic\Matrix.cs" />
     <Compile Include="Collections\IRBuffer.cs" />
     <Compile Include="Collections\RBuffer.cs" />
