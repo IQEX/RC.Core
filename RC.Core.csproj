@@ -17,8 +17,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\Bin\Any\</OutputPath>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;Standart; WIN32;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -83,7 +83,8 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resource\app.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -198,6 +199,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework">
       <Private>False</Private>
@@ -217,11 +219,11 @@
   <ItemGroup>
     <Compile Include="Collections\EqualityComparer.cs" />
     <Compile Include="Collections\Generic\Box.cs" />
-    <Compile Include="Collections\Generic\IBox.cs" />
-    <Compile Include="Collections\Generic\IReflectDictionary.cs" />
-    <Compile Include="Collections\Generic\IMatrix.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IBox.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
     <Compile Include="Collections\Generic\ReflectDictionary.cs" />
-    <Compile Include="Collections\Generic\IRList.cs" />
     <Compile Include="Collections\Generic\Matrix.cs" />
     <Compile Include="Collections\IRBuffer.cs" />
     <Compile Include="Collections\RBuffer.cs" />
@@ -286,8 +288,6 @@
     <Compile Include="Extension\ExtensionConvert.cs" />
     <Compile Include="Extension\ExtensionMethod.cs" />
     <Compile Include="Framework.cs" />
-    <Compile Include="IO\Log.cs" />
-    <Compile Include="IO\ILog.cs" />
     <Compile Include="IO\StreamPtr.cs" />
     <Compile Include="IO\UnSafe\Memory\Disposer.cs" />
     <Compile Include="IO\UnSafe\StreamExtension.cs" />
@@ -446,11 +446,6 @@
     <Compile Include="Net\NT\State.cs" />
     <Compile Include="Net\Protocol\TcpServer.cs" />
     <Compile Include="Net\Protocol\TcpServerConnection.cs" />
-    <Compile Include="Resource\Resource.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resource.resx</DependentUpon>
-    </Compile>
     <Compile Include="RMath\Complex.cs" />
     <Compile Include="RMath\Gaussian.cs" />
     <Compile Include="RMath\IntRange.cs" />
@@ -461,6 +456,42 @@
     <Compile Include="RMath\Vector2.cs" />
     <Compile Include="RMath\Vector3.cs" />
     <Compile Include="RMath\Vector4.cs" />
+    <Compile Include="Screens\ColorAlternator.cs" />
+    <Compile Include="Screens\ColorAlternatorFactory.cs" />
+    <Compile Include="Screens\ColorExtensions.cs" />
+    <Compile Include="Screens\ColorfulConsoleBack.cs" />
+    <Compile Include="Screens\ColorfulConsoleFront.cs" />
+    <Compile Include="Screens\ColorManager.cs" />
+    <Compile Include="Screens\ColorManagerFactory.cs" />
+    <Compile Include="Screens\ColorMapper.cs" />
+    <Compile Include="Screens\ColorMappingException.cs" />
+    <Compile Include="Screens\COLORREF.cs" />
+    <Compile Include="Screens\ColorStore.cs" />
+    <Compile Include="Screens\ConsoleAccessException.cs" />
+    <Compile Include="Screens\DefaultFonts.cs" />
+    <Compile Include="Screens\ExtensionMethods.cs" />
+    <Compile Include="Screens\FailConvertGroupToColorException.cs" />
+    <Compile Include="Screens\Figlet.cs" />
+    <Compile Include="Screens\FigletFont.cs" />
+    <Compile Include="Screens\Formatter.cs" />
+    <Compile Include="Screens\FrequencyBasedColorAlternator.cs" />
+    <Compile Include="Screens\GradientGenerator.cs" />
+    <Compile Include="Screens\IPrototypable.cs" />
+    <Compile Include="Screens\MatchLocation.cs" />
+    <Compile Include="Screens\Pattern.cs" />
+    <Compile Include="Screens\PatternBasedColorAlternator.cs" />
+    <Compile Include="Screens\PatternCollection.cs" />
+    <Compile Include="Screens\publics\FrontScreen.cs" />
+    <Compile Include="Screens\publics\RCL.cs" />
+    <Compile Include="Screens\publics\Screen.cs" />
+    <Compile Include="Screens\StyleClass.cs" />
+    <Compile Include="Screens\StyledString.cs" />
+    <Compile Include="Screens\Styler.cs" />
+    <Compile Include="Screens\StyleSheet.cs" />
+    <Compile Include="Screens\TextAnnotator.cs" />
+    <Compile Include="Screens\TextFormatter.cs" />
+    <Compile Include="Screens\TextPattern.cs" />
+    <Compile Include="Screens\TextPatternCollection.cs" />
     <Compile Include="Security\Cryptology.cs" />
     <Compile Include="Security\HashSum.cs" />
     <Compile Include="Security\RSA.cs" />
@@ -484,7 +515,7 @@
     <Compile Include="Data\Yaml\Serialized\YamlTagPrefixes.cs" />
     <Compile Include="Data\Yaml\Serialized\YamlTagResolutionScheme.cs" />
     <Compile Include="Data\Yaml\Serialized\YamlTagValidator.cs" />
-    <Compile Include="Terminal.cs" />
+    <Compile Include="_obsolete\Terminal.cs" />
     <Compile Include="IO\FileSystem\ApplePartitionMap\BlockZero.cs" />
     <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMap.cs" />
     <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMapEntry.cs" />
@@ -1155,26 +1186,6 @@
     <Compile Include="IO\FileSystem\Xva\VirtualMachine.cs" />
     <Compile Include="IO\FileSystem\Xva\VirtualMachineBuilder.cs" />
     <Compile Include="IO\FileSystem\ZeroStream.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resource\app.ico" />
-    <Content Include="IO\FileSystem\RC.Framework.FileSystem.csproj" />
-    <Content Include="IO\FileSystem\Resources\XVA_ova_base.xml" />
-    <Content Include="IO\FileSystem\Resources\XVA_ova_ref.xml" />
-    <Content Include="IO\FileSystem\Resources\XVA_ova_sr.xml" />
-    <Content Include="IO\FileSystem\Resources\XVA_ova_vbd.xml" />
-    <Content Include="IO\FileSystem\Resources\XVA_ova_vdi.xml" />
-    <Content Include="IO\FileSystem\Resources\XVA_ova_vm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resource\Resource.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="IO\FileSystem\Resources.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="IO\FileSystem\RC.Framework.FileSystem.csproj.csdat" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Native\Unix\IO\" />

@@ -22,7 +22,7 @@ namespace RC.Framework.Yaml.Serialization
     /// object obj = GetObjectToConvert();
     /// 
     /// // Check if the type has [TypeConverter] attribute.
-    /// if( EasyTypeConverter.IsTypeConverterSpecified(type) ) {
+    /// if( nameof(type) ) {
     /// 
     ///   // Convert the object to string.
     ///   string s = EasyTypeConverter.ConvertToString(obj);
