@@ -1,0 +1,1207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{35A23B54-4D7B-43A0-8FA5-133FEEDC8C6A}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Rc.Framework</RootNamespace>
+    <AssemblyName>RC.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;Standart; WIN32;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>
+    </DocumentationFile>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityVersion|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\UnityVersion\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DelaySign>false</DelaySign>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x64|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Bin\x64\</OutputPath>
+    <DefineConstants>DEBUG;x64</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>C:\Git\RCFramework\Bin\x64\RC.Core.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x86|AnyCPU'">
+    <OutputPath>..\Bin\x86\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>x86;x32;</DefineConstants>
+    <DocumentationFile>C:\Git\RCFramework\Bin\x86\RC.Core.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;x64</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityVersion|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\UnityVersion\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x64|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\x64\</OutputPath>
+    <DefineConstants>DEBUG;x64</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x64\RC.Core.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x86|x64'">
+    <OutputPath>bin\x64\x86\</OutputPath>
+    <DefineConstants>x86;x32;</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x86\RC.Core.XML</DocumentationFile>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;x86;x32</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityVersion|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\UnityVersion\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x64|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\x64\</OutputPath>
+    <DefineConstants>DEBUG;x64</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x64\RC.Core.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'x86|x86'">
+    <OutputPath>bin\x86\x86\</OutputPath>
+    <DefineConstants>x86;x32;</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\x86\RC.Core.XML</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Collections\EqualityComparer.cs" />
+    <Compile Include="Collections\Generic\Box.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IBox.cs" />
+<<<<<<< HEAD
+    <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
+=======
+    <Compile Include="Collections\Generic\Interfaces\IReflectDictionary.cs" />
+    <Compile Include="Collections\Generic\Interfaces\IMatrix.cs" />
+>>>>>>> origin/master
+    <Compile Include="Collections\Generic\Interfaces\IRList.cs" />
+    <Compile Include="Collections\Generic\ReflectDictionary.cs" />
+    <Compile Include="Collections\Generic\Matrix.cs" />
+    <Compile Include="Collections\IRBuffer.cs" />
+    <Compile Include="Collections\RBuffer.cs" />
+    <Compile Include="Collections\Generic\SoapSerializer.cs" />
+    <Compile Include="Collections\Generic\RList.cs" />
+    <Compile Include="Collections\Generic\SortMode.cs" />
+    <Compile Include="Compress\Ionic\BitWriter.cs" />
+    <Compile Include="Compress\Ionic\BZip2Compressor.cs" />
+    <Compile Include="Compress\Ionic\BZip2InputStream.cs" />
+    <Compile Include="Compress\Ionic\BZip2OutputStream.cs" />
+    <Compile Include="Compress\Ionic\ComHelper.cs" />
+    <Compile Include="Compress\Ionic\CRC32.cs" />
+    <Compile Include="Compress\Ionic\Deflate.cs" />
+    <Compile Include="Compress\Ionic\DeflateStream.cs" />
+    <Compile Include="Compress\Ionic\EncryptionAlgorithm.cs" />
+    <Compile Include="Compress\Ionic\Events.cs" />
+    <Compile Include="Compress\Ionic\Exceptions.cs" />
+    <Compile Include="Compress\Ionic\ExtractExistingFileAction.cs" />
+    <Compile Include="Compress\Ionic\FileSelector.cs" />
+    <Compile Include="Compress\Ionic\GZipStream.cs" />
+    <Compile Include="Compress\Ionic\Inflate.cs" />
+    <Compile Include="Compress\Ionic\InfTree.cs" />
+    <Compile Include="Compress\Ionic\Iso8859Dash1Encoding.cs" />
+    <Compile Include="Compress\Ionic\OffsetStream.cs" />
+    <Compile Include="Compress\Ionic\ParallelBZip2OutputStream.cs" />
+    <Compile Include="Compress\Ionic\ParallelDeflateOutputStream.cs" />
+    <Compile Include="Compress\Ionic\Rand.cs" />
+    <Compile Include="Compress\Ionic\Shared.cs" />
+    <Compile Include="Compress\Ionic\Tree.cs" />
+    <Compile Include="Compress\Ionic\WinZipAes.cs" />
+    <Compile Include="Compress\Ionic\ZipConstants.cs" />
+    <Compile Include="Compress\Ionic\ZipCrypto.cs" />
+    <Compile Include="Compress\Ionic\ZipDirEntry.cs" />
+    <Compile Include="Compress\Ionic\ZipEntry.cs" />
+    <Compile Include="Compress\Ionic\ZipEntry.Extract.cs" />
+    <Compile Include="Compress\Ionic\ZipEntry.Read.cs" />
+    <Compile Include="Compress\Ionic\ZipEntry.Write.cs" />
+    <Compile Include="Compress\Ionic\ZipEntrySource.cs" />
+    <Compile Include="Compress\Ionic\ZipErrorAction.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.AddUpdate.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.Check.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.Events.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.Extract.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.Read.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.Save.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.SaveSelfExtractor.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.Selector.cs" />
+    <Compile Include="Compress\Ionic\ZipFile.x-IEnumerable.cs" />
+    <Compile Include="Compress\Ionic\ZipInputStream.cs" />
+    <Compile Include="Compress\Ionic\ZipOutputStream.cs" />
+    <Compile Include="Compress\Ionic\ZipSegmentedStream.cs" />
+    <Compile Include="Compress\Ionic\Zlib.cs" />
+    <Compile Include="Compress\Ionic\ZlibBaseStream.cs" />
+    <Compile Include="Compress\Ionic\ZlibCodec.cs" />
+    <Compile Include="Compress\Ionic\ZlibConstants.cs" />
+    <Compile Include="Compress\Ionic\ZlibStream.cs" />
+    <Compile Include="Extension\Ater.cs" />
+    <Compile Include="Extension\RException.cs" />
+    <Compile Include="Extension\Utils\CMDLine.cs" />
+    <Compile Include="IO\Dir.cs" />
+    <Compile Include="Extension\ExtensionConvert.cs" />
+    <Compile Include="Extension\ExtensionMethod.cs" />
+    <Compile Include="Framework.cs" />
+    <Compile Include="IO\StreamPtr.cs" />
+    <Compile Include="IO\UnSafe\Memory\Disposer.cs" />
+    <Compile Include="IO\UnSafe\StreamExtension.cs" />
+    <Compile Include="Native\Unix\Diagnostics\nixProcessState.cs" />
+    <Compile Include="Native\Unix\Diagnostics\Process.cs" />
+    <Compile Include="Native\Unix\Time\DateTime.cs" />
+    <Compile Include="Native\Unix\Environment.cs" />
+    <Compile Include="Native\Unix\Mono\MHelper.cs" />
+    <Compile Include="Native\Unix\Time\UnixTime.cs" />
+    <Compile Include="Native\Unix\Time\UnixTimestamp.cs" />
+    <Compile Include="Native\Unix\Time\UnixTimeTypeConverter.cs" />
+    <Compile Include="Native\Win32\API\Advapi32.cs" />
+    <Compile Include="Native\Win32\API\DeviceContextValues.cs" />
+    <Compile Include="Native\Win32\API\Dwmapi.cs" />
+    <Compile Include="Native\Win32\API\DwmWindowAttribute.cs" />
+    <Compile Include="Native\Win32\API\Gdi32.cs" />
+    <Compile Include="Native\Win32\API\HWndValues.cs" />
+    <Compile Include="Native\Win32\API\IconReader.cs" />
+    <Compile Include="Native\Win32\API\Kernel32.cs" />
+    <Compile Include="Native\Win32\API\MonitorOption.cs" />
+    <Compile Include="Native\Win32\API\PeekMessageOptions.cs" />
+    <Compile Include="Native\Win32\API\RedrawWindowFlags.cs" />
+    <Compile Include="Native\Win32\API\Shell32.cs" />
+    <Compile Include="Native\Win32\API\ShellFileFlags.cs" />
+    <Compile Include="Native\Win32\API\SystemMetric.cs" />
+    <Compile Include="Native\Win32\API\User32.cs" />
+    <Compile Include="Native\Win32\Authentication\CREDENTIAL.cs" />
+    <Compile Include="Native\Win32\Authentication\CredentialFlags.cs" />
+    <Compile Include="Native\Win32\Authentication\CredentialType.cs" />
+    <Compile Include="Native\Win32\Authentication\PersistType.cs" />
+    <Compile Include="Native\Win32\BasicValues.cs" />
+    <Compile Include="Native\Win32\Bitmaps\BITMAPINFO.cs" />
+    <Compile Include="Native\Win32\Bitmaps\BITMAPINFOHEADER.cs" />
+    <Compile Include="Native\Win32\Bitmaps\BLENDFUNCTION.cs" />
+    <Compile Include="Native\Win32\Bitmaps\RGBQUAD.cs" />
+    <Compile Include="Native\Win32\Bitmaps\SIZE.cs" />
+    <Compile Include="Native\Win32\ComboBoxControl\COMBOBOXINFO.cs" />
+    <Compile Include="Native\Win32\DeviceManagement\DEV_BROADCAST_DEVICEINTERFACE.cs" />
+    <Compile Include="Native\Win32\DeviceManagement\DEV_BROADCAST_HANDLE.cs" />
+    <Compile Include="Native\Win32\DeviceManagement\DEV_BROADCAST_HDR.cs" />
+    <Compile Include="Native\Win32\DeviceManagement\DEV_BROADCAST_OEM.cs" />
+    <Compile Include="Native\Win32\DeviceManagement\DEV_BROADCAST_PORT.cs" />
+    <Compile Include="Native\Win32\DeviceManagement\DEV_BROADCAST_VOLUME.cs" />
+    <Compile Include="Native\Win32\EditControl\EditControlMessage.cs" />
+    <Compile Include="Native\Win32\FileManagement\FileAttributes.cs" />
+    <Compile Include="Native\Win32\GenericControl\CommonControlMessage.cs" />
+    <Compile Include="Native\Win32\HResult.cs" />
+    <Compile Include="Native\Win32\ImageLists\COLORREF.cs" />
+    <Compile Include="Native\Win32\ImageLists\IImageList.cs" />
+    <Compile Include="Native\Win32\ImageLists\IMAGEINFO.cs" />
+    <Compile Include="Native\Win32\ImageLists\IMAGELISTDRAWPARAMS.cs" />
+    <Compile Include="Native\Win32\IntPtrExtensions.cs" />
+    <Compile Include="Native\Win32\ListViewControl\ColumnFlags.cs" />
+    <Compile Include="Native\Win32\ListViewControl\ColumnFormats.cs" />
+    <Compile Include="Native\Win32\ListViewControl\GroupAlignments.cs" />
+    <Compile Include="Native\Win32\ListViewControl\GroupFlags.cs" />
+    <Compile Include="Native\Win32\ListViewControl\GroupStates.cs" />
+    <Compile Include="Native\Win32\ListViewControl\ItemFlags.cs" />
+    <Compile Include="Native\Win32\ListViewControl\ListViewMessage.cs" />
+    <Compile Include="Native\Win32\ListViewControl\ListViewStylesEx.cs" />
+    <Compile Include="Native\Win32\ListViewControl\LVCOLUMN.cs" />
+    <Compile Include="Native\Win32\ListViewControl\LVGROUP.cs" />
+    <Compile Include="Native\Win32\ListViewControl\LVITEM.cs" />
+    <Compile Include="Native\Win32\ListViewControl\MiscValues.cs" />
+    <Compile Include="Native\Win32\Monitors\MONITORINFO.cs" />
+    <Compile Include="Native\Win32\MouseInput\EventFlags.cs" />
+    <Compile Include="Native\Win32\MouseInput\MouseActivate.cs" />
+    <Compile Include="Native\Win32\MouseInput\TRACKMOUSEEVENT.cs" />
+    <Compile Include="Native\Win32\PEHeaderReader.cs" />
+    <Compile Include="Native\Win32\PlatformInfo.cs" />
+    <Compile Include="Native\Win32\PowerManagement\PowerBroadcastType.cs" />
+    <Compile Include="Native\Win32\Rectangles\POINT.cs" />
+    <Compile Include="Native\Win32\Rectangles\RECT.cs" />
+    <Compile Include="Native\Win32\Runtime\Diagnostic\DisposeBase.cs" />
+    <Compile Include="Native\Win32\Runtime\Diagnostic\DisposeEventArgs.cs" />
+    <Compile Include="Native\Win32\Runtime\Diagnostic\Interop.cs" />
+    <Compile Include="Native\Win32\Runtime\IUnknown.cs" />
+    <Compile Include="Native\Win32\Shells\APPBARDATA.cs" />
+    <Compile Include="Native\Win32\Shells\AppBarEdge.cs" />
+    <Compile Include="Native\Win32\Shells\AppBarMessage.cs" />
+    <Compile Include="Native\Win32\Shells\SHFILEINFO.cs" />
+    <Compile Include="Native\Win32\SystemInformation\OSVERSIONINFOEX.cs" />
+    <Compile Include="Native\Win32\SystemInformation\VersionConditionMask.cs" />
+    <Compile Include="Native\Win32\SystemInformation\VersionTypeMask.cs" />
+    <Compile Include="Native\Win32\TreeViewControl\TreeViewMessage.cs" />
+    <Compile Include="Native\Win32\TreeViewControl\TreeViewStyles.cs" />
+    <Compile Include="Native\Win32\TreeViewControl\TreeViewStylesEx.cs" />
+    <Compile Include="Native\Win32\VisualStyles\MARGINS.cs" />
+    <Compile Include="Native\Win32\WindowClasses\ClassLong.cs" />
+    <Compile Include="Native\Win32\WindowClasses\WindowLong.cs" />
+    <Compile Include="Native\Win32\Windows\ClassStyles.cs" />
+    <Compile Include="Native\Win32\Windows\MINMAXINFO.cs" />
+    <Compile Include="Native\Win32\Windows\NcCalcResults.cs" />
+    <Compile Include="Native\Win32\Windows\NCCALCSIZE_PARAMS.cs" />
+    <Compile Include="Native\Win32\Windows\NcHitTest.cs" />
+    <Compile Include="Native\Win32\Windows\SetWindowPosOptions.cs" />
+    <Compile Include="Native\Win32\Windows\ShowWindowOption.cs" />
+    <Compile Include="Native\Win32\Windows\SystemCommand.cs" />
+    <Compile Include="Native\Win32\Windows\WindowMessage.cs" />
+    <Compile Include="Native\Win32\Windows\WINDOWPLACEMENT.cs" />
+    <Compile Include="Native\Win32\Windows\WindowPlacementFlags.cs" />
+    <Compile Include="Native\Win32\Windows\WINDOWPOS.cs" />
+    <Compile Include="Native\Win32\Windows\WindowStyles.cs" />
+    <Compile Include="Native\Win32\Windows\WindowStylesEx.cs" />
+    <Compile Include="Native\Win32\WMI.cs" />
+    <Compile Include="Native\Win32\WMIClass\Win32BaseBoard.cs" />
+    <Compile Include="Native\Win32\WMIClass\Win32Bios.cs" />
+    <Compile Include="Native\Win32\WMIClass\Win32BootConfiguration.cs" />
+    <Compile Include="Native\Win32\WMIClass\Win32CDROMDrive.cs" />
+    <Compile Include="Native\Win32\WMIClass\Win32DiskDrive.cs" />
+    <Compile Include="Native\Win32\WMIClass\Win32Version.cs" />
+    <Compile Include="Net\ArchBox\ArchByte.cs" />
+    <Compile Include="Net\ArchBox\ArchMBReader.cs" />
+    <Compile Include="Net\ArchBox\ArchMBWriter.cs" />
+    <Compile Include="Net\ArchBox\Interface\IAsyncArchMBReader.cs" />
+    <Compile Include="Net\FtpManager.cs" />
+    <Compile Include="Net\ArchBox\Interface\IArchByteBoxReader.cs" />
+    <Compile Include="Net\ArchBox\Interface\IArchByteBoxWriter.cs" />
+    <Compile Include="Net\IPTool.cs" />
+    <Compile Include="Net\NAT\Discovery\ISearcher.cs" />
+    <Compile Include="Net\NAT\Discovery\Searcher.cs" />
+    <Compile Include="Net\NAT\Enums\ProtocolType.cs" />
+    <Compile Include="Net\NAT\EventArgs\DeviceEventArgs.cs" />
+    <Compile Include="Net\NAT\Exceptions\MappingException.cs" />
+    <Compile Include="Net\NAT\Exceptions\NatDeviceNotFoundException.cs" />
+    <Compile Include="Net\NAT\Finalizer.cs" />
+    <Compile Include="Net\NAT\Mapping.cs" />
+    <Compile Include="Net\NAT\NatDevice.cs" />
+    <Compile Include="Net\NAT\NatDiscoverer.cs" />
+    <Compile Include="Net\NAT\Pmp\PmpConstants.cs" />
+    <Compile Include="Net\NAT\Pmp\PmpNatDevice.cs" />
+    <Compile Include="Net\NAT\Pmp\PmpSearcher.cs" />
+    <Compile Include="Net\NAT\PortMapper.cs" />
+    <Compile Include="Net\NAT\Upnp\DiscoveryResponseMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\DiscoverDeviceMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\CreatePortMappingMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\DeletePortMappingMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\GetExternalIPAddressMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\GetGenericPortMappingEntry.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Requests\GetSpecificPortMappingEntryMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Responses\GetExternalIPAddressResponseMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\Messages\Responses\GetGenericPortMappingEntryResponseMessage.cs" />
+    <Compile Include="Net\NAT\Upnp\RequestMessageBase.cs" />
+    <Compile Include="Net\NAT\Upnp\ResponseMessageBase.cs" />
+    <Compile Include="Net\NAT\Upnp\SoapClient.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpConstants.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpNatDevice.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpNatDeviceInfo.cs" />
+    <Compile Include="Net\NAT\Upnp\UpnpSearcher.cs" />
+    <Compile Include="Net\NAT\Utils\Extensions.cs" />
+    <Compile Include="Net\NAT\Utils\Guard.cs" />
+    <Compile Include="Net\NAT\Utils\IIPAddressesProvider.cs" />
+    <Compile Include="Net\NAT\Utils\IPAddressesProvider.cs" />
+    <Compile Include="Net\NAT\Utils\WellKnownConstants.cs" />
+    <Compile Include="Net\NT\NetworkObject.cs" />
+    <Compile Include="Net\NT\State.cs" />
+    <Compile Include="Net\Protocol\TcpServer.cs" />
+    <Compile Include="Net\Protocol\TcpServerConnection.cs" />
+    <Compile Include="RMath\Complex.cs" />
+    <Compile Include="RMath\Gaussian.cs" />
+    <Compile Include="RMath\IntRange.cs" />
+    <Compile Include="RMath\PerlinNoise.cs" />
+    <Compile Include="RMath\Range.cs" />
+    <Compile Include="RMath\RMath.cs" />
+    <Compile Include="RMath\Statistics.cs" />
+    <Compile Include="RMath\Vector2.cs" />
+    <Compile Include="RMath\Vector3.cs" />
+    <Compile Include="RMath\Vector4.cs" />
+    <Compile Include="Screens\ColorAlternator.cs" />
+    <Compile Include="Screens\ColorAlternatorFactory.cs" />
+    <Compile Include="Screens\ColorExtensions.cs" />
+    <Compile Include="Screens\ColorfulConsoleBack.cs" />
+    <Compile Include="Screens\ColorfulConsoleFront.cs" />
+    <Compile Include="Screens\ColorManager.cs" />
+    <Compile Include="Screens\ColorManagerFactory.cs" />
+    <Compile Include="Screens\ColorMapper.cs" />
+    <Compile Include="Screens\ColorMappingException.cs" />
+    <Compile Include="Screens\COLORREF.cs" />
+    <Compile Include="Screens\ColorStore.cs" />
+    <Compile Include="Screens\ConsoleAccessException.cs" />
+    <Compile Include="Screens\DefaultFonts.cs" />
+    <Compile Include="Screens\ExtensionMethods.cs" />
+    <Compile Include="Screens\FailConvertGroupToColorException.cs" />
+    <Compile Include="Screens\Figlet.cs" />
+    <Compile Include="Screens\FigletFont.cs" />
+    <Compile Include="Screens\Formatter.cs" />
+    <Compile Include="Screens\FrequencyBasedColorAlternator.cs" />
+    <Compile Include="Screens\GradientGenerator.cs" />
+    <Compile Include="Screens\IPrototypable.cs" />
+    <Compile Include="Screens\MatchLocation.cs" />
+    <Compile Include="Screens\Pattern.cs" />
+    <Compile Include="Screens\PatternBasedColorAlternator.cs" />
+    <Compile Include="Screens\PatternCollection.cs" />
+    <Compile Include="Screens\publics\FrontScreen.cs" />
+    <Compile Include="Screens\publics\RCL.cs" />
+    <Compile Include="Screens\publics\Screen.cs" />
+    <Compile Include="Screens\StyleClass.cs" />
+    <Compile Include="Screens\StyledString.cs" />
+    <Compile Include="Screens\Styler.cs" />
+    <Compile Include="Screens\StyleSheet.cs" />
+    <Compile Include="Screens\TextAnnotator.cs" />
+    <Compile Include="Screens\TextFormatter.cs" />
+    <Compile Include="Screens\TextPattern.cs" />
+    <Compile Include="Screens\TextPatternCollection.cs" />
+    <Compile Include="Security\Cryptology.cs" />
+    <Compile Include="Security\HashSum.cs" />
+    <Compile Include="Security\RSA.cs" />
+    <Compile Include="Security\Rule.cs" />
+    <Compile Include="Native\Win32\WMIClass\SystemInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Data\Yaml\Serialized\EasyTypeConverter.cs" />
+    <Compile Include="Data\Yaml\Serialized\ObjectMemberAccessor.cs" />
+    <Compile Include="Data\Yaml\Serialized\Parser.cs" />
+    <Compile Include="Data\Yaml\Serialized\RehashableDictionary.cs" />
+    <Compile Include="Data\Yaml\Serialized\TypeUtils.cs" />
+    <Compile Include="Data\Yaml\Serialized\UriEncoding.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlAnchorDictionary.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlConstructor.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlDoubleQuoteEscaping.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlNode.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlParser.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlPresenter.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlRepresenter.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlSerializer.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlTagPrefixes.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlTagResolutionScheme.cs" />
+    <Compile Include="Data\Yaml\Serialized\YamlTagValidator.cs" />
+    <Compile Include="_obsolete\Terminal.cs" />
+    <Compile Include="IO\FileSystem\ApplePartitionMap\BlockZero.cs" />
+    <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMap.cs" />
+    <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMapEntry.cs" />
+    <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMapFactory.cs" />
+    <Compile Include="IO\FileSystem\BigEndianDataReader.cs" />
+    <Compile Include="IO\FileSystem\BigEndianDataWriter.cs" />
+    <Compile Include="IO\FileSystem\Block.cs" />
+    <Compile Include="IO\FileSystem\BlockCache.cs" />
+    <Compile Include="IO\FileSystem\BlockCacheSettings.cs" />
+    <Compile Include="IO\FileSystem\BlockCacheStatistics.cs" />
+    <Compile Include="IO\FileSystem\BlockCacheStream.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\ApplicationImageType.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\ApplicationType.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\BaseStorage.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\BcdObject.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\BooleanElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\DeviceAndPathRecord.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\DeviceElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\DeviceRecord.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\DiscUtilsRegistryStorage.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\Element.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\ElementClass.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\ElementFormat.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\ElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\GuidElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\GuidListElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\InheritType.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\IntegerElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\IntegerListElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\ObjectType.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\PartitionRecord.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\Store.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\StringElementValue.cs" />
+    <Compile Include="IO\FileSystem\BootConfig\WellKnownElement.cs" />
+    <Compile Include="IO\FileSystem\Buffer.cs" />
+    <Compile Include="IO\FileSystem\BufferStream.cs" />
+    <Compile Include="IO\FileSystem\BuilderBufferExtent.cs" />
+    <Compile Include="IO\FileSystem\BuilderBufferExtentSource.cs" />
+    <Compile Include="IO\FileSystem\BuilderExtent.cs" />
+    <Compile Include="IO\FileSystem\BuilderExtentSource.cs" />
+    <Compile Include="IO\FileSystem\BuilderSparseStreamExtent.cs" />
+    <Compile Include="IO\FileSystem\BuilderStreamExtent.cs" />
+    <Compile Include="IO\FileSystem\BuilderStreamExtentSource.cs" />
+    <Compile Include="IO\FileSystem\BuiltStream.cs" />
+    <Compile Include="IO\FileSystem\ChsAddress.cs" />
+    <Compile Include="IO\FileSystem\ClusterMap.cs" />
+    <Compile Include="IO\FileSystem\Compression\Adler32.cs" />
+    <Compile Include="IO\FileSystem\Compression\BigEndianBitStream.cs" />
+    <Compile Include="IO\FileSystem\Compression\BitStream.cs" />
+    <Compile Include="IO\FileSystem\Compression\BlockCompressor.cs" />
+    <Compile Include="IO\FileSystem\Compression\BZip2BlockDecoder.cs" />
+    <Compile Include="IO\FileSystem\Compression\BZip2CombinedHuffmanTrees.cs" />
+    <Compile Include="IO\FileSystem\Compression\BZip2Crc.cs" />
+    <Compile Include="IO\FileSystem\Compression\BZip2DecoderStream.cs" />
+    <Compile Include="IO\FileSystem\Compression\BZip2Randomizer.cs" />
+    <Compile Include="IO\FileSystem\Compression\BZip2RleStream.cs" />
+    <Compile Include="IO\FileSystem\Compression\CompressionResult.cs" />
+    <Compile Include="IO\FileSystem\Compression\DataBlockTransform.cs" />
+    <Compile Include="IO\FileSystem\Compression\HuffmanTree.cs" />
+    <Compile Include="IO\FileSystem\Compression\InverseBurrowsWheeler.cs" />
+    <Compile Include="IO\FileSystem\Compression\MoveToFront.cs" />
+    <Compile Include="IO\FileSystem\Compression\ZlibStream.cs" />
+    <Compile Include="IO\FileSystem\ConcatStream.cs" />
+    <Compile Include="IO\FileSystem\DataReader.cs" />
+    <Compile Include="IO\FileSystem\DataWriter.cs" />
+    <Compile Include="IO\FileSystem\DiscDirectoryInfo.cs" />
+    <Compile Include="IO\FileSystem\DiscFileInfo.cs" />
+    <Compile Include="IO\FileSystem\DiscFileLocator.cs" />
+    <Compile Include="IO\FileSystem\DiscFileSystem.cs" />
+    <Compile Include="IO\FileSystem\DiscFileSystemChecker.cs" />
+    <Compile Include="IO\FileSystem\DiscFileSystemInfo.cs" />
+    <Compile Include="IO\FileSystem\DiscFileSystemOptions.cs" />
+    <Compile Include="IO\FileSystem\DiskImageBuilder.cs" />
+    <Compile Include="IO\FileSystem\DiskImageFileSpecification.cs" />
+    <Compile Include="IO\FileSystem\Dmg\BlkxResource.cs" />
+    <Compile Include="IO\FileSystem\Dmg\CompressedBlock.cs" />
+    <Compile Include="IO\FileSystem\Dmg\CompressedRun.cs" />
+    <Compile Include="IO\FileSystem\Dmg\Disk.cs" />
+    <Compile Include="IO\FileSystem\Dmg\DiskFactory.cs" />
+    <Compile Include="IO\FileSystem\Dmg\DiskImageFile.cs" />
+    <Compile Include="IO\FileSystem\Dmg\GenericResource.cs" />
+    <Compile Include="IO\FileSystem\Dmg\Plist.cs" />
+    <Compile Include="IO\FileSystem\Dmg\Resource.cs" />
+    <Compile Include="IO\FileSystem\Dmg\ResourceFork.cs" />
+    <Compile Include="IO\FileSystem\Dmg\RunType.cs" />
+    <Compile Include="IO\FileSystem\Dmg\UdifBuffer.cs" />
+    <Compile Include="IO\FileSystem\Dmg\UdifChecksum.cs" />
+    <Compile Include="IO\FileSystem\Dmg\UdifResourceFile.cs" />
+    <Compile Include="IO\FileSystem\Ext\BlockGroup.cs" />
+    <Compile Include="IO\FileSystem\Ext\CompatibleFeatures.cs" />
+    <Compile Include="IO\FileSystem\Ext\Context.cs" />
+    <Compile Include="IO\FileSystem\Ext\Directory.cs" />
+    <Compile Include="IO\FileSystem\Ext\DirectoryRecord.cs" />
+    <Compile Include="IO\FileSystem\Ext\DirEntry.cs" />
+    <Compile Include="IO\FileSystem\Ext\Extent.cs" />
+    <Compile Include="IO\FileSystem\Ext\ExtentBlock.cs" />
+    <Compile Include="IO\FileSystem\Ext\ExtentHeader.cs" />
+    <Compile Include="IO\FileSystem\Ext\ExtentIndex.cs" />
+    <Compile Include="IO\FileSystem\Ext\ExtentsFileBuffer.cs" />
+    <Compile Include="IO\FileSystem\Ext\ExtFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Ext\File.cs" />
+    <Compile Include="IO\FileSystem\Ext\FileBuffer.cs" />
+    <Compile Include="IO\FileSystem\Ext\FileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\Ext\IncompatibleFeatures.cs" />
+    <Compile Include="IO\FileSystem\Ext\Inode.cs" />
+    <Compile Include="IO\FileSystem\Ext\InodeFlags.cs" />
+    <Compile Include="IO\FileSystem\Ext\ReadOnlyCompatibleFeatures.cs" />
+    <Compile Include="IO\FileSystem\Ext\SuperBlock.cs" />
+    <Compile Include="IO\FileSystem\Ext\Symlink.cs" />
+    <Compile Include="IO\FileSystem\Ext\VfsExtFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Fat\ClusterReader.cs" />
+    <Compile Include="IO\FileSystem\Fat\ClusterStream.cs" />
+    <Compile Include="IO\FileSystem\Fat\Directory.cs" />
+    <Compile Include="IO\FileSystem\Fat\DirectoryEntry.cs" />
+    <Compile Include="IO\FileSystem\Fat\FatAttributes.cs" />
+    <Compile Include="IO\FileSystem\Fat\FatBuffer.cs" />
+    <Compile Include="IO\FileSystem\Fat\FatFileStream.cs" />
+    <Compile Include="IO\FileSystem\Fat\FatFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Fat\FatFileSystemOptions.cs" />
+    <Compile Include="IO\FileSystem\Fat\FatType.cs" />
+    <Compile Include="IO\FileSystem\Fat\FileAllocationTable.cs" />
+    <Compile Include="IO\FileSystem\Fat\FileName.cs" />
+    <Compile Include="IO\FileSystem\Fat\FileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\FileLocator.cs" />
+    <Compile Include="IO\FileSystem\FileSystemInfo.cs" />
+    <Compile Include="IO\FileSystem\FileSystemManager.cs" />
+    <Compile Include="IO\FileSystem\FileSystemParameters.cs" />
+    <Compile Include="IO\FileSystem\FileTransport.cs" />
+    <Compile Include="IO\FileSystem\FloppyDiskType.cs" />
+    <Compile Include="IO\FileSystem\GenericDiskAdapterType.cs" />
+    <Compile Include="IO\FileSystem\Geometry.cs" />
+    <Compile Include="IO\FileSystem\GeometryTranslation.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTree.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeGenericRecord.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeHeaderNode.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeHeaderRecord.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeIndexNode.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeIndexRecord.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeKey.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeKeyedNode.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeLeafNode.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeLeafRecord.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeNode.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeNodeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeNodeKind.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTreeNodeRecord.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\BTree_T.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CatalogDirInfo.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CatalogFileInfo.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CatalogKey.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CatalogNodeId.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CatalogRecordType.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CatalogThread.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\CommonCatalogFileInfo.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\Context.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\Directory.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\DirEntry.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\ExtentDescriptor.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\File.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\FileBuffer.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\FileInfo.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\FileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\FinderFlags.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\ForkData.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\HfsPlusFileSystem.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\HfsPlusFileSystemImpl.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\HfsPlusUtilities.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\Point.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\VolumeAttributes.cs" />
+    <Compile Include="IO\FileSystem\HfsPlus\VolumeHeader.cs" />
+    <Compile Include="IO\FileSystem\IBuffer.cs" />
+    <Compile Include="IO\FileSystem\IByteArraySerializable.cs" />
+    <Compile Include="IO\FileSystem\IClusterBasedFileSystem.cs" />
+    <Compile Include="IO\FileSystem\IDiagnosticTraceable.cs" />
+    <Compile Include="IO\FileSystem\IFileSystem.cs" />
+    <Compile Include="IO\FileSystem\IMappedBuffer.cs" />
+    <Compile Include="IO\FileSystem\InvalidFileSystemException.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\Authenticator.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\BaseResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\BasicHeaderSegment.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ChapAuthenticator.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\CommandRequest.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\Connection.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\DataInPacket.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\DataOutPacket.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\Disk.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\DiskStream.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\DiskTransport.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\Initiator.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\InvalidProtocolException.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\IscsiException.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LoginException.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LoginRequest.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LoginResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LoginStatusClass.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LogoutRequest.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LogoutResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LunCapacity.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\LunInfo.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\NullAuthenticator.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\OpCode.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ProtocolDataUnit.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ProtocolKeyAttribute.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ProtocolKeyValueAttribute.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ReadyToTransferPacket.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\RejectPacket.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\Response.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiCommandException.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiInquiryCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiInquiryStandardResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiRawCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiReadCapacityCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiReadCapacityResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiReadCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiReportLunsCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiReportLunsResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiResponse.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiStatus.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\ScsiWriteCommand.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\Session.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\TargetAddress.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\TargetInfo.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\TextBuffer.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\TextRequest.cs" />
+    <Compile Include="IO\FileSystem\Iscsi\TextResponse.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BaseVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BootDeviceEmulation.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BootInitialEntry.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BootValidationEntry.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BootVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BootVolumeDescriptorRegion.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BuildDirectoryInfo.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BuildDirectoryMember.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BuildFileInfo.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\BuildParameters.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\CDBuilder.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\CDReader.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\CommonVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\DirectoryExtent.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\DirectoryRecord.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\ExtentStream.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\File.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\FileExtent.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\IsoContext.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\IsoUtilities.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\PathTable.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\PathTableRecord.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\PrimaryVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\PrimaryVolumeDescriptorRegion.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\ReaderDirectory.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\SupplementaryVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\SupplementaryVolumeDescriptorRegion.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\VfsCDReader.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\VolumeDescriptorRegion.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\VolumeDescriptorSetTerminator.cs" />
+    <Compile Include="IO\FileSystem\Iso9660\VolumeDescriptorSetTerminatorRegion.cs" />
+    <Compile Include="IO\FileSystem\IUnixFileSystem.cs" />
+    <Compile Include="IO\FileSystem\IWindowsFileSystem.cs" />
+    <Compile Include="IO\FileSystem\LittleEndianDataReader.cs" />
+    <Compile Include="IO\FileSystem\LocalFileLocator.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\ComponentRecord.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\Database.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DatabaseHeader.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DatabaseRecord.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DiskGroupRecord.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DiskRecord.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DynamicDisk.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DynamicDiskGroup.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DynamicDiskManager.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DynamicDiskManagerFactory.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\DynamicVolume.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\ExtentMergeType.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\ExtentRecord.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\PrivateHeader.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\RecordType.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\TocBlock.cs" />
+    <Compile Include="IO\FileSystem\LogicalDiskManager\VolumeRecord.cs" />
+    <Compile Include="IO\FileSystem\LogicalVolumeFactory.cs" />
+    <Compile Include="IO\FileSystem\LogicalVolumeFactoryAttribute.cs" />
+    <Compile Include="IO\FileSystem\LogicalVolumeInfo.cs" />
+    <Compile Include="IO\FileSystem\MappedStream.cs" />
+    <Compile Include="IO\FileSystem\MirrorStream.cs" />
+    <Compile Include="IO\FileSystem\NativeFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Nfs\DiskTransport.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3AccessPermissions.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3AccessResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3CallResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3Client.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3CreateResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3DirectoryEntry.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3Exception.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3Export.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileAttributes.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileHandle.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileStream.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileSystemInfo.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileSystemInfoResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileSystemProperties.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileTime.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3FileType.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3GetAttributesResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3LookupResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3ModifyResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3Mount.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3MountResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3ReadDirPlusResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3ReadResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3RenameResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3SetAttributes.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3WeakCacheConsistency.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3WeakCacheConsistencyAttr.cs" />
+    <Compile Include="IO\FileSystem\Nfs\Nfs3WriteResult.cs" />
+    <Compile Include="IO\FileSystem\Nfs\NfsFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Nfs\NfsFileSystemOptions.cs" />
+    <Compile Include="IO\FileSystem\Nfs\PortMapper.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcAcceptedReplyHeader.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcAuthentication.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcCallHeader.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcClient.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcCredentials.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcException.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcMessageHeader.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcMismatchInfo.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcNullCredentials.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcProgram.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcRejectedReplyHeader.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcReply.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcReplyHeader.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcTcpTransport.cs" />
+    <Compile Include="IO\FileSystem\Nfs\RpcUnixCredential.cs" />
+    <Compile Include="IO\FileSystem\Nfs\XdrDataReader.cs" />
+    <Compile Include="IO\FileSystem\Nfs\XdrDataWriter.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeDefinitionRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeDefinitions.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeList.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeListRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeReference.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\AttributeType.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\BiosParameterBlock.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Bitmap.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ClusterBitmap.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ClusterStream.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\CompressedClusterStream.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\CookedDataRun.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\CookedDataRuns.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\DataRun.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Directory.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\DirectoryEntry.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\File.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\FileNameRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\FileRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\FileRecordReference.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\FileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\FixupRecordBase.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\GenericFixupRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Index.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\IndexBlock.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\IndexEntry.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\IndexHeader.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\IndexNode.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\IndexRoot.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\IndexView.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\AttributeFlags.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\AttributeListAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\AttributeListEntry.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\EntryState.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\EntryStates.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\FileNameAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\GenericAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTable.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTableAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTableEntry.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTableEntryFlags.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTableRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTableRecordFlags.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\MasterFileTableReference.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\NtfsFileAttributes.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\NtfsNamespace.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\StandardInformationAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Internals\UnknownAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\LZNT1.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\LzWindowDictionary.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\MasterFileTable.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NewFileOptions.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NonResidentAttributeBuffer.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NonResidentAttributeRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NonResidentDataBuffer.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsAttributeBuffer.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsContext.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsFileStream.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsFileSystemChecker.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsFormatOptions.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsFormatter.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsOptions.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsStream.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\NtfsTransaction.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ObjectId.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ObjectIdRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ObjectIds.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\Quotas.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\RawClusterStream.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ReparsePointRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ReparsePoints.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ResidentAttributeRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\SecurityDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\SecurityDescriptorRecord.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\SecurityDescriptors.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\ShortFileNameOption.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\SparseClusterStream.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\StandardInformation.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\StructuredNtfsAttribute.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\UpperCase.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\VolumeInformation.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\VolumeInformationFlags.cs" />
+    <Compile Include="IO\FileSystem\Ntfs\VolumeName.cs" />
+    <Compile Include="IO\FileSystem\Numbers.cs" />
+    <Compile Include="IO\FileSystem\ObjectCache.cs" />
+    <Compile Include="IO\FileSystem\Optical\Disc.cs" />
+    <Compile Include="IO\FileSystem\Optical\DiscFactory.cs" />
+    <Compile Include="IO\FileSystem\Optical\DiscImageFile.cs" />
+    <Compile Include="IO\FileSystem\Optical\FileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\Optical\Mode2Buffer.cs" />
+    <Compile Include="IO\FileSystem\Optical\OpticalFormat.cs" />
+    <Compile Include="IO\FileSystem\Ownership.cs" />
+    <Compile Include="IO\FileSystem\Partitions\BiosExtendedPartitionTable.cs" />
+    <Compile Include="IO\FileSystem\Partitions\BiosPartitionedDiskBuilder.cs" />
+    <Compile Include="IO\FileSystem\Partitions\BiosPartitionInfo.cs" />
+    <Compile Include="IO\FileSystem\Partitions\BiosPartitionRecord.cs" />
+    <Compile Include="IO\FileSystem\Partitions\BiosPartitionTable.cs" />
+    <Compile Include="IO\FileSystem\Partitions\BiosPartitionTypes.cs" />
+    <Compile Include="IO\FileSystem\Partitions\Crc32.cs" />
+    <Compile Include="IO\FileSystem\Partitions\DefaultPartitionTableFactory.cs" />
+    <Compile Include="IO\FileSystem\Partitions\GptEntry.cs" />
+    <Compile Include="IO\FileSystem\Partitions\GptHeader.cs" />
+    <Compile Include="IO\FileSystem\Partitions\GuidPartitionInfo.cs" />
+    <Compile Include="IO\FileSystem\Partitions\GuidPartitionTable.cs" />
+    <Compile Include="IO\FileSystem\Partitions\GuidPartitionTypes.cs" />
+    <Compile Include="IO\FileSystem\Partitions\PartitionInfo.cs" />
+    <Compile Include="IO\FileSystem\Partitions\PartitionTable.cs" />
+    <Compile Include="IO\FileSystem\Partitions\PartitionTableFactory.cs" />
+    <Compile Include="IO\FileSystem\Partitions\PartitionTableFactoryAttribute.cs" />
+    <Compile Include="IO\FileSystem\Partitions\WellKnownPartitionType.cs" />
+    <Compile Include="IO\FileSystem\PassthroughStreamBuilder.cs" />
+    <Compile Include="IO\FileSystem\PhysicalVolumeInfo.cs" />
+    <Compile Include="IO\FileSystem\PumpProgressEventArgs.cs" />
+    <Compile Include="IO\FileSystem\Range.cs" />
+    <Compile Include="IO\FileSystem\Raw\Disk.cs" />
+    <Compile Include="IO\FileSystem\Raw\DiskFactory.cs" />
+    <Compile Include="IO\FileSystem\Raw\DiskImageFile.cs" />
+    <Compile Include="IO\FileSystem\ReadOnlyDiscFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Registry\Bin.cs" />
+    <Compile Include="IO\FileSystem\Registry\BinHeader.cs" />
+    <Compile Include="IO\FileSystem\Registry\Cell.cs" />
+    <Compile Include="IO\FileSystem\Registry\HiveHeader.cs" />
+    <Compile Include="IO\FileSystem\Registry\KeyNodeCell.cs" />
+    <Compile Include="IO\FileSystem\Registry\ListCell.cs" />
+    <Compile Include="IO\FileSystem\Registry\RegistryCorruptException.cs" />
+    <Compile Include="IO\FileSystem\Registry\RegistryHive.cs" />
+    <Compile Include="IO\FileSystem\Registry\RegistryKey.cs" />
+    <Compile Include="IO\FileSystem\Registry\RegistryKeyFlags.cs" />
+    <Compile Include="IO\FileSystem\Registry\RegistryValue.cs" />
+    <Compile Include="IO\FileSystem\Registry\RegistryValueType.cs" />
+    <Compile Include="IO\FileSystem\Registry\SecurityCell.cs" />
+    <Compile Include="IO\FileSystem\Registry\SubKeyHashedListCell.cs" />
+    <Compile Include="IO\FileSystem\Registry\SubKeyIndirectListCell.cs" />
+    <Compile Include="IO\FileSystem\Registry\ValueCell.cs" />
+    <Compile Include="IO\FileSystem\Registry\ValueFlags.cs" />
+    <Compile Include="IO\FileSystem\ReparsePoint.cs" />
+    <Compile Include="IO\FileSystem\Resources.Designer.cs" />
+    <Compile Include="IO\FileSystem\Sdi\FileHeader.cs" />
+    <Compile Include="IO\FileSystem\Sdi\SdiFile.cs" />
+    <Compile Include="IO\FileSystem\Sdi\Section.cs" />
+    <Compile Include="IO\FileSystem\Sdi\SectionRecord.cs" />
+    <Compile Include="IO\FileSystem\Sizes.cs" />
+    <Compile Include="IO\FileSystem\SnapshotStream.cs" />
+    <Compile Include="IO\FileSystem\SparseMemoryBuffer.cs" />
+    <Compile Include="IO\FileSystem\SparseMemoryStream.cs" />
+    <Compile Include="IO\FileSystem\SparseStream.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\BuilderContext.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\BuilderDirectory.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\BuilderFile.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\BuilderNode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\Context.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\DeviceInode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\Directory.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\DirectoryEntry.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\DirectoryHeader.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\DirectoryInode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\DirectoryRecord.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\ExtendedDirectoryInode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\File.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\FileContentBuffer.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\FileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\FragmentRecord.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\FragmentWriter.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\IDirectoryInode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\IdTableWriter.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\Inode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\InodeType.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\Metablock.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\MetablockReader.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\MetablockWriter.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\MetadataRef.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\RegularInode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\SquashFileSystemBuilder.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\SquashFileSystemReader.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\SuperBlock.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\Symlink.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\SymlinkInode.cs" />
+    <Compile Include="IO\FileSystem\SquashFs\VfsSquashFileSystemReader.cs" />
+    <Compile Include="IO\FileSystem\StreamBuffer.cs" />
+    <Compile Include="IO\FileSystem\StreamBuilder.cs" />
+    <Compile Include="IO\FileSystem\StreamExtent.cs" />
+    <Compile Include="IO\FileSystem\StreamPump.cs" />
+    <Compile Include="IO\FileSystem\StripedStream.cs" />
+    <Compile Include="IO\FileSystem\SubBuffer.cs" />
+    <Compile Include="IO\FileSystem\SubStream.cs" />
+    <Compile Include="IO\FileSystem\ThreadSafeStream.cs" />
+    <Compile Include="IO\FileSystem\Tuple.cs" />
+    <Compile Include="IO\FileSystem\Tuple_2.cs" />
+    <Compile Include="IO\FileSystem\Tuple_3.cs" />
+    <Compile Include="IO\FileSystem\Udf\AnchorVolumeDescriptorPointer.cs" />
+    <Compile Include="IO\FileSystem\Udf\ApplicationEntityIdentifier.cs" />
+    <Compile Include="IO\FileSystem\Udf\BaseTaggedDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\CharacterSetSpecification.cs" />
+    <Compile Include="IO\FileSystem\Udf\DescriptorTag.cs" />
+    <Compile Include="IO\FileSystem\Udf\Directory.cs" />
+    <Compile Include="IO\FileSystem\Udf\DomainEntityIdentifier.cs" />
+    <Compile Include="IO\FileSystem\Udf\EntityIdentifier.cs" />
+    <Compile Include="IO\FileSystem\Udf\ExtendedAttribute.cs" />
+    <Compile Include="IO\FileSystem\Udf\ExtendedAttributeRecord.cs" />
+    <Compile Include="IO\FileSystem\Udf\ExtendedFileEntry.cs" />
+    <Compile Include="IO\FileSystem\Udf\ExtentAllocationDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\ExtentDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\File.cs" />
+    <Compile Include="IO\FileSystem\Udf\FileContentBuffer.cs" />
+    <Compile Include="IO\FileSystem\Udf\FileEntry.cs" />
+    <Compile Include="IO\FileSystem\Udf\FileIdentifier.cs" />
+    <Compile Include="IO\FileSystem\Udf\FilePermissions.cs" />
+    <Compile Include="IO\FileSystem\Udf\FileSetDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\FileType.cs" />
+    <Compile Include="IO\FileSystem\Udf\ImplementationEntityIdentifier.cs" />
+    <Compile Include="IO\FileSystem\Udf\ImplementationUseExtendedAttributeRecord.cs" />
+    <Compile Include="IO\FileSystem\Udf\InformationControlBlock.cs" />
+    <Compile Include="IO\FileSystem\Udf\LogicalBlockAddress.cs" />
+    <Compile Include="IO\FileSystem\Udf\LogicalPartition.cs" />
+    <Compile Include="IO\FileSystem\Udf\LogicalVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\LongAllocationDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\MetadataPartition.cs" />
+    <Compile Include="IO\FileSystem\Udf\MetadataPartitionMap.cs" />
+    <Compile Include="IO\FileSystem\Udf\Partition.cs" />
+    <Compile Include="IO\FileSystem\Udf\PartitionDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\PartitionMap.cs" />
+    <Compile Include="IO\FileSystem\Udf\PhysicalPartition.cs" />
+    <Compile Include="IO\FileSystem\Udf\PrimaryVolumeDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\ShortAllocationDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\SparablePartitionMap.cs" />
+    <Compile Include="IO\FileSystem\Udf\TaggedDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\Type1Partition.cs" />
+    <Compile Include="IO\FileSystem\Udf\Type1PartitionMap.cs" />
+    <Compile Include="IO\FileSystem\Udf\UdfContext.cs" />
+    <Compile Include="IO\FileSystem\Udf\UdfEntityIdentifier.cs" />
+    <Compile Include="IO\FileSystem\Udf\UdfReader.cs" />
+    <Compile Include="IO\FileSystem\Udf\UdfUtilities.cs" />
+    <Compile Include="IO\FileSystem\Udf\UnallocatedSpaceDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Udf\VirtualPartitionMap.cs" />
+    <Compile Include="IO\FileSystem\UnixFilePermissions.cs" />
+    <Compile Include="IO\FileSystem\UnixFileSystemInfo.cs" />
+    <Compile Include="IO\FileSystem\UnixFileType.cs" />
+    <Compile Include="IO\FileSystem\Utilities.cs" />
+    <Compile Include="IO\FileSystem\Vdi\Disk.cs" />
+    <Compile Include="IO\FileSystem\Vdi\DiskFactory.cs" />
+    <Compile Include="IO\FileSystem\Vdi\DiskImageFile.cs" />
+    <Compile Include="IO\FileSystem\Vdi\DiskStream.cs" />
+    <Compile Include="IO\FileSystem\Vdi\FileVersion.cs" />
+    <Compile Include="IO\FileSystem\Vdi\GeometryRecord.cs" />
+    <Compile Include="IO\FileSystem\Vdi\HeaderRecord.cs" />
+    <Compile Include="IO\FileSystem\Vdi\ImageFlags.cs" />
+    <Compile Include="IO\FileSystem\Vdi\ImageType.cs" />
+    <Compile Include="IO\FileSystem\Vdi\PreHeaderRecord.cs" />
+    <Compile Include="IO\FileSystem\Vfs\IVfsDirectory.cs" />
+    <Compile Include="IO\FileSystem\Vfs\IVfsFile.cs" />
+    <Compile Include="IO\FileSystem\Vfs\IVfsSymlink.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsContext.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsDirEntry.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsFileSystemFacade.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsFileSystemFactory.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsFileSystemFactoryAttribute.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsFileSystemInfo.cs" />
+    <Compile Include="IO\FileSystem\Vfs\VfsReadOnlyFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Vhd\Disk.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DiskBuilder.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DiskExtent.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DiskFactory.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DiskImageFile.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DiskImageFileInfo.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DynamicDiskBuilder.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DynamicHeader.cs" />
+    <Compile Include="IO\FileSystem\Vhd\DynamicStream.cs" />
+    <Compile Include="IO\FileSystem\Vhd\FileChecker.cs" />
+    <Compile Include="IO\FileSystem\Vhd\FileType.cs" />
+    <Compile Include="IO\FileSystem\Vhd\Footer.cs" />
+    <Compile Include="IO\FileSystem\Vhd\Header.cs" />
+    <Compile Include="IO\FileSystem\Vhd\ParentLocator.cs" />
+    <Compile Include="IO\FileSystem\VirtualDisk.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskClass.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskExtent.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskFactory.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskFactoryAttribute.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskLayer.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskParameters.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskTransport.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskTransportAttribute.cs" />
+    <Compile Include="IO\FileSystem\VirtualDiskTypeInfo.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\CommonSparseExtentHeader.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\CommonSparseExtentStream.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\CompressedGrainHeader.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DescriptorFile.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DescriptorFileEntry.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\Disk.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskAdapterType.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskBuilder.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskCreateType.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskExtent.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskFactory.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskImageFile.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\DiskParameters.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\ExtentDescriptor.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\HostedSparseExtentFlags.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\HostedSparseExtentHeader.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\HostedSparseExtentStream.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\ServerSparseExtentHeader.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\ServerSparseExtentStream.cs" />
+    <Compile Include="IO\FileSystem\Vmdk\VmfsSparseExtentBuilder.cs" />
+    <Compile Include="IO\FileSystem\VolumeInfo.cs" />
+    <Compile Include="IO\FileSystem\VolumeManager.cs" />
+    <Compile Include="IO\FileSystem\Wim\AlternateStreamEntry.cs" />
+    <Compile Include="IO\FileSystem\Wim\DirectoryEntry.cs" />
+    <Compile Include="IO\FileSystem\Wim\FileHeader.cs" />
+    <Compile Include="IO\FileSystem\Wim\FileResourceStream.cs" />
+    <Compile Include="IO\FileSystem\Wim\LzxBitStream.cs" />
+    <Compile Include="IO\FileSystem\Wim\LzxStream.cs" />
+    <Compile Include="IO\FileSystem\Wim\ResourceInfo.cs" />
+    <Compile Include="IO\FileSystem\Wim\ShortResourceHeader.cs" />
+    <Compile Include="IO\FileSystem\Wim\WimFile.cs" />
+    <Compile Include="IO\FileSystem\Wim\WimFileSystem.cs" />
+    <Compile Include="IO\FileSystem\Wim\XpressBitStream.cs" />
+    <Compile Include="IO\FileSystem\Wim\XpressStream.cs" />
+    <Compile Include="IO\FileSystem\WindowsFileInformation.cs" />
+    <Compile Include="IO\FileSystem\Xva\BuildFileRecord.cs" />
+    <Compile Include="IO\FileSystem\Xva\ChecksumStream.cs" />
+    <Compile Include="IO\FileSystem\Xva\Disk.cs" />
+    <Compile Include="IO\FileSystem\Xva\DiskFactory.cs" />
+    <Compile Include="IO\FileSystem\Xva\DiskLayer.cs" />
+    <Compile Include="IO\FileSystem\Xva\DiskStream.cs" />
+    <Compile Include="IO\FileSystem\Xva\FileRecord.cs" />
+    <Compile Include="IO\FileSystem\Xva\HashStream.cs" />
+    <Compile Include="IO\FileSystem\Xva\TarFile.cs" />
+    <Compile Include="IO\FileSystem\Xva\TarFileBuilder.cs" />
+    <Compile Include="IO\FileSystem\Xva\TarHeader.cs" />
+    <Compile Include="IO\FileSystem\Xva\TarHeaderExtent.cs" />
+    <Compile Include="IO\FileSystem\Xva\VirtualMachine.cs" />
+    <Compile Include="IO\FileSystem\Xva\VirtualMachineBuilder.cs" />
+    <Compile Include="IO\FileSystem\ZeroStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Native\Unix\IO\" />
+    <Folder Include="Native\Unix\Threading\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

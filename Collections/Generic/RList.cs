@@ -15,7 +15,7 @@ namespace RC.Framework.Collections.Generic
     /// <param name="left"></param>
     /// <param name="right"></param>
     /// <returns></returns>
-    public delegate int GateCompare<T>(T left, T right);
+    public delegate int GateCompare<in T>(T left, T right);
     /// <summary>
     ///  Represents a strongly typed list of objects that can be accessed by index. Provides
     ///  methods to search, sort, and manipulate lists.To browse the .NET Framework source
@@ -43,13 +43,8 @@ namespace RC.Framework.Collections.Generic
         /// <summary>
         /// Gets the number of elements contained
         /// </summary>
-        public int Count
-        {
-            get
-            {
-                return size;
-            }
-        }
+        public int Count => size;
+
         /// <summary>
         ///     Returns an enumerator that iterates through the <see cref="RList{T}"/>
         /// </summary>
@@ -78,7 +73,7 @@ namespace RC.Framework.Collections.Generic
         } 
         internal void AllocateMore()
         {
-            int max = (buffer == null) ? 0 : (buffer.Length << 1);
+            int max = buffer?.Length << 1 ?? 0;
             if (max < 32) max = 32;
             T[] newList = new T[max];
             if (buffer != null && size > 0) buffer.CopyTo(newList, 0);
@@ -126,7 +121,7 @@ namespace RC.Framework.Collections.Generic
         {
             if (buffer == null || size == buffer.Length)
                 AllocateMore();
-            buffer[size++] = item;
+            if (buffer != null) buffer[size++] = item;
         }
         /// <summary>
         /// Adds an object
@@ -139,7 +134,7 @@ namespace RC.Framework.Collections.Generic
         {
             if (buffer == null || size == buffer.Length)
                 AllocateMore();
-            buffer[size++] = (T)item;
+            if (buffer != null) buffer[size++] = (T)item;
         }
         /// <summary>
         ///  Inserts an element into the <see cref="RList{T}"/> at the specified
@@ -153,8 +148,8 @@ namespace RC.Framework.Collections.Generic
                 AllocateMore();
             if (index > -1 && index < size)
             {
-                for (int i = size; i > index; --i) buffer[i] = buffer[i - 1];
-                buffer[index] = item;
+                for (int i = size; i > index; --i) if (buffer != null) buffer[i] = buffer[i - 1];
+                if (buffer != null) buffer[index] = item;
                 ++size;
             }
             else Add(item);
@@ -234,8 +229,11 @@ namespace RC.Framework.Collections.Generic
             if (buffer == null && index < -1 && index < size)
                 throw new ArgumentOutOfRangeException("index");
             --size;
-            buffer[index] = default(T);
-            for (int b = index; b < size; ++b) buffer[b] = buffer[b + 1];
+            if (buffer != null)
+            {
+                buffer[index] = default(T);
+                for (int b = index; b < size; ++b) buffer[b] = buffer[b + 1];
+            }
         }
         /// <summary>
         /// Pop <see cref="RList{T}"/>.
@@ -311,9 +309,9 @@ namespace RC.Framework.Collections.Generic
         public void CopyTo(T[] array, int arrayIndex)
         {
             if (arrayIndex == 0)
-                throw new ArgumentOutOfRangeException("arrayIndex");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
             if (array == null)
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             if (array.Length < arrayIndex)
                 throw new ArgumentException("array.Length < arrayIndex");
             Array.Copy(this.buffer, 0, array, arrayIndex, this.size);

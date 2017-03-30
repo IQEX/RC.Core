@@ -20,7 +20,7 @@ namespace RC.Framework.Collections.Generic
         public static T DeSerializable<T>(byte[] bt) where T : class
         {
             if (bt == null || bt.Length == 0)
-                throw new System.ArgumentException("byte array is empty", "bt");
+                throw new System.ArgumentException("byte array is empty", nameof(bt));
             T t;
             using (MemoryStream fs = new MemoryStream(bt))
             {
@@ -37,7 +37,7 @@ namespace RC.Framework.Collections.Generic
         public static byte[] Serializable<T>(T t) where T : class
         {
             if (t == null)
-                throw new System.ArgumentException("byte array is empty", "t");
+                throw new System.ArgumentException("byte array is empty", nameof(t));
             byte[] nit = null;
             using (MemoryStream fs = new MemoryStream())
             {

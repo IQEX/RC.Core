@@ -13,34 +13,28 @@ namespace RC.Framework.Collections.Generic
     /// <typeparam name="TValue">The type of the second dictionary.</typeparam>
     public class ReflectDictionary<TKey, TValue> : IReflectDictionary<TKey, TValue>
     {
-        private Dictionary<TKey, TValue> dictOne = new Dictionary<TKey, TValue>();
-        private Dictionary<TValue, TKey> dictTwo = new Dictionary<TValue, TKey>();
+        private readonly Dictionary<TKey, TValue> dictOne = new Dictionary<TKey, TValue>();
+        private readonly Dictionary<TValue, TKey> dictTwo = new Dictionary<TValue, TKey>();
         /// <summary>
         /// Gets the ElementA
         /// </summary>
         /// <param name="u">ElementB</param>
         /// <returns>ElementA</returns>
-        public TKey this[TValue u]
-        {
-            get { return dictTwo[u]; }
-        }
+        public TKey this[TValue u] => dictTwo[u];
         /// <summary>
         /// Gets the ElementB
         /// </summary>
         /// <param name="t">ElementA</param>
         /// <returns>ElementB</returns>
-        public TValue this[TKey t]
-        {
-            get { return dictOne[t]; }
-        }
+        public TValue this[TKey t] => dictOne[t];
         /// <summary>
         /// Gets all the values for the A element.
         /// </summary>
-        public IRList<TKey> KeyElements { get { return (RList<TKey>)dictTwo.Values.ToList(); } }
+        public IRList<TKey> KeyElements => (RList<TKey>)dictTwo.Values.ToList();
         /// <summary>
         /// Gets all the values for the B element.
         /// </summary>
-        public IRList<TValue> ValueElements { get { return (RList<TValue>)dictOne.Values.ToList(); } }
+        public IRList<TValue> ValueElements => (RList<TValue>)dictOne.Values.ToList();
         /// <summary>
         /// Adds an element to the bidictinary
         /// </summary>
@@ -119,10 +113,7 @@ namespace RC.Framework.Collections.Generic
         /// <summary>
         /// Returns the amount of the dictionary
         /// </summary>
-        public int Count
-        {
-            get { return (dictOne.Count + dictTwo.Count) / 2; }
-        }
+        public int Count => (dictOne.Count + dictTwo.Count) / 2;
         /// <summary>
         /// Proofs if an A element exists or not
         /// </summary>
