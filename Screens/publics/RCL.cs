@@ -1,13 +1,32 @@
-﻿namespace Rc.Framework.Screens
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Rc.Framework.Screens
 {
     using System;
     using System.Drawing;
 
     public static class RCL
     {
+        public static string Map(this string e, string t, Color c       ) => e.Replace(t, Wrap(t, c));
+        public static string Map(this string e, string t, ConsoleColor c) => e.Map(t, c.getValue());
+
+        public static string Map(this string e, string[]     t, Color        c) => t.Aggregate(e, (current, s) => current.Map(s, c));
+        public static string Map(this string e, string[]     t, ConsoleColor c) => e.Map(t, c.getValue());
+        public static string Map(this string e, List<string> t, ConsoleColor c) => e.Map(t.ToArray(), c.getValue());
+        public static string Map(this string e, List<string> t, Color        c) => e.Map(t.ToArray(), c);
+
+
+        public static string Map(this string e, List<object> t, Color        c) => e.Map(t.ToArray(), c);
+        public static string Map(this string e, List<object> t, ConsoleColor c) => e.Map(t.ToArray(), c);
+        public static string Map(this string e, object[]     t, Color        c) => t.Aggregate(e, (current, s) => current.Map(s.ToString(), c));
+        public static string Map(this string e, object[]     t, ConsoleColor c) => t.Aggregate(e, (current, s) => current.Map(s.ToString(), c));
+        public static string Map(this string e, object       t, Color        c) => e.Replace(t.ToString(), Wrap(t, c));
+        public static string Map(this string e, object       t, ConsoleColor c) => e.Map(t, c.getValue());
+
+
+
         public static string Wrap(string text, ConsoleColor color) => $"{color.getValue()}{text}{ConsoleColor.White.getValue()}";
-
-
         public static string Wrap(object text, Color foreground) => Wrap(text, foreground, Color.Empty);
         public static string Wrap(object text, Color foreground, Color background) => $"{foreground.getValue(background)}{text}{ConsoleColor.White.getValue().getValue(Color.Empty)}";
 

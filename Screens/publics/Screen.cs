@@ -63,28 +63,28 @@
         private static bool isUseRCL = true;
         public static void SwithRCL() => isUseRCL = !isUseRCL;
 
-        public static void Wtire(string s)
+        public static void Write(string s)
         {
             if (isUseRCL)
                 Screen.Parse(s);
             else
                 Screen.Out.Write(s);
         }
-        public static void Wtire(string s, Color foregroundDefault)
+        public static void Write(string s, Color foregroundDefault)
         {
             if (isUseRCL)
                 Screen.Parse(s);
             else
                 Colorful.Console.Write(s, foregroundDefault);
         }
-        public static void WtireLine(string s)
+        public static void WriteLine(string s)
         {
             if (isUseRCL)
                 Screen.Parse($"{s}{System.Environment.NewLine}");
             else
                 Screen.Out.Write($"{s}{System.Environment.NewLine}");
         }
-        public static void WtireLine(string s, Color foregroundDefault)
+        public static void WriteLine(string s, Color foregroundDefault)
         {
             if (isUseRCL)
                 Screen.Parse($"{s}{System.Environment.NewLine}", foregroundDefault);
