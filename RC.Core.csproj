@@ -1191,8 +1191,20 @@
     <Folder Include="Native\Unix\IO\" />
     <Folder Include="Native\Unix\Threading\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="RC.Core.pfx" />
+    <None Include="RC.Core.snk" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>powershell -ExecutionPolicy Unrestricted $(ProjectDir)sign.ps1 -ProjectDir $(ProjectDir) -path "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" -cert "RC.Core.pfx"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <Target Name="AfterCompile">
+    <Exec Command="&quot;C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe&quot; sign /f RC.Core.pfx /p ALFHEIM_DOF_SECT_DATA /v &quot;$(ProjectDir)obj/$(ConfigurationName)/$(TargetFileName)&quot;" />
+  </Target>
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

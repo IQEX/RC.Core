@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Lite\Debug\</OutputPath>
-    <DefineConstants>DEBUG;Standart; WIN32;</DefineConstants>
+    <DefineConstants>DEBUG;Standart; WIN32; LITE;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -33,7 +33,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;LITE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -201,6 +201,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing">
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Framework.cs" />
@@ -210,6 +213,7 @@
     <Compile Include="Net\ArchBox\Interface\IAsyncArchMBReader.cs" />
     <Compile Include="Net\ArchBox\Interface\IArchByteBoxReader.cs" />
     <Compile Include="Net\ArchBox\Interface\IArchByteBoxWriter.cs" />
+    <Compile Include="RMath\AutoTools.cs" />
     <Compile Include="RMath\Complex.cs" />
     <Compile Include="RMath\Gaussian.cs" />
     <Compile Include="RMath\IntRange.cs" />
@@ -221,9 +225,13 @@
     <Compile Include="RMath\Vector3.cs" />
     <Compile Include="RMath\Vector4.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\publics\RCL.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>powershell -ExecutionPolicy Unrestricted $(ProjectDir)sign.ps1 -ProjectDir $(ProjectDir) -path "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" -cert "RC.Core.pfx"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

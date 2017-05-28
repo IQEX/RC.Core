@@ -65,6 +65,11 @@
 
         public static void Write(string s)
         {
+            if (RCL.isEnabledVirtualTerminalProc)
+            {
+                System.Console.Write(s);
+                return;
+            }
             if (isUseRCL)
                 Screen.Parse(s);
             else
@@ -72,13 +77,28 @@
         }
         public static void Write(string s, Color foregroundDefault)
         {
+            if (RCL.isEnabledVirtualTerminalProc)
+            {
+                System.Console.Write(s);
+                return;
+            }
             if (isUseRCL)
                 Screen.Parse(s);
             else
                 Colorful.Console.Write(s, foregroundDefault);
         }
+
+        public static void WriteS(string s)
+        {
+            System.Console.WriteLine(s);
+        }
         public static void WriteLine(string s)
         {
+            if (RCL.isEnabledVirtualTerminalProc)
+            {
+                System.Console.WriteLine(s);
+                return;
+            }
             if (isUseRCL)
                 Screen.Parse($"{s}{System.Environment.NewLine}");
             else

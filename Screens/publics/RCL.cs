@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+#if !LITE
+using System.Runtime.InteropServices;
+#endif
 
 namespace Rc.Framework.Screens
 {
@@ -31,11 +34,52 @@ namespace Rc.Framework.Screens
         public static string Wrap(object text, Color foreground, Color background) => $"{foreground.getValue(background)}{text}{ConsoleColor.White.getValue().getValue(Color.Empty)}";
 
 
+#if !LITE
+
+        public const string ESC = "\x1b";
+        public const string CSI = "\x1b[";
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool GetConsoleMode(IntPtr handle, out int mode);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr GetStdHandle(int handle);
+
+        public static void EnablingVirtualTerminalProcessing()
+        {
+            if (isEnabledVirtualTerminalProc) return;
+
+            var handle = GetStdHandle(-11);
+            int mode;
+            GetConsoleMode(handle, out mode);
+            SetConsoleMode(handle, mode | 0x4);
+
+            isEnabledVirtualTerminalProc = true;
+        }
+#endif
+        // for < Windows 10 Anniversary Update
+        internal static bool isEnabledVirtualTerminalProc = false;
         public static string getValue(this Color c, Color back)
         {
+#if LITE
+            //! HoloVector/DoF.Issues/#5
+            //! Add RCL support for Unity RichText
+            if (c == Color.White)
+                return "</color>";
+            return $"<color=#{c.R:X2}{c.G:X2}{c.B:X2}>";
+#else
             if (!c.IsNamedColor)
                 throw new CustomColorException("Custom color is not allowed!");
+
+            if (isEnabledVirtualTerminalProc)
+            {
+                if (c == Color.White)
+                    return "\x1b[39m";
+                return $"\x1b[38;2;{c.R};{c.G};{c.B}m";
+            }
             return $"&{c.Name};{back.Name};";
+#endif
         }
 
         public static Color getValue(this ConsoleColor c)

@@ -14,8 +14,11 @@
         {
             try
             {
-                Console.OutputEncoding = Encoding.UTF8;
-                Console.InputEncoding = Encoding.UTF8;
+                if (!RCL.isEnabledVirtualTerminalProc)
+                {
+                    Console.OutputEncoding = Encoding.UTF8;
+                    Console.InputEncoding = Encoding.UTF8;
+                }
             } catch { }
         }
 
