@@ -14,8 +14,8 @@
 [assembly: System.Reflection.AssemblyTrademark      (RC.AssemblyRT.Trademark)]
 [assembly: System.Runtime.InteropServices.ComVisible(true)]
 [assembly: System.Runtime.InteropServices.Guid      (RC.AssemblyRT.GUID)]
-[assembly: System.Reflection.AssemblyVersion("9.7.0.16500")]
-[assembly: System.Reflection.AssemblyFileVersion("9.7.0.16500")]
+[assembly: System.Reflection.AssemblyVersion("10.0.0.25500")]
+[assembly: System.Reflection.AssemblyFileVersion("10.0.0.25500")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Vox.Core, "      + RC.AssemblyRT.PubKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Constructor, "   + RC.AssemblyRT.PubKey)]
@@ -28,7 +28,7 @@ namespace RC
     public class AssemblyRT
     {
         public const string Description = "RC.Framework for .NET";
-        public const string Company = "duo-flux.net";
+        public const string Company = "HoloVectoR Inc.";
         public const string Product = "RC.Core";
         public const string Copyright = "Copyright © Yuuki Wesp & Alice Wesp (Callada & Another) 2013-2017 and Author Project Include's";
         public const string Trademark = "Alfheim.CE";

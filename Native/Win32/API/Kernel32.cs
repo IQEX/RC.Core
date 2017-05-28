@@ -1,8 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using RC.Framework.Native.Win32.Rectangles;
-
 #if WIN32
+using RC.Framework.Native.Win32.Rectangles;
 namespace RC.Framework.Native.Win32.API
 {
     using SystemInformation;
