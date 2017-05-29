@@ -42,11 +42,10 @@
     <DocumentationFile>bin\Release\RC.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>RC.Core.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UnityVersion|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -1199,7 +1198,7 @@
   <PropertyGroup>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>powershell -ExecutionPolicy Unrestricted $(ProjectDir)sign.ps1 -ProjectDir $(ProjectDir) -path "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" -cert "RC.Core.pfx"</PostBuildEvent>
+    <PostBuildEvent>powershell -ExecutionPolicy Unrestricted $(ProjectDir)sign.ps1 -ProjectDir $(ProjectDir) -path "$(ProjectDir)bin\$(ConfigurationName)\$(TargetFileName)" -cert "RC.Core.pfx"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
   <Target Name="AfterCompile">
