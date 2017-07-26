@@ -304,11 +304,20 @@ namespace Colorful
             }
             catch (ConsoleAccessException ex)
             {
+                System.Console.WriteLine(ex);
                 isInCompatibilityMode = true;
             }
 
-            ReplaceAllColorsWithDefaults(isInCompatibilityMode);
-            System.Console.CancelKeyPress += Console_CancelKeyPress;
+            try
+            {
+                ReplaceAllColorsWithDefaults(isInCompatibilityMode);
+                System.Console.CancelKeyPress += Console_CancelKeyPress;
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+            }
+            
         }
 
         public static void Write(bool value)

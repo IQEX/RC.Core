@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
+using System.Threading.Tasks;
+
 
 namespace Colorful
 {
@@ -27,62 +29,43 @@ namespace Colorful
         private static readonly string WRITELINE_TRAILER = "\r\n";
         private static readonly string WRITE_TRAILER = "";
 
+#if !NET40
+        private static TaskQueue Queue { get; } = new TaskQueue();
+#endif
+
         private static void MapToScreen(IEnumerable<KeyValuePair<string, Color>> styleMap, string trailer)
         {
-            int writeCount = 1;
-            foreach (KeyValuePair<string, Color> textChunk in styleMap)
+#if !NET40
+            Queue.Enqueue(() => Task.Factory.StartNew(() =>
             {
-                System.Console.BackgroundColor = colorManager.GetConsoleColor(textChunk.Value);
-
-                if (writeCount == styleMap.Count())
+#endif
+                var oldSystemColor = System.Console.ForegroundColor;
+                int writeCount = 1;
+                foreach (KeyValuePair<string, Color> textChunk in styleMap)
                 {
-                    System.Console.Write(textChunk.Key + trailer);
-                }
-                else
-                {
-                    System.Console.Write(textChunk.Key);
-                }
+                    System.Console.ForegroundColor = colorManager.GetConsoleColor(textChunk.Value);
 
-                writeCount++;
-            }
+                    if (writeCount == styleMap.Count())
+                    {
+                        System.Console.Write(textChunk.Key + trailer);
+                    }
+                    else
+                    {
+                        System.Console.Write(textChunk.Key);
+                    }
 
-            System.Console.ResetColor();
-        }
-
-        private static void MixMapToScreen(IEnumerable<KeyValuePair<string, Color>> styleMap, IEnumerable<KeyValuePair<string, Color>> backStyleMap, string trailer)
-        {
-            int writeCount = 1;
-            var StyleArray = styleMap as KeyValuePair<string, Color>[] ?? styleMap.ToArray();
-            var StyleArray2 = backStyleMap as KeyValuePair<string, Color>[] ?? backStyleMap.ToArray();
-
-            for (int o = 0; o != StyleArray.Length; o++)
-            {
-                KeyValuePair<string, Color> textChunk = StyleArray[o];
-                KeyValuePair<string, Color> textChunk2 = StyleArray2[o];
-
-                ForegroundColor = textChunk.Value;
-                if(!textChunk2.Value.IsEmpty)
-                if (textChunk2.Value.Name != Color.Empty.Name)
-                if (BackgroundColor.Name != textChunk2.Value.Name)
-                BackgroundColor = textChunk2.Value;
-
-                if (writeCount == StyleArray.Count())
-                {
-                    System.Console.Write(textChunk.Key + trailer);
-                }
-                else
-                {
-                    System.Console.Write(textChunk.Key);
+                    writeCount++;
                 }
 
-                writeCount++;
-            }
-
-            //System.Console.ResetColor();
+                System.Console.ForegroundColor = oldSystemColor;
+#if !NET40
+            })).Wait();
+#endif
         }
 
         private static void MapToScreen(StyledString styledString, string trailer)
         {
+            var oldSystemColor = System.Console.ForegroundColor;
             int rowLength = styledString.CharacterGeometry.GetLength(0);
             int columnLength = styledString.CharacterGeometry.GetLength(1);
             for (int row = 0; row < rowLength; row++)
@@ -106,14 +89,15 @@ namespace Colorful
                 }
             }
 
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColor<T>(Action<T> action, T target, Color color)
         {
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteChunkInColor(Action<string> action, char[] buffer, int index, int count, Color color)
@@ -127,9 +111,10 @@ namespace Colorful
         {
             Color color = alternator.GetNextColor(target.AsString());
 
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteChunkInColorAlternating(Action<string> action, char[] buffer, int index, int count, ColorAlternator alternator)
@@ -195,9 +180,10 @@ namespace Colorful
 
         private static void WriteInColor<T, U>(Action<T, U> action, T target0, U target1, Color color)
         {
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target0, target1);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColorAlternating<T, U>(Action<T, U> action, T target0, U target1, ColorAlternator alternator)
@@ -205,9 +191,10 @@ namespace Colorful
             string formatted = string.Format(target0.ToString(), target1.Normalize());
             Color color = alternator.GetNextColor(formatted);
 
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target0, target1);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColorStyled<T, U>(string trailer, T target0, U target1, StyleSheet styleSheet)
@@ -238,9 +225,10 @@ namespace Colorful
 
         private static void WriteInColor<T, U>(Action<T, U, U> action, T target0, U target1, U target2, Color color)
         {
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target0, target1, target2);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColorAlternating<T, U>(Action<T, U, U> action, T target0, U target1, U target2, ColorAlternator alternator)
@@ -248,9 +236,10 @@ namespace Colorful
             string formatted = string.Format(target0.ToString(), target1, target2); // NOT FORMATTING
             Color color = alternator.GetNextColor(formatted);
 
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target0, target1, target2);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColorStyled<T, U>(string trailer, T target0, U target1, U target2, StyleSheet styleSheet)
@@ -281,9 +270,10 @@ namespace Colorful
 
         private static void WriteInColor<T, U>(Action<T, U, U, U> action, T target0, U target1, U target2, U target3, Color color)
         {
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target0, target1, target2, target3);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColorAlternating<T, U>(Action<T, U, U, U> action, T target0, U target1, U target2, U target3, ColorAlternator alternator)
@@ -291,9 +281,10 @@ namespace Colorful
             string formatted = string.Format(target0.ToString(), target1, target2, target3);
             Color color = alternator.GetNextColor(formatted);
 
+            var oldSystemColor = System.Console.ForegroundColor;
             System.Console.ForegroundColor = colorManager.GetConsoleColor(color);
             action.Invoke(target0, target1, target2, target3);
-            System.Console.ResetColor();
+            System.Console.ForegroundColor = oldSystemColor;
         }
 
         private static void WriteInColorStyled<T, U>(string trailer, T target0, U target1, U target2, U target3, StyleSheet styleSheet)
@@ -331,6 +322,39 @@ namespace Colorful
             List<KeyValuePair<string, Color>> format2Map =
                 stylerBlack.GetFormatMap(target0.ToString(), backTargets.Select(formatter => formatter.Target).ToArray(), backTargets.Select(formatter => formatter.Color).ToArray());
             MixMapToScreen(formatMap, format2Map, trailer);
+        }
+
+
+        private static void MixMapToScreen(IEnumerable<KeyValuePair<string, Color>> styleMap, IEnumerable<KeyValuePair<string, Color>> backStyleMap, string trailer)
+        {
+            int writeCount = 1;
+            var StyleArray = styleMap as KeyValuePair<string, Color>[] ?? styleMap.ToArray();
+            var StyleArray2 = backStyleMap as KeyValuePair<string, Color>[] ?? backStyleMap.ToArray();
+
+            for (int o = 0; o != StyleArray.Length; o++)
+            {
+                KeyValuePair<string, Color> textChunk = StyleArray[o];
+                KeyValuePair<string, Color> textChunk2 = StyleArray2[o];
+
+                ForegroundColor = textChunk.Value;
+                if (!textChunk2.Value.IsEmpty)
+                    if (textChunk2.Value.Name != Color.Empty.Name)
+                        if (BackgroundColor.Name != textChunk2.Value.Name)
+                            BackgroundColor = textChunk2.Value;
+
+                if (writeCount == StyleArray.Count())
+                {
+                    System.Console.Write(textChunk.Key + trailer);
+                }
+                else
+                {
+                    System.Console.Write(textChunk.Key);
+                }
+
+                writeCount++;
+            }
+
+            //System.Console.ResetColor();
         }
 
         private static void WriteInColorFormatted<T>(string trailer, T target0, Formatter[] targets, Color defaultColor)

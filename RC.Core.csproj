@@ -514,7 +514,6 @@
     <Compile Include="Data\Yaml\Serialized\YamlTagPrefixes.cs" />
     <Compile Include="Data\Yaml\Serialized\YamlTagResolutionScheme.cs" />
     <Compile Include="Data\Yaml\Serialized\YamlTagValidator.cs" />
-    <Compile Include="_obsolete\Terminal.cs" />
     <Compile Include="IO\FileSystem\ApplePartitionMap\BlockZero.cs" />
     <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMap.cs" />
     <Compile Include="IO\FileSystem\ApplePartitionMap\PartitionMapEntry.cs" />
