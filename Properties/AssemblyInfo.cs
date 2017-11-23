@@ -14,8 +14,8 @@
 [assembly: System.Reflection.AssemblyTrademark      (RC.AssemblyRT.Trademark)]
 [assembly: System.Runtime.InteropServices.ComVisible(true)]
 [assembly: System.Runtime.InteropServices.Guid      (RC.AssemblyRT.GUID)]
-[assembly: System.Reflection.AssemblyVersion("13.0")]
-[assembly: System.Reflection.AssemblyFileVersion("13.0")]
+[assembly: System.Reflection.AssemblyVersion("2017.11")]
+[assembly: System.Reflection.AssemblyFileVersion("2017.11")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Vox.Core, "      + RC.AssemblyRT.PubKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("SAL, "   + RC.AssemblyRT.PubKey)]
