@@ -14,14 +14,16 @@
 [assembly: System.Reflection.AssemblyTrademark      (RC.AssemblyRT.Trademark)]
 [assembly: System.Runtime.InteropServices.ComVisible(true)]
 [assembly: System.Runtime.InteropServices.Guid      (RC.AssemblyRT.GUID)]
-[assembly: System.Reflection.AssemblyVersion("12.5")]
-[assembly: System.Reflection.AssemblyFileVersion("12.5")]
+[assembly: System.Reflection.AssemblyVersion("13.0")]
+[assembly: System.Reflection.AssemblyFileVersion("13.0")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Vox.Core, "      + RC.AssemblyRT.PubKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Constructor, "   + RC.AssemblyRT.PubKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("SAL, "   + RC.AssemblyRT.PubKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Qurd, "          + RC.AssemblyRT.PubKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Launcher, "      + RC.AssemblyRT.PubKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Quantum.Driver, "+ RC.AssemblyRT.PubKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DOF.Launcher, "      + RC.AssemblyRT.PubKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Qu.Driver, "+ RC.AssemblyRT.PubKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Qu.Core, "+ RC.AssemblyRT.PubKey)]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Emul.SQASM, "+ RC.AssemblyRT.PubKey)]
 
 namespace RC
 {

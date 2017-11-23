@@ -11,6 +11,9 @@ namespace RC.Framework.Screens
 
     public static class RCL
     {
+
+
+
         public static string Map(this string e, string t, Color c       ) => e.Replace(t, Wrap(t, c));
         public static string Map(this string e, string t, ConsoleColor c) => e.Map(t, c.getValue());
 
@@ -48,6 +51,7 @@ namespace RC.Framework.Screens
 
         public static void EnablingVirtualTerminalProcessing()
         {
+            if(!OSDetector.IsAnniversaryUpdate) return;
             if (isEnabledVirtualTerminalProc) return;
 
             var handle = GetStdHandle(-11);
@@ -60,8 +64,17 @@ namespace RC.Framework.Screens
 #endif
         // for < Windows 10 Anniversary Update
         internal static bool isEnabledVirtualTerminalProc = false;
+
+        internal static bool ThrowCustomColor = true;
+
+
+
+        public static void SetThrowCustomColor(bool value) => ThrowCustomColor = value;
+
         public static string getValue(this Color c, Color back)
         {
+            if (!Screen.isUseRCL)
+                return "";
 #if LITE
             //! HoloVector/DoF.Issues/#5
             //! Add RCL support for Unity RichText
@@ -69,6 +82,7 @@ namespace RC.Framework.Screens
                 return "</color>";
             return $"<color=#{c.R:X2}{c.G:X2}{c.B:X2}>";
 #else
+            if (ThrowCustomColor)
             if (!c.IsNamedColor)
                 throw new CustomColorException("Custom color is not allowed!");
 

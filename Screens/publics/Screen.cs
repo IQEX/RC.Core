@@ -1,4 +1,6 @@
-﻿namespace RC.Framework.Screens
+﻿using System.IO;
+
+namespace RC.Framework.Screens
 {
     using Colorful;
     using System;
@@ -60,11 +62,27 @@
             }
         }
 
-        private static bool isUseRCL = true;
+        internal static bool isUseRCL = true;
+        internal static bool isTechnicalRedirect = false;
         public static void SwithRCL() => isUseRCL = !isUseRCL;
+        public static void SetModeRCL(bool isEnabled) => isUseRCL = isEnabled;
+
+        private static TextWriter wre;
+        private static TextReader rew;
+
+        public static void SetOut(TextWriter a) => wre = a;
+        public static void SetIn(TextReader a) => rew = a;
+
+        public static void SetModeRedirect(bool isEnabled) => isTechnicalRedirect = isEnabled;
 
         public static void Write(string s)
         {
+            if (isTechnicalRedirect)
+            {
+                wre.Write(s);
+                return;
+            }
+
             if (RCL.isEnabledVirtualTerminalProc)
             {
                 System.Console.Write(s);
@@ -73,10 +91,15 @@
             if (isUseRCL)
                 Screen.Parse(s);
             else
-                Screen.Out.Write(s);
+                System.Console.Write(s);
         }
         public static void Write(string s, Color foregroundDefault)
         {
+            if (isTechnicalRedirect)
+            {
+                wre.Write(s);
+                return;
+            }
             if (RCL.isEnabledVirtualTerminalProc)
             {
                 System.Console.Write(s);
@@ -94,6 +117,12 @@
         }
         public static void WriteLine(string s)
         {
+            if (isTechnicalRedirect)
+            {
+                wre.WriteLine(s);
+                return;
+            }
+
             if (RCL.isEnabledVirtualTerminalProc)
             {
                 System.Console.WriteLine(s);
@@ -102,10 +131,15 @@
             if (isUseRCL)
                 Screen.Parse($"{s}{System.Environment.NewLine}");
             else
-                Screen.Out.Write($"{s}{System.Environment.NewLine}");
+                System.Console.Write($"{s}{System.Environment.NewLine}");
         }
         public static void WriteLine(string s, Color foregroundDefault)
         {
+            if (isTechnicalRedirect)
+            {
+                wre.WriteLine(s);
+                return;
+            }
             if (isUseRCL)
                 Screen.Parse($"{s}{System.Environment.NewLine}", foregroundDefault);
             else
