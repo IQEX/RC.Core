@@ -8,12 +8,12 @@ Write-Host ("Project Dir: " + $ProjectDir);
 if([System.IO.File]::Exists($ProjectDir + "/sign.pass") -ceq $false)
 {
     Write-Error "sign.pass is not found!";
-    exit 1;
+    exit 0;
 }
 if([System.IO.File]::Exists($ProjectDir + "/" + $cert) -ceq $false)
 {
     Write-Error ("Certificate file ["+$cert+"] is not found!");
-    exit 1;
+    exit 0;
 }
 $pass = [System.IO.File]::ReadAllText($ProjectDir + "/sign.pass");
 Write-Host ("Password Sign: " + $pass);
@@ -31,5 +31,5 @@ else
 {
     Write-Host  ("Sign Fail!");
     Write-Error ("Sign Fail!");
-    exit $lastexitcode;
+    exit 0;
 }
