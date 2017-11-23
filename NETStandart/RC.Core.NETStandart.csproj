@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>RC.Core</AssemblyName>
+    <RootNamespace>RC.Framework</RootNamespace>
+    <AssemblyVersion>2017.11.2.0</AssemblyVersion>
+    <FileVersion>2017.11.2.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Rc.Core\Native\OSDetector.cs" Link="OSDetector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.0" />
+    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
+  </ItemGroup>
+
+</Project>
