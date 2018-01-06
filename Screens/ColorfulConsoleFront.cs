@@ -302,7 +302,7 @@ namespace Colorful
             {
                 defaultColorMap = new ColorMapper().GetBufferColors();
             }
-            catch (ConsoleAccessException ex)
+            catch (ConsoleAccessException)
             {
                 isInCompatibilityMode = true;
             }
