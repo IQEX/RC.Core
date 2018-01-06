@@ -1,17 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-#if !LITE
-using System.Runtime.InteropServices;
-#endif
-
-namespace RC.Framework.Screens
+﻿namespace RC.Framework.Screens
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Drawing;
-
+#if !LITE
+    using System.Runtime.InteropServices;
+    using Microsoft.Win32;
+#endif
     public static class RCL
     {
+        public delegate void OutputRCL(string str, Exception ex);
 
+        public static event OutputRCL Trace;
 
 
         public static string Map(this string e, string t, Color c       ) => e.Replace(t, Wrap(t, c));
@@ -39,37 +40,141 @@ namespace RC.Framework.Screens
 
 #if !LITE
 
+        /// <summary>
+        /// Escape symbol
+        /// </summary>
         public const string ESC = "\x1b";
+        /// <summary>
+        /// CSI Symbols
+        /// </summary>
         public const string CSI = "\x1b[";
+        public const string EscapeRegex = @"\e\[[0-9;]+m";
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
+        private static extern bool SetConsoleMode(IntPtr hConsoleHandle, int mode);
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetConsoleMode(IntPtr handle, out int mode);
+        private static extern bool GetConsoleMode(IntPtr handle, out int mode);
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr GetStdHandle(int handle);
+        private static extern IntPtr GetStdHandle(int handle);
 
-        public static void EnablingVirtualTerminalProcessing()
+        [Flags]
+        internal enum ConsoleModeInputFlags
         {
-            if(!OSDetector.IsAnniversaryUpdate) return;
-            if (isEnabledVirtualTerminalProc) return;
+            ENABLE_PROCESSED_INPUT = 0x0001,
+            ENABLE_LINE_INPUT = 0x0002,
+            ENABLE_ECHO_INPUT = 0x0004,
+            ENABLE_WINDOW_INPUT = 0x0008,
+            ENABLE_MOUSE_INPUT = 0x0010,
+            ENABLE_INSERT_MODE = 0x0020,
+            ENABLE_QUICK_EDIT_MODE = 0x0040,
+            ENABLE_EXTENDED_FLAGS = 0x0080,
+            ENABLE_AUTO_POSITION = 0x0100,
+            ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0200
+        }
+        [Flags]
+        internal enum ConsoleModeOutputFlags
+        {
+            ENABLE_PROCESSED_OUTPUT = 0x0001,
+            ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002,
+            ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004
+        }
 
-            var handle = GetStdHandle(-11);
-            int mode;
-            GetConsoleMode(handle, out mode);
-            SetConsoleMode(handle, mode | 0x4);
+        public enum ConsoleHandle : int
+        {
+            Input = -10,
+            Output = -11
+        }
 
+        public enum RejectedResponse
+        {
+            Unknown,
+            IsNotAnniversaryUpdate,
+            HardDisabledVTP,
+            RegistryDisabledVTP,
+            WinAPIRejected,
+            AlreadyEnabled,
+            AlreadyEnabledFromRegistry,
+            Success
+        }
+
+        public static RejectedResponse EnablingVirtualTerminalProcessing()
+        {
+            if (!OSDetector.IsAnniversaryUpdate)
+            {
+                OnOut("OS is not 'Windows 10 AnniversaryUpdate'.");
+                OnOut("Failed Enabling VTP technology.");
+                return RejectedResponse.IsNotAnniversaryUpdate;
+            }
+            if (isEnabledVirtualTerminalProc) return RejectedResponse.HardDisabledVTP;
+
+            using (var tree = Registry.CurrentUser.OpenSubKey("Console"))
+            {
+                var valKey = tree?.GetValue("VirtualTerminalLevel")?.ToString();
+                switch (valKey)
+                {
+                    case null:
+                        OnOut("Registry Key 'VirtualTerminalLevel' not found.");
+                        break;
+                    case "1":
+                        OnOut("Registry Key 'VirtualTerminalLevel' is enabled! [0x0000001] DWORD x32");
+                        isEnabledVirtualTerminalProc = true;
+                        return RejectedResponse.AlreadyEnabledFromRegistry;
+                    case "0":
+                        OnOut("Registry Key 'VirtualTerminalLevel' is disabled! [0x0000000] DWORD x32");
+                        return RejectedResponse.RegistryDisabledVTP;
+                    default:
+                        OnOut($"Registry Key 'VirtualTerminalLevel' has been unknown value [0x000000{valKey}] DWORD x32");
+                        return RejectedResponse.Unknown;
+                }
+            }
+
+
+            var handle = GetStdHandle((int)ConsoleHandle.Output);
+            OnOut($"Getting handle 'Output' -> [0x{handle}] HANDLE x64");
+            GetConsoleMode(handle, out var mode);
+            OnOut($"Getting handle mode -> [{(ConsoleModeOutputFlags)mode}] 'Output' 0xB");
+            if (!((ConsoleModeOutputFlags) mode).HasFlag(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING))
+            {
+                SetConsoleMode(handle, mode | (int)ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+                OnOut($"Set [{(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING)}] from console handle [0xB x64]");
+                GetConsoleMode(handle, out mode);
+                if (!((ConsoleModeOutputFlags) mode).HasFlag(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING))
+                {
+                    OnOut($"Rejected [{(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING)}] from console handle [0xB x64] -> [{(ConsoleModeOutputFlags)mode}]");
+                    OnOut("Failed Enabling VTP technology.");
+                    return RejectedResponse.WinAPIRejected;
+                }
+                OnOut($"Success set [{(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING)}] from console handle [0xB x64] -> [{(ConsoleModeOutputFlags)mode}]");
+                isEnabledVirtualTerminalProc = true;
+                return RejectedResponse.Success;
+            }
+            OnOut($"Already set [{(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING)}] from console handle [0xB x64] -> [{(ConsoleModeOutputFlags)mode}]");
             isEnabledVirtualTerminalProc = true;
+            return RejectedResponse.AlreadyEnabled;
         }
 #endif
         // for < Windows 10 Anniversary Update
         internal static bool isEnabledVirtualTerminalProc = false;
+        private static bool ThrowCustomColor = true;
 
-        internal static bool ThrowCustomColor = true;
-
-
+        public enum Type
+        {
+            Standard,
+            VTP_Technology,
+            Unity
+        }
 
         public static void SetThrowCustomColor(bool value) => ThrowCustomColor = value;
+
+        public static Type getType()
+        {
+#if LITE
+            return Type.Unity;
+#else
+            return isEnabledVirtualTerminalProc ? Type.VTP_Technology : Type.Standard;
+
+#endif
+        }
 
         public static string getValue(this Color c, Color back)
         {
@@ -135,6 +240,11 @@ namespace RC.Framework.Screens
                 default:
                     throw new ArgumentOutOfRangeException(nameof(c), c, null);
             }
+        }
+
+        private static void OnOut(string str, Exception ex = null)
+        {
+            Trace?.Invoke(str, ex);
         }
     }
 }
