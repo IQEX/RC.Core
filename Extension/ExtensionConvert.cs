@@ -3,6 +3,7 @@
 // LicenseType="MIT"                    //                  Alise Wesp & Yuuki Wesp                     //
 // =====================================//==============================================================//
 using System;
+using System.Globalization;
 using RC.Framework;
 /// <summary>
 /// Класс расширения конвертации
@@ -33,37 +34,37 @@ public static class ExtensionConvert
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static Int32 ToInt32(this string t) => Int32.Parse(t);
+    public static int ToInt32(this string t) => int.Parse(t);
     /// <summary>
     /// Конвертация строки в <see cref="Int64"/>
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static Int64 ToInt64(this string t) => Int64.Parse(t);
+    public static long ToInt64(this string t) => long.Parse(t);
     /// <summary>
     /// Конвертация строки в <see cref="Int16"/>
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static Int16 ToInt16(this string t) => Int16.Parse(t);
+    public static short ToInt16(this string t) => short.Parse(t);
     /// <summary>
     /// Конвертация строки в <see cref="UInt16"/>
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static UInt16 ToUInt16(this string t) => UInt16.Parse(t);
+    public static ushort ToUInt16(this string t) => ushort.Parse(t);
     /// <summary>
     /// Конвертация строки в <see cref="UInt32"/>
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static UInt32 ToUInt32(this string t) => UInt32.Parse(t);
+    public static uint ToUInt32(this string t) => uint.Parse(t);
     /// <summary>
     /// Конвертация строки в <see cref="UInt64"/>
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static UInt64 ToUInt64(this string t) => UInt64.Parse(t);
+    public static ulong ToUInt64(this string t) => ulong.Parse(t);
     /// <summary>
     /// Конвертация строки в <see cref="sbyte"/>
     /// </summary>
@@ -82,13 +83,13 @@ public static class ExtensionConvert
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static float ToSingle(this string t) => float.Parse(t);
+    public static float ToSingle(this string t) => float.Parse(t, CultureInfo.InvariantCulture);
     /// <summary>
     /// Конвертация строки в <see cref="double"/>
     /// </summary>
     /// <param name="t">строка содержащие число для преобразования.</param>
     /// <returns>Преобразованное число.</returns>
-    public static double ToDouble(this string t) => double.Parse(t);
+    public static double ToDouble(this string t) => double.Parse(t, CultureInfo.InvariantCulture);
     /// <summary>
     /// Конвертация строки в <typeparamref name="TEnum"/>
     /// </summary>
