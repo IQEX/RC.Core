@@ -1,13 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
+using RC.Framework.Screens;
 
 /// <summary>
 /// Класс расширений
 /// </summary>
 public static class ExtensionMethods
 {
+    /// <summary>
+    /// The extension for types time, like in ruby
+    /// </summary>
+    public static long Minutes(this int i) => (long)TimeSpan.FromMinutes(i).TotalMilliseconds;
+    public static long Hours(this int i) => (long)TimeSpan.FromHours(i).TotalMilliseconds;
+    public static long Days(this int i) => (long)TimeSpan.FromDays(i).TotalMilliseconds;
+    public static long Second(this int i) => (long)TimeSpan.FromSeconds(i).TotalMilliseconds;
+
+
+    /// <summary>
+    /// Regex Replace
+    /// </summary>
+    /// <param name="value">
+    /// current string
+    /// </param>
+    /// <param name="rule">
+    /// Regex rule match
+    /// </param>
+    /// <param name="to">
+    /// Replace to text
+    /// </param>
+    /// <returns>
+    /// Complete string
+    /// </returns>
+    public static string ReplaceRex(this string value, string rule, string to = "") => Regex.Replace(value, rule, to);
+
+    /// <summary>
+    /// Colored string [RCL]
+    /// </summary>
+    public static string To(this string s, Color c) => RCL.Wrap(s, c);
+    public static Tuple<string, string> GetFullExceptionMessage(this Exception exception)
+    {
+        if (exception.InnerException == null)
+        {
+            if (exception.GetType() != typeof(ArgumentException))
+                return new Tuple<string, string>(exception.Message, exception.StackTrace);
+            var argumentName = ((ArgumentException)exception).ParamName;
+            return new Tuple<string, string>($"{exception.Message} With null argument named '{argumentName}'.", exception.StackTrace);
+        }
+        var innerExceptionInfo = GetFullExceptionMessage(exception.InnerException);
+        return new Tuple<string, string>(
+            $"{innerExceptionInfo.Item1}{Environment.NewLine}{exception.Message}",
+            $"{innerExceptionInfo.Item2}{Environment.NewLine}{exception.StackTrace}");
+    }
+    public static Exception GetOriginalException(this Exception ex) => ex.InnerException == null ? ex : ex.InnerException.GetOriginalException();
+
     /// <summary>
     /// Short expression of string.Format(XXX, arg1, arg2, ...)
     /// </summary>
