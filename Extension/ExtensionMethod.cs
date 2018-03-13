@@ -13,12 +13,11 @@ public static class ExtensionMethods
     /// <summary>
     /// The extension for types time, like in ruby
     /// </summary>
-    public static long Minutes(this int i) => (long)TimeSpan.FromMinutes(i).TotalMilliseconds;
-    public static long Hours(this int i) => (long)TimeSpan.FromHours(i).TotalMilliseconds;
-    public static long Days(this int i) => (long)TimeSpan.FromDays(i).TotalMilliseconds;
-    public static long Second(this int i) => (long)TimeSpan.FromSeconds(i).TotalMilliseconds;
-
-
+    public static long AtMinutes(this int i) => (long)TimeSpan.FromMinutes(i).TotalMilliseconds;
+    public static long AtHours(this int i) => (long)TimeSpan.FromHours(i).TotalMilliseconds;
+    public static long AtDays(this int i) => (long)TimeSpan.FromDays(i).TotalMilliseconds;
+    public static long AtSecond(this int i) => (long)TimeSpan.FromSeconds(i).TotalMilliseconds;
+    
     /// <summary>
     /// Regex Replace
     /// </summary>
@@ -71,39 +70,7 @@ public static class ExtensionMethods
     /// <param name="comparison">Setting</param>
     /// <returns></returns>
     public static bool Contains(this string text, string value, StringComparison comparison = StringComparison.CurrentCulture) => text.IndexOf(value, comparison) >= 0;
-
-    /// <summary>
-    /// Short expression of string.IsNullOrWhiteSpace(<see cref="String"/>)
-    /// 
-    /// It indicates whether the specified string is null, the whether it is an empty string or a string consisting only of white space.
-    /// </summary>
-    /// <param name="t">
-    /// The string for checking.
-    /// </param>
-    /// <returns>
-    /// Is true, if the parameter <paramref name="t"/> is null or <see cref="String.Empty"/>, or if the parameter is <paramref name="t"/> contains only simvoly - delimiters.
-    /// </returns>
-    public static bool IsNullOrWhiteSpace(this string t) => string.IsNullOrWhiteSpace(t);
-    /// <summary>
-    /// Short expression of string.IsNullOrEmpty(<see cref="String"/>)
-    /// 
-    /// It indicates whether the specified string is null or the string <see cref="System.String.Empty"/>.
-    /// </summary>
-    /// <param name="t">
-    /// The string for checking.
-    /// </param>
-    /// <returns>
-    /// Is true, if the parameter <paramref name = "t" /> is null or empty string (""); otherwise - to false.
-    /// </returns>
-    public static bool IsNullOrEmpty(this string t) => string.IsNullOrEmpty(t);
-    /// <summary>
-    /// Short expression of string.IsNullOrEmpty(<see cref="String"/>) or string.IsNullOrWhiteSpace(<see cref="String"/>)
-    /// </summary>
-    /// <param name="t">
-    /// The string for checking.
-    /// </param>
-    /// <returns></returns>
-    public static bool IsNullOrEmptyOrWhiteSpace(this string t) => string.IsNullOrEmpty(t) && string.IsNullOrWhiteSpace(t);
+    
     /// <summary>
     /// To get an ID(num) enumeration
     /// </summary>
