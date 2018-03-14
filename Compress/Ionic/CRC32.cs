@@ -517,7 +517,7 @@ namespace Ionic.Crc
         /// </remarks>
         /// <param name="stream">The underlying stream</param>
         public CrcCalculatorStream(System.IO.Stream stream)
-            : this(leaveOpen: true, length: CrcCalculatorStream.UnsetLengthLimit, stream: stream, crc32: null)
+            : this(true, length: CrcCalculatorStream.UnsetLengthLimit, stream: stream, crc32: null)
         {
         }
 
@@ -556,7 +556,7 @@ namespace Ionic.Crc
         /// <param name="stream">The underlying stream</param>
         /// <param name="length">The length of the stream to slurp</param>
         public CrcCalculatorStream(System.IO.Stream stream, Int64 length)
-            : this(leaveOpen: true, length: length, stream: stream, crc32: null)
+            : this(true, length: length, stream: stream, crc32: null)
         {
             if (length < 0)
                 throw new ArgumentException("length");
