@@ -56,7 +56,7 @@ namespace RC.Framework.FileSystem.HfsPlus
         {
             int totalRead = 0;
 
-            int limitedCount = (int)Math.Min(count, Math.Max(0, Capacity - pos));
+            int limitedCount = (int)Math.Min(count, Math.Max(val1: 0, val2: Capacity - pos));
 
             while (totalRead < limitedCount)
             {

@@ -116,7 +116,7 @@ namespace RC.Framework.FileSystem.Wim
             using (Stream s = _file.OpenResourceStream(hdr))
             {
                 byte[] buffer = new byte[s.Length];
-                s.Read(buffer, 0, buffer.Length);
+                s.Read(buffer, offset: 0, count: buffer.Length);
                 return new ReparsePoint((int)dirEntry.ReparseTag, buffer);
             }
         }
@@ -285,7 +285,7 @@ namespace RC.Framework.FileSystem.Wim
             Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
             List<string> dirs = new List<string>();
-            DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, true, false);
+            DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, dirs: true, files: false);
             return dirs.ToArray();
         }
 
@@ -302,7 +302,7 @@ namespace RC.Framework.FileSystem.Wim
             Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
             List<string> results = new List<string>();
-            DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, false, true);
+            DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, dirs: false, files: true);
             return results.ToArray();
         }
 
@@ -378,9 +378,9 @@ namespace RC.Framework.FileSystem.Wim
             ShortResourceHeader hdr = _file.LocateResource(streamHash);
             if (hdr == null)
             {
-                if (Utilities.IsAllZeros(streamHash, 0, streamHash.Length))
+                if (Utilities.IsAllZeros(streamHash, offset: 0, count: streamHash.Length))
                 {
-                    return new ZeroStream(0);
+                    return new ZeroStream(length: 0);
                 }
 
                 throw new IOException("Unable to locate file contents");
@@ -522,7 +522,7 @@ namespace RC.Framework.FileSystem.Wim
 
             if (streamSepPos >= 0)
             {
-                filePart = path.Substring(0, streamSepPos);
+                filePart = path.Substring(startIndex: 0, length: streamSepPos);
                 altStreamPart = path.Substring(streamSepPos + 1);
             }
             else
@@ -572,7 +572,7 @@ namespace RC.Framework.FileSystem.Wim
             _securityDescriptors = new List<RawSecurityDescriptor>((int)numEntries);
             for (uint i = 0; i < numEntries; ++i)
             {
-                _securityDescriptors.Add(new RawSecurityDescriptor(reader.ReadBytes((int)sdLengths[i]), 0));
+                _securityDescriptors.Add(new RawSecurityDescriptor(reader.ReadBytes((int)sdLengths[i]), offset: 0));
             }
 
             if (reader.Position < startPos + totalLength)
@@ -587,7 +587,7 @@ namespace RC.Framework.FileSystem.Wim
         {
             if (path.EndsWith(@"\", StringComparison.Ordinal))
             {
-                path = path.Substring(0, path.Length - 1);
+                path = path.Substring(startIndex: 0, length: path.Length - 1);
             }
 
             if (!string.IsNullOrEmpty(path) && !path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
@@ -595,7 +595,7 @@ namespace RC.Framework.FileSystem.Wim
                 path = @"\" + path;
             }
 
-            return GetEntry(GetDirectory(0), path.Split('\\'));
+            return GetEntry(GetDirectory(id: 0), path.Split('\\'));
         }
 
         private DirectoryEntry GetEntry(List<DirectoryEntry> dir, string[] path)

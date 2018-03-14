@@ -62,11 +62,11 @@ namespace RC.Framework.Yaml.Serialization
                     System.Reflection.BindingFlags.GetProperty) ) {
                 var prop = p; // create closures with this local variable
                 // not readable or parameters required to access the property
-                if ( !prop.CanRead || prop.GetGetMethod(false) == null || prop.GetIndexParameters().Count() != 0 )
+                if ( !prop.CanRead || prop.GetGetMethod(nonPublic: false) == null || prop.GetIndexParameters().Count() != 0 )
                     continue;
                 Func<object, object> get = obj => prop.GetValue(obj, EmptyObjectArray);
                 Action<object, object> set = null;
-                if ( prop.CanWrite && prop.GetSetMethod(false) != null )
+                if ( prop.CanWrite && prop.GetSetMethod(nonPublic: false) != null )
                     set = (obj, value) => prop.SetValue(obj, value, EmptyObjectArray);
                 RegisterMember(type, prop, prop.PropertyType, get, set);
             }
@@ -167,7 +167,7 @@ namespace RC.Framework.Yaml.Serialization
             //      otherwise => true
             var shouldSerialize = type.GetMethod("ShouldSerialize" + m.Name,
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,
-                null, Type.EmptyTypes, new System.Reflection.ParameterModifier[0]);
+                binder: null, types: Type.EmptyTypes, modifiers: new System.Reflection.ParameterModifier[0]);
             if ( shouldSerialize != null && shouldSerialize.ReturnType == typeof(bool) && accessor.ShouldSeriealize == null )
                 accessor.ShouldSeriealize = obj => (bool)shouldSerialize.Invoke(obj, EmptyObjectArray);
             var attr2 = m.GetAttribute<DefaultValueAttribute>();

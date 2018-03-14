@@ -75,20 +75,20 @@ namespace RC.Framework.FileSystem.Registry
 
             Timestamp = DateTime.FromFileTimeUtc(Utilities.ToInt64LittleEndian(buffer, offset + 0x000C));
 
-            MajorVersion = Utilities.ToInt32LittleEndian(buffer, 0x0014);
-            MinorVersion = Utilities.ToInt32LittleEndian(buffer, 0x0018);
+            MajorVersion = Utilities.ToInt32LittleEndian(buffer, offset: 0x0014);
+            MinorVersion = Utilities.ToInt32LittleEndian(buffer, offset: 0x0018);
 
-            int isLog = Utilities.ToInt32LittleEndian(buffer, 0x001C);
+            int isLog = Utilities.ToInt32LittleEndian(buffer, offset: 0x001C);
 
-            RootCell = Utilities.ToInt32LittleEndian(buffer, 0x0024);
-            Length = Utilities.ToInt32LittleEndian(buffer, 0x0028);
+            RootCell = Utilities.ToInt32LittleEndian(buffer, offset: 0x0024);
+            Length = Utilities.ToInt32LittleEndian(buffer, offset: 0x0028);
 
-            Path = Encoding.Unicode.GetString(buffer, 0x0030, 0x0040).Trim('\0');
+            Path = Encoding.Unicode.GetString(buffer, index: 0x0030, count: 0x0040).Trim('\0');
 
-            Guid1 = Utilities.ToGuidLittleEndian(buffer, 0x0070);
-            Guid2 = Utilities.ToGuidLittleEndian(buffer, 0x0094);
+            Guid1 = Utilities.ToGuidLittleEndian(buffer, offset: 0x0070);
+            Guid2 = Utilities.ToGuidLittleEndian(buffer, offset: 0x0094);
 
-            Checksum = Utilities.ToUInt32LittleEndian(buffer, 0x01FC);
+            Checksum = Utilities.ToUInt32LittleEndian(buffer, offset: 0x01FC);
 
             if (Sequence1 != Sequence2)
             {
@@ -117,7 +117,7 @@ namespace RC.Framework.FileSystem.Registry
             Utilities.WriteBytesLittleEndian(RootCell, buffer, offset + 0x0024);
             Utilities.WriteBytesLittleEndian(Length, buffer, offset + 0x0028);
 
-            Encoding.Unicode.GetBytes(Path, 0, Path.Length, buffer, offset + 0x0030);
+            Encoding.Unicode.GetBytes(Path, charIndex: 0, charCount: Path.Length, bytes: buffer, byteIndex: offset + 0x0030);
             Utilities.WriteBytesLittleEndian((ushort)0, buffer, offset + 0x0030 + (Path.Length * 2));
 
             Utilities.WriteBytesLittleEndian(Guid1, buffer, offset + 0x0070);

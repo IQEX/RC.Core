@@ -75,7 +75,7 @@ namespace RC.Framework.FileSystem.Optical
                 CanBeHardDisk = false,
                 DeterministicGeometry = true,
                 PreservesBiosGeometry = false,
-                CalcGeometry = c => new Geometry(1, 1, 1, 2048),
+                CalcGeometry = c => new Geometry(cylinders: 1, headsPerCylinder: 1, sectorsPerTrack: 1, bytesPerSector: 2048),
             };
         }
     }

@@ -59,8 +59,8 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             CharacterEncoding = enc;
 
-            SystemIdentifier = IsoUtilities.ReadChars(src, offset + 8, 32, CharacterEncoding);
-            VolumeIdentifier = IsoUtilities.ReadChars(src, offset + 40, 32, CharacterEncoding);
+            SystemIdentifier = IsoUtilities.ReadChars(src, offset + 8, numBytes: 32, enc: CharacterEncoding);
+            VolumeIdentifier = IsoUtilities.ReadChars(src, offset + 40, numBytes: 32, enc: CharacterEncoding);
             VolumeSpaceSize = IsoUtilities.ToUInt32FromBoth(src, offset + 80);
             VolumeSetSize = IsoUtilities.ToUInt16FromBoth(src, offset + 120);
             VolumeSequenceNumber = IsoUtilities.ToUInt16FromBoth(src, offset + 124);

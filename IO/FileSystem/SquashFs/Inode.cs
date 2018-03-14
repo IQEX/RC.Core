@@ -49,24 +49,24 @@ namespace RC.Framework.FileSystem.SquashFs
         public static Inode Read(MetablockReader inodeReader)
         {
             byte[] typeData = new byte[2];
-            if (inodeReader.Read(typeData, 0, 2) != 2)
+            if (inodeReader.Read(typeData, offset: 0, count: 2) != 2)
             {
                 throw new IOException("Unable to read Inode type");
             }
 
-            InodeType type = (InodeType)Utilities.ToUInt16LittleEndian(typeData, 0);
+            InodeType type = (InodeType)Utilities.ToUInt16LittleEndian(typeData, offset: 0);
             Inode inode = InstantiateType(type);
 
             byte[] inodeData = new byte[inode.Size];
             inodeData[0] = typeData[0];
             inodeData[1] = typeData[1];
 
-            if (inodeReader.Read(inodeData, 2, inode.Size - 2) != inode.Size - 2)
+            if (inodeReader.Read(inodeData, offset: 2, count: inode.Size - 2) != inode.Size - 2)
             {
                 throw new IOException("Unable to read whole Inode");
             }
 
-            inode.ReadFrom(inodeData, 0);
+            inode.ReadFrom(inodeData, offset: 0);
 
             return inode;
         }

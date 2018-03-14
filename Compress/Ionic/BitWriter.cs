@@ -146,8 +146,8 @@ namespace Ionic.BZip2
             this.accumulator = 0;
             this.nAccumulatedBits = 0;
             this.totalBytesWrittenOut = 0;
-            this.output.Seek(0, SeekOrigin.Begin);
-            this.output.SetLength(0);
+            this.output.Seek(offset: 0, origin: SeekOrigin.Begin);
+            this.output.SetLength(value: 0);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace Ionic.BZip2
         /// </summary>
         public void WriteByte(byte b)
         {
-            WriteBits(8, b);
+            WriteBits(nbits: 8, value: b);
         }
 
         /// <summary>
@@ -197,10 +197,10 @@ namespace Ionic.BZip2
         /// </summary>
         public void WriteInt(uint u)
         {
-            WriteBits(8, (u >> 24) & 0xff);
-            WriteBits(8, (u >> 16) & 0xff);
-            WriteBits(8, (u >> 8) & 0xff);
-            WriteBits(8, u & 0xff);
+            WriteBits(nbits: 8, value: (u >> 24) & 0xff);
+            WriteBits(nbits: 8, value: (u >> 16) & 0xff);
+            WriteBits(nbits: 8, value: (u >> 8) & 0xff);
+            WriteBits(nbits: 8, value: u & 0xff);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Ionic.BZip2
         /// </remarks>
         public void Flush()
         {
-            WriteBits(0,0);
+            WriteBits(nbits: 0,value: 0);
         }
 
 

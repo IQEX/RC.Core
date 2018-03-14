@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Raw
         /// </summary>
         /// <param name="stream">The stream to interpret</param>
         public DiskImageFile(Stream stream)
-            : this(stream, Ownership.None, null)
+            : this(stream, Ownership.None, geometry: null)
         {
         }
 
@@ -125,7 +125,7 @@ namespace RC.Framework.FileSystem.Raw
 
             // Wipe any pre-existing master boot record / BPB
             stream.Position = 0;
-            stream.Write(new byte[Sizes.Sector], 0, Sizes.Sector);
+            stream.Write(new byte[Sizes.Sector], offset: 0, count: Sizes.Sector);
             stream.Position = 0;
 
             return new DiskImageFile(stream, ownsStream, geometry);
@@ -140,7 +140,7 @@ namespace RC.Framework.FileSystem.Raw
         /// <returns>An object that accesses the stream as a disk</returns>
         public static DiskImageFile Initialize(Stream stream, Ownership ownsStream, FloppyDiskType type)
         {
-            return Initialize(stream, ownsStream, FloppyCapacity(type), null);
+            return Initialize(stream, ownsStream, FloppyCapacity(type), geometry: null);
         }
 
         /// <summary>
@@ -205,15 +205,15 @@ namespace RC.Framework.FileSystem.Raw
             // First, check for floppy disk capacities - these have well-defined geometries
             if (capacity == Sizes.Sector * 1440)
             {
-                return new Geometry(80, 2, 9);
+                return new Geometry(cylinders: 80, headsPerCylinder: 2, sectorsPerTrack: 9);
             }
             else if (capacity == Sizes.Sector * 2880)
             {
-                return new Geometry(80, 2, 18);
+                return new Geometry(cylinders: 80, headsPerCylinder: 2, sectorsPerTrack: 18);
             }
             else if (capacity == Sizes.Sector * 5760)
             {
-                return new Geometry(80, 2, 36);
+                return new Geometry(cylinders: 80, headsPerCylinder: 2, sectorsPerTrack: 36);
             }
 
             // Failing that, try to detect the geometry from any partition table.

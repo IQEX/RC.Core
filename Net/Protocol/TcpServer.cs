@@ -69,7 +69,7 @@ namespace RC.Framework.Net.Protocol.Tcp
             m_verifyConnectionInterval = 100;
             m_encoding = Encoding.ASCII;
 
-            sem = new SemaphoreSlim(0);
+            sem = new SemaphoreSlim(initialCount: 0);
             waiting = false;
 
             activeThreads = 0;
@@ -317,11 +317,11 @@ namespace RC.Framework.Net.Protocol.Tcp
                 {
 
                     byte[] arLength = new byte[sizeof(short)];
-                    stream.Read(arLength, 0, arLength.Length);
+                    stream.Read(arLength, offset: 0, size: arLength.Length);
                     IArchByteBoxReader reader = ArchManagedByte.InvokeReader(arLength);
                     short Length = reader.rShort();
                     byte[] byffer = new byte[Length];
-                    stream.Read(byffer, 0, byffer.Length);
+                    stream.Read(byffer, offset: 0, size: byffer.Length);
 
                     return byffer;
                 }
@@ -355,7 +355,7 @@ namespace RC.Framework.Net.Protocol.Tcp
 
                 try
                 {
-                    listener.Start(5);
+                    listener.Start(backlog: 5);
                 }
                 catch (Exception)
                 {

@@ -33,7 +33,7 @@ namespace RC.Framework.FileSystem.Iscsi
 
         public override void Parse(ProtocolDataUnit pdu)
         {
-            Parse(pdu.HeaderData, 0);
+            Parse(pdu.HeaderData, headerOffset: 0);
         }
 
         public void Parse(byte[] headerData, int headerOffset)

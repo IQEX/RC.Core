@@ -135,7 +135,7 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             while (_offsetList[index].Count > 256)
             {
-                _offsetList[index].RemoveAt(0);
+                _offsetList[index].RemoveAt(index: 0);
             }
         }
     }

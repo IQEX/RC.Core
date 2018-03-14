@@ -377,7 +377,7 @@ namespace Ionic.Zip
                 throw new ArgumentNullException("buffer");
 
             byte[] db = new byte[count];
-            int n = _s.Read(db, 0, count);
+            int n = _s.Read(db, offset: 0, count: count);
             byte[] decrypted = _cipher.DecryptMessage(db, n);
             for (int i = 0; i < n; i++)
             {
@@ -409,7 +409,7 @@ namespace Ionic.Zip
             else plaintext = buffer;
 
             byte[] encrypted = _cipher.EncryptMessage(plaintext, count);
-            _s.Write(encrypted, 0, encrypted.Length);
+            _s.Write(encrypted, offset: 0, count: encrypted.Length);
         }
 
 

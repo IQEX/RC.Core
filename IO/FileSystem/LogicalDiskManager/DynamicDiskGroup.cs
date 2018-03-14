@@ -305,7 +305,7 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
             }
             else if (cmpntStreams.Count == 1)
             {
-                return cmpntStreams[0];
+                return cmpntStreams[index: 0];
             }
             else
             {

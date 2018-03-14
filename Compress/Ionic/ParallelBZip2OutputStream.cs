@@ -249,7 +249,7 @@ namespace Ionic.BZip2
         ///   </code>
         /// </example>
         public ParallelBZip2OutputStream(Stream output)
-            : this(output, BZip2.MaxBlockSize, false)
+            : this(output, BZip2.MaxBlockSize, leaveOpen: false)
         {
         }
 
@@ -262,7 +262,7 @@ namespace Ionic.BZip2
         ///   The valid range is 1..9.
         /// </param>
         public ParallelBZip2OutputStream(Stream output, int blockSize)
-            : this(output, blockSize, false)
+            : this(output, blockSize, leaveOpen: false)
         {
         }
 
@@ -327,7 +327,7 @@ namespace Ionic.BZip2
                 this.toFill.Enqueue(i);
             }
 
-            this.newlyCompressedBlob = new AutoResetEvent(false);
+            this.newlyCompressedBlob = new AutoResetEvent(initialState: false);
             this.currentlyFilling = -1;
             this.lastFilled = -1;
             this.lastWritten = -1;
@@ -441,7 +441,7 @@ namespace Ionic.BZip2
 
             try
             {
-                FlushOutput(true);
+                FlushOutput(lastInput: true);
             }
             finally
             {
@@ -468,12 +468,12 @@ namespace Ionic.BZip2
 
             if (lastInput)
             {
-                EmitPendingBuffers(true, false);
+                EmitPendingBuffers(doAll: true, mustWait: false);
                 EmitTrailer();
             }
             else
             {
-                EmitPendingBuffers(false, false);
+                EmitPendingBuffers(doAll: false, mustWait: false);
             }
         }
 
@@ -486,7 +486,7 @@ namespace Ionic.BZip2
         {
             if (this.output != null)
             {
-                FlushOutput(false);
+                FlushOutput(lastInput: false);
                 this.bw.Flush();
                 this.output.Flush();
             }
@@ -502,7 +502,7 @@ namespace Ionic.BZip2
             };
 
             // not necessary to shred the initial magic bytes
-            this.output.Write(magic, 0, magic.Length);
+            this.output.Write(magic, offset: 0, count: magic.Length);
         }
 
         private void EmitTrailer()
@@ -514,12 +514,12 @@ namespace Ionic.BZip2
                         this.bw.TotalBytesWrittenOut);
 
             // must shred
-            this.bw.WriteByte(0x17);
-            this.bw.WriteByte(0x72);
-            this.bw.WriteByte(0x45);
-            this.bw.WriteByte(0x38);
-            this.bw.WriteByte(0x50);
-            this.bw.WriteByte(0x90);
+            this.bw.WriteByte(b: 0x17);
+            this.bw.WriteByte(b: 0x72);
+            this.bw.WriteByte(b: 0x45);
+            this.bw.WriteByte(b: 0x38);
+            this.bw.WriteByte(b: 0x50);
+            this.bw.WriteByte(b: 0x90);
 
             this.bw.WriteInt(this.combinedCRC);
 
@@ -612,7 +612,7 @@ namespace Ionic.BZip2
             do
             {
                 // may need to make buffers available
-                EmitPendingBuffers(false, mustWait);
+                EmitPendingBuffers(doAll: false, mustWait: mustWait);
 
                 mustWait = false;
 
@@ -733,7 +733,7 @@ namespace Ionic.BZip2
                             var bw2 = workitem.bw;
                             bw2.Flush(); // not bw2.FinishAndPad()!
                             var ms = workitem.ms;
-                            ms.Seek(0,SeekOrigin.Begin);
+                            ms.Seek(offset: 0,loc: SeekOrigin.Begin);
 
                             // cannot dump bytes!!
                             // ms.WriteTo(this.output);
@@ -743,7 +743,7 @@ namespace Ionic.BZip2
                             int y = -1;
                             long totOut = 0;
                             var buffer = new byte[1024];
-                            while ((n = ms.Read(buffer,0,buffer.Length)) > 0)
+                            while ((n = ms.Read(buffer,offset: 0,count: buffer.Length)) > 0)
                             {
 #if Trace
                                 if (y == -1) // diagnostics only

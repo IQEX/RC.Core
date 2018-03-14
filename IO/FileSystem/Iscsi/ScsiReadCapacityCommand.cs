@@ -50,7 +50,7 @@ namespace RC.Framework.FileSystem.Iscsi
 
         public override void WriteTo(byte[] buffer, int offset)
         {
-            Array.Clear(buffer, offset, 10);
+            Array.Clear(buffer, offset, length: 10);
             buffer[offset] = 0x25; // OpCode
         }
     }

@@ -51,15 +51,15 @@ namespace RC.Framework.Net.Nat.Pmp
 
         public override async Task CreatePortMapAsync(Mapping mapping)
         {
-            await InternalCreatePortMapAsync(mapping, true)
-                .TimeoutAfter(TimeSpan.FromSeconds(4));
+            await InternalCreatePortMapAsync(mapping, create: true)
+                .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
             RegisterMapping(mapping);
         }
 
         public override async Task DeletePortMapAsync(Mapping mapping)
         {
-            await InternalCreatePortMapAsync(mapping, false)
-                .TimeoutAfter(TimeSpan.FromSeconds(4));
+            await InternalCreatePortMapAsync(mapping, create: false)
+                .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
             UnregisterMapping(mapping);
         }
 
@@ -71,7 +71,7 @@ namespace RC.Framework.Net.Nat.Pmp
         public override Task<IPAddress> GetExternalIPAsync()
         {
             return Task.Run(() => _publicAddress)
-                .TimeoutAfter(TimeSpan.FromSeconds(4));
+                .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
         }
 
         public override Task<Mapping> GetSpecificMappingAsync(Protocol protocol, int port)
@@ -86,8 +86,8 @@ namespace RC.Framework.Net.Nat.Pmp
 
             package.Add(PmpConstants.Version);
             package.Add(mapping.Protocol == Protocol.Tcp ? PmpConstants.OperationCodeTcp : PmpConstants.OperationCodeUdp);
-            package.Add(0); //reserved
-            package.Add(0); //reserved
+            package.Add(item: 0); //reserved
+            package.Add(item: 0); //reserved
             package.AddRange(BitConverter.GetBytes(IPAddress.HostToNetworkOrder((short) mapping.PrivatePort)));
             package.AddRange(
                 BitConverter.GetBytes(create ? IPAddress.HostToNetworkOrder((short) mapping.PublicPort) : (short) 0));
@@ -150,13 +150,13 @@ namespace RC.Framework.Net.Nat.Pmp
                 if (opCode == PmpConstants.OperationCodeUdp)
                     protocol = Protocol.Udp;
 
-                short resultCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 2));
-                int epoch = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(data, 4));
+                short resultCode = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, startIndex: 2));
+                int epoch = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(data, startIndex: 4));
 
-                short privatePort = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 8));
-                short publicPort = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 10));
+                short privatePort = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, startIndex: 8));
+                short publicPort = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, startIndex: 10));
 
-                var lifetime = (uint) IPAddress.NetworkToHostOrder(BitConverter.ToInt32(data, 12));
+                var lifetime = (uint) IPAddress.NetworkToHostOrder(BitConverter.ToInt32(data, startIndex: 12));
 
                 if (privatePort < 0 || publicPort < 0 || resultCode != PmpConstants.ResultCodeSuccess)
                 {

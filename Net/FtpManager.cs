@@ -163,13 +163,13 @@ namespace RC.Framework.Net
                 {
                     using (FileStream fs = File.Open(Path.Combine(localDirectory, localFilename), FileMode.Open))
                     {
-                        fs.Seek(0, SeekOrigin.Begin);
+                        fs.Seek(offset: 0, origin: SeekOrigin.Begin);
                         byte[] buffer = new byte[BufferSize];
                         int readBytes = 0;
                         do
                         {
-                            readBytes = fs.Read(buffer, 0, BufferSize);
-                            requestStream.Write(buffer, 0, readBytes);
+                            readBytes = fs.Read(buffer, offset: 0, count: BufferSize);
+                            requestStream.Write(buffer, offset: 0, count: readBytes);
                             if (UploadProgressChanged != null && !_abort)
                             {
                                 UploadProgressChanged(this, new UploadProgressChangedLibArgs(fs.Position, fs.Length));
@@ -275,8 +275,8 @@ namespace RC.Framework.Net
                         int readBytes = 0;
                         do
                         {
-                            readBytes = fs.BaseStream.Read(buffer, 0, BufferSize);
-                            requestStream.Write(buffer, 0, readBytes);
+                            readBytes = fs.BaseStream.Read(buffer, offset: 0, count: BufferSize);
+                            requestStream.Write(buffer, offset: 0, count: readBytes);
                             if (UploadProgressChanged != null && !_abort)
                             {
                                 UploadProgressChanged(this, new UploadProgressChangedLibArgs(fs.BaseStream.Position, fs.BaseStream.Length));
@@ -288,7 +288,7 @@ namespace RC.Framework.Net
                         totalBytesSend = fs.BaseStream.Length;
                         fs.Close();
                         logFileStream.Close();
-                        Thread.Sleep(100);
+                        Thread.Sleep(millisecondsTimeout: 100);
                     }
                 }
                 //Console.WriteLine( "Done" );
@@ -372,12 +372,12 @@ namespace RC.Framework.Net
                     using (Stream ftpStream = response.GetResponseStream())
                     {
                         byte[] buffer = new byte[BufferSize];
-                        int bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                        int bytesRead = ftpStream.Read(buffer, offset: 0, count: BufferSize);
                         totalBytesReceived = bytesRead;
                         while (bytesRead != 0 && !_abort)
                         {
-                            localfileStream.Write(buffer, 0, bytesRead);
-                            bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                            localfileStream.Write(buffer, offset: 0, count: bytesRead);
+                            bytesRead = ftpStream.Read(buffer, offset: 0, count: BufferSize);
                             totalBytesReceived += bytesRead;
                             if (DownloadProgressChanged != null && !_abort)
                             {
@@ -472,7 +472,7 @@ namespace RC.Framework.Net
                         {
                             if (DownloadFileCompleted != null)
                             {
-                                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(0, TransmissionState.Success);
+                                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(totalBytesReceived: 0, transmissionState: TransmissionState.Success);
                                 DownloadFileCompleted(this, downloadFileCompleteArgs);
                                 return;
                             }
@@ -481,7 +481,7 @@ namespace RC.Framework.Net
                         {
                             if (DownloadFileCompleted != null)
                             {
-                                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(0, TransmissionState.LocalFileBiggerAsRemoteFile);
+                                var downloadFileCompleteArgs = new DownloadFileCompletedEventLibArgs(totalBytesReceived: 0, transmissionState: TransmissionState.LocalFileBiggerAsRemoteFile);
                                 DownloadFileCompleted(this, downloadFileCompleteArgs);
                                 return;
                             }
@@ -502,12 +502,12 @@ namespace RC.Framework.Net
                         using (Stream ftpStream = response.GetResponseStream())
                         {
                             byte[] buffer = new byte[BufferSize];
-                            int bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                            int bytesRead = ftpStream.Read(buffer, offset: 0, count: BufferSize);
                             totalBytesReceived = localFileSize + bytesRead;
                             while (bytesRead != 0 && !_abort)
                             {
-                                localfileStream.Write(buffer, 0, bytesRead);
-                                bytesRead = ftpStream.Read(buffer, 0, BufferSize);
+                                localfileStream.Write(buffer, offset: 0, count: bytesRead);
+                                bytesRead = ftpStream.Read(buffer, offset: 0, count: BufferSize);
                                 totalBytesReceived += bytesRead;
                                 if (DownloadProgressChanged != null && !_abort)
                                 {
@@ -755,7 +755,7 @@ namespace RC.Framework.Net
             _host = host;
             if (host.ToLower().StartsWith("ftp://"))
             {
-                _host = _host.Substring(6);
+                _host = _host.Substring(startIndex: 6);
             }
         }
     }
@@ -956,17 +956,17 @@ namespace RC.Framework.Net
             // 02-03-04  07:46PM       <DIR>          Append
             FileStruct f = new FileStruct();
             string processstr = Record.Trim();
-            string[] splitArray = processstr.Split(" \t".ToCharArray(), 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] splitArray = processstr.Split(" \t".ToCharArray(), count: 2, options: StringSplitOptions.RemoveEmptyEntries);
             string dateStr = splitArray[0];
             processstr = splitArray[1];
-            string timeStr = processstr.Substring(0, 7);
-            processstr = (processstr.Substring(7, processstr.Length - 7)).Trim();
+            string timeStr = processstr.Substring(startIndex: 0, length: 7);
+            processstr = (processstr.Substring(startIndex: 7, length: processstr.Length - 7)).Trim();
             ConvertDate.Parse(dateStr, timeStr, out f.CreateTime);
             f.CreateTimeString = dateStr + timeStr;
-            if (processstr.Substring(0, 5) == "<DIR>")
+            if (processstr.Substring(startIndex: 0, length: 5) == "<DIR>")
             {
                 f.IsDirectory = true;
-                processstr = (processstr.Substring(5, processstr.Length - 5)).Trim();
+                processstr = (processstr.Substring(startIndex: 5, length: processstr.Length - 5)).Trim();
             }
             else
             {
@@ -990,11 +990,11 @@ namespace RC.Framework.Net
 
         private static FileListStyle GuessFileListStyle(string record)
         {
-            if (record.Length > 10 && Regex.IsMatch(record.Substring(0, 10), "(-|d)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)"))
+            if (record.Length > 10 && Regex.IsMatch(record.Substring(startIndex: 0, length: 10), "(-|d)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)(-|r)(-|w)(-|x)"))
             {
                 return FileListStyle.UnixStyle;
             }
-            else if (record.Length > 8 && Regex.IsMatch(record.Substring(0, 8), "[0-9][0-9]-[0-9][0-9]-[0-9][0-9]"))
+            else if (record.Length > 8 && Regex.IsMatch(record.Substring(startIndex: 0, length: 8), "[0-9][0-9]-[0-9][0-9]-[0-9][0-9]"))
             {
                 return FileListStyle.WindowsStyle;
             }
@@ -1007,14 +1007,14 @@ namespace RC.Framework.Net
             // dr-xr-xr-x   1 owner    group               0 Nov 25  2002 bussys
             FileStruct f = new FileStruct();
             string processstr = Record.Trim();
-            f.Flags = processstr.Substring(0, 9);
-            f.IsDirectory = (f.Flags[0] == 'd');
-            processstr = (processstr.Substring(11)).Trim();
-            _cutSubstringFromStringWithTrim(ref processstr, ' ', 0); //skip one part
-            f.Owner = _cutSubstringFromStringWithTrim(ref processstr, ' ', 0);
-            f.Group = _cutSubstringFromStringWithTrim(ref processstr, ' ', 0);
-            long.TryParse(_cutSubstringFromStringWithTrim(ref processstr, ' ', 0), out f.Size); //skip one part
-            f.CreateTime = DateTime.Parse(_cutSubstringFromStringWithTrim(ref processstr, ' ', 8));
+            f.Flags = processstr.Substring(startIndex: 0, length: 9);
+            f.IsDirectory = (f.Flags[index: 0] == 'd');
+            processstr = (processstr.Substring(startIndex: 11)).Trim();
+            _cutSubstringFromStringWithTrim(ref processstr, c: ' ', startIndex: 0); //skip one part
+            f.Owner = _cutSubstringFromStringWithTrim(ref processstr, c: ' ', startIndex: 0);
+            f.Group = _cutSubstringFromStringWithTrim(ref processstr, c: ' ', startIndex: 0);
+            long.TryParse(_cutSubstringFromStringWithTrim(ref processstr, c: ' ', startIndex: 0), out f.Size); //skip one part
+            f.CreateTime = DateTime.Parse(_cutSubstringFromStringWithTrim(ref processstr, c: ' ', startIndex: 8));
             f.Name = processstr; //Rest of the part is name
             return f;
         }
@@ -1022,7 +1022,7 @@ namespace RC.Framework.Net
         private string _cutSubstringFromStringWithTrim(ref string s, char c, int startIndex)
         {
             int pos1 = s.IndexOf(c, startIndex);
-            string retString = s.Substring(0, pos1);
+            string retString = s.Substring(startIndex: 0, length: pos1);
             s = (s.Substring(pos1)).Trim();
             return retString;
         }

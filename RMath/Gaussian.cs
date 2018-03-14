@@ -40,7 +40,7 @@ namespace RC.Framework.RMath
             }
             set
             {
-                this.sigma = Math.Max(1E-08, value);
+                this.sigma = Math.Max(val1: 1E-08, val2: value);
                 this.sqrSigma = this.sigma * this.sigma;
             }
         }
@@ -75,7 +75,7 @@ namespace RC.Framework.RMath
         /// </remarks>
         public double Function(double x)
         {
-            return Math.Exp(x * x / (-2.0 * this.sqrSigma)) / (Math.Sqrt(6.2831853071795862) * this.sigma);
+            return Math.Exp(x * x / (-2.0 * this.sqrSigma)) / (Math.Sqrt(d: 6.2831853071795862) * this.sigma);
         }
         /// <summary>
         /// 2-D Gaussian function.

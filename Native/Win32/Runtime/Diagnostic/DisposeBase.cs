@@ -28,7 +28,7 @@ namespace RC.Framework.Native.Runtime.Diagnostic
         ~DisposeBase()
         {
             // Finalizer calls Dispose(false)
-            CheckAndDispose(false);
+            CheckAndDispose(disposing: false);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace RC.Framework.Native.Runtime.Diagnostic
         /// </summary>
         public void Dispose()
         {
-            CheckAndDispose(true);
+            CheckAndDispose(disposing: true);
         }
 
         /// <summary>

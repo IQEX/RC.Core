@@ -41,7 +41,7 @@ namespace RC.Framework.FileSystem.Udf
 
             _entries = new List<FileIdentifier>();
 
-            byte[] contentBytes = Utilities.ReadFully(FileContent, 0, (int)FileContent.Capacity);
+            byte[] contentBytes = Utilities.ReadFully(FileContent, pos: 0, count: (int)FileContent.Capacity);
 
             int pos = 0;
             while (pos < contentBytes.Length)

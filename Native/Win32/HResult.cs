@@ -165,7 +165,7 @@ namespace RC.Framework.Native.Win32
             {
                 return _value.ToString();
             }
-            object[] o = fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            object[] o = fi.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
             DescriptionAttribute descr = null;
             if (o != null && o.Length > 0) descr = (DescriptionAttribute)o[0];
             string s = (descr != null) ? fi.Name + ": " + descr.Description : fi.Name;
@@ -7147,13 +7147,13 @@ namespace RC.Framework.Native.Win32
 
         static DirCodes InitDirCodes()
         {
-            var dirCodes = new DirCodes(1280);
+            var dirCodes = new DirCodes(capacity: 1280);
             System.Reflection.FieldInfo[] fieldsInfo = typeof(HRESULT).GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             foreach (System.Reflection.FieldInfo fi in fieldsInfo)
             {
-                if (fi.GetValue(null).GetType() == typeof(int))
+                if (fi.GetValue(obj: null).GetType() == typeof(int))
                 {
-                    int hr = (int)fi.GetValue(null);
+                    int hr = (int)fi.GetValue(obj: null);
                     if (!dirCodes.ContainsKey(hr))
                         dirCodes[hr] = fi;
                 }

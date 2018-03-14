@@ -44,7 +44,7 @@ namespace RC.Framework.FileSystem.Sdi
 
         public void ReadFrom(byte[] buffer, int offset)
         {
-            Tag = Utilities.BytesToString(buffer, offset, 8);
+            Tag = Utilities.BytesToString(buffer, offset, count: 8);
 
             if (Tag != "$SDI0001")
             {

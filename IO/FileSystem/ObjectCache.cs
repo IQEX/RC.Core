@@ -134,7 +134,7 @@ namespace RC.Framework.FileSystem
 
             KeyValuePair<K, V> entry = _recent[i];
             _recent.RemoveAt(i);
-            _recent.Insert(0, entry);
+            _recent.Insert(index: 0, item: entry);
         }
 
         private void MakeMostRecent(K key, V val)
@@ -144,7 +144,7 @@ namespace RC.Framework.FileSystem
                 _recent.RemoveAt(_recent.Count - 1);
             }
 
-            _recent.Insert(0, new KeyValuePair<K, V>(key, val));
+            _recent.Insert(index: 0, item: new KeyValuePair<K, V>(key, val));
         }
     }
 }

@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Nfs
         private NetworkStream _tcpStream;
 
         public RpcTcpTransport(string address, int port)
-            : this(address, port, 0)
+            : this(address, port, localPort: 0)
         {
         }
 
@@ -98,15 +98,15 @@ namespace RC.Framework.FileSystem.Nfs
                         }
 
                         _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                        _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, optionValue: true);
                         _socket.NoDelay = true;
                         if (_localPort != 0)
                         {
-                            _socket.Bind(new IPEndPoint(0, _localPort));
+                            _socket.Bind(new IPEndPoint(address: 0, port: _localPort));
                         }
 
                         _socket.Connect(_address, _port);
-                        _tcpStream = new NetworkStream(_socket, false);
+                        _tcpStream = new NetworkStream(_socket, ownsSocket: false);
                     }
                     catch (IOException connectException)
                     {
@@ -115,7 +115,7 @@ namespace RC.Framework.FileSystem.Nfs
 
                         if (!isNewConnection)
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(millisecondsTimeout: 1000);
                         }
                     }
                     catch (SocketException se)
@@ -125,7 +125,7 @@ namespace RC.Framework.FileSystem.Nfs
 
                         if (!isNewConnection)
                         {
-                            Thread.Sleep(1000);
+                            Thread.Sleep(millisecondsTimeout: 1000);
                         }
                     }
                 }
@@ -135,9 +135,9 @@ namespace RC.Framework.FileSystem.Nfs
                     try
                     {
                         byte[] header = new byte[4];
-                        Utilities.WriteBytesBigEndian((uint)(0x80000000 | (uint)message.Length), header, 0);
-                        _tcpStream.Write(header, 0, 4);
-                        _tcpStream.Write(message, 0, message.Length);
+                        Utilities.WriteBytesBigEndian((uint)(0x80000000 | (uint)message.Length), header, offset: 0);
+                        _tcpStream.Write(header, offset: 0, size: 4);
+                        _tcpStream.Write(message, offset: 0, size: message.Length);
                         _tcpStream.Flush();
 
                         response = Receive();
@@ -171,20 +171,20 @@ namespace RC.Framework.FileSystem.Nfs
 
             while (!lastFragFound)
             {
-                byte[] header = Utilities.ReadFully(_tcpStream, 4);
-                uint headerVal = Utilities.ToUInt32BigEndian(header, 0);
+                byte[] header = Utilities.ReadFully(_tcpStream, count: 4);
+                uint headerVal = Utilities.ToUInt32BigEndian(header, offset: 0);
 
                 lastFragFound = (headerVal & 0x80000000) != 0;
                 byte[] frag = Utilities.ReadFully(_tcpStream, (int)(headerVal & 0x7FFFFFFF));
 
                 if (ms != null)
                 {
-                    ms.Write(frag, 0, frag.Length);
+                    ms.Write(frag, offset: 0, count: frag.Length);
                 }
                 else if (!lastFragFound)
                 {
                     ms = new MemoryStream();
-                    ms.Write(frag, 0, frag.Length);
+                    ms.Write(frag, offset: 0, count: frag.Length);
                 }
                 else
                 {

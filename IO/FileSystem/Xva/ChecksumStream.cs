@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem.Xva
             // We commit the hash on the first read
             if (_data == null)
             {
-                _hashGenerator.TransformFinalBlock(new byte[0], 0, 0);
+                _hashGenerator.TransformFinalBlock(new byte[0], inputOffset: 0, inputCount: 0);
                 byte[] hash = _hashGenerator.Hash;
                 byte[] result = new byte[Length];
                 for (int i = 0; i < hash.Length; ++i)

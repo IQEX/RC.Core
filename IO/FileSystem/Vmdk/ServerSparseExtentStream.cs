@@ -39,7 +39,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
             file.Position = 0;
             byte[] firstSectors = Utilities.ReadFully(file, Sizes.Sector * 4);
-            _serverHeader = ServerSparseExtentHeader.Read(firstSectors, 0);
+            _serverHeader = ServerSparseExtentHeader.Read(firstSectors, offset: 0);
             _header = _serverHeader;
 
             _gtCoverage = _header.NumGTEsPerGT * (long)_header.GrainSize * Sizes.Sector;
@@ -108,13 +108,13 @@ namespace RC.Framework.FileSystem.Vmdk
             _parentDiskStream.Position = _diskOffset + ((grain + (_header.NumGTEsPerGT * (long)grainTable)) * _header.GrainSize * Sizes.Sector);
             byte[] content = Utilities.ReadFully(_parentDiskStream, (int)(_header.GrainSize * Sizes.Sector * count));
             _fileStream.Position = grainStartPos;
-            _fileStream.Write(content, 0, content.Length);
+            _fileStream.Write(content, offset: 0, count: content.Length);
 
             // Update next-free-sector in disk header
             _serverHeader.FreeSector += (uint)Utilities.Ceil(content.Length, Sizes.Sector);
             byte[] headerBytes = _serverHeader.GetBytes();
             _fileStream.Position = 0;
-            _fileStream.Write(headerBytes, 0, headerBytes.Length);
+            _fileStream.Write(headerBytes, offset: 0, count: headerBytes.Length);
 
             LoadGrainTable(grainTable);
             for (int i = 0; i < count; ++i)
@@ -132,13 +132,13 @@ namespace RC.Framework.FileSystem.Vmdk
 
             byte[] emptyGrainTable = new byte[_header.NumGTEsPerGT * 4];
             _fileStream.Position = startSector * (long)Sizes.Sector;
-            _fileStream.Write(emptyGrainTable, 0, emptyGrainTable.Length);
+            _fileStream.Write(emptyGrainTable, offset: 0, count: emptyGrainTable.Length);
 
             // Update header
             _serverHeader.FreeSector += (uint)Utilities.Ceil(emptyGrainTable.Length, Sizes.Sector);
             byte[] headerBytes = _serverHeader.GetBytes();
             _fileStream.Position = 0;
-            _fileStream.Write(headerBytes, 0, headerBytes.Length);
+            _fileStream.Write(headerBytes, offset: 0, count: headerBytes.Length);
 
             // Update the global directory
             _globalDirectory[grainTable] = startSector;
@@ -157,7 +157,7 @@ namespace RC.Framework.FileSystem.Vmdk
             }
 
             _fileStream.Position = ((long)_serverHeader.GdOffset) * Sizes.Sector;
-            _fileStream.Write(buffer, 0, buffer.Length);
+            _fileStream.Write(buffer, offset: 0, count: buffer.Length);
         }
 
         private void WriteGrainTable()
@@ -168,7 +168,7 @@ namespace RC.Framework.FileSystem.Vmdk
             }
 
             _fileStream.Position = _globalDirectory[_currentGrainTable] * (long)Sizes.Sector;
-            _fileStream.Write(_grainTable, 0, _grainTable.Length);
+            _fileStream.Write(_grainTable, offset: 0, count: _grainTable.Length);
         }
     }
 }

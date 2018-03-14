@@ -122,7 +122,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public AttributeRecord FirstAttribute
         {
-            get { return _attributes.Count > 0 ? _attributes[0] : null; }
+            get { return _attributes.Count > 0 ? _attributes[index: 0] : null; }
         }
 
         public FileRecordReference Reference
@@ -171,7 +171,7 @@ namespace RC.Framework.FileSystem.Ntfs
             _nextAttributeId = 0;
             _index = index;
             _hardLinkCount = 0;
-            _baseFile = new FileRecordReference(0);
+            _baseFile = new FileRecordReference(val: 0);
 
             _attributes = new List<AttributeRecord>();
             _haveIndex = true;
@@ -202,7 +202,7 @@ namespace RC.Framework.FileSystem.Ntfs
         /// <returns>The attribute, or <c>null</c>.</returns>
         public AttributeRecord GetAttribute(AttributeType type)
         {
-            return GetAttribute(type, null);
+            return GetAttribute(type, name: null);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace RC.Framework.FileSystem.Ntfs
             {
                 if (attr.AttributeType == AttributeType.FileName)
                 {
-                    StructuredNtfsAttribute<FileNameRecord> fnAttr = (StructuredNtfsAttribute<FileNameRecord>)NtfsAttribute.FromRecord(null, new FileRecordReference(0), attr);
+                    StructuredNtfsAttribute<FileNameRecord> fnAttr = (StructuredNtfsAttribute<FileNameRecord>)NtfsAttribute.FromRecord(file: null, recordFile: new FileRecordReference(val: 0), record: attr);
                     return fnAttr.Content.FileName;
                 }
             }
@@ -276,8 +276,8 @@ namespace RC.Framework.FileSystem.Ntfs
                     name,
                     id,
                     flags,
-                    0,
-                    new List<DataRun>()));
+                    startVcn: 0,
+                    dataRuns: new List<DataRun>()));
             _attributes.Sort();
             return id;
         }
@@ -349,7 +349,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal long GetAttributeOffset(ushort id)
         {
-            int firstAttrPos = (ushort)Utilities.RoundUp((_haveIndex ? 0x30 : 0x2A) + UpdateSequenceSize, 8);
+            int firstAttrPos = (ushort)Utilities.RoundUp((_haveIndex ? 0x30 : 0x2A) + UpdateSequenceSize, unit: 8);
 
             int offset = firstAttrPos;
             foreach (var attr in _attributes)
@@ -422,7 +422,7 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             ushort headerEnd = (ushort)(_haveIndex ? 0x30 : 0x2A);
 
-            _firstAttributeOffset = (ushort)Utilities.RoundUp(headerEnd + UpdateSequenceSize, 0x08);
+            _firstAttributeOffset = (ushort)Utilities.RoundUp(headerEnd + UpdateSequenceSize, unit: 0x08);
             _recordRealSize = (uint)CalcSize();
 
             Utilities.WriteBytesLittleEndian(_logFileSequenceNumber, buffer, offset + 0x08);
@@ -454,7 +454,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         protected override int CalcSize()
         {
-            int firstAttrPos = (ushort)Utilities.RoundUp((_haveIndex ? 0x30 : 0x2A) + UpdateSequenceSize, 8);
+            int firstAttrPos = (ushort)Utilities.RoundUp((_haveIndex ? 0x30 : 0x2A) + UpdateSequenceSize, unit: 8);
 
             int size = firstAttrPos;
             foreach (var attr in _attributes)
@@ -462,7 +462,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 size += attr.Size;
             }
 
-            return Utilities.RoundUp(size + 4, 8); // 0xFFFFFFFF terminator on attributes
+            return Utilities.RoundUp(size + 4, unit: 8); // 0xFFFFFFFF terminator on attributes
         }
     }
 }

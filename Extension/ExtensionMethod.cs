@@ -136,7 +136,7 @@ public static class ExtensionMethods
     {
         var result = sourceString;
         if (sourceString.Length > removeFromBeginning)
-            result = result.Remove(0, removeFromBeginning);
+            result = result.Remove(startIndex: 0, count: removeFromBeginning);
         return result;
     }
 
@@ -152,7 +152,7 @@ public static class ExtensionMethods
         var result = sourceString;
 
         if (sourceString.Length > removeFromBeginning && removeFromBeginning > 0)
-            result = result.Remove(0, removeFromBeginning);
+            result = result.Remove(startIndex: 0, count: removeFromBeginning);
 
         return result;
     }
@@ -164,7 +164,7 @@ public static class ExtensionMethods
     /// <returns> </returns>
     public static string Clip(this string sourceString)
     {
-        return Clip(sourceString, 1);
+        return Clip(sourceString, removeFromBeginning: 1);
     }
 
     /// <summary>
@@ -474,7 +474,7 @@ public static class ExtensionMethods
     ///     DateTime startOfDay = DateTime.Now.AtMidnight();
     /// </example>
     /// <param name="dt">Start date</param>
-    public static DateTime AtMidnight(this DateTime dt) => new DateTime(dt.Year, dt.Month, dt.Day, 0, 0, 0);
+    public static DateTime AtMidnight(this DateTime dt) => new DateTime(dt.Year, dt.Month, dt.Day, hour: 0, minute: 0, second: 0);
 
     /// <summary>
     ///     Returns the same day, at midday
@@ -483,5 +483,5 @@ public static class ExtensionMethods
     ///     DateTime startOfAfternoon = DateTime.Now.AtMidday();
     /// </example>
     /// <param name="dt">Start date</param>
-    public static DateTime AtMidday(this DateTime dt) => new DateTime(dt.Year, dt.Month, dt.Day, 12, 0, 0);
+    public static DateTime AtMidday(this DateTime dt) => new DateTime(dt.Year, dt.Month, dt.Day, hour: 12, minute: 0, second: 0);
 }

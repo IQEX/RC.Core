@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             _files = new List<BuildFileInfo>();
             _dirs = new List<BuildDirectoryInfo>();
-            _rootDirectory = new BuildDirectoryInfo("\0", null);
+            _rootDirectory = new BuildDirectoryInfo("\0", parent: null);
             _dirs.Add(_rootDirectory);
 
             _buildParams = new BuildParameters();
@@ -151,7 +151,7 @@ namespace RC.Framework.FileSystem.Iso9660
         public BuildDirectoryInfo AddDirectory(string name)
         {
             string[] nameElements = name.Split('\\');
-            return GetDirectory(nameElements, nameElements.Length, true);
+            return GetDirectory(nameElements, nameElements.Length, createMissing: true);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace RC.Framework.FileSystem.Iso9660
         public BuildFileInfo AddFile(string name, byte[] content)
         {
             string[] nameElements = name.Split('\\');
-            BuildDirectoryInfo dir = GetDirectory(nameElements, nameElements.Length - 1, true);
+            BuildDirectoryInfo dir = GetDirectory(nameElements, nameElements.Length - 1, createMissing: true);
 
             BuildDirectoryMember existing;
             if (dir.TryGetMember(nameElements[nameElements.Length - 1], out existing))
@@ -204,7 +204,7 @@ namespace RC.Framework.FileSystem.Iso9660
         public BuildFileInfo AddFile(string name, string sourcePath)
         {
             string[] nameElements = name.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            BuildDirectoryInfo dir = GetDirectory(nameElements, nameElements.Length - 1, true);
+            BuildDirectoryInfo dir = GetDirectory(nameElements, nameElements.Length - 1, createMissing: true);
 
             BuildDirectoryMember existing;
             if (dir.TryGetMember(nameElements[nameElements.Length - 1], out existing))
@@ -242,7 +242,7 @@ namespace RC.Framework.FileSystem.Iso9660
             }
 
             string[] nameElements = name.Split('\\');
-            BuildDirectoryInfo dir = GetDirectory(nameElements, nameElements.Length - 1, true);
+            BuildDirectoryInfo dir = GetDirectory(nameElements, nameElements.Length - 1, createMissing: true);
 
             BuildDirectoryMember existing;
             if (dir.TryGetMember(nameElements[nameElements.Length - 1], out existing))
@@ -290,10 +290,10 @@ namespace RC.Framework.FileSystem.Iso9660
                 bootCatalogPos = focus;
                 byte[] bootCatalog = new byte[IsoUtilities.SectorSize];
                 BootValidationEntry bve = new BootValidationEntry();
-                bve.WriteTo(bootCatalog, 0x00);
+                bve.WriteTo(bootCatalog, offset: 0x00);
                 _bootEntry.ImageStart = (uint)Utilities.Ceil(bootImagePos, IsoUtilities.SectorSize);
                 _bootEntry.SectorCount = (ushort)Utilities.Ceil(_bootImage.Length, Sizes.Sector);
-                _bootEntry.WriteTo(bootCatalog, 0x20);
+                _bootEntry.WriteTo(bootCatalog, offset: 0x20);
                 fixedRegions.Add(new BuilderBufferExtent(bootCatalogPos, bootCatalog));
                 focus += IsoUtilities.SectorSize;
             }
@@ -358,24 +358,24 @@ namespace RC.Framework.FileSystem.Iso9660
 
             // Find end of the path table
             long startOfFirstPathTable = focus;
-            PathTable pathTable = new PathTable(false, Encoding.ASCII, _dirs, primaryLocationTable, focus);
+            PathTable pathTable = new PathTable(byteSwap: false, enc: Encoding.ASCII, dirs: _dirs, locations: primaryLocationTable, start: focus);
             fixedRegions.Add(pathTable);
             focus += Utilities.RoundUp(pathTable.Length, IsoUtilities.SectorSize);
             long primaryPathTableLength = pathTable.Length;
 
             long startOfSecondPathTable = focus;
-            pathTable = new PathTable(true, Encoding.ASCII, _dirs, primaryLocationTable, focus);
+            pathTable = new PathTable(byteSwap: true, enc: Encoding.ASCII, dirs: _dirs, locations: primaryLocationTable, start: focus);
             fixedRegions.Add(pathTable);
             focus += Utilities.RoundUp(pathTable.Length, IsoUtilities.SectorSize);
 
             long startOfThirdPathTable = focus;
-            pathTable = new PathTable(false, suppEncoding, _dirs, supplementaryLocationTable, focus);
+            pathTable = new PathTable(byteSwap: false, enc: suppEncoding, dirs: _dirs, locations: supplementaryLocationTable, start: focus);
             fixedRegions.Add(pathTable);
             focus += Utilities.RoundUp(pathTable.Length, IsoUtilities.SectorSize);
             long supplementaryPathTableLength = pathTable.Length;
 
             long startOfFourthPathTable = focus;
-            pathTable = new PathTable(true, suppEncoding, _dirs, supplementaryLocationTable, focus);
+            pathTable = new PathTable(byteSwap: true, enc: suppEncoding, dirs: _dirs, locations: supplementaryLocationTable, start: focus);
             fixedRegions.Add(pathTable);
             focus += Utilities.RoundUp(pathTable.Length, IsoUtilities.SectorSize);
 
@@ -447,7 +447,7 @@ namespace RC.Framework.FileSystem.Iso9660
 
             byte[] bootData = Utilities.ReadFully(bootImage, (int)bootImage.Length);
 
-            Array.Clear(bootData, 8, 56);
+            Array.Clear(bootData, index: 8, length: 56);
 
             uint checkSum = 0;
             for (int i = 64; i < bootData.Length; i += 4)
@@ -455,12 +455,12 @@ namespace RC.Framework.FileSystem.Iso9660
                 checkSum += Utilities.ToUInt32LittleEndian(bootData, i);
             }
 
-            Utilities.WriteBytesLittleEndian(pvdLba, bootData, 8);
-            Utilities.WriteBytesLittleEndian(bootImageLba, bootData, 12);
-            Utilities.WriteBytesLittleEndian(bootData.Length, bootData, 16);
-            Utilities.WriteBytesLittleEndian(checkSum, bootData, 20);
+            Utilities.WriteBytesLittleEndian(pvdLba, bootData, offset: 8);
+            Utilities.WriteBytesLittleEndian(bootImageLba, bootData, offset: 12);
+            Utilities.WriteBytesLittleEndian(bootData.Length, bootData, offset: 16);
+            Utilities.WriteBytesLittleEndian(checkSum, bootData, offset: 20);
 
-            return new MemoryStream(bootData, false);
+            return new MemoryStream(bootData, writable: false);
         }
 
         private BuildDirectoryInfo GetDirectory(string[] path, int pathLength, bool createMissing)

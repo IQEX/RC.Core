@@ -76,12 +76,12 @@ namespace RC.Framework.FileSystem.SquashFs
             // Persist the table that references the block containing the id's
             long blockPos = _context.RawStream.Position + 8;
             byte[] tableBuffer = new byte[8];
-            Utilities.WriteBytesLittleEndian(blockPos, tableBuffer, 0);
-            _context.RawStream.Write(tableBuffer, 0, 8);
+            Utilities.WriteBytesLittleEndian(blockPos, tableBuffer, offset: 0);
+            _context.RawStream.Write(tableBuffer, offset: 0, count: 8);
 
             // Persist the actual Id's
             MetablockWriter writer = new MetablockWriter();
-            writer.Write(_context.IoBuffer, 0, _ids.Count * 4);
+            writer.Write(_context.IoBuffer, offset: 0, count: _ids.Count * 4);
             writer.Persist(_context.RawStream);
         }
     }

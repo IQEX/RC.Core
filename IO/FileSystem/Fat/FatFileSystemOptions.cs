@@ -34,7 +34,7 @@ namespace RC.Framework.FileSystem.Fat
 
         internal FatFileSystemOptions()
         {
-            FileNameEncoding = Encoding.GetEncoding(437);
+            FileNameEncoding = Encoding.GetEncoding(codepage: 437);
         }
 
         internal FatFileSystemOptions(FileSystemParameters parameters)
@@ -45,7 +45,7 @@ namespace RC.Framework.FileSystem.Fat
             }
             else
             {
-                FileNameEncoding = Encoding.GetEncoding(437);
+                FileNameEncoding = Encoding.GetEncoding(codepage: 437);
             }
         }
 

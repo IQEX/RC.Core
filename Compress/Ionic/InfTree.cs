@@ -275,7 +275,7 @@ namespace Ionic.Zlib
                                                         r[1] = (sbyte) l; // bits to dump before this table
                                                         j = SharedUtils.URShift(i, (w - l));
                                                         r[2] = (int) (q - u[h - 1] - j); // offset to this table
-                                                        Array.Copy(r, 0, hp, (u[h - 1] + j) * 3, 3); // connect to last table
+                                                        Array.Copy(r, sourceIndex: 0, destinationArray: hp, destinationIndex: (u[h - 1] + j) * 3, length: 3); // connect to last table
                                                 }
                                                 else
                                                 {
@@ -304,11 +304,11 @@ namespace Ionic.Zlib
                                         f = 1 << (k - w);
                                         for (j = SharedUtils.URShift(i, w); j < z; j += f)
                                         {
-                                                Array.Copy(r, 0, hp, (q + j) * 3, 3);
+                                                Array.Copy(r, sourceIndex: 0, destinationArray: hp, destinationIndex: (q + j) * 3, length: 3);
                                         }
                                         
                                         // backwards increment the k-bit code i
-                                        for (j = 1 << (k - 1); (i & j) != 0; j = SharedUtils.URShift(j, 1))
+                                        for (j = 1 << (k - 1); (i & j) != 0; j = SharedUtils.URShift(j, bits: 1))
                                         {
                                                 i ^= j;
                                         }
@@ -331,9 +331,9 @@ namespace Ionic.Zlib
                 internal int inflate_trees_bits(int[] c, int[] bb, int[] tb, int[] hp, ZlibCodec z)
                 {
                         int result;
-                        initWorkArea(19);
+                        initWorkArea(vsize: 19);
                         hn[0] = 0;
-                        result = huft_build(c, 0, 19, 19, null, null, tb, bb, hp, hn, v);
+                        result = huft_build(c, bindex: 0, n: 19, s: 19, d: null, e: null, t: tb, m: bb, hp: hp, hn: hn, v: v);
                         
                         if (result == Z_DATA_ERROR)
                         {
@@ -352,9 +352,9 @@ namespace Ionic.Zlib
                         int result;
                         
                         // build literal/length tree
-                        initWorkArea(288);
+                        initWorkArea(vsize: 288);
                         hn[0] = 0;
-                        result = huft_build(c, 0, nl, 257, cplens, cplext, tl, bl, hp, hn, v);
+                        result = huft_build(c, bindex: 0, n: nl, s: 257, d: cplens, e: cplext, t: tl, m: bl, hp: hp, hn: hn, v: v);
                         if (result != Z_OK || bl[0] == 0)
                         {
                                 if (result == Z_DATA_ERROR)
@@ -370,8 +370,8 @@ namespace Ionic.Zlib
                         }
                         
                         // build distance tree
-                        initWorkArea(288);
-                        result = huft_build(c, nl, nd, 0, cpdist, cpdext, td, bd, hp, hn, v);
+                        initWorkArea(vsize: 288);
+                        result = huft_build(c, nl, nd, s: 0, d: cpdist, e: cpdext, t: td, m: bd, hp: hp, hn: hn, v: v);
                         
                         if (result != Z_OK || (bd[0] == 0 && nl > 257))
                         {
@@ -421,15 +421,15 @@ namespace Ionic.Zlib
                             {
                                 v = new int[vsize];
                             }
-                            Array.Clear(v,0,vsize);
-                            Array.Clear(c,0,BMAX+1);
+                            Array.Clear(v,index: 0,length: vsize);
+                            Array.Clear(c,index: 0,length: BMAX+1);
                             r[0]=0; r[1]=0; r[2]=0;
                             //  for(int i=0; i<BMAX; i++){u[i]=0;}
                             //Array.Copy(c, 0, u, 0, BMAX);
-                            Array.Clear(u,0,BMAX);
+                            Array.Clear(u,index: 0,length: BMAX);
                             //  for(int i=0; i<BMAX+1; i++){x[i]=0;}
                             //Array.Copy(c, 0, x, 0, BMAX + 1);
-                            Array.Clear(x,0,BMAX+1);
+                            Array.Clear(x,index: 0,length: BMAX+1);
                         }
                 }
         }

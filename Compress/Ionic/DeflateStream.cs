@@ -120,7 +120,7 @@ namespace Ionic.Zlib
         /// <param name="stream">The stream which will be read or written.</param>
         /// <param name="mode">Indicates whether the DeflateStream will compress or decompress.</param>
         public DeflateStream(System.IO.Stream stream, CompressionMode mode)
-            : this(stream, mode, CompressionLevel.Default, false)
+            : this(stream, mode, CompressionLevel.Default, leaveOpen: false)
         {
         }
 
@@ -186,7 +186,7 @@ namespace Ionic.Zlib
         /// <param name="mode">Indicates whether the <c>DeflateStream</c> will compress or decompress.</param>
         /// <param name="level">A tuning knob to trade speed for effectiveness.</param>
         public DeflateStream(System.IO.Stream stream, CompressionMode mode, CompressionLevel level)
-            : this(stream, mode, level, false)
+            : this(stream, mode, level, leaveOpen: false)
         {
         }
 

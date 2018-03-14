@@ -224,7 +224,7 @@ namespace RC.Framework.FileSystem.Fat
 
                 if (desiredNumClusters == 0)
                 {
-                    FireFirstClusterAllocated(0);
+                    FireFirstClusterAllocated(cluster: 0);
                 }
             }
             else if (desiredNumClusters > actualNumClusters)
@@ -313,7 +313,7 @@ namespace RC.Framework.FileSystem.Fat
             if (pos == 0 && count >= _reader.ClusterSize)
             {
                 _currentCluster = cluster;
-                Array.Copy(buffer, offset, _clusterBuffer, 0, _reader.ClusterSize);
+                Array.Copy(buffer, offset, _clusterBuffer, destinationIndex: 0, length: _reader.ClusterSize);
 
                 WriteCurrentCluster();
 
@@ -393,7 +393,7 @@ namespace RC.Framework.FileSystem.Fat
             // Read the cluster, it's different to the one currently loaded
             if (cluster != _currentCluster)
             {
-                _reader.ReadCluster(cluster, _clusterBuffer, 0);
+                _reader.ReadCluster(cluster, _clusterBuffer, offset: 0);
                 _currentCluster = cluster;
             }
 
@@ -405,14 +405,14 @@ namespace RC.Framework.FileSystem.Fat
             // Read the cluster, it's different to the one currently loaded
             if (cluster != _currentCluster)
             {
-                _reader.ReadCluster(cluster, _clusterBuffer, 0);
+                _reader.ReadCluster(cluster, _clusterBuffer, offset: 0);
                 _currentCluster = cluster;
             }
         }
 
         private void WriteCurrentCluster()
         {
-            _reader.WriteCluster(_currentCluster, _clusterBuffer, 0);
+            _reader.WriteCluster(_currentCluster, _clusterBuffer, offset: 0);
         }
 
         private bool TryGetClusterByPosition(long pos, out uint cluster)

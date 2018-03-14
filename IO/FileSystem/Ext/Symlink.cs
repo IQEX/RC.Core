@@ -36,8 +36,8 @@ namespace RC.Framework.FileSystem.Ext
             get
             {
                 IBuffer content = FileContent;
-                byte[] data = Utilities.ReadFully(content, 0, (int)content.Capacity);
-                return Utilities.BytesToZString(data, 0, data.Length).Replace('/', '\\');
+                byte[] data = Utilities.ReadFully(content, pos: 0, count: (int)content.Capacity);
+                return Utilities.BytesToZString(data, offset: 0, count: data.Length).Replace(oldChar: '/', newChar: '\\');
             }
         }
     }

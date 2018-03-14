@@ -81,7 +81,7 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             if (_contentData != null)
             {
-                return new MemoryStream(_contentData, false);
+                return new MemoryStream(_contentData, writable: false);
             }
             else if (_contentPath != null)
             {
@@ -124,12 +124,12 @@ namespace RC.Framework.FileSystem.Iso9660
 
             if (parts[0].Length + parts[1].Length > 30)
             {
-                parts[1] = parts[1].Substring(0, Math.Min(parts[1].Length, 3));
+                parts[1] = parts[1].Substring(startIndex: 0, length: Math.Min(parts[1].Length, val2: 3));
             }
 
             if (parts[0].Length + parts[1].Length > 30)
             {
-                parts[0] = parts[0].Substring(0, 30 - parts[1].Length);
+                parts[0] = parts[0].Substring(startIndex: 0, length: 30 - parts[1].Length);
             }
 
             string candidate = parts[0] + '.' + parts[1] + ';' + parts[2];

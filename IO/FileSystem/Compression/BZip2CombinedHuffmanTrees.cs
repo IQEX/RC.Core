@@ -65,20 +65,20 @@ namespace RC.Framework.FileSystem.Compression
 
         private void Initialize(int maxSymbols)
         {
-            int numTrees = (int)_bitstream.Read(3);
+            int numTrees = (int)_bitstream.Read(count: 3);
             if (numTrees < 2 || numTrees > 6)
             {
                 throw new InvalidDataException("Invalid number of tables");
             }
 
-            int numSelectors = (int)_bitstream.Read(15);
+            int numSelectors = (int)_bitstream.Read(count: 15);
             if (numSelectors < 1)
             {
                 throw new InvalidDataException("Invalid number of selectors");
             }
 
             _selectors = new byte[numSelectors];
-            MoveToFront mtf = new MoveToFront(numTrees, true);
+            MoveToFront mtf = new MoveToFront(numTrees, autoInit: true);
             for (int i = 0; i < numSelectors; ++i)
             {
                 _selectors[i] = mtf.GetAndMove(CountSetBits(numTrees));
@@ -89,7 +89,7 @@ namespace RC.Framework.FileSystem.Compression
             {
                 uint[] lengths = new uint[maxSymbols];
 
-                uint len = _bitstream.Read(5);
+                uint len = _bitstream.Read(count: 5);
                 for (int i = 0; i < maxSymbols; ++i)
                 {
                     if (len < 1 || len > 20)
@@ -97,9 +97,9 @@ namespace RC.Framework.FileSystem.Compression
                         throw new InvalidDataException("Invalid length constructing Huffman tree");
                     }
 
-                    while (_bitstream.Read(1) != 0)
+                    while (_bitstream.Read(count: 1) != 0)
                     {
-                        len = (_bitstream.Read(1) == 0) ? len + 1 : len - 1;
+                        len = (_bitstream.Read(count: 1) == 0) ? len + 1 : len - 1;
 
                         if (len < 1 || len > 20)
                         {
@@ -120,7 +120,7 @@ namespace RC.Framework.FileSystem.Compression
         private byte CountSetBits(int max)
         {
             byte val = 0;
-            while (_bitstream.Read(1) != 0)
+            while (_bitstream.Read(count: 1) != 0)
             {
                 val++;
                 if (val >= max)

@@ -66,9 +66,9 @@ namespace RC.Framework.FileSystem.Ntfs
             _fileCache = new ObjectCache<long, File>();
 
             stream.Position = 0;
-            byte[] bytes = Utilities.ReadFully(stream, 512);
+            byte[] bytes = Utilities.ReadFully(stream, count: 512);
 
-            _context.BiosParameterBlock = BiosParameterBlock.FromBytes(bytes, 0);
+            _context.BiosParameterBlock = BiosParameterBlock.FromBytes(bytes, offset: 0);
 
             if (NtfsOptions.ReadCacheEnabled)
             {
@@ -93,7 +93,7 @@ namespace RC.Framework.FileSystem.Ntfs
             _context.Quotas = new Quotas(GetFile(GetDirectoryEntry(@"$Extend\$Quota").Reference));
 
             File volumeInfoFile = GetFile(MasterFileTable.VolumeIndex);
-            _volumeInfo = volumeInfoFile.GetStream(AttributeType.VolumeInformation, null).GetContent<VolumeInformation>();
+            _volumeInfo = volumeInfoFile.GetStream(AttributeType.VolumeInformation, name: null).GetContent<VolumeInformation>();
 
 #if false
             byte[] buffer = new byte[1024];
@@ -163,7 +163,7 @@ namespace RC.Framework.FileSystem.Ntfs
             get
             {
                 File volumeFile = GetFile(MasterFileTable.VolumeIndex);
-                NtfsStream volNameStream = volumeFile.GetStream(AttributeType.VolumeName, null);
+                NtfsStream volNameStream = volumeFile.GetStream(AttributeType.VolumeName, name: null);
                 return volNameStream.GetContent<VolumeName>().Name;
             }
         }
@@ -331,8 +331,8 @@ namespace RC.Framework.FileSystem.Ntfs
             }
 
             stream.Position = 0;
-            byte[] bytes = Utilities.ReadFully(stream, 512);
-            BiosParameterBlock bpb = BiosParameterBlock.FromBytes(bytes, 0);
+            byte[] bytes = Utilities.ReadFully(stream, count: 512);
+            BiosParameterBlock bpb = BiosParameterBlock.FromBytes(bytes, offset: 0);
 
             if (bpb.SignatureByte != 0x80 || bpb.TotalSectors16 != 0 || bpb.TotalSectors32 != 0
                 || bpb.TotalSectors64 == 0 || bpb.MftRecordSize == 0 || bpb.MftCluster == 0 || bpb.BytesPerSector == 0)
@@ -435,8 +435,8 @@ namespace RC.Framework.FileSystem.Ntfs
 
                                 do
                                 {
-                                    numRead = s.Read(buffer, 0, buffer.Length);
-                                    d.Write(buffer, 0, numRead);
+                                    numRead = s.Read(buffer, offset: 0, count: buffer.Length);
+                                    d.Write(buffer, offset: 0, count: numRead);
                                 }
                                 while (numRead != 0);
                             }
@@ -450,7 +450,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     }
                 }
 
-                AddFileToDirectory(newFile, destParentDir, Utilities.GetFileFromPath(destinationFile), null);
+                AddFileToDirectory(newFile, destParentDir, Utilities.GetFileFromPath(destinationFile), options: null);
                 destParentDirEntry.UpdateFrom(destParentDir);
             }
         }
@@ -461,7 +461,7 @@ namespace RC.Framework.FileSystem.Ntfs
         /// <param name="path">The path of the new directory</param>
         public override void CreateDirectory(string path)
         {
-            CreateDirectory(path, null);
+            CreateDirectory(path, options: null);
         }
 
         /// <summary>
@@ -509,7 +509,7 @@ namespace RC.Framework.FileSystem.Ntfs
                             }
                             else
                             {
-                                newSd = SecurityDescriptor.CalcNewObjectDescriptor(parentSd, false);
+                                newSd = SecurityDescriptor.CalcNewObjectDescriptor(parentSd, isContainer: false);
                             }
 
                             DoSetSecurity(childDir, newSd);
@@ -698,7 +698,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
                 List<string> dirs = new List<string>();
-                DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, true, false);
+                DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, dirs: true, files: false);
                 return dirs.ToArray();
             }
         }
@@ -718,7 +718,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
                 List<string> results = new List<string>();
-                DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, false, true);
+                DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, dirs: false, files: true);
                 return results.ToArray();
             }
         }
@@ -740,7 +740,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
                 Directory parentDir = GetDirectory(parentDirEntry.Reference);
 
-                return Utilities.Map<DirectoryEntry, string>(parentDir.GetAllEntries(true), (m) => Utilities.CombinePaths(path, m.Details.FileName));
+                return Utilities.Map<DirectoryEntry, string>(parentDir.GetAllEntries(filter: true), (m) => Utilities.CombinePaths(path, m.Details.FileName));
             }
         }
 
@@ -768,7 +768,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 Directory parentDir = GetDirectory(parentDirEntry.Reference);
 
                 List<string> result = new List<string>();
-                foreach (DirectoryEntry dirEntry in parentDir.GetAllEntries(true))
+                foreach (DirectoryEntry dirEntry in parentDir.GetAllEntries(filter: true))
                 {
                     if (re.IsMatch(dirEntry.Details.FileName))
                     {
@@ -822,7 +822,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     }
 
                     RemoveFileFromDirectory(sourceParentDir, file, sourceEntry.Details.FileName);
-                    AddFileToDirectory(file, destParentDir, Utilities.GetFileFromPath(destinationDirectoryName), null);
+                    AddFileToDirectory(file, destParentDir, Utilities.GetFileFromPath(destinationDirectoryName), options: null);
                 }
             }
         }
@@ -885,7 +885,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
 
                 RemoveFileFromDirectory(sourceParentDir, file, sourceEntry.Details.FileName);
-                AddFileToDirectory(file, destParentDir, Utilities.GetFileFromPath(destinationName), null);
+                AddFileToDirectory(file, destParentDir, Utilities.GetFileFromPath(destinationName), options: null);
             }
         }
 
@@ -898,7 +898,7 @@ namespace RC.Framework.FileSystem.Ntfs
         /// <returns>The new stream.</returns>
         public override SparseStream OpenFile(string path, FileMode mode, FileAccess access)
         {
-            return OpenFile(path, mode, access, null);
+            return OpenFile(path, mode, access, options: null);
         }
 
         /// <summary>
@@ -959,7 +959,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
                     if (mode == FileMode.Create || mode == FileMode.Truncate)
                     {
-                        stream.SetLength(0);
+                        stream.SetLength(value: 0);
                     }
 
                     return stream;
@@ -975,7 +975,7 @@ namespace RC.Framework.FileSystem.Ntfs
         /// <param name="name">The name of the stream</param>
         /// <param name="access">The desired access to the stream</param>
         /// <returns>A stream that can be used to access the file stream</returns>
-        [Obsolete(@"Use OpenFile with filename:attributename:$attributetype syntax (e.g. \FILE.TXT:STREAM:$DATA)", false)]
+        [Obsolete(@"Use OpenFile with filename:attributename:$attributetype syntax (e.g. \FILE.TXT:STREAM:$DATA)", error: false)]
         public SparseStream OpenRawStream(string file, AttributeType type, string name, FileAccess access)
         {
             using (new NtfsTransaction())
@@ -1056,7 +1056,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     }
                     else
                     {
-                        NtfsAttribute ntfsAttr = file.GetAttribute(AttributeType.Data, null);
+                        NtfsAttribute ntfsAttr = file.GetAttribute(AttributeType.Data, name: null);
                         if ((ntfsAttr.Flags & AttributeFlags.Compressed) != 0)
                         {
                             throw new ArgumentException("Attempt to mark compressed file as sparse", "newValue");
@@ -1080,7 +1080,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     }
                     else
                     {
-                        NtfsAttribute ntfsAttr = file.GetAttribute(AttributeType.Data, null);
+                        NtfsAttribute ntfsAttr = file.GetAttribute(AttributeType.Data, name: null);
                         if ((ntfsAttr.Flags & AttributeFlags.Sparse) != 0)
                         {
                             throw new ArgumentException("Attempt to mark sparse file as compressed", "newValue");
@@ -1397,7 +1397,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 {
                     int numHardLinks = 0;
 
-                    foreach (var fnStream in file.GetStreams(AttributeType.FileName, null))
+                    foreach (var fnStream in file.GetStreams(AttributeType.FileName, name: null))
                     {
                         var fnr = fnStream.GetContent<FileNameRecord>();
                         if (fnr.FileNameNamespace != FileNameNamespace.Dos)
@@ -1486,7 +1486,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 {
                     File file = GetFile(dirEntry.Reference);
 
-                    NtfsStream stream = file.GetStream(AttributeType.ReparsePoint, null);
+                    NtfsStream stream = file.GetStream(AttributeType.ReparsePoint, name: null);
                     if (stream != null)
                     {
                         // If there's an existing reparse point, unhook it.
@@ -1494,13 +1494,13 @@ namespace RC.Framework.FileSystem.Ntfs
                         {
                             byte[] oldRpBuffer = Utilities.ReadFully(contentStream, (int)contentStream.Length);
                             ReparsePointRecord rp = new ReparsePointRecord();
-                            rp.ReadFrom(oldRpBuffer, 0);
+                            rp.ReadFrom(oldRpBuffer, offset: 0);
                             _context.ReparsePoints.Remove(rp.Tag, dirEntry.Reference);
                         }
                     }
                     else
                     {
-                        stream = file.CreateStream(AttributeType.ReparsePoint, null);
+                        stream = file.CreateStream(AttributeType.ReparsePoint, name: null);
                     }
 
                     // Set the new content
@@ -1509,15 +1509,15 @@ namespace RC.Framework.FileSystem.Ntfs
                     newRp.Content = reparsePoint.Content;
 
                     byte[] contentBuffer = new byte[newRp.Size];
-                    newRp.WriteTo(contentBuffer, 0);
+                    newRp.WriteTo(contentBuffer, offset: 0);
                     using (Stream contentStream = stream.Open(FileAccess.ReadWrite))
                     {
-                        contentStream.Write(contentBuffer, 0, contentBuffer.Length);
+                        contentStream.Write(contentBuffer, offset: 0, count: contentBuffer.Length);
                         contentStream.SetLength(contentBuffer.Length);
                     }
 
                     // Update the standard information attribute - so it reflects the actual file state
-                    NtfsStream stdInfoStream = file.GetStream(AttributeType.StandardInformation, null);
+                    NtfsStream stdInfoStream = file.GetStream(AttributeType.StandardInformation, name: null);
                     StandardInformation si = stdInfoStream.GetContent<StandardInformation>();
                     si.FileAttributes = si.FileAttributes | FileAttributeFlags.ReparsePoint;
                     stdInfoStream.SetContent(si);
@@ -1553,7 +1553,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 {
                     File file = GetFile(dirEntry.Reference);
 
-                    NtfsStream stream = file.GetStream(AttributeType.ReparsePoint, null);
+                    NtfsStream stream = file.GetStream(AttributeType.ReparsePoint, name: null);
                     if (stream != null)
                     {
                         ReparsePointRecord rp = new ReparsePointRecord();
@@ -1561,7 +1561,7 @@ namespace RC.Framework.FileSystem.Ntfs
                         using (Stream contentStream = stream.Open(FileAccess.Read))
                         {
                             byte[] buffer = Utilities.ReadFully(contentStream, (int)contentStream.Length);
-                            rp.ReadFrom(buffer, 0);
+                            rp.ReadFrom(buffer, offset: 0);
                             return new ReparsePoint((int)rp.Tag, rp.Content);
                         }
                     }
@@ -1640,7 +1640,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 {
                     File file = GetFile(givenEntry.Reference);
 
-                    foreach (var stream in file.GetStreams(AttributeType.FileName, null))
+                    foreach (var stream in file.GetStreams(AttributeType.FileName, name: null))
                     {
                         FileNameRecord fnr = stream.GetContent<FileNameRecord>();
                         if (fnr.ParentDirectory.Equals(givenEntry.Details.ParentDirectory)
@@ -1704,7 +1704,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
 
                 // Remove any existing Dos names, and set the new one
-                List<NtfsStream> nameStreams = new List<NtfsStream>(file.GetStreams(AttributeType.FileName, null));
+                List<NtfsStream> nameStreams = new List<NtfsStream>(file.GetStreams(AttributeType.FileName, name: null));
                 foreach (var stream in nameStreams)
                 {
                     FileNameRecord fnr = stream.GetContent<FileNameRecord>();
@@ -1852,12 +1852,12 @@ namespace RC.Framework.FileSystem.Ntfs
             _context.BiosParameterBlock.NumHeads = (ushort)geometry.HeadsPerCylinder;
 
             _context.RawStream.Position = 0;
-            byte[] bpbSector = Utilities.ReadFully(_context.RawStream, 512);
+            byte[] bpbSector = Utilities.ReadFully(_context.RawStream, count: 512);
 
-            _context.BiosParameterBlock.ToBytes(bpbSector, 0);
+            _context.BiosParameterBlock.ToBytes(bpbSector, offset: 0);
 
             _context.RawStream.Position = 0;
-            _context.RawStream.Write(bpbSector, 0, bpbSector.Length);
+            _context.RawStream.Write(bpbSector, offset: 0, count: bpbSector.Length);
         }
 
         /// <summary>
@@ -1972,7 +1972,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal File GetFile(long index)
         {
-            FileRecord record = _context.Mft.GetRecord(index, false);
+            FileRecord record = _context.Mft.GetRecord(index, ignoreMagic: false);
             if (record == null)
             {
                 return null;
@@ -2014,11 +2014,11 @@ namespace RC.Framework.FileSystem.Ntfs
             File result = null;
             if ((flags & FileRecordFlags.IsDirectory) != 0)
             {
-                result = new Directory(_context, _context.Mft.AllocateRecord(flags, false));
+                result = new Directory(_context, _context.Mft.AllocateRecord(flags, isMft: false));
             }
             else
             {
-                result = new File(_context, _context.Mft.AllocateRecord(flags, false));
+                result = new File(_context, _context.Mft.AllocateRecord(flags, isMft: false));
             }
 
             _fileCache[result.MftReference.MftIndex] = result;
@@ -2070,7 +2070,7 @@ namespace RC.Framework.FileSystem.Ntfs
             if (dirEntry.Details.FileNameNamespace == FileNameNamespace.Dos
                 || dirEntry.Details.FileNameNamespace == FileNameNamespace.Win32)
             {
-                foreach (var fnStream in file.GetStreams(AttributeType.FileName, null))
+                foreach (var fnStream in file.GetStreams(AttributeType.FileName, name: null))
                 {
                     var fnr = fnStream.GetContent<FileNameRecord>();
                     if ((fnr.FileNameNamespace == FileNameNamespace.Win32 || fnr.FileNameNamespace == FileNameNamespace.Dos)
@@ -2098,18 +2098,18 @@ namespace RC.Framework.FileSystem.Ntfs
             string fileName = Utilities.GetFileFromPath(path);
             attributeName = null;
 
-            int streamSepPos = fileName.IndexOf(':');
+            int streamSepPos = fileName.IndexOf(value: ':');
             if (streamSepPos >= 0)
             {
                 attributeName = fileName.Substring(streamSepPos + 1);
-                plainPath = plainPath.Substring(0, path.Length - (fileName.Length - streamSepPos));
+                plainPath = plainPath.Substring(startIndex: 0, length: path.Length - (fileName.Length - streamSepPos));
             }
         }
 
         private static void UpdateStandardInformation(DirectoryEntry dirEntry, File file, StandardInformationModifier modifier)
         {
             // Update the standard information attribute - so it reflects the actual file state
-            NtfsStream stream = file.GetStream(AttributeType.StandardInformation, null);
+            NtfsStream stream = file.GetStream(AttributeType.StandardInformation, name: null);
             StandardInformation si = stream.GetContent<StandardInformation>();
             modifier(si);
             stream.SetContent(si);
@@ -2153,7 +2153,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
                 else
                 {
-                    newSd = SecurityDescriptor.CalcNewObjectDescriptor(parentSd, false);
+                    newSd = SecurityDescriptor.CalcNewObjectDescriptor(parentSd, isContainer: false);
                 }
 
                 DoSetSecurity(file, newSd);
@@ -2175,7 +2175,7 @@ namespace RC.Framework.FileSystem.Ntfs
         private DirectoryEntry GetDirectoryEntry(Directory dir, string path)
         {
             string[] pathElements = path.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            return GetDirectoryEntry(dir, pathElements, 0);
+            return GetDirectoryEntry(dir, pathElements, pathOffset: 0);
         }
 
         private void DoSearch(List<string> results, string path, Regex regex, bool subFolders, bool dirs, bool files)
@@ -2192,7 +2192,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "The directory '{0}' was not found", path));
             }
 
-            foreach (DirectoryEntry de in parentDir.GetAllEntries(true))
+            foreach (DirectoryEntry de in parentDir.GetAllEntries(filter: true))
             {
                 bool isDir = (de.Details.FileAttributes & FileAttributes.Directory) != 0;
 
@@ -2280,7 +2280,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         private void RemoveReparsePoint(File file)
         {
-            NtfsStream stream = file.GetStream(AttributeType.ReparsePoint, null);
+            NtfsStream stream = file.GetStream(AttributeType.ReparsePoint, name: null);
             if (stream != null)
             {
                 ReparsePointRecord rp = new ReparsePointRecord();
@@ -2288,13 +2288,13 @@ namespace RC.Framework.FileSystem.Ntfs
                 using (Stream contentStream = stream.Open(FileAccess.Read))
                 {
                     byte[] buffer = Utilities.ReadFully(contentStream, (int)contentStream.Length);
-                    rp.ReadFrom(buffer, 0);
+                    rp.ReadFrom(buffer, offset: 0);
                 }
 
                 file.RemoveStream(stream);
 
                 // Update the standard information attribute - so it reflects the actual file state
-                NtfsStream stdInfoStream = file.GetStream(AttributeType.StandardInformation, null);
+                NtfsStream stdInfoStream = file.GetStream(AttributeType.StandardInformation, name: null);
                 StandardInformation si = stdInfoStream.GetContent<StandardInformation>();
                 si.FileAttributes = si.FileAttributes & ~FileAttributeFlags.ReparsePoint;
                 stdInfoStream.SetContent(si);
@@ -2306,7 +2306,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         private RawSecurityDescriptor DoGetSecurity(File file)
         {
-            NtfsStream legacyStream = file.GetStream(AttributeType.SecurityDescriptor, null);
+            NtfsStream legacyStream = file.GetStream(AttributeType.SecurityDescriptor, name: null);
             if (legacyStream != null)
             {
                 return legacyStream.GetContent<SecurityDescriptor>().Descriptor;
@@ -2318,7 +2318,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         private void DoSetSecurity(File file, RawSecurityDescriptor securityDescriptor)
         {
-            NtfsStream legacyStream = file.GetStream(AttributeType.SecurityDescriptor, null);
+            NtfsStream legacyStream = file.GetStream(AttributeType.SecurityDescriptor, name: null);
             if (legacyStream != null)
             {
                 SecurityDescriptor sd = new SecurityDescriptor();
@@ -2330,7 +2330,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 uint id = _context.SecurityDescriptors.AddDescriptor(securityDescriptor);
 
                 // Update the standard information attribute - so it reflects the actual file state
-                NtfsStream stream = file.GetStream(AttributeType.StandardInformation, null);
+                NtfsStream stream = file.GetStream(AttributeType.StandardInformation, name: null);
                 StandardInformation si = stream.GetContent<StandardInformation>();
                 si.SecurityId = id;
                 stream.SetContent(si);
@@ -2342,7 +2342,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         private void DumpDirectory(Directory dir, TextWriter writer, string indent)
         {
-            foreach (DirectoryEntry dirEntry in dir.GetAllEntries(true))
+            foreach (DirectoryEntry dirEntry in dir.GetAllEntries(filter: true))
             {
                 File file = GetFile(dirEntry.Reference);
                 Directory asDir = file as Directory;
@@ -2377,7 +2377,7 @@ namespace RC.Framework.FileSystem.Ntfs
             attributeName = null;
             attributeType = AttributeType.Data;
 
-            string[] fileNameElements = fileName.Split(new char[] { ':' }, 3);
+            string[] fileNameElements = fileName.Split(new char[] { ':' }, count: 3);
             fileName = fileNameElements[0];
 
             if (fileNameElements.Length > 1)

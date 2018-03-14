@@ -52,7 +52,7 @@ namespace RC.Framework.FileSystem.Udf
         public int ReadFrom(byte[] buffer, int offset)
         {
             Type = (CharacterSetType)buffer[offset];
-            Information = Utilities.ToByteArray(buffer, offset + 1, 63);
+            Information = Utilities.ToByteArray(buffer, offset + 1, length: 63);
             return 64;
         }
 

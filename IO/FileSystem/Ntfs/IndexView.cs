@@ -130,7 +130,7 @@ namespace RC.Framework.FileSystem.Ntfs
             where T : IByteArraySerializable, new()
         {
             T result = new T();
-            result.ReadFrom(data, 0);
+            result.ReadFrom(data, offset: 0);
             return result;
         }
 
@@ -138,7 +138,7 @@ namespace RC.Framework.FileSystem.Ntfs
             where T : IByteArraySerializable, new()
         {
             byte[] buffer = new byte[value.Size];
-            value.WriteTo(buffer, 0);
+            value.WriteTo(buffer, offset: 0);
             return buffer;
         }
 

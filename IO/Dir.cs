@@ -40,7 +40,7 @@ namespace RC.Framework.IO
             foreach (FileInfo file in files)
             {
                 string temppath = Path.Combine(destDirName, file.Name);
-                file.CopyTo(temppath, true);
+                file.CopyTo(temppath, overwrite: true);
             }
             if (copySubDirs)
             {
@@ -60,7 +60,7 @@ namespace RC.Framework.IO
             if (!Directory.Exists(path)) return false;
             try
             {
-                Directory.Delete(path, true);
+                Directory.Delete(path, recursive: true);
                 return true;
             }
             catch

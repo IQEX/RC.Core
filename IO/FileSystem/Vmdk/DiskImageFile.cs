@@ -110,7 +110,7 @@ namespace RC.Framework.FileSystem.Vmdk
                 || _descriptor.CreateType == DiskCreateType.StreamOptimized;
 
             if (!createTypeIsSparse || _descriptor.Extents.Count != 1
-                || _descriptor.Extents[0].Type != ExtentType.Sparse || _descriptor.ParentContentId != uint.MaxValue)
+                || _descriptor.Extents[index: 0].Type != ExtentType.Sparse || _descriptor.ParentContentId != uint.MaxValue)
             {
                 throw new ArgumentException("Only Monolithic Sparse and Streaming Optimized disks can be accessed via a stream", "stream");
             }
@@ -218,7 +218,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
                 if (_monolithicStream != null)
                 {
-                    extents.Add(new DiskExtent(_descriptor.Extents[0], 0, _monolithicStream));
+                    extents.Add(new DiskExtent(_descriptor.Extents[index: 0], diskOffset: 0, monolithicStream: _monolithicStream));
                 }
                 else
                 {
@@ -487,13 +487,13 @@ namespace RC.Framework.FileSystem.Vmdk
                     return new HostedSparseExtentStream(
                         _monolithicStream,
                         Ownership.None,
-                        0,
-                        parent,
-                        ownsParent);
+                        diskOffset: 0,
+                        parentDiskStream: parent,
+                        ownsParentDiskStream: ownsParent);
                 }
                 else
                 {
-                    return OpenExtent(_descriptor.Extents[0], 0, parent, ownsParent);
+                    return OpenExtent(_descriptor.Extents[index: 0], extentStart: 0, parent: parent, ownsParent: ownsParent);
                 }
             }
             else
@@ -645,7 +645,7 @@ namespace RC.Framework.FileSystem.Vmdk
                     long descriptorStart;
                     CreateExtent(fs, capacity, ExtentType.Sparse, 10 * Sizes.OneKiB, out descriptorStart);
 
-                    ExtentDescriptor extent = new ExtentDescriptor(ExtentAccess.ReadWrite, capacity / Sizes.Sector, ExtentType.Sparse, file, 0);
+                    ExtentDescriptor extent = new ExtentDescriptor(ExtentAccess.ReadWrite, capacity / Sizes.Sector, ExtentType.Sparse, file, offset: 0);
                     fs.Position = descriptorStart * Sizes.Sector;
                     baseDescriptor.Extents.Add(extent);
                     baseDescriptor.Write(fs);
@@ -669,7 +669,7 @@ namespace RC.Framework.FileSystem.Vmdk
                     using (Stream fs = fileLocator.Open(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None))
                     {
                         CreateExtent(fs, capacity, extentType);
-                        extents.Add(new ExtentDescriptor(ExtentAccess.ReadWrite, capacity / Sizes.Sector, extentType, fileName, 0));
+                        extents.Add(new ExtentDescriptor(ExtentAccess.ReadWrite, capacity / Sizes.Sector, extentType, fileName, offset: 0));
                         totalSize = capacity;
                     }
                 }
@@ -694,7 +694,7 @@ namespace RC.Framework.FileSystem.Vmdk
                         {
                             long extentSize = Math.Min((2 * Sizes.OneGiB) - Sizes.OneMiB, capacity - totalSize);
                             CreateExtent(fs, extentSize, extentType);
-                            extents.Add(new ExtentDescriptor(ExtentAccess.ReadWrite, extentSize / Sizes.Sector, extentType, fileName, 0));
+                            extents.Add(new ExtentDescriptor(ExtentAccess.ReadWrite, extentSize / Sizes.Sector, extentType, fileName, offset: 0));
                             totalSize += extentSize;
                         }
 
@@ -731,7 +731,7 @@ namespace RC.Framework.FileSystem.Vmdk
                 descriptorStart = 1;
             }
 
-            long redundantGrainDirStart = Math.Max(descriptorStart, 1) + Utilities.Ceil(descriptorLength, Sizes.Sector);
+            long redundantGrainDirStart = Math.Max(descriptorStart, val2: 1) + Utilities.Ceil(descriptorLength, Sizes.Sector);
             long redundantGrainDirLength = numGrainTables * 4;
 
             long redundantGrainTablesStart = redundantGrainDirStart + Utilities.Ceil(redundantGrainDirLength, Sizes.Sector);
@@ -758,14 +758,14 @@ namespace RC.Framework.FileSystem.Vmdk
             header.Overhead = dataStart;
 
             extentStream.Position = 0;
-            extentStream.Write(header.GetBytes(), 0, Sizes.Sector);
+            extentStream.Write(header.GetBytes(), offset: 0, count: Sizes.Sector);
 
             // Zero-out the descriptor space
             if (descriptorLength > 0)
             {
                 byte[] descriptor = new byte[descriptorLength];
                 extentStream.Position = descriptorStart * Sizes.Sector;
-                extentStream.Write(descriptor, 0, descriptor.Length);
+                extentStream.Write(descriptor, offset: 0, count: descriptor.Length);
             }
 
             // Generate the redundant grain dir, and write it
@@ -776,14 +776,14 @@ namespace RC.Framework.FileSystem.Vmdk
             }
 
             extentStream.Position = redundantGrainDirStart * Sizes.Sector;
-            extentStream.Write(grainDir, 0, grainDir.Length);
+            extentStream.Write(grainDir, offset: 0, count: grainDir.Length);
 
             // Write out the blank grain tables
             byte[] grainTable = new byte[GtesPerGt * 4];
             for (int i = 0; i < numGrainTables; ++i)
             {
                 extentStream.Position = (redundantGrainTablesStart * Sizes.Sector) + (i * Utilities.RoundUp(GtesPerGt * 4, Sizes.Sector));
-                extentStream.Write(grainTable, 0, grainTable.Length);
+                extentStream.Write(grainTable, offset: 0, count: grainTable.Length);
             }
 
             // Generate the main grain dir, and write it
@@ -793,13 +793,13 @@ namespace RC.Framework.FileSystem.Vmdk
             }
 
             extentStream.Position = grainDirStart * Sizes.Sector;
-            extentStream.Write(grainDir, 0, grainDir.Length);
+            extentStream.Write(grainDir, offset: 0, count: grainDir.Length);
 
             // Write out the blank grain tables
             for (int i = 0; i < numGrainTables; ++i)
             {
                 extentStream.Position = (grainTablesStart * Sizes.Sector) + (i * Utilities.RoundUp(GtesPerGt * 4, Sizes.Sector));
-                extentStream.Write(grainTable, 0, grainTable.Length);
+                extentStream.Write(grainTable, offset: 0, count: grainTable.Length);
             }
 
             // Make sure stream is correct length
@@ -812,7 +812,7 @@ namespace RC.Framework.FileSystem.Vmdk
         private static void CreateExtent(Stream extentStream, long size, ExtentType type)
         {
             long descriptorStart;
-            CreateExtent(extentStream, size, type, 0, out descriptorStart);
+            CreateExtent(extentStream, size, type, descriptorLength: 0, descriptorStart: out descriptorStart);
         }
 
         private static void CreateExtent(Stream extentStream, long size, ExtentType type, long descriptorLength, out long descriptorStart)
@@ -834,10 +834,10 @@ namespace RC.Framework.FileSystem.Vmdk
                 ServerSparseExtentHeader header = CreateServerSparseExtentHeader(size);
 
                 extentStream.Position = 0;
-                extentStream.Write(header.GetBytes(), 0, 4 * Sizes.Sector);
+                extentStream.Write(header.GetBytes(), offset: 0, count: 4 * Sizes.Sector);
 
                 byte[] blankGlobalDirectory = new byte[header.NumGdEntries * 4];
-                extentStream.Write(blankGlobalDirectory, 0, blankGlobalDirectory.Length);
+                extentStream.Write(blankGlobalDirectory, offset: 0, count: blankGlobalDirectory.Length);
 
                 descriptorStart = 0;
                 return;
@@ -855,7 +855,7 @@ namespace RC.Framework.FileSystem.Vmdk
                 throw new ArgumentException("name must end in .vmdk to be adorned");
             }
 
-            return name.Substring(0, name.Length - 5) + "-" + adornment + ".vmdk";
+            return name.Substring(startIndex: 0, length: name.Length - 5) + "-" + adornment + ".vmdk";
         }
 
         private static ExtentType CreateTypeToExtentType(DiskCreateType type)
@@ -955,7 +955,7 @@ namespace RC.Framework.FileSystem.Vmdk
         {
             s.Position = 0;
             byte[] header = Utilities.ReadFully(s, (int)Math.Min(Sizes.Sector, s.Length));
-            if (header.Length < Sizes.Sector || Utilities.ToUInt32LittleEndian(header, 0) != HostedSparseExtentHeader.VmdkMagicNumber)
+            if (header.Length < Sizes.Sector || Utilities.ToUInt32LittleEndian(header, offset: 0) != HostedSparseExtentHeader.VmdkMagicNumber)
             {
                 s.Position = 0;
                 _descriptor = new DescriptorFile(s);
@@ -970,7 +970,7 @@ namespace RC.Framework.FileSystem.Vmdk
             else
             {
                 // This is a sparse disk extent, hopefully with embedded descriptor...
-                HostedSparseExtentHeader hdr = HostedSparseExtentHeader.Read(header, 0);
+                HostedSparseExtentHeader hdr = HostedSparseExtentHeader.Read(header, offset: 0);
                 if (hdr.DescriptorOffset != 0)
                 {
                     Stream descriptorStream = new SubStream(s, hdr.DescriptorOffset * Sizes.Sector, hdr.DescriptorSize * Sizes.Sector);
@@ -981,7 +981,7 @@ namespace RC.Framework.FileSystem.Vmdk
                         descriptorStream.Position = 0;
                         _descriptor.Write(descriptorStream);
                         byte[] blank = new byte[descriptorStream.Length - descriptorStream.Position];
-                        descriptorStream.Write(blank, 0, blank.Length);
+                        descriptorStream.Write(blank, offset: 0, count: blank.Length);
                     }
                 }
             }

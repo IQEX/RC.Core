@@ -40,10 +40,10 @@ namespace RC.Framework.FileSystem
             _wrapped = new List<SparseStream>(wrapped);
             _ownsWrapped = ownsWrapped;
 
-            _canRead = _wrapped[0].CanRead;
-            _canWrite = _wrapped[0].CanWrite;
-            _canSeek = _wrapped[0].CanSeek;
-            _length = _wrapped[0].Length;
+            _canRead = _wrapped[index: 0].CanRead;
+            _canWrite = _wrapped[index: 0].CanWrite;
+            _canSeek = _wrapped[index: 0].CanSeek;
+            _length = _wrapped[index: 0].Length;
 
             foreach (var stream in _wrapped)
             {
@@ -83,33 +83,33 @@ namespace RC.Framework.FileSystem
         {
             get
             {
-                return _wrapped[0].Position;
+                return _wrapped[index: 0].Position;
             }
 
             set
             {
-                _wrapped[0].Position = value;
+                _wrapped[index: 0].Position = value;
             }
         }
 
         public override IEnumerable<StreamExtent> Extents
         {
-            get { return _wrapped[0].Extents; }
+            get { return _wrapped[index: 0].Extents; }
         }
 
         public override void Flush()
         {
-            _wrapped[0].Flush();
+            _wrapped[index: 0].Flush();
         }
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return _wrapped[0].Read(buffer, offset, count);
+            return _wrapped[index: 0].Read(buffer, offset, count);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            return _wrapped[0].Seek(offset, origin);
+            return _wrapped[index: 0].Seek(offset, origin);
         }
 
         public override void SetLength(long value)
@@ -122,7 +122,7 @@ namespace RC.Framework.FileSystem
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            long pos = _wrapped[0].Position;
+            long pos = _wrapped[index: 0].Position;
 
             if (pos + count > _length)
             {

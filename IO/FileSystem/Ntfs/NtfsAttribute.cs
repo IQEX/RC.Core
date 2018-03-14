@@ -378,7 +378,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     {
                         string hex = string.Empty;
                         byte[] buffer = new byte[32];
-                        int numBytes = s.Read(buffer, 0, buffer.Length);
+                        int numBytes = s.Read(buffer, offset: 0, count: buffer.Length);
                         for (int i = 0; i < numBytes; ++i)
                         {
                             hex = hex + string.Format(CultureInfo.InvariantCulture, " {0:X2}", buffer[i]);

@@ -167,7 +167,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The intersection of the extents.</returns>
         public static IEnumerable<StreamExtent> Intersect(IEnumerable<StreamExtent> extents, StreamExtent other)
         {
-            List<StreamExtent> otherList = new List<StreamExtent>(1);
+            List<StreamExtent> otherList = new List<StreamExtent>(capacity: 1);
             otherList.Add(other);
             return Intersect(extents, otherList);
         }
@@ -338,9 +338,9 @@ namespace RC.Framework.FileSystem
         /// <returns>Whether the two extents are equal</returns>
         public static bool operator ==(StreamExtent a, StreamExtent b)
         {
-            if (Object.ReferenceEquals(a, null))
+            if (Object.ReferenceEquals(a, objB: null))
             {
-                return Object.ReferenceEquals(b, null);
+                return Object.ReferenceEquals(b, objB: null);
             }
             else
             {

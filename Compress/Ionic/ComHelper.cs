@@ -34,7 +34,7 @@ namespace Ionic.Zip
     /// class unless you are using DotNetZip from a COM environment.
     /// </summary>
     [System.Runtime.InteropServices.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d0000F")]
-    [System.Runtime.InteropServices.ComVisible(true)]
+    [System.Runtime.InteropServices.ComVisible(visibility: true)]
 #if !NETCF
     [System.Runtime.InteropServices.ClassInterface(System.Runtime.InteropServices.ClassInterfaceType.AutoDispatch)]
 #endif
@@ -62,7 +62,7 @@ namespace Ionic.Zip
         /// <returns>true if the file contains a valid zip file.</returns>
         public bool IsZipFileWithExtract(string filename)
         {
-            return ZipFile.IsZipFile(filename, true);
+            return ZipFile.IsZipFile(filename, testExtract: true);
         }
 
 #if !NETCF

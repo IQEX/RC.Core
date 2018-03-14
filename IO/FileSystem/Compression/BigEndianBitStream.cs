@@ -50,7 +50,7 @@ namespace RC.Framework.FileSystem.Compression
         {
             if (count > 16)
             {
-                uint result = Read(16) << (count - 16);
+                uint result = Read(count: 16) << (count - 16);
                 return result | Read(count - 16);
             }
 
@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem.Compression
             {
                 _readBuffer[0] = 0;
                 _readBuffer[1] = 0;
-                _byteStream.Read(_readBuffer, 0, 2);
+                _byteStream.Read(_readBuffer, offset: 0, count: 2);
 
                 _buffer = (uint)((uint)(_buffer << 16) | (uint)(_readBuffer[0] << 8) | (uint)_readBuffer[1]);
                 _bufferAvailable += 16;

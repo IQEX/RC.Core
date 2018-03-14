@@ -139,13 +139,13 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
 
         protected virtual void DoReadFrom(byte[] buffer, int offset)
         {
-            Signature = Utilities.BytesToString(buffer, offset + 0x00, 4);
+            Signature = Utilities.BytesToString(buffer, offset + 0x00, count: 4);
             Label = Utilities.ToUInt32BigEndian(buffer, offset + 0x04);
             Counter = Utilities.ToUInt32BigEndian(buffer, offset + 0x08);
             Valid = Utilities.ToUInt32BigEndian(buffer, offset + 0x0C);
             Flags = Utilities.ToUInt32BigEndian(buffer, offset + 0x10);
             RecordType = (RecordType)(Flags & 0xF);
-            DataLength = Utilities.ToUInt32BigEndian(buffer, 0x14);
+            DataLength = Utilities.ToUInt32BigEndian(buffer, offset: 0x14);
         }
     }
 }

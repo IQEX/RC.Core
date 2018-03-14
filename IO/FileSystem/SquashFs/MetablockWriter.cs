@@ -75,7 +75,7 @@ namespace RC.Framework.FileSystem.SquashFs
                 NextBlock();
             }
 
-            output.Write(_buffer.GetBuffer(), 0, (int)_buffer.Length);
+            output.Write(_buffer.GetBuffer(), offset: 0, count: (int)_buffer.Length);
         }
 
         internal long DistanceFrom(MetadataRef startPos)
@@ -87,9 +87,9 @@ namespace RC.Framework.FileSystem.SquashFs
         private void NextBlock()
         {
             MemoryStream compressed = new MemoryStream();
-            using (ZlibStream compStream = new ZlibStream(compressed, CompressionMode.Compress, true))
+            using (ZlibStream compStream = new ZlibStream(compressed, CompressionMode.Compress, leaveOpen: true))
             {
-                compStream.Write(_currentBlock, 0, _currentOffset);
+                compStream.Write(_currentBlock, offset: 0, count: _currentOffset);
             }
 
             byte[] writeData;
@@ -106,9 +106,9 @@ namespace RC.Framework.FileSystem.SquashFs
             }
 
             byte[] header = new byte[2];
-            Utilities.WriteBytesLittleEndian(writeLen, header, 0);
-            _buffer.Write(header, 0, 2);
-            _buffer.Write(writeData, 0, writeLen & 0x7FFF);
+            Utilities.WriteBytesLittleEndian(writeLen, header, offset: 0);
+            _buffer.Write(header, offset: 0, count: 2);
+            _buffer.Write(writeData, offset: 0, count: writeLen & 0x7FFF);
 
             ++_currentBlockNum;
         }

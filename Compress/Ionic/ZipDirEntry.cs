@@ -133,9 +133,9 @@ namespace Ionic.Zip
                     System.Text.RegularExpressions.Match m = re.Match(f);
                     if (m.Success)
                     {
-                        n = Int32.Parse(m.Groups[1].Value) + 1;
+                        n = Int32.Parse(m.Groups[groupnum: 1].Value) + 1;
                         string copy = String.Format(" (copy {0})", n);
-                        f = f.Substring(0, m.Index) + copy;
+                        f = f.Substring(startIndex: 0, length: m.Index) + copy;
                     }
                     else
                     {
@@ -146,17 +146,17 @@ namespace Ionic.Zip
                 else
                 {
                     //System.Console.WriteLine("HasExtension");
-                    System.Text.RegularExpressions.Match m = re.Match(f.Substring(0, r));
+                    System.Text.RegularExpressions.Match m = re.Match(f.Substring(startIndex: 0, length: r));
                     if (m.Success)
                     {
-                        n = Int32.Parse(m.Groups[1].Value) + 1;
+                        n = Int32.Parse(m.Groups[groupnum: 1].Value) + 1;
                         string copy = String.Format(" (copy {0})", n);
-                        f = f.Substring(0, m.Index) + copy + f.Substring(r);
+                        f = f.Substring(startIndex: 0, length: m.Index) + copy + f.Substring(r);
                     }
                     else
                     {
                         string copy = String.Format(" (copy {0})", n);
-                        f = f.Substring(0, r) + copy + f.Substring(r);
+                        f = f.Substring(startIndex: 0, length: r) + copy + f.Substring(r);
                     }
 
                     //System.Console.WriteLine("returning f({0})", f);
@@ -195,7 +195,7 @@ namespace Ionic.Zip
             // return null if this is not a local file header signature
             if (IsNotValidZipDirEntrySig(signature))
             {
-                s.Seek(-4, System.IO.SeekOrigin.Current);
+                s.Seek(offset: -4, origin: System.IO.SeekOrigin.Current);
                 // workitem 10178
                 Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(s);
 
@@ -216,7 +216,7 @@ namespace Ionic.Zip
 
             int bytesRead = 42 + 4;
             byte[] block = new byte[42];
-            int n = s.Read(block, 0, block.Length);
+            int n = s.Read(block, offset: 0, count: block.Length);
             if (n != block.Length) return null;
 
             int i = 0;
@@ -257,7 +257,7 @@ namespace Ionic.Zip
             zde.IsText = ((zde._InternalFileAttrs & 0x01) == 0x01);
 
             block = new byte[zde._filenameLength];
-            n = s.Read(block, 0, block.Length);
+            n = s.Read(block, offset: 0, count: block.Length);
             bytesRead += n;
             if ((zde._BitField & 0x0800) == 0x0800)
             {
@@ -339,7 +339,7 @@ namespace Ionic.Zip
             if (zde._commentLength > 0)
             {
                 block = new byte[zde._commentLength];
-                n = s.Read(block, 0, block.Length);
+                n = s.Read(block, offset: 0, count: block.Length);
                 bytesRead += n;
                 if ((zde._BitField & 0x0800) == 0x0800)
                 {

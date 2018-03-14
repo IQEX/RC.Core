@@ -36,7 +36,7 @@ namespace RC.Framework.Collections.Generic
         public T[,] matrix;
         T current;
         int curIndex = -1;
-        private static readonly SizeMatrix DefaultSize1 = new SizeMatrix(5, 5);
+        private static readonly SizeMatrix DefaultSize1 = new SizeMatrix(X: 5, Y: 5);
 
         /// <summary>
         /// Конструктор класса. Если размерность не указана будет создана матрица размерностью DefaultSize. Если указан только один параметр будет создана квадратная матрица размерностью равной указанному параметру.
@@ -425,7 +425,7 @@ namespace RC.Framework.Collections.Generic
         /// <summary>
         /// Нулевая матрица
         /// </summary>
-        public static SizeMatrix Zero { get { return new SizeMatrix(0, 0); } }
+        public static SizeMatrix Zero { get { return new SizeMatrix(X: 0, Y: 0); } }
         /// <summary>
         /// Инициализация размера. 
         /// </summary>

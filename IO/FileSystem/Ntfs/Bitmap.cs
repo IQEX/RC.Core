@@ -55,8 +55,8 @@ namespace RC.Framework.FileSystem.Ntfs
 
             if (byteIdx >= _bitmap.Length)
             {
-                _bitmap.Position = Utilities.RoundUp(byteIdx + 1, 8) - 1;
-                _bitmap.WriteByte(0);
+                _bitmap.Position = Utilities.RoundUp(byteIdx + 1, unit: 8) - 1;
+                _bitmap.WriteByte(value: 0);
             }
 
             SetByte(byteIdx, (byte)(GetByte(byteIdx) | mask));
@@ -74,8 +74,8 @@ namespace RC.Framework.FileSystem.Ntfs
 
             if (lastByte >= _bitmap.Length)
             {
-                _bitmap.Position = Utilities.RoundUp(lastByte + 1, 8) - 1;
-                _bitmap.WriteByte(0);
+                _bitmap.Position = Utilities.RoundUp(lastByte + 1, unit: 8) - 1;
+                _bitmap.WriteByte(value: 0);
             }
 
             byte[] buffer = new byte[lastByte - firstByte + 1];
@@ -123,8 +123,8 @@ namespace RC.Framework.FileSystem.Ntfs
             long lastByte = (index + count - 1) / 8;
             if (lastByte >= _bitmap.Length)
             {
-                _bitmap.Position = Utilities.RoundUp(lastByte + 1, 8) - 1;
-                _bitmap.WriteByte(0);
+                _bitmap.Position = Utilities.RoundUp(lastByte + 1, unit: 8) - 1;
+                _bitmap.WriteByte(value: 0);
             }
 
             byte[] buffer = new byte[lastByte - firstByte + 1];
@@ -172,7 +172,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal long SetTotalEntries(long numEntries)
         {
-            long length = Utilities.RoundUp(Utilities.Ceil(numEntries, 8), 8);
+            long length = Utilities.RoundUp(Utilities.Ceil(numEntries, denominator: 8), unit: 8);
             _stream.SetLength(length);
             return length * 8;
         }
@@ -186,7 +186,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
             byte[] buffer = new byte[1];
             _bitmap.Position = index;
-            if (_bitmap.Read(buffer, 0, 1) != 0)
+            if (_bitmap.Read(buffer, offset: 0, count: 1) != 0)
             {
                 return buffer[0];
             }
@@ -200,14 +200,14 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             byte[] buffer = new byte[] { value };
             _bitmap.Position = index;
-            _bitmap.Write(buffer, 0, 1);
+            _bitmap.Write(buffer, offset: 0, count: 1);
             _bitmap.Flush();
         }
 
         private void SetBytes(long index, byte[] buffer)
         {
             _bitmap.Position = index;
-            _bitmap.Write(buffer, 0, buffer.Length);
+            _bitmap.Write(buffer, offset: 0, count: buffer.Length);
             _bitmap.Flush();
         }
     }

@@ -90,7 +90,7 @@
                 if (NativeMethods.WindowsCreateString(kAppExtensionClassName, kAppExtensionClassName.Length, out classNameHString) == 0)
                 {
                     IntPtr appExtensionCatalogStatics;
-                    var IID_IAppExtensionCatalogStatics = new Guid(1010198154, 24344, 20235, 156, 229, 202, 182, 29, 25, 111, 17);
+                    var IID_IAppExtensionCatalogStatics = new Guid(a: 1010198154, b: 24344, c: 20235, d: 156, e: 229, f: 202, g: 182, h: 29, i: 25, j: 111, k: 17);
 
                     if (NativeMethods.RoGetActivationFactory(classNameHString, ref IID_IAppExtensionCatalogStatics, out appExtensionCatalogStatics) == 0)
                     {

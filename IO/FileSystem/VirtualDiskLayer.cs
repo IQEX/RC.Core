@@ -44,7 +44,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         ~VirtualDiskLayer()
         {
-            Dispose(false);
+            Dispose(disposing: false);
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
 

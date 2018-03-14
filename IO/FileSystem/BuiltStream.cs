@@ -234,7 +234,7 @@ namespace RC.Framework.FileSystem
         private class SearchExtent : BuilderExtent
         {
             public SearchExtent(long pos)
-                : base(pos, 1)
+                : base(pos, length: 1)
             {
             }
 

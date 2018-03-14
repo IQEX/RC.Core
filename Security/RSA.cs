@@ -42,7 +42,7 @@ namespace RC.Framework.Security
         public RSAKeyPair CreateKey()
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            return new RSAKeyPair(rsa.ToXmlString(true), rsa.ToXmlString(false));
+            return new RSAKeyPair(rsa.ToXmlString(includePrivateParameters: true), rsa.ToXmlString(includePrivateParameters: false));
         }
         /// <summary>
         /// Шифрует строку используя публичный ключ
@@ -54,7 +54,7 @@ namespace RC.Framework.Security
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(xmlPublicKey);
-            return Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(Phrase), false));
+            return Convert.ToBase64String(rsa.Encrypt(Encoding.UTF8.GetBytes(Phrase), fOAEP: false));
         }
         /// <summary>
         /// Шифрует массив байтов используя публичный ключ
@@ -66,7 +66,7 @@ namespace RC.Framework.Security
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(xmlPublicKey);
-            return Convert.ToBase64String(rsa.Encrypt(Phrase, false));
+            return Convert.ToBase64String(rsa.Encrypt(Phrase, fOAEP: false));
         }
         /// <summary>
         /// Расшифровывает строку используя приватный ключ
@@ -78,7 +78,7 @@ namespace RC.Framework.Security
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(xmlPrivateKey);
-            return Encoding.UTF8.GetString(rsa.Decrypt(Convert.FromBase64String(Phrase), false));
+            return Encoding.UTF8.GetString(rsa.Decrypt(Convert.FromBase64String(Phrase), fOAEP: false));
         }
         /// <summary>
         /// Расшифровывает строку используя приватный ключ
@@ -90,7 +90,7 @@ namespace RC.Framework.Security
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
             rsa.FromXmlString(xmlPrivateKey);
-            return rsa.Decrypt(Convert.FromBase64String(Phrase), false);
+            return rsa.Decrypt(Convert.FromBase64String(Phrase), fOAEP: false);
         }
     }
 }

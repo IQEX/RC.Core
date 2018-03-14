@@ -60,7 +60,7 @@ namespace RC.Framework.Net.Nat.Upnp
             {
                 using (var stream = await request.GetRequestStreamAsync())
                 {
-                    await stream.WriteAsync(messageBody, 0, messageBody.Length);
+                    await stream.WriteAsync(messageBody, offset: 0, count: messageBody.Length);
                 }
             }
 

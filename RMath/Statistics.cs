@@ -286,7 +286,7 @@ namespace RC.Framework.RMath
                     double num4 = (double)values[j] / (double)num2;
                     if (num4 != 0.0)
                     {
-                        num3 += -num4 * Math.Log(num4, 2.0);
+                        num3 += -num4 * Math.Log(num4, newBase: 2.0);
                     }
                 }
             }

@@ -62,7 +62,7 @@ namespace RC.Framework.FileSystem.Optical
 
         private DiscFileSystem OpenIso(Stream stream, VolumeInfo volumeInfo, FileSystemParameters parameters)
         {
-            return new CDReader(stream, true, true);
+            return new CDReader(stream, joliet: true, hideVersions: true);
         }
     }
 }

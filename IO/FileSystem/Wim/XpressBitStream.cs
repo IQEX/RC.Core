@@ -90,7 +90,7 @@ namespace RC.Framework.FileSystem.Wim
             {
                 _readBuffer[0] = 0;
                 _readBuffer[1] = 0;
-                _byteStream.Read(_readBuffer, 0, 2);
+                _byteStream.Read(_readBuffer, offset: 0, count: 2);
 
                 _buffer = (uint)((uint)(_buffer << 16) | (uint)(_readBuffer[1] << 8) | (uint)_readBuffer[0]);
                 _bufferAvailable += 16;

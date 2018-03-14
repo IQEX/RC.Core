@@ -40,11 +40,11 @@ namespace RC.Framework.FileSystem.Wim
                 return null;
             }
 
-            reader.Skip(8);
+            reader.Skip(bytes: 8);
 
             AlternateStreamEntry result = new AlternateStreamEntry();
             result.Length = length;
-            result.Hash = reader.ReadBytes(20);
+            result.Hash = reader.ReadBytes(count: 20);
             int nameLength = reader.ReadUInt16();
             if (nameLength > 0)
             {

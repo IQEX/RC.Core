@@ -41,7 +41,7 @@ namespace RC.Framework.FileSystem.Ntfs
             Tag = Utilities.ToUInt32LittleEndian(buffer, offset);
             ushort length = Utilities.ToUInt16LittleEndian(buffer, offset + 4);
             Content = new byte[length];
-            Array.Copy(buffer, offset + 8, Content, 0, length);
+            Array.Copy(buffer, offset + 8, Content, destinationIndex: 0, length: length);
             return 8 + length;
         }
 
@@ -50,7 +50,7 @@ namespace RC.Framework.FileSystem.Ntfs
             Utilities.WriteBytesLittleEndian(Tag, buffer, offset);
             Utilities.WriteBytesLittleEndian((ushort)Content.Length, buffer, offset + 4);
             Utilities.WriteBytesLittleEndian((ushort)0, buffer, offset + 6);
-            Array.Copy(Content, 0, buffer, offset + 8, Content.Length);
+            Array.Copy(Content, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + 8, length: Content.Length);
         }
 
         public void Dump(TextWriter writer, string linePrefix)
@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Ntfs
             writer.WriteLine(linePrefix + "                Tag: " + Tag.ToString("x", CultureInfo.InvariantCulture));
 
             string hex = string.Empty;
-            for (int i = 0; i < Math.Min(Content.Length, 32); ++i)
+            for (int i = 0; i < Math.Min(Content.Length, val2: 32); ++i)
             {
                 hex = hex + string.Format(CultureInfo.InvariantCulture, " {0:X2}", Content[i]);
             }

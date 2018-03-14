@@ -62,7 +62,7 @@ namespace RC.Framework.FileSystem.Iscsi
         private Dictionary<string, string> _negotiatedParameters;
 
         internal Session(SessionType type, string targetName, params TargetAddress[] addresses)
-            : this(type, targetName, null, null, addresses)
+            : this(type, targetName, userName: null, password: null, addresses: addresses)
         {
         }
 
@@ -95,11 +95,11 @@ namespace RC.Framework.FileSystem.Iscsi
 
             if (string.IsNullOrEmpty(userName))
             {
-                _currentConnection = new Connection(this, _addresses[0], new Authenticator[] { new NullAuthenticator() });
+                _currentConnection = new Connection(this, _addresses[index: 0], new Authenticator[] { new NullAuthenticator() });
             }
             else
             {
-                _currentConnection = new Connection(this, _addresses[0], new Authenticator[] { new NullAuthenticator(), new ChapAuthenticator(_userName, _password) });
+                _currentConnection = new Connection(this, _addresses[index: 0], new Authenticator[] { new NullAuthenticator(), new ChapAuthenticator(_userName, _password) });
             }
         }
 
@@ -107,13 +107,13 @@ namespace RC.Framework.FileSystem.Iscsi
         /// <summary>
         /// Gets the name of the iSCSI target this session is connected to.
         /// </summary>
-        [ProtocolKey("TargetName", null, KeyUsagePhase.SecurityNegotiation, KeySender.Initiator, KeyType.Declarative, UsedForDiscovery = true)]
+        [ProtocolKey("TargetName", defaultValue: null, phase: KeyUsagePhase.SecurityNegotiation, sender: KeySender.Initiator, type: KeyType.Declarative, UsedForDiscovery = true)]
         public string TargetName { get; internal set; }
 
         /// <summary>
         /// Gets the name of the iSCSI initiator seen by the target for this session.
         /// </summary>
-        [ProtocolKey("InitiatorName", null, KeyUsagePhase.SecurityNegotiation, KeySender.Initiator, KeyType.Declarative, UsedForDiscovery = true)]
+        [ProtocolKey("InitiatorName", defaultValue: null, phase: KeyUsagePhase.SecurityNegotiation, sender: KeySender.Initiator, type: KeyType.Declarative, UsedForDiscovery = true)]
         public string InitiatorName
         {
             get { return "iqn.2008-2010-04.RC.Framework.FileSystem.codeplex.com"; }
@@ -125,7 +125,7 @@ namespace RC.Framework.FileSystem.Iscsi
         [ProtocolKey("TargetAlias", "", KeyUsagePhase.All, KeySender.Target, KeyType.Declarative)]
         public string TargetAlias { get; internal set; }
 
-        [ProtocolKey("SessionType", null, KeyUsagePhase.SecurityNegotiation, KeySender.Initiator, KeyType.Declarative, UsedForDiscovery = true)]
+        [ProtocolKey("SessionType", defaultValue: null, phase: KeyUsagePhase.SecurityNegotiation, sender: KeySender.Initiator, type: KeyType.Declarative, UsedForDiscovery = true)]
         internal SessionType SessionType { get; set; }
 
         [ProtocolKey("MaxConnections", "1", KeyUsagePhase.OperationalNegotiation, KeySender.Both, KeyType.Negotiated, LeadingConnectionOnly = true)]
@@ -134,7 +134,7 @@ namespace RC.Framework.FileSystem.Iscsi
         [ProtocolKey("InitiatorAlias", "", KeyUsagePhase.All, KeySender.Initiator, KeyType.Declarative)]
         internal string InitiatorAlias { get; set; }
 
-        [ProtocolKey("TargetPortalGroupTag", null, KeyUsagePhase.SecurityNegotiation, KeySender.Target, KeyType.Declarative)]
+        [ProtocolKey("TargetPortalGroupTag", defaultValue: null, phase: KeyUsagePhase.SecurityNegotiation, sender: KeySender.Target, type: KeyType.Declarative)]
         internal int TargetPortalGroupTag { get; set; }
 
         [ProtocolKey("InitialR2T", "Yes", KeyUsagePhase.OperationalNegotiation, KeySender.Both, KeyType.Negotiated, LeadingConnectionOnly = true)]
@@ -227,12 +227,12 @@ namespace RC.Framework.FileSystem.Iscsi
         {
             ScsiReportLunsCommand cmd = new ScsiReportLunsCommand(ScsiReportLunsCommand.InitialResponseSize);
 
-            ScsiReportLunsResponse resp = Send<ScsiReportLunsResponse>(cmd, null, 0, 0, ScsiReportLunsCommand.InitialResponseSize);
+            ScsiReportLunsResponse resp = Send<ScsiReportLunsResponse>(cmd, buffer: null, offset: 0, count: 0, expected: ScsiReportLunsCommand.InitialResponseSize);
 
             if (resp.Truncated)
             {
                 cmd = new ScsiReportLunsCommand(resp.NeededDataLength);
-                resp = Send<ScsiReportLunsResponse>(cmd, null, 0, 0, (int)resp.NeededDataLength);
+                resp = Send<ScsiReportLunsResponse>(cmd, buffer: null, offset: 0, count: 0, expected: (int)resp.NeededDataLength);
             }
 
             if (resp.Truncated)
@@ -277,7 +277,7 @@ namespace RC.Framework.FileSystem.Iscsi
         {
             ScsiInquiryCommand cmd = new ScsiInquiryCommand((ulong)lun, ScsiInquiryCommand.InitialResponseDataLength);
 
-            ScsiInquiryStandardResponse resp = Send<ScsiInquiryStandardResponse>(cmd, null, 0, 0, ScsiInquiryCommand.InitialResponseDataLength);
+            ScsiInquiryStandardResponse resp = Send<ScsiInquiryStandardResponse>(cmd, buffer: null, offset: 0, count: 0, expected: ScsiInquiryCommand.InitialResponseDataLength);
 
             TargetInfo targetInfo = new TargetInfo(TargetName, new List<TargetAddress>(_addresses).ToArray());
             return new LunInfo(targetInfo, lun, resp.DeviceType, resp.Removable, resp.VendorId, resp.ProductId, resp.ProductRevision);
@@ -292,7 +292,7 @@ namespace RC.Framework.FileSystem.Iscsi
         {
             ScsiReadCapacityCommand cmd = new ScsiReadCapacityCommand((ulong)lun);
 
-            ScsiReadCapacityResponse resp = Send<ScsiReadCapacityResponse>(cmd, null, 0, 0, ScsiReadCapacityCommand.ResponseDataLength);
+            ScsiReadCapacityResponse resp = Send<ScsiReadCapacityResponse>(cmd, buffer: null, offset: 0, count: 0, expected: ScsiReadCapacityCommand.ResponseDataLength);
 
             if (resp.Truncated)
             {
@@ -335,7 +335,7 @@ namespace RC.Framework.FileSystem.Iscsi
         public int Read(long lun, long startBlock, short blockCount, byte[] buffer, int offset)
         {
             ScsiReadCommand cmd = new ScsiReadCommand((ulong)lun, (uint)startBlock, (ushort)blockCount);
-            return Send(cmd, null, 0, 0, buffer, offset, buffer.Length - offset);
+            return Send(cmd, outBuffer: null, outBufferOffset: 0, outBufferCount: 0, inBuffer: buffer, inBufferOffset: offset, inBufferMax: buffer.Length - offset);
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace RC.Framework.FileSystem.Iscsi
         public void Write(long lun, long startBlock, short blockCount, int blockSize, byte[] buffer, int offset)
         {
             ScsiWriteCommand cmd = new ScsiWriteCommand((ulong)lun, (uint)startBlock, (ushort)blockCount);
-            Send(cmd, buffer, offset, blockCount * blockSize, null, 0, 0);
+            Send(cmd, buffer, offset, blockCount * blockSize, inBuffer: null, inBufferOffset: 0, inBufferMax: 0);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace RC.Framework.FileSystem.Iscsi
                 throw new ArgumentException("inBufferLength must be 0 if inBuffer null", "inBufferLength");
             }
 
-            ScsiRawCommand cmd = new ScsiRawCommand((ulong)lun, command, 0, command.Length);
+            ScsiRawCommand cmd = new ScsiRawCommand((ulong)lun, command, offset: 0, length: command.Length);
             return Send(cmd, outBuffer, outBufferOffset, outBufferLength, inBuffer, inBufferOffset, inBufferLength);
         }
 
@@ -409,7 +409,7 @@ namespace RC.Framework.FileSystem.Iscsi
 
                 if (attr != null)
                 {
-                    object value = propInfo.GetGetMethod(true).Invoke(this, null);
+                    object value = propInfo.GetGetMethod(nonPublic: true).Invoke(this, parameters: null);
 
                     if (attr.ShouldTransmit(value, propInfo.PropertyType, phase, SessionType == SessionType.Discovery))
                     {
@@ -432,12 +432,12 @@ namespace RC.Framework.FileSystem.Iscsi
                     {
                         object value = ProtocolKeyAttribute.GetValueAsObject(inParameters[attr.Name], propInfo.PropertyType);
 
-                        propInfo.GetSetMethod(true).Invoke(this, new object[] { value });
+                        propInfo.GetSetMethod(nonPublic: true).Invoke(this, new object[] { value });
                         inParameters.Remove(attr.Name);
 
                         if (attr.Type == KeyType.Negotiated && !_negotiatedParameters.ContainsKey(attr.Name))
                         {
-                            value = propInfo.GetGetMethod(true).Invoke(this, null);
+                            value = propInfo.GetGetMethod(nonPublic: true).Invoke(this, parameters: null);
                             outParameters.Add(attr.Name, ProtocolKeyAttribute.GetValueAsString(value, propInfo.PropertyType));
                             _negotiatedParameters.Add(attr.Name, string.Empty);
                         }

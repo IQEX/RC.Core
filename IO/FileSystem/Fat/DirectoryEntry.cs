@@ -44,8 +44,8 @@ namespace RC.Framework.FileSystem.Fat
         internal DirectoryEntry(FatFileSystemOptions options, Stream stream)
         {
             _options = options;
-            byte[] buffer = Utilities.ReadFully(stream, 32);
-            Load(buffer, 0);
+            byte[] buffer = Utilities.ReadFully(stream, count: 32);
+            Load(buffer, offset: 0);
         }
 
         internal DirectoryEntry(FatFileSystemOptions options, FileName name, FatAttributes attrs)
@@ -97,13 +97,13 @@ namespace RC.Framework.FileSystem.Fat
 
         public DateTime LastAccessTime
         {
-            get { return FileTimeToDateTime(_lastAccessDate, 0, 0); }
+            get { return FileTimeToDateTime(_lastAccessDate, time: 0, tenths: 0); }
             set { DateTimeToFileTime(value, out _lastAccessDate); }
         }
 
         public DateTime LastWriteTime
         {
-            get { return FileTimeToDateTime(_lastWriteDate, _lastWriteTime, 0); }
+            get { return FileTimeToDateTime(_lastWriteDate, _lastWriteTime, tenths: 0); }
             set { DateTimeToFileTime(value, out _lastWriteDate, out _lastWriteTime); }
         }
 
@@ -131,19 +131,19 @@ namespace RC.Framework.FileSystem.Fat
         {
             byte[] buffer = new byte[32];
 
-            _name.GetBytes(buffer, 0);
+            _name.GetBytes(buffer, offset: 0);
             buffer[11] = _attr;
             buffer[13] = _creationTimeTenth;
-            Utilities.WriteBytesLittleEndian((ushort)_creationTime, buffer, 14);
-            Utilities.WriteBytesLittleEndian((ushort)_creationDate, buffer, 16);
-            Utilities.WriteBytesLittleEndian((ushort)_lastAccessDate, buffer, 18);
-            Utilities.WriteBytesLittleEndian((ushort)_firstClusterHi, buffer, 20);
-            Utilities.WriteBytesLittleEndian((ushort)_lastWriteTime, buffer, 22);
-            Utilities.WriteBytesLittleEndian((ushort)_lastWriteDate, buffer, 24);
-            Utilities.WriteBytesLittleEndian((ushort)_firstClusterLo, buffer, 26);
-            Utilities.WriteBytesLittleEndian((uint)_fileSize, buffer, 28);
+            Utilities.WriteBytesLittleEndian((ushort)_creationTime, buffer, offset: 14);
+            Utilities.WriteBytesLittleEndian((ushort)_creationDate, buffer, offset: 16);
+            Utilities.WriteBytesLittleEndian((ushort)_lastAccessDate, buffer, offset: 18);
+            Utilities.WriteBytesLittleEndian((ushort)_firstClusterHi, buffer, offset: 20);
+            Utilities.WriteBytesLittleEndian((ushort)_lastWriteTime, buffer, offset: 22);
+            Utilities.WriteBytesLittleEndian((ushort)_lastWriteDate, buffer, offset: 24);
+            Utilities.WriteBytesLittleEndian((ushort)_firstClusterLo, buffer, offset: 26);
+            Utilities.WriteBytesLittleEndian((uint)_fileSize, buffer, offset: 28);
 
-            stream.Write(buffer, 0, buffer.Length);
+            stream.Write(buffer, offset: 0, count: buffer.Length);
         }
 
         private static DateTime FileTimeToDateTime(ushort date, ushort time, byte tenths)

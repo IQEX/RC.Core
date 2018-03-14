@@ -56,7 +56,7 @@ namespace RC.Framework.FileSystem.Registry
         public string Name;
 
         public KeyNodeCell(string name, int parentCellIndex)
-            : this(-1)
+            : this(index: -1)
         {
             Flags = RegistryKeyFlags.Normal;
             Timestamp = DateTime.UtcNow;
@@ -102,7 +102,7 @@ namespace RC.Framework.FileSystem.Registry
 
         public override void WriteTo(byte[] buffer, int offset)
         {
-            Utilities.StringToBytes("nk", buffer, offset, 2);
+            Utilities.StringToBytes("nk", buffer, offset, count: 2);
             Utilities.WriteBytesLittleEndian((ushort)Flags, buffer, offset + 0x02);
             Utilities.WriteBytesLittleEndian(Timestamp.ToFileTimeUtc(), buffer, offset + 0x04);
             Utilities.WriteBytesLittleEndian(ParentIndex, buffer, offset + 0x10);

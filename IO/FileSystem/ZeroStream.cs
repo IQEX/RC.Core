@@ -77,7 +77,7 @@ namespace RC.Framework.FileSystem
         public override IEnumerable<StreamExtent> Extents
         {
             // The stream is entirely sparse
-            get { return new List<StreamExtent>(0); }
+            get { return new List<StreamExtent>(capacity: 0); }
         }
 
         public override IEnumerable<StreamExtent> MapContent(long start, long length)

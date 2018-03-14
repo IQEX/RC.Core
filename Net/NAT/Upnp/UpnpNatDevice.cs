@@ -57,7 +57,7 @@ namespace RC.Framework.Net.Nat.Upnp
             var message = new GetExternalIPAddressRequestMessage();
             var responseData = await _soapClient
                 .InvokeAsync("GetExternalIPAddress", message.ToXml())
-                .TimeoutAfter(TimeSpan.FromSeconds(4));
+                .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
 
             var response = new GetExternalIPAddressResponseMessage(responseData, DeviceInfo.ServiceType);
             return response.ExternalIPAddress;
@@ -74,7 +74,7 @@ namespace RC.Framework.Net.Nat.Upnp
                 var message = new CreatePortMappingRequestMessage(mapping);
                 await _soapClient
                     .InvokeAsync("AddPortMapping", message.ToXml())
-                    .TimeoutAfter(TimeSpan.FromSeconds(4));
+                    .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
                 RegisterMapping(mapping);
             }
             catch(MappingException me)
@@ -124,7 +124,7 @@ namespace RC.Framework.Net.Nat.Upnp
                 var message = new DeletePortMappingRequestMessage(mapping);
                 await _soapClient
                     .InvokeAsync("DeletePortMapping", message.ToXml())
-                    .TimeoutAfter(TimeSpan.FromSeconds(4));
+                    .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
                 UnregisterMapping(mapping);
             }
 		    catch (MappingException e)
@@ -147,9 +147,9 @@ namespace RC.Framework.Net.Nat.Upnp
 
                     var responseData = await _soapClient
                         .InvokeAsync("GetGenericPortMappingEntry", message.ToXml())
-                        .TimeoutAfter(TimeSpan.FromSeconds(4));
+                        .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
 
-                    var responseMessage = new GetPortMappingEntryResponseMessage(responseData, DeviceInfo.ServiceType, true);
+                    var responseMessage = new GetPortMappingEntryResponseMessage(responseData, DeviceInfo.ServiceType, genericMapping: true);
 
                     IPAddress internalClientIp;
                     if(!IPAddress.TryParse(responseMessage.InternalClient, out internalClientIp))
@@ -187,7 +187,7 @@ namespace RC.Framework.Net.Nat.Upnp
 		public override async Task<Mapping> GetSpecificMappingAsync (Protocol protocol, int port)
 		{
             Guard.IsTrue(protocol == Protocol.Tcp || protocol == Protocol.Udp, "protocol");
-            Guard.IsInRange(port, 0, ushort.MaxValue, "port");
+            Guard.IsInRange(port, lowerBound: 0, upperBound: ushort.MaxValue, paramName: "port");
 
             NatDiscoverer.TraceSource.LogInfo("GetSpecificMappingAsync - Getting mapping for protocol: {0} port: {1}", Enum.GetName(typeof(Protocol), protocol), port);
 
@@ -196,9 +196,9 @@ namespace RC.Framework.Net.Nat.Upnp
                 var message = new GetSpecificPortMappingEntryRequestMessage(protocol, port);
                 var responseData = await _soapClient
                     .InvokeAsync("GetSpecificPortMappingEntry", message.ToXml())
-                    .TimeoutAfter(TimeSpan.FromSeconds(4));
+                    .TimeoutAfter(TimeSpan.FromSeconds(value: 4));
 
-                var messageResponse = new GetPortMappingEntryResponseMessage(responseData, DeviceInfo.ServiceType, false);
+                var messageResponse = new GetPortMappingEntryResponseMessage(responseData, DeviceInfo.ServiceType, genericMapping: false);
 
                 return new Mapping(messageResponse.Protocol
                     , IPAddress.Parse(messageResponse.InternalClient)

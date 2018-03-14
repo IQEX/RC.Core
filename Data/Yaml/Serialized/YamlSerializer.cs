@@ -735,7 +735,7 @@ namespace RC.Framework.Yaml.Serialization
                 if ( i < types.Length ) {
                     objects.Add(constructor.NodeToObject(node, types[i], c));
                 } else {
-                    objects.Add(constructor.NodeToObject(node, null, c));
+                    objects.Add(constructor.NodeToObject(node, expected: null, config: c));
                 }
             }
             return objects.ToArray();

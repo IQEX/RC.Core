@@ -84,7 +84,7 @@ namespace RC.Framework.FileSystem.Ext
             if (FileType == UnixFileType.Link && BlocksCount == 0)
             {
                 FastSymlink = new byte[60];
-                Array.Copy(buffer, offset + 40, FastSymlink, 0, 60);
+                Array.Copy(buffer, offset + 40, FastSymlink, destinationIndex: 0, length: 60);
             }
             else if ((Flags & InodeFlags.ExtentsUsed) != 0)
             {
@@ -124,7 +124,7 @@ namespace RC.Framework.FileSystem.Ext
         {
             if (FastSymlink != null)
             {
-                return new StreamBuffer(new MemoryStream(FastSymlink, false), Ownership.Dispose);
+                return new StreamBuffer(new MemoryStream(FastSymlink, writable: false), Ownership.Dispose);
             }
             else if ((Flags & InodeFlags.ExtentsUsed) != 0)
             {

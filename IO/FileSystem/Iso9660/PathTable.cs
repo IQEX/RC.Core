@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Iso9660
             {
                 dirNumbers[di] = i++;
                 PathTableRecord ptr = new PathTableRecord();
-                ptr.DirectoryIdentifier = di.PickName(null, _enc);
+                ptr.DirectoryIdentifier = di.PickName(nameOverride: null, enc: _enc);
                 ptr.LocationOfExtent = _locations[di];
                 ptr.ParentDirectoryNumber = dirNumbers[di.Parent];
 

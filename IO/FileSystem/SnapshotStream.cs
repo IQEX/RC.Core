@@ -144,7 +144,7 @@ namespace RC.Framework.FileSystem
                 SparseStream sparseBase = _baseStream as SparseStream;
                 if (sparseBase == null)
                 {
-                    return new StreamExtent[] { new StreamExtent(0, Length) };
+                    return new StreamExtent[] { new StreamExtent(start: 0, length: Length) };
                 }
                 else
                 {
@@ -225,8 +225,8 @@ namespace RC.Framework.FileSystem
                 {
                     int toRead = (int)Math.Min(extent.Length - totalRead, buffer.Length);
 
-                    int read = _diffStream.Read(buffer, 0, toRead);
-                    _baseStream.Write(buffer, 0, read);
+                    int read = _diffStream.Read(buffer, offset: 0, count: toRead);
+                    _baseStream.Write(buffer, offset: 0, count: read);
 
                     totalRead += read;
                 }

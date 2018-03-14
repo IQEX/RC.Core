@@ -30,7 +30,7 @@ namespace RC.Framework
                     CodeBase = "null",
                     Name = "Rc.Core",
                     ProcArch = ProcessorArchitecture.Amd64,
-                    ver = new System.Version(10, 0, 15200, 0)
+                    ver = new System.Version(major: 10, minor: 0, build: 15200, revision: 0)
                 };
 #if !x32
 #else

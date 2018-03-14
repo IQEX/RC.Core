@@ -36,7 +36,7 @@ namespace RC.Framework.FileSystem.Iso9660
         /// <param name="data">The stream to read the ISO image from.</param>
         /// <param name="joliet">Whether to read Joliet extensions.</param>
         public CDReader(Stream data, bool joliet)
-            : base(new VfsCDReader(data, joliet, false))
+            : base(new VfsCDReader(data, joliet, hideVersions: false))
         {
         }
 
@@ -126,13 +126,13 @@ namespace RC.Framework.FileSystem.Iso9660
             }
 
             data.Position = 0x8000;
-            int numRead = Utilities.ReadFully(data, buffer, 0, IsoUtilities.SectorSize);
+            int numRead = Utilities.ReadFully(data, buffer, offset: 0, length: IsoUtilities.SectorSize);
             if (numRead != IsoUtilities.SectorSize)
             {
                 return false;
             }
 
-            BaseVolumeDescriptor bvd = new BaseVolumeDescriptor(buffer, 0);
+            BaseVolumeDescriptor bvd = new BaseVolumeDescriptor(buffer, offset: 0);
             return bvd.StandardIdentifier == "CD001";
         }
 

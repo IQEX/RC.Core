@@ -33,15 +33,15 @@ namespace RC.Framework.FileSystem.HfsPlus
         {
             _data = data;
 
-            byte[] headerInfo = Utilities.ReadFully(_data, 0, 114);
+            byte[] headerInfo = Utilities.ReadFully(_data, pos: 0, count: 114);
 
             _header = new BTreeHeaderRecord();
-            _header.ReadFrom(headerInfo, 14);
+            _header.ReadFrom(headerInfo, offset: 14);
 
-            byte[] node0data = Utilities.ReadFully(_data, 0, _header.NodeSize);
+            byte[] node0data = Utilities.ReadFully(_data, pos: 0, count: _header.NodeSize);
 
-            BTreeHeaderNode node0 = BTreeNode.ReadNode(this, node0data, 0) as BTreeHeaderNode;
-            node0.ReadFrom(node0data, 0);
+            BTreeHeaderNode node0 = BTreeNode.ReadNode(this, node0data, offset: 0) as BTreeHeaderNode;
+            node0.ReadFrom(node0data, offset: 0);
 
             _rootNode = GetKeyedNode(node0.HeaderRecord.RootNode);
         }
@@ -65,8 +65,8 @@ namespace RC.Framework.FileSystem.HfsPlus
         {
             byte[] nodeData = Utilities.ReadFully(_data, (int)nodeId * _header.NodeSize, _header.NodeSize);
 
-            BTreeKeyedNode<TKey> node = BTreeNode.ReadNode<TKey>(this, nodeData, 0) as BTreeKeyedNode<TKey>;
-            node.ReadFrom(nodeData, 0);
+            BTreeKeyedNode<TKey> node = BTreeNode.ReadNode<TKey>(this, nodeData, offset: 0) as BTreeKeyedNode<TKey>;
+            node.ReadFrom(nodeData, offset: 0);
             return node;
         }
     }

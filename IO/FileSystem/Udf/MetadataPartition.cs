@@ -39,15 +39,15 @@ namespace RC.Framework.FileSystem.Udf
             long fileEntryPos = partitionMap.MetadataFileLocation * (long)volumeDescriptor.LogicalBlockSize;
 
             byte[] entryData = Utilities.ReadFully(physical.Content, fileEntryPos, _context.PhysicalSectorSize);
-            if (!DescriptorTag.IsValid(entryData, 0))
+            if (!DescriptorTag.IsValid(entryData, offset: 0))
             {
                 throw new IOException("Invalid descriptor tag looking for Metadata file entry");
             }
 
-            DescriptorTag dt = Utilities.ToStruct<DescriptorTag>(entryData, 0);
+            DescriptorTag dt = Utilities.ToStruct<DescriptorTag>(entryData, offset: 0);
             if (dt.TagIdentifier == TagIdentifier.ExtendedFileEntry)
             {
-                ExtendedFileEntry efe = Utilities.ToStruct<ExtendedFileEntry>(entryData, 0);
+                ExtendedFileEntry efe = Utilities.ToStruct<ExtendedFileEntry>(entryData, offset: 0);
                 _metadataFile = new File(context, physical, efe, _volumeDescriptor.LogicalBlockSize);
             }
             else

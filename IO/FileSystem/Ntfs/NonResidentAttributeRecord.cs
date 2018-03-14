@@ -52,7 +52,7 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             _nonResidentFlag = 1;
             _dataRuns = new List<DataRun>();
-            _dataRuns.Add(new DataRun(firstCluster, (long)numClusters, false));
+            _dataRuns.Add(new DataRun(firstCluster, (long)numClusters, isSparse: false));
             _lastVCN = numClusters - 1;
             _dataAllocatedSize = bytesPerCluster * numClusters;
             _dataRealSize = bytesPerCluster * numClusters;
@@ -157,7 +157,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     nameLength = (byte)Name.Length;
                 }
 
-                ushort dataOffset = (ushort)Utilities.RoundUp(nameOffset + (nameLength * 2), 8);
+                ushort dataOffset = (ushort)Utilities.RoundUp(nameOffset + (nameLength * 2), unit: 8);
 
                 // Write out data first, since we know where it goes...
                 int dataLen = 0;
@@ -168,7 +168,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
                 dataLen++; // NULL terminator
 
-                return Utilities.RoundUp(dataOffset + dataLen, 8);
+                return Utilities.RoundUp(dataOffset + dataLen, unit: 8);
             }
         }
 
@@ -249,7 +249,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 nameLength = (byte)Name.Length;
             }
 
-            ushort dataOffset = (ushort)Utilities.RoundUp(headerLength + (nameLength * 2), 8);
+            ushort dataOffset = (ushort)Utilities.RoundUp(headerLength + (nameLength * 2), unit: 8);
 
             // Write out data first, since we know where it goes...
             int dataLen = 0;
@@ -261,7 +261,7 @@ namespace RC.Framework.FileSystem.Ntfs
             buffer[offset + dataOffset + dataLen] = 0; // NULL terminator
             dataLen++;
 
-            int length = (int)Utilities.RoundUp(dataOffset + dataLen, 8);
+            int length = (int)Utilities.RoundUp(dataOffset + dataLen, unit: 8);
 
             Utilities.WriteBytesLittleEndian((uint)_type, buffer, offset + 0x00);
             Utilities.WriteBytesLittleEndian(length, buffer, offset + 0x04);
@@ -286,7 +286,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
             if (Name != null)
             {
-                Array.Copy(Encoding.Unicode.GetBytes(Name), 0, buffer, offset + nameOffset, nameLength * 2);
+                Array.Copy(Encoding.Unicode.GetBytes(Name), sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + nameOffset, length: nameLength * 2);
             }
 
             return length;
@@ -335,7 +335,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
             _lastVCN = (ulong)splitVcn - 1;
 
-            return new NonResidentAttributeRecord(_type, _name, 0, _flags, splitVcn, newRecordRuns);
+            return new NonResidentAttributeRecord(_type, _name, id: 0, flags: _flags, startVcn: splitVcn, dataRuns: newRecordRuns);
         }
 
         public override void Dump(TextWriter writer, string indent)

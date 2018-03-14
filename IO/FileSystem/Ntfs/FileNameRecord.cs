@@ -162,7 +162,7 @@ namespace RC.Framework.FileSystem.Ntfs
             Utilities.WriteBytesLittleEndian(EASizeOrReparsePointTag, buffer, offset + 0x3C);
             buffer[offset + 0x40] = (byte)FileName.Length;
             buffer[offset + 0x41] = (byte)FileNameNamespace;
-            Encoding.Unicode.GetBytes(FileName, 0, FileName.Length, buffer, offset + 0x42);
+            Encoding.Unicode.GetBytes(FileName, charIndex: 0, charCount: FileName.Length, bytes: buffer, byteIndex: offset + 0x42);
         }
 
         public bool Equals(FileNameRecord other)

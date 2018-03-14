@@ -43,13 +43,13 @@ namespace RC.Framework.FileSystem.Nfs
             if ((count & 0x3) != 0)
             {
                 int padding = 4 - (buffer.Length & 0x3);
-                _stream.Write(new byte[padding], 0, padding);
+                _stream.Write(new byte[padding], offset: 0, count: padding);
             }
         }
 
         public void WriteBuffer(byte[] buffer)
         {
-            WriteBuffer(buffer, 0, buffer.Length);
+            WriteBuffer(buffer, offset: 0, count: buffer.Length);
         }
 
         public void WriteBuffer(byte[] buffer, int offset, int count)

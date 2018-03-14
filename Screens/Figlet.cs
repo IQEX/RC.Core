@@ -99,7 +99,7 @@
 
             if (font.Kerning > 0)
             {
-                result += new string(' ', font.Kerning);
+                result += new string(c: ' ', count: font.Kerning);
             }
 
             return result.Replace(font.HardBlank, " ");

@@ -113,10 +113,10 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             string searchName = name;
 
-            int streamSepPos = name.IndexOf(':');
+            int streamSepPos = name.IndexOf(value: ':');
             if (streamSepPos >= 0)
             {
-                searchName = name.Substring(0, streamSepPos);
+                searchName = name.Substring(startIndex: 0, length: streamSepPos);
             }
 
             DirectoryIndexEntry entry = Index.FindFirst(new FileNameQuery(searchName, _context.UpperCase));
@@ -141,12 +141,12 @@ namespace RC.Framework.FileSystem.Ntfs
                 throw new IOException(@"Invalid file name, contains '\0' or '/': " + name);
             }
 
-            FileNameRecord newNameRecord = file.GetFileNameRecord(null, true);
+            FileNameRecord newNameRecord = file.GetFileNameRecord(name: null, freshened: true);
             newNameRecord.FileNameNamespace = nameNamespace;
             newNameRecord.FileName = name;
             newNameRecord.ParentDirectory = MftReference;
 
-            NtfsStream nameStream = file.CreateStream(AttributeType.FileName, null);
+            NtfsStream nameStream = file.CreateStream(AttributeType.FileName, name: null);
             nameStream.SetContent(newNameRecord);
 
             file.HardLinkCount++;
@@ -168,7 +168,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
             Index.Remove(dirEntry.Details);
 
-            foreach (NtfsStream stream in file.GetStreams(AttributeType.FileName, null))
+            foreach (NtfsStream stream in file.GetStreams(AttributeType.FileName, name: null))
             {
                 FileNameRecord streamName = stream.GetContent<FileNameRecord>();
                 if (nameRecord.Equals(streamName))
@@ -190,7 +190,7 @@ namespace RC.Framework.FileSystem.Ntfs
             string baseName = string.Empty;
             string ext = string.Empty;
 
-            int lastPeriod = name.LastIndexOf('.');
+            int lastPeriod = name.LastIndexOf(value: '.');
 
             int i = 0;
             while (baseName.Length < 6 && i < name.Length && i != lastPeriod)
@@ -224,7 +224,7 @@ namespace RC.Framework.FileSystem.Ntfs
             do
             {
                 string suffix = string.Format(CultureInfo.InvariantCulture, "~{0}", i);
-                candidate = baseName.Substring(0, Math.Min(8 - suffix.Length, baseName.Length)) + suffix + (ext.Length > 0 ? "." + ext : string.Empty);
+                candidate = baseName.Substring(startIndex: 0, length: Math.Min(8 - suffix.Length, baseName.Length)) + suffix + (ext.Length > 0 ? "." + ext : string.Empty);
                 i++;
             }
             while (GetEntryByName(candidate) != null);
@@ -284,7 +284,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 // reasons, we don't want to decode the entire structure.  In fact can avoid the string
                 // conversion as well.
                 byte fnLen = buffer[0x40];
-                return _upperCase.Compare(_query, 0, _query.Length, buffer, 0x42, fnLen * 2);
+                return _upperCase.Compare(_query, xOffset: 0, xLength: _query.Length, y: buffer, yOffset: 0x42, yLength: fnLen * 2);
             }
         }
     }

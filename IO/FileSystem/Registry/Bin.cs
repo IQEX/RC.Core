@@ -48,9 +48,9 @@ namespace RC.Framework.FileSystem.Registry
             _streamPos = stream.Position;
 
             stream.Position = _streamPos;
-            byte[] buffer = Utilities.ReadFully(stream, 0x20);
+            byte[] buffer = Utilities.ReadFully(stream, count: 0x20);
             _header = new BinHeader();
-            _header.ReadFrom(buffer, 0);
+            _header.ReadFrom(buffer, offset: 0);
 
             _fileStream.Position = _streamPos;
             _buffer = Utilities.ReadFully(_fileStream, _header.BinSize);
@@ -123,7 +123,7 @@ namespace RC.Framework.FileSystem.Registry
             Utilities.WriteBytesLittleEndian(len, _buffer, freeIndex);
 
             _fileStream.Position = _streamPos + freeIndex;
-            _fileStream.Write(_buffer, freeIndex, 4);
+            _fileStream.Write(_buffer, freeIndex, count: 4);
         }
 
         public bool UpdateCell(Cell cell)
@@ -150,7 +150,7 @@ namespace RC.Framework.FileSystem.Registry
             int index = cellIndex - _header.FileOffset;
             int len = Math.Abs(Utilities.ToInt32LittleEndian(_buffer, index));
             byte[] result = new byte[Math.Min(len - 4, maxBytes)];
-            Array.Copy(_buffer, index + 4, result, 0, result.Length);
+            Array.Copy(_buffer, index + 4, result, destinationIndex: 0, length: result.Length);
             return result;
         }
 
@@ -189,13 +189,13 @@ namespace RC.Framework.FileSystem.Registry
                     // Record the newly allocated cell
                     Utilities.WriteBytesLittleEndian(-size, _buffer, _freeCells[i].Offset);
                     _fileStream.Position = _streamPos + _freeCells[i].Offset;
-                    _fileStream.Write(_buffer, _freeCells[i].Offset, 4);
+                    _fileStream.Write(_buffer, _freeCells[i].Offset, count: 4);
 
                     // Keep the remainder of the free buffer as unallocated
                     _freeCells[i] = new Range<int, int>(_freeCells[i].Offset + size, _freeCells[i].Count - size);
                     Utilities.WriteBytesLittleEndian(_freeCells[i].Count, _buffer, _freeCells[i].Offset);
                     _fileStream.Position = _streamPos + _freeCells[i].Offset;
-                    _fileStream.Write(_buffer, _freeCells[i].Offset, 4);
+                    _fileStream.Write(_buffer, _freeCells[i].Offset, count: 4);
 
                     return result;
                 }
@@ -204,7 +204,7 @@ namespace RC.Framework.FileSystem.Registry
                     // Record the whole of the free buffer as a newly allocated cell
                     Utilities.WriteBytesLittleEndian(-size, _buffer, _freeCells[i].Offset);
                     _fileStream.Position = _streamPos + _freeCells[i].Offset;
-                    _fileStream.Write(_buffer, _freeCells[i].Offset, 4);
+                    _fileStream.Write(_buffer, _freeCells[i].Offset, count: 4);
 
                     _freeCells.RemoveAt(i);
                     return result;

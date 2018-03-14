@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem
 
         public void WriteBytes(byte[] value)
         {
-            WriteBytes(value, 0, value.Length);
+            WriteBytes(value, offset: 0, count: value.Length);
         }
     }
 }

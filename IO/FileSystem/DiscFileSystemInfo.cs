@@ -76,7 +76,7 @@ namespace RC.Framework.FileSystem
             get
             {
                 string name = Name;
-                int sepIdx = name.LastIndexOf('.');
+                int sepIdx = name.LastIndexOf(value: '.');
                 if (sepIdx >= 0)
                 {
                     return name.Substring(sepIdx + 1);

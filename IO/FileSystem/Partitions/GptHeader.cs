@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.Partitions
 
         public bool ReadFrom(byte[] buffer, int offset)
         {
-            Signature = Utilities.BytesToString(buffer, offset + 0, 8);
+            Signature = Utilities.BytesToString(buffer, offset + 0, count: 8);
             Version = Utilities.ToUInt32LittleEndian(buffer, offset + 8);
             HeaderSize = Utilities.ToInt32LittleEndian(buffer, offset + 12);
             Crc = Utilities.ToUInt32LittleEndian(buffer, offset + 16);
@@ -91,7 +91,7 @@ namespace RC.Framework.FileSystem.Partitions
             // In case the header has new fields unknown to us, store the entire header
             // as a byte array
             Buffer = new byte[HeaderSize];
-            Array.Copy(buffer, offset, Buffer, 0, HeaderSize);
+            Array.Copy(buffer, offset, Buffer, destinationIndex: 0, length: HeaderSize);
 
             // Reject obviously invalid data
             if (Signature != GptSignature || HeaderSize == 0)
@@ -105,10 +105,10 @@ namespace RC.Framework.FileSystem.Partitions
         public void WriteTo(byte[] buffer, int offset)
         {
             // First, copy the cached header to allow for unknown fields
-            Array.Copy(Buffer, 0, buffer, offset, Buffer.Length);
+            Array.Copy(Buffer, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset, length: Buffer.Length);
 
             // Next, write the fields
-            Utilities.StringToBytes(Signature, buffer, offset + 0, 8);
+            Utilities.StringToBytes(Signature, buffer, offset + 0, count: 8);
             Utilities.WriteBytesLittleEndian(Version, buffer, offset + 8);
             Utilities.WriteBytesLittleEndian(HeaderSize, buffer, offset + 12);
             Utilities.WriteBytesLittleEndian((uint)0, buffer, offset + 16);
@@ -127,18 +127,18 @@ namespace RC.Framework.FileSystem.Partitions
 
             // Update the cached copy - re-allocate the buffer to allow for HeaderSize potentially having changed
             Buffer = new byte[HeaderSize];
-            Array.Copy(buffer, offset, Buffer, 0, HeaderSize);
+            Array.Copy(buffer, offset, Buffer, destinationIndex: 0, length: HeaderSize);
         }
 
         internal static uint CalcCrc(byte[] buffer, int offset, int count)
         {
             byte[] temp = new byte[count];
-            Array.Copy(buffer, offset, temp, 0, count);
+            Array.Copy(buffer, offset, temp, destinationIndex: 0, length: count);
 
             // Reset CRC field
-            Utilities.WriteBytesLittleEndian((uint)0, temp, 16);
+            Utilities.WriteBytesLittleEndian((uint)0, temp, offset: 16);
 
-            return Crc32.Compute(0xFFFFFFFF, temp, 0, count) ^ 0xFFFFFFFF;
+            return Crc32.Compute(crc: 0xFFFFFFFF, buffer: temp, offset: 0, count: count) ^ 0xFFFFFFFF;
         }
     }
 }

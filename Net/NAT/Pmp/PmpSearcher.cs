@@ -76,7 +76,7 @@ namespace RC.Framework.Net.Nat.Pmp
 
                     try
                     {
-                        client = new UdpClient(new IPEndPoint(address, 0));
+                        client = new UdpClient(new IPEndPoint(address, port: 0));
                     }
                     catch (SocketException)
                     {
@@ -105,7 +105,7 @@ namespace RC.Framework.Net.Nat.Pmp
             if (_timeout >= 3000)
             {
                 _timeout = 250;
-                NextSearch = DateTime.UtcNow.AddSeconds(10);
+                NextSearch = DateTime.UtcNow.AddSeconds(value: 10);
                 return;
             }
 
@@ -133,7 +133,7 @@ namespace RC.Framework.Net.Nat.Pmp
                 || response[1] != PmpConstants.ServerNoop)
                 return null;
 
-            int errorcode = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(response, 2));
+            int errorcode = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(response, startIndex: 2));
             if (errorcode != 0)
                 NatDiscoverer.TraceSource.LogError("Non zero error: {0}", errorcode);
 

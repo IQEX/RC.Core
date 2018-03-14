@@ -52,8 +52,8 @@ namespace RC.Framework.Screens
             var saval = RegexColorGroup.Match(c.Value).Groups;
             try
             {
-                string fore = saval[1].Value;
-                string back = saval[2].Value;
+                string fore = saval[groupnum: 1].Value;
+                string back = saval[groupnum: 2].Value;
                 return new ConsoleBox(Color.FromName(fore), Color.FromName(back)); ;
             }
             catch(Exception e)
@@ -164,8 +164,8 @@ namespace RC.Framework.Screens
             foreach (Match grt in coll)
             {
                 string fullData = grt.Value;
-                ConsoleBox clr = grt.Groups[1].getColor();
-                string coloredText = grt.Groups[3].Value;
+                ConsoleBox clr = grt.Groups[groupnum: 1].getColor();
+                string coloredText = grt.Groups[groupnum: 3].Value;
 
                 if (!clr.IsNamedColor)
                     throw new CustomColorException("Custom color is not allowed");

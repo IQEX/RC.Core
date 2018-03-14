@@ -58,17 +58,17 @@ namespace RC.Framework.FileSystem.Iso9660
             do
             {
                 data.Position = vdpos;
-                int numRead = data.Read(buffer, 0, IsoUtilities.SectorSize);
+                int numRead = data.Read(buffer, offset: 0, count: IsoUtilities.SectorSize);
                 if (numRead != IsoUtilities.SectorSize)
                 {
                     break;
                 }
 
-                bvd = new BaseVolumeDescriptor(buffer, 0);
+                bvd = new BaseVolumeDescriptor(buffer, offset: 0);
                 switch (bvd.VolumeDescriptorType)
                 {
                     case VolumeDescriptorType.Boot:
-                        _bootVolDesc = new BootVolumeDescriptor(buffer, 0);
+                        _bootVolDesc = new BootVolumeDescriptor(buffer, offset: 0);
                         if (_bootVolDesc.SystemId != BootVolumeDescriptor.ElToritoSystemIdentifier)
                         {
                             _bootVolDesc = null;
@@ -98,14 +98,14 @@ namespace RC.Framework.FileSystem.Iso9660
             if (joliet && svdPos != 0)
             {
                 data.Position = svdPos;
-                data.Read(buffer, 0, IsoUtilities.SectorSize);
-                volDesc = new SupplementaryVolumeDescriptor(buffer, 0);
+                data.Read(buffer, offset: 0, count: IsoUtilities.SectorSize);
+                volDesc = new SupplementaryVolumeDescriptor(buffer, offset: 0);
             }
             else
             {
                 data.Position = pvdPos;
-                data.Read(buffer, 0, IsoUtilities.SectorSize);
-                volDesc = new PrimaryVolumeDescriptor(buffer, 0);
+                data.Read(buffer, offset: 0, count: IsoUtilities.SectorSize);
+                volDesc = new PrimaryVolumeDescriptor(buffer, offset: 0);
             }
 
             Context = new IsoContext { VolumeDescriptor = volDesc, DataStream = _data };
@@ -143,7 +143,7 @@ namespace RC.Framework.FileSystem.Iso9660
                     return false;
                 }
 
-                BootValidationEntry entry = new BootValidationEntry(bootCatalog, 0);
+                BootValidationEntry entry = new BootValidationEntry(bootCatalog, offset: 0);
                 return entry.ChecksumValid;
             }
         }
@@ -318,10 +318,10 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             if (_hideVersions)
             {
-                int pos = name.LastIndexOf(';');
+                int pos = name.LastIndexOf(value: ';');
                 if (pos > 0)
                 {
-                    return name.Substring(0, pos);
+                    return name.Substring(startIndex: 0, length: pos);
                 }
             }
 
@@ -336,13 +336,13 @@ namespace RC.Framework.FileSystem.Iso9660
                 return null;
             }
 
-            BootValidationEntry validationEntry = new BootValidationEntry(bootCatalog, 0);
+            BootValidationEntry validationEntry = new BootValidationEntry(bootCatalog, offset: 0);
             if (!validationEntry.ChecksumValid)
             {
                 return null;
             }
 
-            return new BootInitialEntry(bootCatalog, 0x20);
+            return new BootInitialEntry(bootCatalog, offset: 0x20);
         }
 
         private byte[] GetBootCatalog()

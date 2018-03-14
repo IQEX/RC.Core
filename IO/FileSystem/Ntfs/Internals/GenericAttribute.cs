@@ -95,7 +95,7 @@ namespace RC.Framework.FileSystem.Ntfs.Internals
             get
             {
                 IBuffer rawBuffer = _record.GetReadOnlyDataBuffer(_context);
-                return new SubBuffer(rawBuffer, 0, _record.DataLength);
+                return new SubBuffer(rawBuffer, first: 0, length: _record.DataLength);
             }
         }
 

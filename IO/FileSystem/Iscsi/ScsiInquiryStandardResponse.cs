@@ -85,9 +85,9 @@ namespace RC.Framework.FileSystem.Iscsi
             _removable = (buffer[1] & 0x80) != 0;
             _version = buffer[2];
 
-            _vendorId = Utilities.BytesToString(buffer, 8, 8);
-            _productId = Utilities.BytesToString(buffer, 16, 16);
-            _productRevision = Utilities.BytesToString(buffer, 32, 4);
+            _vendorId = Utilities.BytesToString(buffer, offset: 8, count: 8);
+            _productId = Utilities.BytesToString(buffer, offset: 16, count: 16);
+            _productRevision = Utilities.BytesToString(buffer, offset: 32, count: 4);
         }
     }
 }

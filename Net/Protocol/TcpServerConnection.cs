@@ -40,7 +40,7 @@ namespace RC.Framework.Net.Protocol.Tcp
             //note: `Available` is checked before because it's faster,
             //`Available` is also checked after to prevent a race condition.
             bool connected = m_socket.Client.Available != 0 || 
-                !m_socket.Client.Poll(1, SelectMode.SelectRead) || 
+                !m_socket.Client.Poll(microSeconds: 1, mode: SelectMode.SelectRead) || 
                 m_socket.Client.Available != 0;
             m_lastVerifyTime = DateTime.UtcNow;
             return connected;
@@ -63,11 +63,11 @@ namespace RC.Framework.Net.Protocol.Tcp
                 NetworkStream stream = m_socket.GetStream();
                 try
                 {
-                    stream.Write(messagesToSend[0], 0, messagesToSend[0].Length);
+                    stream.Write(messagesToSend[index: 0], offset: 0, size: messagesToSend[index: 0].Length);
 
                     lock (messagesToSend)
                     {
-                        messagesToSend.RemoveAt(0);
+                        messagesToSend.RemoveAt(index: 0);
                     }
                     attemptCount = 0;
                 }
@@ -80,7 +80,7 @@ namespace RC.Framework.Net.Protocol.Tcp
 
                     lock (messagesToSend)
                     {
-                        messagesToSend.RemoveAt(0);
+                        messagesToSend.RemoveAt(index: 0);
                     }
                     attemptCount = 0;
                 }

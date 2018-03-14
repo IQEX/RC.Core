@@ -136,7 +136,7 @@ namespace Ionic.BZip2
         ///   </code>
         /// </example>
         public BZip2OutputStream(Stream output)
-            : this(output, BZip2.MaxBlockSize, false)
+            : this(output, BZip2.MaxBlockSize, leaveOpen: false)
         {
         }
 
@@ -150,7 +150,7 @@ namespace Ionic.BZip2
         ///   The valid range is 1..9.
         /// </param>
         public BZip2OutputStream(Stream output, int blockSize)
-            : this(output, blockSize, false)
+            : this(output, blockSize, leaveOpen: false)
         {
         }
 
@@ -250,7 +250,7 @@ namespace Ionic.BZip2
             };
 
             // not necessary to shred the initial magic bytes
-            this.output.Write(magic, 0, magic.Length);
+            this.output.Write(magic, offset: 0, count: magic.Length);
         }
 
         private void EmitTrailer()
@@ -262,12 +262,12 @@ namespace Ionic.BZip2
                         this.bw.TotalBytesWrittenOut);
 
             // must shred
-            this.bw.WriteByte(0x17);
-            this.bw.WriteByte(0x72);
-            this.bw.WriteByte(0x45);
-            this.bw.WriteByte(0x38);
-            this.bw.WriteByte(0x50);
-            this.bw.WriteByte(0x90);
+            this.bw.WriteByte(b: 0x17);
+            this.bw.WriteByte(b: 0x72);
+            this.bw.WriteByte(b: 0x45);
+            this.bw.WriteByte(b: 0x38);
+            this.bw.WriteByte(b: 0x50);
+            this.bw.WriteByte(b: 0x90);
 
             this.bw.WriteInt(this.combinedCRC);
 

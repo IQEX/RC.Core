@@ -81,8 +81,8 @@ namespace RC.Framework.FileSystem.Ext
                         if (_inode.IndirectBlock != 0)
                         {
                             _context.RawStream.Position = (_inode.IndirectBlock * (long)blockSize) + (logicalBlock * 4);
-                            byte[] indirectData = Utilities.ReadFully(_context.RawStream, 4);
-                            physicalBlock = Utilities.ToUInt32LittleEndian(indirectData, 0);
+                            byte[] indirectData = Utilities.ReadFully(_context.RawStream, count: 4);
+                            physicalBlock = Utilities.ToUInt32LittleEndian(indirectData, offset: 0);
                         }
                     }
                     else
@@ -93,14 +93,14 @@ namespace RC.Framework.FileSystem.Ext
                             if (_inode.DoubleIndirectBlock != 0)
                             {
                                 _context.RawStream.Position = (_inode.DoubleIndirectBlock * (long)blockSize) + ((logicalBlock / (blockSize / 4)) * 4);
-                                byte[] indirectData = Utilities.ReadFully(_context.RawStream, 4);
-                                uint indirectBlock = Utilities.ToUInt32LittleEndian(indirectData, 0);
+                                byte[] indirectData = Utilities.ReadFully(_context.RawStream, count: 4);
+                                uint indirectBlock = Utilities.ToUInt32LittleEndian(indirectData, offset: 0);
 
                                 if (indirectBlock != 0)
                                 {
                                     _context.RawStream.Position = (indirectBlock * (long)blockSize) + ((logicalBlock % (blockSize / 4)) * 4);
-                                    Utilities.ReadFully(_context.RawStream, indirectData, 0, 4);
-                                    physicalBlock = Utilities.ToUInt32LittleEndian(indirectData, 0);
+                                    Utilities.ReadFully(_context.RawStream, indirectData, offset: 0, length: 4);
+                                    physicalBlock = Utilities.ToUInt32LittleEndian(indirectData, offset: 0);
                                 }
                             }
                         }
@@ -144,7 +144,7 @@ namespace RC.Framework.FileSystem.Ext
         public override IEnumerable<StreamExtent> GetExtentsInRange(long start, long count)
         {
             return StreamExtent.Intersect(
-                new StreamExtent[] { new StreamExtent(0, Capacity) },
+                new StreamExtent[] { new StreamExtent(start: 0, length: Capacity) },
                 new StreamExtent(start, count));
         }
     }

@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Wim
             PartNumber = Utilities.ToUInt16LittleEndian(buffer, offset + ShortResourceHeader.Size);
             RefCount = Utilities.ToUInt32LittleEndian(buffer, offset + ShortResourceHeader.Size + 2);
             Hash = new byte[20];
-            Array.Copy(buffer, offset + ShortResourceHeader.Size + 6, Hash, 0, 20);
+            Array.Copy(buffer, offset + ShortResourceHeader.Size + 6, Hash, destinationIndex: 0, length: 20);
         }
     }
 }

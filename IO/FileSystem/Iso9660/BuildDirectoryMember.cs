@@ -103,7 +103,7 @@ namespace RC.Framework.FileSystem.Iso9660
 
         internal uint GetDirectoryRecordSize(Encoding enc)
         {
-            return DirectoryRecord.CalcLength(PickName(null, enc), enc);
+            return DirectoryRecord.CalcLength(PickName(nameOverride: null, enc: enc), enc);
         }
 
         private class DirectorySortedComparison : Comparer<BuildDirectoryMember>
@@ -120,7 +120,7 @@ namespace RC.Framework.FileSystem.Iso9660
                 {
                     xPart = (xParts.Length > i) ? xParts[i] : string.Empty;
                     yPart = (yParts.Length > i) ? yParts[i] : string.Empty;
-                    int val = ComparePart(xPart, yPart, ' ');
+                    int val = ComparePart(xPart, yPart, padChar: ' ');
                     if (val != 0)
                     {
                         return val;
@@ -129,7 +129,7 @@ namespace RC.Framework.FileSystem.Iso9660
 
                 xPart = (xParts.Length > 2) ? xParts[2] : string.Empty;
                 yPart = (yParts.Length > 2) ? yParts[2] : string.Empty;
-                return ComparePartBackwards(xPart, yPart, '0');
+                return ComparePartBackwards(xPart, yPart, padChar: '0');
             }
 
             private static int ComparePart(string x, string y, char padChar)

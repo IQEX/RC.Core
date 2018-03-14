@@ -41,7 +41,7 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             get
             {
-                return Utilities.RoundUp(0x20 + (string.IsNullOrEmpty(Name) ? 0 : Encoding.Unicode.GetByteCount(Name)), 8);
+                return Utilities.RoundUp(0x20 + (string.IsNullOrEmpty(Name) ? 0 : Encoding.Unicode.GetByteCount(Name)), unit: 8);
             }
         }
 
@@ -100,10 +100,10 @@ namespace RC.Framework.FileSystem.Ntfs
             }
             else
             {
-                NameLength = (byte)(Encoding.Unicode.GetBytes(Name, 0, Name.Length, buffer, offset + NameOffset) / 2);
+                NameLength = (byte)(Encoding.Unicode.GetBytes(Name, charIndex: 0, charCount: Name.Length, bytes: buffer, byteIndex: offset + NameOffset) / 2);
             }
 
-            RecordLength = (ushort)Utilities.RoundUp(NameOffset + (NameLength * 2), 8);
+            RecordLength = (ushort)Utilities.RoundUp(NameOffset + (NameLength * 2), unit: 8);
 
             Utilities.WriteBytesLittleEndian((uint)Type, buffer, offset);
             Utilities.WriteBytesLittleEndian(RecordLength, buffer, offset + 0x04);

@@ -149,7 +149,7 @@ namespace Ionic.Zip
         ///
         public void ExtractAll(string path)
         {
-            _InternalExtractAll(path, true);
+            _InternalExtractAll(path, overrideExtractExistingProperty: true);
         }
 
 
@@ -219,7 +219,7 @@ namespace Ionic.Zip
         public void ExtractAll(string path, ExtractExistingFileAction extractExistingFile)
         {
             ExtractExistingFile = extractExistingFile;
-            _InternalExtractAll(path, true);
+            _InternalExtractAll(path, overrideExtractExistingProperty: true);
         }
 
 
@@ -238,7 +238,7 @@ namespace Ionic.Zip
                     {
                         StatusMessageTextWriter.WriteLine("\n{1,-22} {2,-8} {3,4}   {4,-8}  {0}",
                                   "Name", "Modified", "Size", "Ratio", "Packed");
-                        StatusMessageTextWriter.WriteLine(new System.String('-', 72));
+                        StatusMessageTextWriter.WriteLine(new System.String(c: '-', count: 72));
                         header = false;
                     }
                     if (Verbose)
@@ -253,12 +253,12 @@ namespace Ionic.Zip
                             StatusMessageTextWriter.WriteLine("  Comment: {0}", e.Comment);
                     }
                     e.Password = _Password;  // this may be null
-                    OnExtractEntry(n, true, e, path);
+                    OnExtractEntry(n, before: true, currentEntry: e, path: path);
                     if (overrideExtractExistingProperty)
                         e.ExtractExistingFile = this.ExtractExistingFile;
                     e.Extract(path);
                     n++;
-                    OnExtractEntry(n, false, e, path);
+                    OnExtractEntry(n, before: false, currentEntry: e, path: path);
                     if (_extractOperationCanceled)
                         break;
                 }
@@ -276,10 +276,10 @@ namespace Ionic.Zip
                         if ((e.IsDirectory) || (e.FileName.EndsWith("/")))
                         {
                             string outputFile = (e.FileName.StartsWith("/"))
-                                ? Path.Combine(path, e.FileName.Substring(1))
+                                ? Path.Combine(path, e.FileName.Substring(startIndex: 1))
                                 : Path.Combine(path, e.FileName);
 
-                            e._SetTimes(outputFile, false);
+                            e._SetTimes(outputFile, isFile: false);
                         }
                     }
                     OnExtractAllCompleted(path);

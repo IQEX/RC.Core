@@ -103,7 +103,7 @@ namespace RC.Framework.FileSystem.Iso9660
 
         internal uint GetPathTableEntrySize(Encoding enc)
         {
-            int nameBytes = enc.GetByteCount(PickName(null, enc));
+            int nameBytes = enc.GetByteCount(PickName(nameOverride: null, enc: enc));
 
             return (uint)(8 + nameBytes + (((nameBytes & 0x1) == 1) ? 1 : 0));
         }
@@ -129,7 +129,7 @@ namespace RC.Framework.FileSystem.Iso9660
                     pos += padLength;
                 }
 
-                pos += WriteMember(m, null, enc, buffer, offset + pos, locationTable, enc);
+                pos += WriteMember(m, nameOverride: null, nameEnc: enc, buffer: buffer, offset: offset + pos, locationTable: locationTable, dataEnc: enc);
             }
 
             // Ensure final padding data is zero'd
@@ -194,7 +194,7 @@ namespace RC.Framework.FileSystem.Iso9660
                     return Compare(x.Parent, y.Parent);
                 }
 
-                return CompareNames(x.Name, y.Name, ' ');
+                return CompareNames(x.Name, y.Name, padChar: ' ');
             }
 
             private static int CompareNames(string x, string y, char padChar)

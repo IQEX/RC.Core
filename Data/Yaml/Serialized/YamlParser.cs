@@ -98,7 +98,7 @@ namespace RC.Framework.Yaml
             Warnings.Clear();
             ParseResult.Clear();
             AlreadyWarnedChars.Clear();
-            return base.Parse(() => nsPlain(0, Context.BlockKey) && EndOfFile(), plain + "\0"); // '\0' = guard char
+            return base.Parse(() => nsPlain(n: 0, c: Context.BlockKey) && EndOfFile(), plain + "\0"); // '\0' = guard char
         }
 
         #region Warnings
@@ -148,7 +148,7 @@ namespace RC.Framework.Yaml
                     text[p] < 0x100 ? string.Format("\\x{0:x2}", (int)text[p]) :
                                       string.Format("\\u{0:x4}", (int)text[p])
                     );
-                AlreadyWarnedChars.Add(text[p], true);
+                AlreadyWarnedChars.Add(text[p], value: true);
             }
         }
         #endregion
@@ -548,7 +548,7 @@ namespace RC.Framework.Yaml
         bool nsUriEscapedChar()
         {
             if ( text[p] == '+' ) {
-                stringValue.Append(' ');
+                stringValue.Append(value: ' ');
                 p++;
                 return true;
             }
@@ -663,26 +663,26 @@ namespace RC.Framework.Yaml
                 break;
             case 'x':
                 if(!HexValue(p + 2, out v1))
-                    InvalidEscapeSequence(4);
+                    InvalidEscapeSequence(n: 4);
                 c = (char)v1;
                 p+=2;
                 break;
             case 'u':
                 if(!(HexValue(p + 2, out v1) && HexValue(p + 4, out v2)))
-                    InvalidEscapeSequence(6);
+                    InvalidEscapeSequence(n: 6);
                 c = (char)( ( v1 << 8 ) + v2 );
                 p+=4;
                 break;
             case 'U':
                 if(!(HexValue(p + 2, out v1) && HexValue(p + 4, out v2) && HexValue(p + 6, out v3) && HexValue(p + 8, out v4)))
-                    InvalidEscapeSequence(10);
+                    InvalidEscapeSequence(n: 10);
                 c = (char)( ( v1 << 24 ) + ( v2 << 16 ) + ( v3 << 8 ) + v4 );
                 p += 8;
                 break;
             default:
                 // escaped line break or error
                 if ( text[p + 1] != '\n' && text[p + 1] != '\r' )
-                    InvalidEscapeSequence(2);
+                    InvalidEscapeSequence(n: 2);
                 return false;
             }
             p += 2;
@@ -812,7 +812,7 @@ namespace RC.Framework.Yaml
         {
             return 
                 bBreak() &&
-                Action(()=>stringValue.Append(' '));
+                Action(()=>stringValue.Append(value: ' '));
         }
         private bool b_lFolded(int n, Context c) // [73] 
         {
@@ -1180,7 +1180,7 @@ namespace RC.Framework.Yaml
             }
             // [117] cQuotedQuote
             if ( text[p] == '\'' && text[p + 1] == '\'' ) {
-                stringValue.Append('\'');
+                stringValue.Append(value: '\'');
                 p += 2;
                 return true;
             }
@@ -1301,11 +1301,11 @@ namespace RC.Framework.Yaml
             case Context.FlowIn:
                 return
                     nsPlainMultiLine(n, c) &&
-                    SetValue(CreateScalar(null, pos));
+                    SetValue(CreateScalar(auto_detected_tag: null, pos: pos));
             case Context.BlockKey:
             case Context.FlowKey:
                 return nsPlainOneLine(c) &&
-                    SetValue(CreateScalar(null, pos));
+                    SetValue(CreateScalar(auto_detected_tag: null, pos: pos));
             default:
                 throw new NotImplementedException();
             }
@@ -1534,7 +1534,7 @@ namespace RC.Framework.Yaml
         {
             /* At most 1024 characters altogether */
             int start = p;
-            if ( nsFlowYamlNode(-1 /* not used */, c) && Optional(sSeparateInLine) ) {
+            if ( nsFlowYamlNode(n: -1 /* not used */, c: c) && Optional(sSeparateInLine) ) {
                 ErrorUnless(( p - start ) < 1024, "The implicit key was too long.");
                 return true;
             }
@@ -1544,7 +1544,7 @@ namespace RC.Framework.Yaml
         {
             /* At most 1024 characters altogether */
             int start = p;
-            if ( cFlowJsonNode(-1 /* not used */, c) && Optional(sSeparateInLine) ) {
+            if ( cFlowJsonNode(n: -1 /* not used */, c: c) && Optional(sSeparateInLine) ) {
                 ErrorUnless(( p - start ) < 1024, "The implicit key was too long.");
                 return true;
             }
@@ -2030,7 +2030,7 @@ namespace RC.Framework.Yaml
         {
             if ( !StartOfLine() || ( text.Length - p ) < 3 )
                 return false;
-            var s = text.Substring(p, 3);
+            var s = text.Substring(p, length: 3);
             if ( s != "---" && s != "..." )
                 return false;
             return
@@ -2048,7 +2048,7 @@ namespace RC.Framework.Yaml
 
             TagPrefixes.SetupDefaultTagPrefixes();
             return
-                s_lBlockNode(-1, Context.BlockIn) &&
+                s_lBlockNode(n: -1, c: Context.BlockIn) &&
                 Action(() => ParseResult.Add(GetValue()));
         }
         bool lExplicitDocument() // [208] 

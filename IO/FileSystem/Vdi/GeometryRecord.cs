@@ -43,12 +43,12 @@ namespace RC.Framework.FileSystem.Vdi
             long totalSectors = capacity / 512;
             if (totalSectors / (16 * 63) <= 1024)
             {
-                result.Cylinders = (int)Math.Max(totalSectors / (16 * 63), 1);
+                result.Cylinders = (int)Math.Max(totalSectors / (16 * 63), val2: 1);
                 result.Heads = 16;
             }
             else if (totalSectors / (32 * 63) <= 1024)
             {
-                result.Cylinders = (int)Math.Max(totalSectors / (32 * 63), 1);
+                result.Cylinders = (int)Math.Max(totalSectors / (32 * 63), val2: 1);
                 result.Heads = 32;
             }
             else if (totalSectors / (64 * 63) <= 1024)
@@ -63,7 +63,7 @@ namespace RC.Framework.FileSystem.Vdi
             }
             else
             {
-                result.Cylinders = (int)Math.Min(totalSectors / (255 * 63), 1024);
+                result.Cylinders = (int)Math.Min(totalSectors / (255 * 63), val2: 1024);
                 result.Heads = 255;
             }
 

@@ -59,12 +59,12 @@ namespace RC.Framework.FileSystem.Vmdk
                 }
             }
 
-            extents.Insert(0, gdExtent);
+            extents.Insert(index: 0, item: gdExtent);
 
             header.FreeSector = (uint)(grainTableStart / Sizes.Sector);
 
             byte[] buffer = header.GetBytes();
-            extents.Insert(0, new BuilderBufferExtent(0, buffer));
+            extents.Insert(index: 0, item: new BuilderBufferExtent(start: 0, buffer: buffer));
 
             totalLength = grainTableStart;
 
@@ -89,7 +89,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
             internal override void PrepareForRead()
             {
-                _streamView = new MemoryStream(_buffer, 0, _buffer.Length, false);
+                _streamView = new MemoryStream(_buffer, index: 0, count: _buffer.Length, writable: false);
             }
 
             internal override int Read(long diskOffset, byte[] block, int offset, int count)
@@ -139,7 +139,7 @@ namespace RC.Framework.FileSystem.Vmdk
                     }
                 }
 
-                _grainTableStream = new MemoryStream(grainTable, 0, grainTable.Length, false);
+                _grainTableStream = new MemoryStream(grainTable, index: 0, count: grainTable.Length, writable: false);
             }
 
             internal override int Read(long diskOffset, byte[] block, int offset, int count)

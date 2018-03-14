@@ -26,17 +26,17 @@ namespace RC.Framework.FileSystem.HfsPlus
 
     internal struct CatalogNodeId
     {
-        public static readonly CatalogNodeId RootParentId = new CatalogNodeId(1);
-        public static readonly CatalogNodeId RootFolderId = new CatalogNodeId(2);
-        public static readonly CatalogNodeId ExtentsFileId = new CatalogNodeId(3);
-        public static readonly CatalogNodeId CatalogFileId = new CatalogNodeId(4);
-        public static readonly CatalogNodeId BadBlockFileId = new CatalogNodeId(5);
-        public static readonly CatalogNodeId AllocationFileId = new CatalogNodeId(6);
-        public static readonly CatalogNodeId StartupFileId = new CatalogNodeId(7);
-        public static readonly CatalogNodeId AttributesFileId = new CatalogNodeId(8);
-        public static readonly CatalogNodeId RepairCatalogFileId = new CatalogNodeId(14);
-        public static readonly CatalogNodeId BogusExtentFileId = new CatalogNodeId(15);
-        public static readonly CatalogNodeId FirstUserCatalogNodeId = new CatalogNodeId(16);
+        public static readonly CatalogNodeId RootParentId = new CatalogNodeId(id: 1);
+        public static readonly CatalogNodeId RootFolderId = new CatalogNodeId(id: 2);
+        public static readonly CatalogNodeId ExtentsFileId = new CatalogNodeId(id: 3);
+        public static readonly CatalogNodeId CatalogFileId = new CatalogNodeId(id: 4);
+        public static readonly CatalogNodeId BadBlockFileId = new CatalogNodeId(id: 5);
+        public static readonly CatalogNodeId AllocationFileId = new CatalogNodeId(id: 6);
+        public static readonly CatalogNodeId StartupFileId = new CatalogNodeId(id: 7);
+        public static readonly CatalogNodeId AttributesFileId = new CatalogNodeId(id: 8);
+        public static readonly CatalogNodeId RepairCatalogFileId = new CatalogNodeId(id: 14);
+        public static readonly CatalogNodeId BogusExtentFileId = new CatalogNodeId(id: 15);
+        public static readonly CatalogNodeId FirstUserCatalogNodeId = new CatalogNodeId(id: 16);
 
         private uint _id;
 

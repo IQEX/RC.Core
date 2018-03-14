@@ -117,7 +117,7 @@ namespace Ionic.Zip
         ///
         public static ZipFile Read(string fileName)
         {
-            return ZipFile.Read(fileName, null, null, null);
+            return ZipFile.Read(fileName, statusMessageWriter: null, encoding: null, readProgress: null);
         }
 
 
@@ -411,7 +411,7 @@ namespace Ionic.Zip
         ///
         public static ZipFile Read(Stream zipStream)
         {
-            return Read(zipStream, null, null, null);
+            return Read(zipStream, statusMessageWriter: null, encoding: null, readProgress: null);
         }
 
         /// <summary>
@@ -581,7 +581,7 @@ namespace Ionic.Zip
                 // safety and start "in front" of that, when looking for the
                 // EndOfCentralDirectorySignature
                 long posn = s.Length - 64;
-                long maxSeekback = Math.Max(s.Length - 0x4000, 10);
+                long maxSeekback = Math.Max(s.Length - 0x4000, val2: 10);
                 do
                 {
                     if (posn < 0) posn = 0;  // BOF
@@ -607,9 +607,9 @@ namespace Ionic.Zip
                     zf._locEndOfCDS = s.Position - 4;
 
                     byte[] block = new byte[16];
-                    s.Read(block, 0, block.Length);
+                    s.Read(block, offset: 0, count: block.Length);
 
-                    zf._diskNumberWithCd = BitConverter.ToUInt16(block, 2);
+                    zf._diskNumberWithCd = BitConverter.ToUInt16(block, startIndex: 2);
 
                     if (zf._diskNumberWithCd == 0xFFFF)
                         throw new ZipException("Spanned archives with more than 65534 segments are not supported at this time.");
@@ -638,7 +638,7 @@ namespace Ionic.Zip
                     // Fallback to the old method.
                     // workitem 8098: ok
                     //s.Seek(zf._originPosition, SeekOrigin.Begin);
-                    s.Seek(0L, SeekOrigin.Begin);
+                    s.Seek(offset: 0L, origin: SeekOrigin.Begin);
                     ReadIntoInstance_Orig(zf);
                 }
             }
@@ -674,10 +674,10 @@ namespace Ionic.Zip
 
             // seek back to find the ZIP64 EoCD.
             // I think this might not work for .NET CF ?
-            s.Seek(-40, SeekOrigin.Current);
-            s.Read(block, 0, 16);
+            s.Seek(offset: -40, origin: SeekOrigin.Current);
+            s.Read(block, offset: 0, count: 16);
 
-            Int64 offset64 = BitConverter.ToInt64(block, 8);
+            Int64 offset64 = BitConverter.ToInt64(block, startIndex: 8);
             zf._OffsetOfCentralDirectory = 0xFFFFFFFF;
             zf._OffsetOfCentralDirectory64 = offset64;
             // change for workitem 8098
@@ -688,13 +688,13 @@ namespace Ionic.Zip
             if (datum != ZipConstants.Zip64EndOfCentralDirectoryRecordSignature)
                 throw new BadReadException(String.Format("  Bad signature (0x{0:X8}) looking for ZIP64 EoCD Record at position 0x{1:X8}", datum, s.Position));
 
-            s.Read(block, 0, 8);
-            Int64 Size = BitConverter.ToInt64(block, 0);
+            s.Read(block, offset: 0, count: 8);
+            Int64 Size = BitConverter.ToInt64(block, startIndex: 0);
 
             block = new byte[Size];
-            s.Read(block, 0, block.Length);
+            s.Read(block, offset: 0, count: block.Length);
 
-            offset64 = BitConverter.ToInt64(block, 36);
+            offset64 = BitConverter.ToInt64(block, startIndex: 36);
             // change for workitem 8098
             s.Seek(offset64, SeekOrigin.Begin);
             //zf.SeekFromOrigin(Offset64);
@@ -726,7 +726,7 @@ namespace Ionic.Zip
             while ((de = ZipEntry.ReadDirEntry(zf, previouslySeen)) != null)
             {
                 de.ResetDirEntry();
-                zf.OnReadEntry(true, null);
+                zf.OnReadEntry(before: true, entry: null);
 
                 if (zf.Verbose)
                     zf.StatusMessageTextWriter.WriteLine("entry {0}", de.FileName);
@@ -735,7 +735,7 @@ namespace Ionic.Zip
 
                 // workitem 9214
                 if (de._InputUsesZip64) inputUsesZip64 = true;
-                previouslySeen.Add(de.FileName, null); // to prevent dupes
+                previouslySeen.Add(de.FileName, value: null); // to prevent dupes
             }
 
             // workitem 9214; auto-set the zip64 flag
@@ -808,7 +808,7 @@ namespace Ionic.Zip
                         e1._Comment = de.Comment;
                         if (de.IsDirectory) e1.MarkAsDirectory();
                     }
-                    previouslySeen.Add(de.FileName,null); // to prevent dupes
+                    previouslySeen.Add(de.FileName,value: null); // to prevent dupes
                 }
 
                 // workitem 8299
@@ -854,9 +854,9 @@ namespace Ionic.Zip
                 // 52 bytes
 
                 block = new byte[8 + 44];
-                s.Read(block, 0, block.Length);
+                s.Read(block, offset: 0, count: block.Length);
 
-                Int64 DataSize = BitConverter.ToInt64(block, 0);  // == 44 + the variable length
+                Int64 DataSize = BitConverter.ToInt64(block, startIndex: 0);  // == 44 + the variable length
 
                 if (DataSize < 44)
                     throw new ZipException("Bad size in the ZIP64 Central Directory.");
@@ -872,7 +872,7 @@ namespace Ionic.Zip
 
                 // read the extended block
                 block = new byte[DataSize - 44];
-                s.Read(block, 0, block.Length);
+                s.Read(block, offset: 0, count: block.Length);
                 // discard the result
 
                 signature = Ionic.Zip.SharedUtilities.ReadSignature(s);
@@ -880,7 +880,7 @@ namespace Ionic.Zip
                     throw new ZipException("Inconsistent metadata in the ZIP64 Central Directory.");
 
                 block = new byte[16];
-                s.Read(block, 0, block.Length);
+                s.Read(block, offset: 0, count: block.Length);
                 // discard the result
 
                 signature = Ionic.Zip.SharedUtilities.ReadSignature(s);
@@ -890,14 +890,14 @@ namespace Ionic.Zip
             // This is a sanity check.
             if (signature != ZipConstants.EndOfCentralDirectorySignature)
             {
-                s.Seek(-4, SeekOrigin.Current);
+                s.Seek(offset: -4, origin: SeekOrigin.Current);
                 throw new BadReadException(String.Format("Bad signature ({0:X8}) at position 0x{1:X8}",
                                                          signature, s.Position));
             }
 
             // read the End-of-Central-Directory-Record
             block = new byte[16];
-            zf.ReadStream.Read(block, 0, block.Length);
+            zf.ReadStream.Read(block, offset: 0, count: block.Length);
 
             // off sz  data
             // -------------------------------------------------------
@@ -913,7 +913,7 @@ namespace Ionic.Zip
 
             if (zf._diskNumberWithCd == 0)
             {
-                zf._diskNumberWithCd = BitConverter.ToUInt16(block, 2);
+                zf._diskNumberWithCd = BitConverter.ToUInt16(block, startIndex: 2);
                 //zf._diskNumberWithCd++; // hack!!
             }
 
@@ -927,13 +927,13 @@ namespace Ionic.Zip
         {
             // read the comment here
             byte[] block = new byte[2];
-            zf.ReadStream.Read(block, 0, block.Length);
+            zf.ReadStream.Read(block, offset: 0, count: block.Length);
 
             Int16 commentLength = (short)(block[0] + block[1] * 256);
             if (commentLength > 0)
             {
                 block = new byte[commentLength];
-                zf.ReadStream.Read(block, 0, block.Length);
+                zf.ReadStream.Read(block, offset: 0, count: block.Length);
 
                 // workitem 10392 - prefer ProvisionalAlternateEncoding,
                 // first.  The fix for workitem 6513 tried to use UTF8
@@ -942,7 +942,7 @@ namespace Ionic.Zip
                 // characters the already-encoded bytes refer
                 // to. Therefore, must do what the user tells us.
 
-                string s1 = zf.AlternateEncoding.GetString(block, 0, block.Length);
+                string s1 = zf.AlternateEncoding.GetString(block, index: 0, count: block.Length);
                 zf.Comment = s1;
             }
         }
@@ -975,7 +975,7 @@ namespace Ionic.Zip
         /// <returns>true if the file appears to be a zip file.</returns>
         public static bool IsZipFile(string fileName)
         {
-            return IsZipFile(fileName, false);
+            return IsZipFile(fileName, testExtract: false);
         }
 
 
@@ -1082,7 +1082,7 @@ namespace Ionic.Zip
 
                 var bitBucket = Stream.Null;
 
-                using (ZipFile zip1 = ZipFile.Read(stream, null, null, null))
+                using (ZipFile zip1 = ZipFile.Read(stream, statusMessageWriter: null, encoding: null, readProgress: null))
                 {
                     if (testExtract)
                     {

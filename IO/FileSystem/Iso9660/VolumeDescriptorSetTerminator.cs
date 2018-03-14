@@ -25,7 +25,7 @@ namespace RC.Framework.FileSystem.Iso9660
     internal class VolumeDescriptorSetTerminator : BaseVolumeDescriptor
     {
         public VolumeDescriptorSetTerminator()
-            : base(VolumeDescriptorType.SetTerminator, 1)
+            : base(VolumeDescriptorType.SetTerminator, version: 1)
         {
         }
     }

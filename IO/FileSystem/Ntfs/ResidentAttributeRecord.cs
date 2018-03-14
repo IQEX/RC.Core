@@ -41,12 +41,12 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             _nonResidentFlag = 0;
             _indexedFlag = (byte)(indexed ? 1 : 0);
-            _memoryBuffer = new SparseMemoryBuffer(1024);
+            _memoryBuffer = new SparseMemoryBuffer(chunkSize: 1024);
         }
 
         public override long AllocatedLength
         {
-            get { return Utilities.RoundUp(DataLength, 8); }
+            get { return Utilities.RoundUp(DataLength, unit: 8); }
             set { throw new NotSupportedException(); }
         }
 
@@ -81,8 +81,8 @@ namespace RC.Framework.FileSystem.Ntfs
                     nameLength = (byte)Name.Length;
                 }
 
-                ushort dataOffset = (ushort)Utilities.RoundUp(nameOffset + (nameLength * 2), 8);
-                return (int)Utilities.RoundUp(dataOffset + _memoryBuffer.Capacity, 8);
+                ushort dataOffset = (ushort)Utilities.RoundUp(nameOffset + (nameLength * 2), unit: 8);
+                return (int)Utilities.RoundUp(dataOffset + _memoryBuffer.Capacity, unit: 8);
             }
         }
 
@@ -96,7 +96,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     nameLength = (byte)Name.Length;
                 }
 
-                return Utilities.RoundUp(0x18 + (nameLength * 2), 8);
+                return Utilities.RoundUp(0x18 + (nameLength * 2), unit: 8);
             }
         }
 
@@ -125,8 +125,8 @@ namespace RC.Framework.FileSystem.Ntfs
                 nameLength = (byte)Name.Length;
             }
 
-            ushort dataOffset = (ushort)Utilities.RoundUp(0x18 + (nameLength * 2), 8);
-            int length = (int)Utilities.RoundUp(dataOffset + _memoryBuffer.Capacity, 8);
+            ushort dataOffset = (ushort)Utilities.RoundUp(0x18 + (nameLength * 2), unit: 8);
+            int length = (int)Utilities.RoundUp(dataOffset + _memoryBuffer.Capacity, unit: 8);
 
             Utilities.WriteBytesLittleEndian((uint)_type, buffer, offset + 0x00);
             Utilities.WriteBytesLittleEndian(length, buffer, offset + 0x04);
@@ -142,10 +142,10 @@ namespace RC.Framework.FileSystem.Ntfs
 
             if (Name != null)
             {
-                Array.Copy(Encoding.Unicode.GetBytes(Name), 0, buffer, offset + nameOffset, nameLength * 2);
+                Array.Copy(Encoding.Unicode.GetBytes(Name), sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + nameOffset, length: nameLength * 2);
             }
 
-            _memoryBuffer.Read(0, buffer, offset + dataOffset, (int)_memoryBuffer.Capacity);
+            _memoryBuffer.Read(pos: 0, buffer: buffer, offset: offset + dataOffset, count: (int)_memoryBuffer.Capacity);
 
             return (int)length;
         }
@@ -170,8 +170,8 @@ namespace RC.Framework.FileSystem.Ntfs
                 throw new IOException("Corrupt attribute, data outside of attribute");
             }
 
-            _memoryBuffer = new SparseMemoryBuffer(1024);
-            _memoryBuffer.Write(0, buffer, offset + dataOffset, (int)dataLength);
+            _memoryBuffer = new SparseMemoryBuffer(chunkSize: 1024);
+            _memoryBuffer.Write(pos: 0, buffer: buffer, offset: offset + dataOffset, count: (int)dataLength);
         }
     }
 }

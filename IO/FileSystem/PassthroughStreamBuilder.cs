@@ -38,7 +38,7 @@ namespace RC.Framework.FileSystem
         {
             _stream.Position = 0;
             List<BuilderExtent> result = new List<BuilderExtent>();
-            result.Add(new BuilderStreamExtent(0, _stream));
+            result.Add(new BuilderStreamExtent(start: 0, source: _stream));
             totalLength = _stream.Length;
             return result;
         }

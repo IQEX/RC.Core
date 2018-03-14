@@ -82,7 +82,7 @@ namespace RC.Framework.Native.Win32.Bitmaps
         /// <returns></returns>
         public float GetXDpi()
         {
-            return (float)Math.Round(biXPelsPerMeter / METER_INCH_RATIO, 0);
+            return (float)Math.Round(biXPelsPerMeter / METER_INCH_RATIO, digits: 0);
         }
         /// <summary>
         /// Gets the vertical dpi of the bitmap.
@@ -90,7 +90,7 @@ namespace RC.Framework.Native.Win32.Bitmaps
         /// <returns></returns>
         public float GetYDpi()
         {
-            return (float)Math.Round(biYPelsPerMeter / METER_INCH_RATIO, 0);
+            return (float)Math.Round(biYPelsPerMeter / METER_INCH_RATIO, digits: 0);
         }
         /// <summary>
         /// Gets the size of the structure.
@@ -218,8 +218,8 @@ namespace RC.Framework.Native.Win32.Bitmaps
             if (biClrUsed > 0)
             {
                 byte[] data = new byte[biClrUsed * 4];
-                Marshal.Copy(new IntPtr(headerPtr.ToInt32() + biSize), data, 0, data.Length);
-                var dummy = new System.Drawing.Bitmap(1, 1, GetDrawingPixelFormat());
+                Marshal.Copy(new IntPtr(headerPtr.ToInt32() + biSize), data, startIndex: 0, length: data.Length);
+                var dummy = new System.Drawing.Bitmap(width: 1, height: 1, format: GetDrawingPixelFormat());
                 ColorPalette pal = dummy.Palette;
                 dummy.Dispose();
                 int index = 0;

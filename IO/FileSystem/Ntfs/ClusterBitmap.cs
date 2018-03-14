@@ -37,7 +37,7 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             _file = file;
             _bitmap = new Bitmap(
-                _file.OpenStream(AttributeType.Data, null, FileAccess.ReadWrite),
+                _file.OpenStream(AttributeType.Data, name: null, access: FileAccess.ReadWrite),
                 Utilities.Ceil(file.Context.BiosParameterBlock.TotalSectors64, file.Context.BiosParameterBlock.SectorsPerCluster));
         }
 
@@ -68,12 +68,12 @@ namespace RC.Framework.FileSystem.Ntfs
                 // The MFT grows sequentially across the disk
                 if (numFound < count && !_fragmentedDiskMode)
                 {
-                    numFound += FindClusters(count - numFound, result, 0, totalClusters, isMft, true, 0);
+                    numFound += FindClusters(count - numFound, result, start: 0, end: totalClusters, isMft: isMft, contiguous: true, headroom: 0);
                 }
 
                 if (numFound < count)
                 {
-                    numFound += FindClusters(count - numFound, result, 0, totalClusters, isMft, false, 0);
+                    numFound += FindClusters(count - numFound, result, start: 0, end: totalClusters, isMft: isMft, contiguous: false, headroom: 0);
                 }
             }
             else
@@ -87,27 +87,27 @@ namespace RC.Framework.FileSystem.Ntfs
                 // Try to find a contiguous range
                 if (numFound < count && !_fragmentedDiskMode)
                 {
-                    numFound += FindClusters(count - numFound, result, totalClusters / 8, totalClusters, isMft, true, total / 4);
+                    numFound += FindClusters(count - numFound, result, totalClusters / 8, totalClusters, isMft, contiguous: true, headroom: total / 4);
                 }
 
                 if (numFound < count)
                 {
-                    numFound += FindClusters(count - numFound, result, totalClusters / 8, totalClusters, isMft, false, 0);
+                    numFound += FindClusters(count - numFound, result, totalClusters / 8, totalClusters, isMft, contiguous: false, headroom: 0);
                 }
 
                 if (numFound < count)
                 {
-                    numFound = FindClusters(count - numFound, result, totalClusters / 16, totalClusters / 8, isMft, false, 0);
+                    numFound = FindClusters(count - numFound, result, totalClusters / 16, totalClusters / 8, isMft, contiguous: false, headroom: 0);
                 }
 
                 if (numFound < count)
                 {
-                    numFound = FindClusters(count - numFound, result, totalClusters / 32, totalClusters / 16, isMft, false, 0);
+                    numFound = FindClusters(count - numFound, result, totalClusters / 32, totalClusters / 16, isMft, contiguous: false, headroom: 0);
                 }
 
                 if (numFound < count)
                 {
-                    numFound = FindClusters(count - numFound, result, 0, totalClusters / 32, isMft, false, 0);
+                    numFound = FindClusters(count - numFound, result, start: 0, end: totalClusters / 32, isMft: isMft, contiguous: false, headroom: 0);
                 }
             }
 

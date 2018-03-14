@@ -54,7 +54,7 @@ namespace RC.Framework.FileSystem.Iscsi
         {
             int numRead = 0;
 
-            byte[] headerData = Utilities.ReadFully(stream, 48);
+            byte[] headerData = Utilities.ReadFully(stream, count: 48);
             numRead += 48;
 
             byte[] contentData = null;
@@ -66,7 +66,7 @@ namespace RC.Framework.FileSystem.Iscsi
             }
 
             BasicHeaderSegment bhs = new BasicHeaderSegment();
-            bhs.ReadFrom(headerData, 0);
+            bhs.ReadFrom(headerData, offset: 0);
 
             if (bhs.DataSegmentLength > 0)
             {
@@ -91,8 +91,8 @@ namespace RC.Framework.FileSystem.Iscsi
 
         private static uint ReadDigest(Stream stream)
         {
-            byte[] data = Utilities.ReadFully(stream, 4);
-            return Utilities.ToUInt32BigEndian(data, 0);
+            byte[] data = Utilities.ReadFully(stream, count: 4);
+            return Utilities.ToUInt32BigEndian(data, offset: 0);
         }
     }
 }

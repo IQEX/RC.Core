@@ -50,7 +50,7 @@ namespace RC.Framework.FileSystem.Iso9660
         public BaseVolumeDescriptor(byte[] src, int offset)
         {
             VolumeDescriptorType = (VolumeDescriptorType)src[offset + 0];
-            StandardIdentifier = Encoding.ASCII.GetString(src, offset + 1, 5);
+            StandardIdentifier = Encoding.ASCII.GetString(src, offset + 1, count: 5);
             VolumeDescriptorVersion = src[offset + 6];
         }
 
@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             Array.Clear(buffer, offset, IsoUtilities.SectorSize);
             buffer[offset] = (byte)VolumeDescriptorType;
-            IsoUtilities.WriteAChars(buffer, offset + 1, 5, StandardIdentifier);
+            IsoUtilities.WriteAChars(buffer, offset + 1, numBytes: 5, str: StandardIdentifier);
             buffer[offset + 6] = VolumeDescriptorVersion;
         }
     }

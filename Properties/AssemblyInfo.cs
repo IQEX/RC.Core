@@ -12,7 +12,7 @@
 [assembly: System.Reflection.AssemblyProduct        (RC.AssemblyRT.Product)]
 [assembly: System.Reflection.AssemblyCopyright      (RC.AssemblyRT.Copyright)]
 [assembly: System.Reflection.AssemblyTrademark      (RC.AssemblyRT.Trademark)]
-[assembly: System.Runtime.InteropServices.ComVisible(true)]
+[assembly: System.Runtime.InteropServices.ComVisible(visibility: true)]
 [assembly: System.Runtime.InteropServices.Guid      (RC.AssemblyRT.GUID)]
 [assembly: System.Reflection.AssemblyVersion("2018.1")]
 [assembly: System.Reflection.AssemblyFileVersion("2018.1")]

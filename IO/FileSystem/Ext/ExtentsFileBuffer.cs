@@ -112,7 +112,7 @@ namespace RC.Framework.FileSystem.Ext
         public override IEnumerable<StreamExtent> GetExtentsInRange(long start, long count)
         {
             return StreamExtent.Intersect(
-                new StreamExtent[] { new StreamExtent(0, Capacity) },
+                new StreamExtent[] { new StreamExtent(start: 0, length: Capacity) },
                 new StreamExtent(start, count));
         }
 
@@ -192,7 +192,7 @@ namespace RC.Framework.FileSystem.Ext
             uint blockSize = _context.SuperBlock.BlockSize;
             _context.RawStream.Position = idxEntry.LeafPhysicalBlock * blockSize;
             byte[] buffer = Utilities.ReadFully(_context.RawStream, (int)blockSize);
-            ExtentBlock subBlock = Utilities.ToStruct<ExtentBlock>(buffer, 0);
+            ExtentBlock subBlock = Utilities.ToStruct<ExtentBlock>(buffer, offset: 0);
             return subBlock;
         }
     }

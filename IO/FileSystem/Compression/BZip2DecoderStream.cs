@@ -63,16 +63,16 @@ namespace RC.Framework.FileSystem.Compression
 
             // The Magic BZh
             byte[] magic = new byte[3];
-            magic[0] = (byte)_bitstream.Read(8);
-            magic[1] = (byte)_bitstream.Read(8);
-            magic[2] = (byte)_bitstream.Read(8);
+            magic[0] = (byte)_bitstream.Read(count: 8);
+            magic[1] = (byte)_bitstream.Read(count: 8);
+            magic[2] = (byte)_bitstream.Read(count: 8);
             if (magic[0] != 0x42 || magic[1] != 0x5A || magic[2] != 0x68)
             {
                 throw new InvalidDataException("Bad magic at start of stream");
             }
 
             // The size of the decompression blocks in multiples of 100,000
-            int blockSize = (int)_bitstream.Read(8) - 0x30;
+            int blockSize = (int)_bitstream.Read(count: 8) - 0x30;
             if (blockSize < 1 || blockSize > 9)
             {
                 throw new InvalidDataException("Unexpected block size in header: " + blockSize);
@@ -296,8 +296,8 @@ namespace RC.Framework.FileSystem.Compression
             ulong marker = ReadMarker();
             if (marker == 0x314159265359)
             {
-                int blockSize = _blockDecoder.Process(_bitstream, _blockBuffer, 0);
-                _rleStream.Reset(_blockBuffer, 0, blockSize);
+                int blockSize = _blockDecoder.Process(_bitstream, _blockBuffer, outputBufferOffset: 0);
+                _rleStream.Reset(_blockBuffer, offset: 0, count: blockSize);
                 _blockCrc = _blockDecoder.Crc;
                 _calcBlockCrc = new BZip2Crc32();
                 return blockSize;
@@ -319,7 +319,7 @@ namespace RC.Framework.FileSystem.Compression
 
             for (int i = 0; i < 4; ++i)
             {
-                val = (val << 8) | _bitstream.Read(8);
+                val = (val << 8) | _bitstream.Read(count: 8);
             }
 
             return val;
@@ -331,7 +331,7 @@ namespace RC.Framework.FileSystem.Compression
 
             for (int i = 0; i < 6; ++i)
             {
-                marker = (marker << 8) | _bitstream.Read(8);
+                marker = (marker << 8) | _bitstream.Read(count: 8);
             }
 
             return marker;

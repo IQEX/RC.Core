@@ -41,15 +41,15 @@ namespace RC.Framework.FileSystem.Iso9660
             uint rootDirDataLength,
             DateTime buildTime,
             Encoding enc)
-            : base(VolumeDescriptorType.Supplementary, 1, volumeSpaceSize, pathTableSize, typeLPathTableLocation, typeMPathTableLocation, rootDirExtentLocation, rootDirDataLength, buildTime, enc)
+            : base(VolumeDescriptorType.Supplementary, version: 1, volumeSpaceSize: volumeSpaceSize, pathTableSize: pathTableSize, typeLPathTableLocation: typeLPathTableLocation, typeMPathTableLocation: typeMPathTableLocation, rootDirExtentLocation: rootDirExtentLocation, rootDirDataLength: rootDirDataLength, buildTime: buildTime, enc: enc)
         {
         }
 
         internal override void WriteTo(byte[] buffer, int offset)
         {
             base.WriteTo(buffer, offset);
-            IsoUtilities.WriteA1Chars(buffer, offset + 8, 32, SystemIdentifier, CharacterEncoding);
-            IsoUtilities.WriteString(buffer, offset + 40, 32, true, VolumeIdentifier, CharacterEncoding, true);
+            IsoUtilities.WriteA1Chars(buffer, offset + 8, numBytes: 32, str: SystemIdentifier, enc: CharacterEncoding);
+            IsoUtilities.WriteString(buffer, offset + 40, numBytes: 32, pad: true, str: VolumeIdentifier, enc: CharacterEncoding, canTruncate: true);
             IsoUtilities.ToBothFromUInt32(buffer, offset + 80, VolumeSpaceSize);
             IsoUtilities.EncodingToBytes(CharacterEncoding, buffer, offset + 88);
             IsoUtilities.ToBothFromUInt16(buffer, offset + 120, VolumeSetSize);
@@ -61,13 +61,13 @@ namespace RC.Framework.FileSystem.Iso9660
             IsoUtilities.ToBytesFromUInt32(buffer, offset + 148, Utilities.BitSwap(TypeMPathTableLocation));
             IsoUtilities.ToBytesFromUInt32(buffer, offset + 152, Utilities.BitSwap(OptionalTypeMPathTableLocation));
             RootDirectory.WriteTo(buffer, offset + 156, CharacterEncoding);
-            IsoUtilities.WriteD1Chars(buffer, offset + 190, 129, VolumeSetIdentifier, CharacterEncoding);
-            IsoUtilities.WriteA1Chars(buffer, offset + 318, 129, PublisherIdentifier, CharacterEncoding);
-            IsoUtilities.WriteA1Chars(buffer, offset + 446, 129, DataPreparerIdentifier, CharacterEncoding);
-            IsoUtilities.WriteA1Chars(buffer, offset + 574, 129, ApplicationIdentifier, CharacterEncoding);
-            IsoUtilities.WriteD1Chars(buffer, offset + 702, 37, CopyrightFileIdentifier, CharacterEncoding); // FIXME!!
-            IsoUtilities.WriteD1Chars(buffer, offset + 739, 37, AbstractFileIdentifier, CharacterEncoding); // FIXME!!
-            IsoUtilities.WriteD1Chars(buffer, offset + 776, 37, BibliographicFileIdentifier, CharacterEncoding); // FIXME!!
+            IsoUtilities.WriteD1Chars(buffer, offset + 190, numBytes: 129, str: VolumeSetIdentifier, enc: CharacterEncoding);
+            IsoUtilities.WriteA1Chars(buffer, offset + 318, numBytes: 129, str: PublisherIdentifier, enc: CharacterEncoding);
+            IsoUtilities.WriteA1Chars(buffer, offset + 446, numBytes: 129, str: DataPreparerIdentifier, enc: CharacterEncoding);
+            IsoUtilities.WriteA1Chars(buffer, offset + 574, numBytes: 129, str: ApplicationIdentifier, enc: CharacterEncoding);
+            IsoUtilities.WriteD1Chars(buffer, offset + 702, numBytes: 37, str: CopyrightFileIdentifier, enc: CharacterEncoding); // FIXME!!
+            IsoUtilities.WriteD1Chars(buffer, offset + 739, numBytes: 37, str: AbstractFileIdentifier, enc: CharacterEncoding); // FIXME!!
+            IsoUtilities.WriteD1Chars(buffer, offset + 776, numBytes: 37, str: BibliographicFileIdentifier, enc: CharacterEncoding); // FIXME!!
             IsoUtilities.ToVolumeDescriptorTimeFromUTC(buffer, offset + 813, CreationDateAndTime);
             IsoUtilities.ToVolumeDescriptorTimeFromUTC(buffer, offset + 830, ModificationDateAndTime);
             IsoUtilities.ToVolumeDescriptorTimeFromUTC(buffer, offset + 847, ExpirationDateAndTime);

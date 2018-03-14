@@ -63,7 +63,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal void Read(byte[] buffer, int offset)
         {
-            Name = Encoding.Unicode.GetString(buffer, offset + 0, 128).Trim('\0');
+            Name = Encoding.Unicode.GetString(buffer, offset + 0, count: 128).Trim('\0');
             Type = (AttributeType)Utilities.ToUInt32LittleEndian(buffer, offset + 0x80);
             DisplayRule = Utilities.ToUInt32LittleEndian(buffer, offset + 0x84);
             CollationRule = (AttributeCollationRule)Utilities.ToUInt32LittleEndian(buffer, offset + 0x88);
@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal void Write(byte[] buffer, int offset)
         {
-            Encoding.Unicode.GetBytes(Name, 0, Name.Length, buffer, offset + 0);
+            Encoding.Unicode.GetBytes(Name, charIndex: 0, charCount: Name.Length, bytes: buffer, byteIndex: offset + 0);
             Utilities.WriteBytesLittleEndian((uint)Type, buffer, offset + 0x80);
             Utilities.WriteBytesLittleEndian(DisplayRule, buffer, offset + 0x84);
             Utilities.WriteBytesLittleEndian((uint)CollationRule, buffer, offset + 0x88);

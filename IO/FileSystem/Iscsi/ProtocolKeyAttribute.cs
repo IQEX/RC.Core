@@ -123,7 +123,7 @@ namespace RC.Framework.FileSystem.Iscsi
                 {
                     if (info.IsLiteral)
                     {
-                        object literalValue = info.GetValue(null);
+                        object literalValue = info.GetValue(obj: null);
                         if (literalValue.Equals(value))
                         {
                             Attribute attr = Attribute.GetCustomAttribute(info, typeof(ProtocolKeyValueAttribute));
@@ -164,7 +164,7 @@ namespace RC.Framework.FileSystem.Iscsi
                         Attribute attr = Attribute.GetCustomAttribute(info, typeof(ProtocolKeyValueAttribute));
                         if (attr != null && ((ProtocolKeyValueAttribute)attr).Name == value)
                         {
-                            return info.GetValue(null);
+                            return info.GetValue(obj: null);
                         }
                     }
                 }

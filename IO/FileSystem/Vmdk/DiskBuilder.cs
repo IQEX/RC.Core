@@ -127,7 +127,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
             if (_diskType == DiskCreateType.Vmfs)
             {
-                ExtentDescriptor extent = new ExtentDescriptor(ExtentAccess.ReadWrite, Content.Length / 512, ExtentType.Vmfs, baseName + "-flat.vmdk", 0);
+                ExtentDescriptor extent = new ExtentDescriptor(ExtentAccess.ReadWrite, Content.Length / 512, ExtentType.Vmfs, baseName + "-flat.vmdk", offset: 0);
                 baseDescriptor.Extents.Add(extent);
 
                 MemoryStream ms = new MemoryStream();
@@ -138,7 +138,7 @@ namespace RC.Framework.FileSystem.Vmdk
             }
             else if (_diskType == DiskCreateType.VmfsSparse)
             {
-                ExtentDescriptor extent = new ExtentDescriptor(ExtentAccess.ReadWrite, Content.Length / 512, ExtentType.VmfsSparse, baseName + "-sparse.vmdk", 0);
+                ExtentDescriptor extent = new ExtentDescriptor(ExtentAccess.ReadWrite, Content.Length / 512, ExtentType.VmfsSparse, baseName + "-sparse.vmdk", offset: 0);
                 baseDescriptor.Extents.Add(extent);
 
                 MemoryStream ms = new MemoryStream();

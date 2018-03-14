@@ -41,7 +41,7 @@ namespace RC.Framework.FileSystem.Udf
             AttributeSubType = buffer[offset + 4];
             int dataLength = Utilities.ToInt32LittleEndian(buffer, offset + 8) - 12;
             AttributeData = new byte[dataLength];
-            Array.Copy(buffer, offset + 12, AttributeData, 0, dataLength);
+            Array.Copy(buffer, offset + 12, AttributeData, destinationIndex: 0, length: dataLength);
 
             return 12 + dataLength;
         }

@@ -48,12 +48,12 @@ namespace RC.Framework.FileSystem.Iscsi
             _basicHeader.DataSegmentLength = 0;
             _basicHeader.InitiatorTaskTag = _connection.Session.CurrentTaskTag;
 
-            byte[] buffer = new byte[Utilities.RoundUp(48, 4)];
-            _basicHeader.WriteTo(buffer, 0);
+            byte[] buffer = new byte[Utilities.RoundUp(value: 48, unit: 4)];
+            _basicHeader.WriteTo(buffer, offset: 0);
             buffer[1] |= (byte)((byte)reason & 0x7F);
-            Utilities.WriteBytesBigEndian(_connection.Id, buffer, 20);
-            Utilities.WriteBytesBigEndian(_connection.Session.CommandSequenceNumber, buffer, 24);
-            Utilities.WriteBytesBigEndian(_connection.ExpectedStatusSequenceNumber, buffer, 28);
+            Utilities.WriteBytesBigEndian(_connection.Id, buffer, offset: 20);
+            Utilities.WriteBytesBigEndian(_connection.Session.CommandSequenceNumber, buffer, offset: 24);
+            Utilities.WriteBytesBigEndian(_connection.ExpectedStatusSequenceNumber, buffer, offset: 28);
             return buffer;
         }
     }

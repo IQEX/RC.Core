@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.Ntfs
         public void AlignVirtualClusterCount()
         {
             _file.MarkMftRecordDirty();
-            _activeStream.ExpandToClusters(Utilities.Ceil(_attribute.Length, _bytesPerCluster), (NonResidentAttributeRecord)_attribute.LastExtent, false);
+            _activeStream.ExpandToClusters(Utilities.Ceil(_attribute.Length, _bytesPerCluster), (NonResidentAttributeRecord)_attribute.LastExtent, allocate: false);
         }
 
         public override void SetCapacity(long value)
@@ -99,7 +99,7 @@ namespace RC.Framework.FileSystem.Ntfs
             }
             else
             {
-                _activeStream.ExpandToClusters(newClusterCount, (NonResidentAttributeRecord)_attribute.LastExtent, true);
+                _activeStream.ExpandToClusters(newClusterCount, (NonResidentAttributeRecord)_attribute.LastExtent, allocate: true);
 
                 PrimaryAttributeRecord.AllocatedLength = _cookedRuns.NextVirtualCluster * _bytesPerCluster;
             }
@@ -151,9 +151,9 @@ namespace RC.Framework.FileSystem.Ntfs
                     // Unaligned or short write
                     int toWrite = (int)Math.Min(remaining, _bytesPerCluster - clusterOffset);
 
-                    _activeStream.ReadClusters(vcn, 1, _ioBuffer, 0);
+                    _activeStream.ReadClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
                     Array.Copy(buffer, offset + (focusPos - pos), _ioBuffer, clusterOffset, toWrite);
-                    allocatedClusters += _activeStream.WriteClusters(vcn, 1, _ioBuffer, 0);
+                    allocatedClusters += _activeStream.WriteClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
 
                     focusPos += toWrite;
                 }
@@ -230,9 +230,9 @@ namespace RC.Framework.FileSystem.Ntfs
 
                     if (_activeStream.IsClusterStored(vcn))
                     {
-                        _activeStream.ReadClusters(vcn, 1, _ioBuffer, 0);
+                        _activeStream.ReadClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
                         Array.Clear(_ioBuffer, (int)clusterOffset, toClear);
-                        releasedClusters -= _activeStream.WriteClusters(vcn, 1, _ioBuffer, 0);
+                        releasedClusters -= _activeStream.WriteClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
                     }
 
                     focusPos += toClear;
@@ -299,9 +299,9 @@ namespace RC.Framework.FileSystem.Ntfs
 
                     if (_activeStream.IsClusterStored(vcn))
                     {
-                        _activeStream.ReadClusters(vcn, 1, _ioBuffer, 0);
+                        _activeStream.ReadClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
                         Array.Clear(_ioBuffer, clusterOffset, toClear);
-                        clustersAllocated += _activeStream.WriteClusters(vcn, 1, _ioBuffer, 0);
+                        clustersAllocated += _activeStream.WriteClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
                     }
 
                     initDataLen += toClear;
@@ -342,7 +342,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
             }
 
-            PrimaryAttributeRecord.LastVcn = Math.Max(0, endVcn - 1);
+            PrimaryAttributeRecord.LastVcn = Math.Max(val1: 0, val2: endVcn - 1);
             PrimaryAttributeRecord.AllocatedLength = endVcn * _bytesPerCluster;
             PrimaryAttributeRecord.DataLength = value;
             PrimaryAttributeRecord.InitializedDataLength = Math.Min(PrimaryAttributeRecord.InitializedDataLength, value);

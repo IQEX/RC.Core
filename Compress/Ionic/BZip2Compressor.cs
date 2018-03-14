@@ -99,7 +99,7 @@ namespace Ionic.BZip2
         private int last;  // index into the block of the last char processed
         private int outBlockFillThreshold;
         private CompressionState cstate;
-        private readonly Ionic.Crc.CRC32 crc = new Ionic.Crc.CRC32(true);
+        private readonly Ionic.Crc.CRC32 crc = new Ionic.Crc.CRC32(reverseBits: true);
         BitWriter bw;
         int runs;
 
@@ -276,7 +276,7 @@ namespace Ionic.BZip2
             {
                 if (++this.runLength > 254)
                 {
-                    rc = AddRunToOutputBlock(false);
+                    rc = AddRunToOutputBlock(final: false);
                     this.currentByte = -1;
                     this.runLength = 0;
                     return (rc) ? 2 : 1;
@@ -287,7 +287,7 @@ namespace Ionic.BZip2
             // This byte requires a new run.
             // Put the prior run into the Run-length-encoded block,
             // and try to start a new run.
-            rc = AddRunToOutputBlock(false);
+            rc = AddRunToOutputBlock(final: false);
 
             if (rc)
             {
@@ -398,7 +398,7 @@ namespace Ionic.BZip2
         public void CompressAndWrite() // endBlock
         {
             if (this.runLength > 0)
-                AddRunToOutputBlock(true);
+                AddRunToOutputBlock(final: true);
 
             this.currentByte = -1;
 
@@ -423,18 +423,18 @@ namespace Ionic.BZip2
              * donot rely on these statistical properties. They are only important
              * when trying to recover blocks from damaged files.
              */
-            this.bw.WriteByte(0x31);
-            this.bw.WriteByte(0x41);
-            this.bw.WriteByte(0x59);
-            this.bw.WriteByte(0x26);
-            this.bw.WriteByte(0x53);
-            this.bw.WriteByte(0x59);
+            this.bw.WriteByte(b: 0x31);
+            this.bw.WriteByte(b: 0x41);
+            this.bw.WriteByte(b: 0x59);
+            this.bw.WriteByte(b: 0x26);
+            this.bw.WriteByte(b: 0x53);
+            this.bw.WriteByte(b: 0x59);
 
             this.Crc32 = (uint) this.crc.Crc32Result;
             this.bw.WriteInt(this.Crc32);
 
             /* Now a single bit indicating randomisation. */
-            this.bw.WriteBits(1, (this.blockRandomised)?1U:0U);
+            this.bw.WriteBits(nbits: 1, value: (this.blockRandomised)?1U:0U);
 
             /* Finally, block's contents proper. */
             moveToFrontCodeAndSend();
@@ -593,7 +593,7 @@ namespace Ionic.BZip2
                         int hi = (ftab[sb + 1] & CLEARMASK) - 1;
                         if (hi > lo)
                         {
-                            mainQSort3(dataShadow, lo, hi, 2);
+                            mainQSort3(dataShadow, lo, hi, dSt: 2);
                             if (firstAttemptShadow
                                 && (this.workDone > workLimitShadow))
                             {
@@ -1640,7 +1640,7 @@ namespace Ionic.BZip2
                  */
                 for (int t = 0; t < nGroups; t++)
                 {
-                    hbMakeCodeLengths(len[t], rfreq[t], this.cstate, alphaSize, 20);
+                    hbMakeCodeLengths(len[t], rfreq[t], this.cstate, alphaSize, maxLen: 20);
                 }
             }
 
@@ -1732,7 +1732,7 @@ namespace Ionic.BZip2
                 if (inUse16[i])
                     u |= 1U << (16 - i - 1);
             }
-            this.bw.WriteBits(16, u);
+            this.bw.WriteBits(nbits: 16, value: u);
 
 
             for (int i = 0; i < 16; i++)
@@ -1748,7 +1748,7 @@ namespace Ionic.BZip2
                             u |= 1U << (16 - j - 1);
                         }
                     }
-                    this.bw.WriteBits(16, u);
+                    this.bw.WriteBits(nbits: 16, value: u);
                 }
             }
         }
@@ -1756,8 +1756,8 @@ namespace Ionic.BZip2
 
         private void sendMTFValues5(int nGroups, int nSelectors)
         {
-            this.bw.WriteBits(3, (uint) nGroups);
-            this.bw.WriteBits(15, (uint) nSelectors);
+            this.bw.WriteBits(nbits: 3, value: (uint) nGroups);
+            this.bw.WriteBits(nbits: 15, value: (uint) nSelectors);
 
             byte[] selectorMtf = this.cstate.selectorMtf;
 
@@ -1765,10 +1765,10 @@ namespace Ionic.BZip2
             {
                 for (int j = 0, hj = selectorMtf[i] & 0xff; j < hj; j++)
                 {
-                    this.bw.WriteBits(1, 1);
+                    this.bw.WriteBits(nbits: 1, value: 1);
                 }
 
-                this.bw.WriteBits(1, 0);
+                this.bw.WriteBits(nbits: 1, value: 0);
             }
         }
 
@@ -1780,24 +1780,24 @@ namespace Ionic.BZip2
             {
                 byte[] len_t = len[t];
                 uint curr = (uint) (len_t[0] & 0xff);
-                this.bw.WriteBits(5, curr);
+                this.bw.WriteBits(nbits: 5, value: curr);
 
                 for (int i = 0; i < alphaSize; i++)
                 {
                     int lti = len_t[i] & 0xff;
                     while (curr < lti)
                     {
-                        this.bw.WriteBits(2, 2U);
+                        this.bw.WriteBits(nbits: 2, value: 2U);
                         curr++; /* 10 */
                     }
 
                     while (curr > lti)
                     {
-                        this.bw.WriteBits(2, 3U);
+                        this.bw.WriteBits(nbits: 2, value: 3U);
                         curr--; /* 11 */
                     }
 
-                    this.bw.WriteBits(1, 0U);
+                    this.bw.WriteBits(nbits: 1, value: 0U);
                 }
             }
         }
@@ -1835,7 +1835,7 @@ namespace Ionic.BZip2
 
         private void moveToFrontCodeAndSend()
         {
-            this.bw.WriteBits(24, (uint) this.origPtr);
+            this.bw.WriteBits(nbits: 24, value: (uint) this.origPtr);
             generateMTFValues();
             sendMTFValues();
         }

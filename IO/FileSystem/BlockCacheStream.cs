@@ -278,7 +278,7 @@ namespace RC.Framework.FileSystem
                     // Do the read
                     _stats.TotalReadsOut++;
                     _wrappedStream.Position = readPosition;
-                    int bytesRead = Utilities.ReadFully(_wrappedStream, _readBuffer, 0, bytesToRead);
+                    int bytesRead = Utilities.ReadFully(_wrappedStream, _readBuffer, offset: 0, length: bytesToRead);
                     if (bytesRead != bytesToRead)
                     {
                         throw new IOException("Short read before end of stream");
@@ -289,7 +289,7 @@ namespace RC.Framework.FileSystem
                     {
                         int copyBytes = Math.Min(blockSize, bytesToRead - (i * blockSize));
                         block = _cache.GetBlock(firstBlock + blocksRead + i);
-                        Array.Copy(_readBuffer, i * blockSize, block.Data, 0, copyBytes);
+                        Array.Copy(_readBuffer, i * blockSize, block.Data, destinationIndex: 0, length: copyBytes);
                         block.Available = copyBytes;
 
                         if (copyBytes < blockSize)

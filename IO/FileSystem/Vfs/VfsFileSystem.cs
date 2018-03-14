@@ -178,7 +178,7 @@ namespace RC.Framework.FileSystem.Vfs
             Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
             List<string> dirs = new List<string>();
-            DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, true, false);
+            DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, dirs: true, files: false);
             return dirs.ToArray();
         }
 
@@ -195,7 +195,7 @@ namespace RC.Framework.FileSystem.Vfs
             Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
             List<string> results = new List<string>();
-            DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, false, true);
+            DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, dirs: false, files: true);
             return results.ToArray();
         }
 
@@ -287,7 +287,7 @@ namespace RC.Framework.FileSystem.Vfs
             string fileName = Utilities.GetFileFromPath(path);
             string attributeName = null;
 
-            int streamSepPos = fileName.IndexOf(':');
+            int streamSepPos = fileName.IndexOf(value: ':');
             if (streamSepPos >= 0)
             {
                 attributeName = fileName.Substring(streamSepPos + 1);
@@ -366,7 +366,7 @@ namespace RC.Framework.FileSystem.Vfs
 
                 if (mode == FileMode.Create || mode == FileMode.Truncate)
                 {
-                    stream.SetLength(0);
+                    stream.SetLength(value: 0);
                 }
 
                 return stream;
@@ -668,7 +668,7 @@ namespace RC.Framework.FileSystem.Vfs
         private TDirEntry GetDirectoryEntry(TDirectory dir, string path)
         {
             string[] pathElements = path.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            return GetDirectoryEntry(dir, pathElements, 0);
+            return GetDirectoryEntry(dir, pathElements, pathOffset: 0);
         }
 
         private TDirEntry GetDirectoryEntry(TDirectory dir, string[] pathEntries, int pathOffset)

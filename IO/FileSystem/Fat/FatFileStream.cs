@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.Fat
         {
             get
             {
-                return new StreamExtent[] { new StreamExtent(0, Length) };
+                return new StreamExtent[] { new StreamExtent(start: 0, length: Length) };
             }
         }
 

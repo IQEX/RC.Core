@@ -54,7 +54,7 @@ namespace Ionic.Zlib
             int n = size + ((size / 32768)+1) * 5 * 2;
             this.compressed = new byte[n];
             this.compressor = new ZlibCodec();
-            this.compressor.InitializeDeflate(compressLevel, false);
+            this.compressor.InitializeDeflate(compressLevel, wantRfc1950Header: false);
             this.compressor.OutputBuffer = this.compressed;
             this.compressor.InputBuffer = this.buffer;
             this.index = ix;
@@ -221,7 +221,7 @@ namespace Ionic.Zlib
         /// </example>
         /// <param name="stream">The stream to which compressed data will be written.</param>
         public ParallelDeflateOutputStream(System.IO.Stream stream)
-            : this(stream, CompressionLevel.Default, CompressionStrategy.Default, false)
+            : this(stream, CompressionLevel.Default, CompressionStrategy.Default, leaveOpen: false)
         {
         }
 
@@ -235,7 +235,7 @@ namespace Ionic.Zlib
         /// <param name="stream">The stream to which compressed data will be written.</param>
         /// <param name="level">A tuning knob to trade speed for effectiveness.</param>
         public ParallelDeflateOutputStream(System.IO.Stream stream, CompressionLevel level)
-            : this(stream, level, CompressionStrategy.Default, false)
+            : this(stream, level, CompressionStrategy.Default, leaveOpen: false)
         {
         }
 
@@ -487,7 +487,7 @@ namespace Ionic.Zlib
                 _toFill.Enqueue(i);
             }
 
-            _newlyCompressedBlob = new AutoResetEvent(false);
+            _newlyCompressedBlob = new AutoResetEvent(initialState: false);
             _runningCrc = new Ionic.Crc.CRC32();
             _currentlyFilling = -1;
             _lastFilled = -1;
@@ -558,7 +558,7 @@ namespace Ionic.Zlib
             do
             {
                 // may need to make buffers available
-                EmitPendingBuffers(false, mustWait);
+                EmitPendingBuffers(doAll: false, mustWait: mustWait);
 
                 mustWait = false;
                 // use current buffer, or get a new buffer to fill
@@ -654,7 +654,7 @@ namespace Ionic.Zlib
             // and then stop.
             byte[] buffer = new byte[128];
             var compressor = new ZlibCodec();
-            int rc = compressor.InitializeDeflate(_compressLevel, false);
+            int rc = compressor.InitializeDeflate(_compressLevel, wantRfc1950Header: false);
             compressor.InputBuffer = null;
             compressor.NextIn = 0;
             compressor.AvailableBytesIn = 0;
@@ -672,7 +672,7 @@ namespace Ionic.Zlib
                             "Emit     begin    flush bytes({0})",
                             buffer.Length - compressor.AvailableBytesOut);
 
-                _outStream.Write(buffer, 0, buffer.Length - compressor.AvailableBytesOut);
+                _outStream.Write(buffer, offset: 0, count: buffer.Length - compressor.AvailableBytesOut);
 
                 TraceOutput(TraceBits.EmitDone,
                             "Emit     done     flush");
@@ -701,12 +701,12 @@ namespace Ionic.Zlib
 
             if (lastInput)
             {
-                EmitPendingBuffers(true, false);
+                EmitPendingBuffers(doAll: true, mustWait: false);
                 _FlushFinish();
             }
             else
             {
-                EmitPendingBuffers(false, false);
+                EmitPendingBuffers(doAll: false, mustWait: false);
             }
         }
 
@@ -727,7 +727,7 @@ namespace Ionic.Zlib
             if (_handlingException)
                 return;
 
-            _Flush(false);
+            _Flush(lastInput: false);
         }
 
 
@@ -755,7 +755,7 @@ namespace Ionic.Zlib
 
             if (_isClosed) return;
 
-            _Flush(true);
+            _Flush(lastInput: true);
 
             if (!_leaveOpen)
                 _outStream.Close();
@@ -783,7 +783,7 @@ namespace Ionic.Zlib
             TraceOutput(TraceBits.Lifecycle, "Dispose  {0:X8}", this.GetHashCode());
             Close();
             _pool = null;
-            Dispose(true);
+            Dispose(disposing: true);
         }
 
 
@@ -944,7 +944,7 @@ namespace Ionic.Zlib
                                         workitem.ordinal,
                                         workitem.compressedBytesAvailable);
 
-                            _outStream.Write(workitem.compressed, 0, workitem.compressedBytesAvailable);
+                            _outStream.Write(workitem.compressed, offset: 0, count: workitem.compressedBytesAvailable);
                             _runningCrc.Combine(workitem.crc, workitem.inputBytesAvailable);
                             _totalBytesProcessed += workitem.inputBytesAvailable;
                             workitem.inputBytesAvailable = 0;
@@ -1158,7 +1158,7 @@ namespace Ionic.Zlib
                 Ionic.Crc.CRC32 crc = new Ionic.Crc.CRC32();
 
                 // calc CRC on the buffer
-                crc.SlurpBlock(workitem.buffer, 0, workitem.inputBytesAvailable);
+                crc.SlurpBlock(workitem.buffer, offset: 0, count: workitem.inputBytesAvailable);
 
                 // deflate it
                 DeflateOneSegment(workitem);

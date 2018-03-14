@@ -52,15 +52,15 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
 
         public void ReadFrom(byte[] buffer, int offset)
         {
-            Signature = Utilities.BytesToString(buffer, offset + 0x00, 4);
+            Signature = Utilities.BytesToString(buffer, offset + 0x00, count: 4);
             NumVBlks = Utilities.ToUInt32BigEndian(buffer, offset + 0x04);
             BlockSize = Utilities.ToUInt32BigEndian(buffer, offset + 0x08);
             HeaderSize = Utilities.ToUInt32BigEndian(buffer, offset + 0x0C);
             Unknown1 = Utilities.ToUInt16BigEndian(buffer, offset + 0x10);
             VersionNum = Utilities.ToUInt16BigEndian(buffer, offset + 0x12);
             VersionDenom = Utilities.ToUInt16BigEndian(buffer, offset + 0x14);
-            GroupName = Utilities.BytesToString(buffer, offset + 0x16, 31).Trim('\0');
-            DiskGroupId = Utilities.BytesToString(buffer, offset + 0x35, 0x40).Trim('\0');
+            GroupName = Utilities.BytesToString(buffer, offset + 0x16, count: 31).Trim('\0');
+            DiskGroupId = Utilities.BytesToString(buffer, offset + 0x35, count: 0x40).Trim('\0');
 
             // May be wrong way round...
             CommittedSequence = Utilities.ToInt64BigEndian(buffer, offset + 0x75);

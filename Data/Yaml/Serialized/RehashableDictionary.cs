@@ -164,26 +164,26 @@ namespace RC.Framework.Yaml
         void AddCore(K key, V value, bool exclusive)
         {
             var newkv = new KeyValue(key, value);
-            FindItem(key, false, default(V),
-                (hash) => {                             // not found hash
+            FindItem(key, compareValue: false, value: default(V),
+                NotFoundHash: (hash) => {                             // not found hash
                     items.Add(hash, newkv);
                     hashes.Add(key, hash);
                 },
-                (hash, oldkv) => {                      // hash hit one entry but key not found
+                NotFoundKeyOne: (hash, oldkv) => {                      // hash hit one entry but key not found
                     var list = new List<KeyValue>();
                     list.Add(oldkv);
                     items[hash] = list;
                     list.Add(newkv);
                     hashes.Add(key, hash);
                 },
-                (hash, oldkv) => {                      // hash hit one entry and key found
+                FoundOne: (hash, oldkv) => {                      // hash hit one entry and key found
                     ReplaceKeyValue(oldkv, newkv, exclusive);
                 },
-                (hash, list) => {                       // hash hit several entries but key not found
+                NotFoundKeyList: (hash, list) => {                       // hash hit several entries but key not found
                     list.Add(newkv);
                     hashes.Add(key, hash);
                 },
-                (hash, oldkv, list, i) => {             // hash hit several entries and key found
+                FoundList: (hash, oldkv, list, i) => {             // hash hit several entries and key found
                     ReplaceKeyValue(oldkv, newkv, exclusive);
                 }
                 );
@@ -227,10 +227,10 @@ namespace RC.Framework.Yaml
         {
             bool result = true;
             V v = default(V);
-            FindItem(key, false, default(V),
-                (hash) => { result = false; },              // key not found
-                (hash, kv) => { v = kv.value; },            // hash hit one entry and key found
-                (hash, kv, list, i) => { v = kv.value; }    // hash hit several entries and key found
+            FindItem(key, compareValue: false, value: default(V),
+                NotFound: (hash) => { result = false; },              // key not found
+                FoundOne: (hash, kv) => { v = kv.value; },            // hash hit one entry and key found
+                FoundList: (hash, kv, list, i) => { v = kv.value; }    // hash hit several entries and key found
                 );
             value = v;
             return result;
@@ -381,7 +381,7 @@ namespace RC.Framework.Yaml
 
         public void Add(K key, V value)
         {
-            AddCore(key, value, true);
+            AddCore(key, value, exclusive: true);
         }
 
         public bool ContainsKey(K key)
@@ -500,7 +500,7 @@ namespace RC.Framework.Yaml
 
         public bool Remove(K key)
         {
-            return RemoveCore(key, false, default(V));
+            return RemoveCore(key, compareValue: false, value: default(V));
         }
 
         public bool TryGetValue(K key, out V value)
@@ -552,7 +552,7 @@ namespace RC.Framework.Yaml
             }
             set
             {
-                AddCore(key, value, false);
+                AddCore(key, value, exclusive: false);
             }
         }
 
@@ -562,7 +562,7 @@ namespace RC.Framework.Yaml
 
         public void Add(KeyValuePair<K, V> item)
         {
-            AddCore(item.Key, item.Value, true);
+            AddCore(item.Key, item.Value, exclusive: true);
         }
 
         public void Clear()
@@ -601,7 +601,7 @@ namespace RC.Framework.Yaml
 
         public bool Remove(KeyValuePair<K, V> item)
         {
-            return RemoveCore(item.Key, true, item.Value);
+            return RemoveCore(item.Key, compareValue: true, value: item.Value);
         }
 
         #endregion

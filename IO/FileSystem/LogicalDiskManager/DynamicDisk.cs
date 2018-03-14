@@ -115,10 +115,10 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
                 {
                     disk.Content.Position = headerPos;
                     byte[] buffer = new byte[Sizes.Sector];
-                    disk.Content.Read(buffer, 0, buffer.Length);
+                    disk.Content.Read(buffer, offset: 0, count: buffer.Length);
 
                     PrivateHeader hdr = new PrivateHeader();
-                    hdr.ReadFrom(buffer, 0);
+                    hdr.ReadFrom(buffer, offset: 0);
                     return hdr;
                 }
             }
@@ -131,9 +131,9 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
             byte[] buffer = new byte[_header.TocSizeLba * 512];
             _disk.Content.Position = (_header.ConfigurationStartLba * 512) + (1 * _header.TocSizeLba * 512);
 
-            _disk.Content.Read(buffer, 0, buffer.Length);
+            _disk.Content.Read(buffer, offset: 0, count: buffer.Length);
             TocBlock tocBlock = new TocBlock();
-            tocBlock.ReadFrom(buffer, 0);
+            tocBlock.ReadFrom(buffer, offset: 0);
 
             if (tocBlock.Signature == "TOCBLOCK")
             {

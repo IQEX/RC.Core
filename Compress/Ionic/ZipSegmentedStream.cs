@@ -103,7 +103,7 @@ namespace Ionic.Zip
             // workitem 9522
             if (zss._baseDir=="") zss._baseDir=".";
 
-            zss._SetWriteStream(0);
+            zss._SetWriteStream(increment: 0);
 
             // Console.WriteLine("ZSS: ForWriting ({0})",
             //                    Path.GetFileName(zss.CurrentName));
@@ -335,7 +335,7 @@ namespace Ionic.Zip
             //                   Path.GetFileName(_currentTempName));
 
             if (CurrentSegment == 0)
-                _innerStream.Write(BitConverter.GetBytes(ZipConstants.SplitArchiveSignature), 0, 4);
+                _innerStream.Write(BitConverter.GetBytes(ZipConstants.SplitArchiveSignature), offset: 0, count: 4);
         }
 
 
@@ -358,7 +358,7 @@ namespace Ionic.Zip
             {
                 // enough space for a contiguous write?
                 if (_innerStream.Position + count > _maxSegmentSize)
-                    _SetWriteStream(1);
+                    _SetWriteStream(increment: 1);
             }
             else
             {
@@ -366,7 +366,7 @@ namespace Ionic.Zip
                 {
                     int c = unchecked(_maxSegmentSize - (int)_innerStream.Position);
                     _innerStream.Write(buffer, offset, c);
-                    _SetWriteStream(1);
+                    _SetWriteStream(increment: 1);
                     count -= c;
                     offset += c;
                 }

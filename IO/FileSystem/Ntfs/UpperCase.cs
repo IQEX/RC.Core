@@ -32,7 +32,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public UpperCase(File file)
         {
-            using (Stream s = file.OpenStream(AttributeType.Data, null, FileAccess.Read))
+            using (Stream s = file.OpenStream(AttributeType.Data, name: null, access: FileAccess.Read))
             {
                 _table = new char[s.Length / 2];
 
@@ -90,9 +90,9 @@ namespace RC.Framework.FileSystem.Ntfs
                 Utilities.WriteBytesLittleEndian((ushort)char.ToUpperInvariant((char)i), buffer, i * 2);
             }
 
-            using (Stream s = file.OpenStream(AttributeType.Data, null, FileAccess.ReadWrite))
+            using (Stream s = file.OpenStream(AttributeType.Data, name: null, access: FileAccess.ReadWrite))
             {
-                s.Write(buffer, 0, buffer.Length);
+                s.Write(buffer, offset: 0, count: buffer.Length);
             }
 
             return new UpperCase(file);

@@ -51,7 +51,7 @@ namespace RC.Framework.FileSystem.Registry
 
         internal static Cell Parse(RegistryHive hive, int index, byte[] buffer, int pos)
         {
-            string type = Utilities.BytesToString(buffer, pos, 2);
+            string type = Utilities.BytesToString(buffer, pos, count: 2);
 
             Cell result = null;
 

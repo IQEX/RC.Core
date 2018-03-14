@@ -112,7 +112,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     entriesTotal += _entries[i].Size;
                 }
 
-                int firstEntryOffset = Utilities.RoundUp(IndexHeader.Size + _storageOverhead, 8);
+                int firstEntryOffset = Utilities.RoundUp(IndexHeader.Size + _storageOverhead, unit: 8);
 
                 return _totalSpaceAvailable - (entriesTotal + firstEntryOffset);
             }
@@ -196,7 +196,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 haveSubNodes |= (entry.Flags & IndexEntryFlags.Node) != 0;
             }
 
-            _header.OffsetToFirstEntry = (uint)Utilities.RoundUp(IndexHeader.Size + _storageOverhead, 8);
+            _header.OffsetToFirstEntry = (uint)Utilities.RoundUp(IndexHeader.Size + _storageOverhead, unit: 8);
             _header.TotalSizeOfEntries = totalEntriesSize + _header.OffsetToFirstEntry;
             _header.HasChildNodes = (byte)(haveSubNodes ? 1 : 0);
             _header.WriteTo(buffer, offset + 0);
@@ -224,7 +224,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public virtual int CalcSize()
         {
-            int firstEntryOffset = Utilities.RoundUp(IndexHeader.Size + _storageOverhead, 8);
+            int firstEntryOffset = Utilities.RoundUp(IndexHeader.Size + _storageOverhead, unit: 8);
             return firstEntryOffset + CalcEntriesSize();
         }
 
@@ -366,7 +366,7 @@ namespace RC.Framework.FileSystem.Ntfs
             // Set the deposed entries into the new node.  Note we updated the parent
             // pointers first, because it's possible SetEntries may need to further
             // divide the entries to fit into nodes.  We mustn't overwrite any changes.
-            newBlock.Node.SetEntries(_entries, 0, _entries.Count);
+            newBlock.Node.SetEntries(_entries, offset: 0, count: _entries.Count);
 
             _entries.Clear();
             _entries.Add(newRootEntry);
@@ -387,8 +387,8 @@ namespace RC.Framework.FileSystem.Ntfs
                 if (childNode._entries.Count == 1)
                 {
                     long freeBlock = _entries[entryIndex].ChildrenVirtualCluster;
-                    _entries[entryIndex].Flags = (_entries[entryIndex].Flags & ~IndexEntryFlags.Node) | (childNode._entries[0].Flags & IndexEntryFlags.Node);
-                    _entries[entryIndex].ChildrenVirtualCluster = childNode._entries[0].ChildrenVirtualCluster;
+                    _entries[entryIndex].Flags = (_entries[entryIndex].Flags & ~IndexEntryFlags.Node) | (childNode._entries[index: 0].Flags & IndexEntryFlags.Node);
+                    _entries[entryIndex].ChildrenVirtualCluster = childNode._entries[index: 0].ChildrenVirtualCluster;
 
                     _index.FreeBlock(freeBlock);
                 }
@@ -549,11 +549,11 @@ namespace RC.Framework.FileSystem.Ntfs
             // Set the entries into the new node.  Note we updated the parent
             // pointers first, because it's possible SetEntries may need to further
             // divide the entries to fit into nodes.  We mustn't overwrite any changes.
-            newBlock.Node.SetEntries(newEntries, 0, newEntries.Count);
+            newBlock.Node.SetEntries(newEntries, offset: 0, count: newEntries.Count);
 
             // Forget about the entries moved into the new node, and the entry about
             // to be promoted as the new node's pointer
-            _entries.RemoveRange(0, midEntryIdx + 1);
+            _entries.RemoveRange(index: 0, count: midEntryIdx + 1);
 
             // Promote the old mid entry
             return midEntry;

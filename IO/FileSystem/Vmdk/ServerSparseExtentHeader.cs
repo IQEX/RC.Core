@@ -69,17 +69,17 @@ namespace RC.Framework.FileSystem.Vmdk
         public byte[] GetBytes()
         {
             byte[] buffer = new byte[Sizes.Sector * 4];
-            Utilities.WriteBytesLittleEndian(MagicNumber, buffer, 0x00);
-            Utilities.WriteBytesLittleEndian(Version, buffer, 0x04);
-            Utilities.WriteBytesLittleEndian(Flags, buffer, 0x08);
-            Utilities.WriteBytesLittleEndian((uint)Capacity, buffer, 0x0C);
-            Utilities.WriteBytesLittleEndian((uint)GrainSize, buffer, 0x10);
-            Utilities.WriteBytesLittleEndian((uint)GdOffset, buffer, 0x14);
-            Utilities.WriteBytesLittleEndian(NumGdEntries, buffer, 0x18);
-            Utilities.WriteBytesLittleEndian(FreeSector, buffer, 0x1C);
+            Utilities.WriteBytesLittleEndian(MagicNumber, buffer, offset: 0x00);
+            Utilities.WriteBytesLittleEndian(Version, buffer, offset: 0x04);
+            Utilities.WriteBytesLittleEndian(Flags, buffer, offset: 0x08);
+            Utilities.WriteBytesLittleEndian((uint)Capacity, buffer, offset: 0x0C);
+            Utilities.WriteBytesLittleEndian((uint)GrainSize, buffer, offset: 0x10);
+            Utilities.WriteBytesLittleEndian((uint)GdOffset, buffer, offset: 0x14);
+            Utilities.WriteBytesLittleEndian(NumGdEntries, buffer, offset: 0x18);
+            Utilities.WriteBytesLittleEndian(FreeSector, buffer, offset: 0x1C);
 
-            Utilities.WriteBytesLittleEndian(SavedGeneration, buffer, 0x660);
-            Utilities.WriteBytesLittleEndian(UncleanShutdown, buffer, 0x66C);
+            Utilities.WriteBytesLittleEndian(SavedGeneration, buffer, offset: 0x660);
+            Utilities.WriteBytesLittleEndian(UncleanShutdown, buffer, offset: 0x66C);
 
             return buffer;
         }

@@ -81,7 +81,7 @@ namespace Ionic.BZip2
         private bool blockRandomised;
         private int bsBuff;
         private int bsLive;
-        private readonly Ionic.Crc.CRC32 crc = new Ionic.Crc.CRC32(true);
+        private readonly Ionic.Crc.CRC32 crc = new Ionic.Crc.CRC32(reverseBits: true);
         private int nInUse;
         private Stream input;
         private int currentChar = -1;
@@ -129,7 +129,7 @@ namespace Ionic.BZip2
         /// </remarks>
         /// <param name='input'>The stream from which to read compressed data</param>
         public BZip2InputStream(Stream input)
-            : this(input, false)
+            : this(input, leaveOpen: false)
         {}
 
 
@@ -430,9 +430,9 @@ namespace Ionic.BZip2
             if (!this.input.CanRead)
                 throw new IOException("Unreadable input Stream");
 
-            CheckMagicChar('B', 0);
-            CheckMagicChar('Z', 1);
-            CheckMagicChar('h', 2);
+            CheckMagicChar(expected: 'B', position: 0);
+            CheckMagicChar(expected: 'Z', position: 1);
+            CheckMagicChar(expected: 'h', position: 2);
 
             int blockSize = this.input.ReadByte();
 
@@ -490,7 +490,7 @@ namespace Ionic.BZip2
                 this.storedBlockCRC = bsGetInt();
                 // Console.WriteLine(" stored block CRC     : {0:X8}", this.storedBlockCRC);
 
-                this.blockRandomised = (GetBits(1) == 1);
+                this.blockRandomised = (GetBits(n: 1) == 1);
 
                 // Lazily allocate data
                 if (this.data == null)
@@ -635,18 +635,18 @@ namespace Ionic.BZip2
 
         private bool bsGetBit()
         {
-            int bit = GetBits(1);
+            int bit = GetBits(n: 1);
             return bit != 0;
         }
 
         private char bsGetUByte()
         {
-            return (char) GetBits(8);
+            return (char) GetBits(n: 8);
         }
 
         private uint bsGetInt()
         {
-            return (uint)((((((GetBits(8) << 8) | GetBits(8)) << 8) | GetBits(8)) << 8) | GetBits(8));
+            return (uint)((((((GetBits(n: 8) << 8) | GetBits(n: 8)) << 8) | GetBits(n: 8)) << 8) | GetBits(n: 8));
         }
 
 
@@ -744,8 +744,8 @@ namespace Ionic.BZip2
             int alphaSize = this.nInUse + 2;
 
             /* Now the selectors */
-            int nGroups = GetBits(3);
-            int nSelectors = GetBits(15);
+            int nGroups = GetBits(n: 3);
+            int nSelectors = GetBits(n: 15);
 
             for (int i = 0; i < nSelectors; i++)
             {
@@ -782,7 +782,7 @@ namespace Ionic.BZip2
             /* Now the coding tables */
             for (int t = 0; t < nGroups; t++)
             {
-                int curr = GetBits(5);
+                int curr = GetBits(n: 5);
                 char[] len_t = len[t];
                 for (int i = 0; i < alphaSize; i++)
                 {
@@ -833,7 +833,7 @@ namespace Ionic.BZip2
         private void getAndMoveToFrontDecode()
         {
             var s = this.data;
-            this.origPtr = GetBits(24);
+            this.origPtr = GetBits(n: 24);
 
             if (this.origPtr < 0)
                 throw new IOException("BZ_DATA_ERROR");
@@ -859,7 +859,7 @@ namespace Ionic.BZip2
             int groupNo = 0;
             int groupPos = BZip2.G_SIZE - 1;
             int eob = this.nInUse + 1;
-            int nextSym = getAndMoveToFrontDecode0(0);
+            int nextSym = getAndMoveToFrontDecode0(groupNo: 0);
             int bsBuffShadow = this.bsBuff;
             int bsLiveShadow = this.bsLive;
             int lastShadow = -1;
@@ -984,7 +984,7 @@ namespace Ionic.BZip2
                     }
                     else
                     {
-                        System.Buffer.BlockCopy(yy, 0, yy, 1, nextSym - 1);
+                        System.Buffer.BlockCopy(yy, srcOffset: 0, dst: yy, dstOffset: 1, count: nextSym - 1);
                     }
 
                     yy[0] = tmp;

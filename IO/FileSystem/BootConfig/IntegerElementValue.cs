@@ -35,7 +35,7 @@ namespace RC.Framework.FileSystem.BootConfig
             byte[] buffer = new byte[8];
             Array.Copy(value, buffer, value.Length);
 
-            _value = Utilities.ToUInt64LittleEndian(buffer, 0);
+            _value = Utilities.ToUInt64LittleEndian(buffer, offset: 0);
         }
 
         public IntegerElementValue(ulong value)
@@ -56,7 +56,7 @@ namespace RC.Framework.FileSystem.BootConfig
         internal byte[] GetBytes()
         {
             byte[] bytes = new byte[8];
-            Utilities.WriteBytesLittleEndian(_value, bytes, 0);
+            Utilities.WriteBytesLittleEndian(_value, bytes, offset: 0);
             return bytes;
         }
     }

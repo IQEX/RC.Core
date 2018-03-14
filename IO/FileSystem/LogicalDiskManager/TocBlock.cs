@@ -44,17 +44,17 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
 
         public void ReadFrom(byte[] buffer, int offset)
         {
-            Signature = Utilities.BytesToString(buffer, offset + 0x00, 8);
+            Signature = Utilities.BytesToString(buffer, offset + 0x00, count: 8);
             Checksum = Utilities.ToUInt32BigEndian(buffer, offset + 0x08);
             SequenceNumber = Utilities.ToInt64BigEndian(buffer, offset + 0x0C);
             Unknown1 = Utilities.ToInt64BigEndian(buffer, offset + 0x14);
             Unknown2 = Utilities.ToInt64BigEndian(buffer, offset + 0x1C);
-            Item1Str = Utilities.BytesToString(buffer, offset + 0x24, 10).Trim('\0');
+            Item1Str = Utilities.BytesToString(buffer, offset + 0x24, count: 10).Trim('\0');
             Item1Start = Utilities.ToInt64BigEndian(buffer, offset + 0x2E);
             Item1Size = Utilities.ToInt64BigEndian(buffer, offset + 0x36);
             Unknown3 = Utilities.ToUInt32BigEndian(buffer, offset + 0x3E);
             Unknown4 = Utilities.ToUInt32BigEndian(buffer, offset + 0x42);
-            Item2Str = Utilities.BytesToString(buffer, offset + 0x46, 10).Trim('\0');
+            Item2Str = Utilities.BytesToString(buffer, offset + 0x46, count: 10).Trim('\0');
             Item2Start = Utilities.ToInt64BigEndian(buffer, offset + 0x50);
             Item2Size = Utilities.ToInt64BigEndian(buffer, offset + 0x58);
             Unknown5 = Utilities.ToUInt32BigEndian(buffer, offset + 0x60);

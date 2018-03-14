@@ -37,7 +37,7 @@ namespace RC.Framework.FileSystem.Partitions
             if (BiosPartitionTable.IsValid(disk.Content))
             {
                 BiosPartitionTable table = new BiosPartitionTable(disk);
-                if (table.Count == 1 && table[0].BiosType == BiosPartitionTypes.GptProtective)
+                if (table.Count == 1 && table[index: 0].BiosType == BiosPartitionTypes.GptProtective)
                 {
                     return new GuidPartitionTable(disk);
                 }

@@ -112,7 +112,7 @@ namespace RC.Framework.FileSystem
                 }
                 else
                 {
-                    return new StreamExtent[] { new StreamExtent(0, _length) };
+                    return new StreamExtent[] { new StreamExtent(start: 0, length: _length) };
                 }
             }
         }

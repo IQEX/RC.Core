@@ -39,7 +39,7 @@ namespace RC.Framework.FileSystem.Udf
             ImplementationIdentifier.ReadFrom(buffer, offset + 16);
 
             ImplementationUseData = new byte[iuSize];
-            Array.Copy(buffer, offset + 48, ImplementationUseData, 0, iuSize);
+            Array.Copy(buffer, offset + 48, ImplementationUseData, destinationIndex: 0, length: iuSize);
 
             return read;
         }

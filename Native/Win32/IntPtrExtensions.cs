@@ -123,7 +123,7 @@ namespace RC.Framework.Native.Win32
             {
                 if (bm != null)
                 {
-                    using (var hbm = new SafeHBitmapHandle(bm.GetHbitmap(), true))
+                    using (var hbm = new SafeHBitmapHandle(bm.GetHbitmap(), ownsHandle: true))
                     {
                         return System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
                            hbm.DangerousGetHandle(),

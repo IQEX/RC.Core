@@ -73,7 +73,7 @@ namespace Ionic.Zip
         /// </remarks>
         public void Extract()
         {
-            InternalExtract(".", null, null);
+            InternalExtract(".", outstream: null, password: null);
         }
 
 
@@ -96,7 +96,7 @@ namespace Ionic.Zip
         public void Extract(ExtractExistingFileAction extractExistingFile)
         {
             ExtractExistingFile = extractExistingFile;
-            InternalExtract(".", null, null);
+            InternalExtract(".", outstream: null, password: null);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Ionic.Zip
         ///
         public void Extract(Stream stream)
         {
-            InternalExtract(null, stream, null);
+            InternalExtract(baseDir: null, outstream: stream, password: null);
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Ionic.Zip
         /// </remarks>
         public void Extract(string baseDirectory)
         {
-            InternalExtract(baseDirectory, null, null);
+            InternalExtract(baseDirectory, outstream: null, password: null);
         }
 
 
@@ -237,7 +237,7 @@ namespace Ionic.Zip
         public void Extract(string baseDirectory, ExtractExistingFileAction extractExistingFile)
         {
             ExtractExistingFile = extractExistingFile;
-            InternalExtract(baseDirectory, null, null);
+            InternalExtract(baseDirectory, outstream: null, password: null);
         }
 
 
@@ -302,7 +302,7 @@ namespace Ionic.Zip
         /// <param name="password">The Password to use for decrypting the entry.</param>
         public void ExtractWithPassword(string password)
         {
-            InternalExtract(".", null, password);
+            InternalExtract(".", outstream: null, password: password);
         }
 
         /// <summary>
@@ -332,7 +332,7 @@ namespace Ionic.Zip
         /// <param name="password">The Password to use for decrypting the entry.</param>
         public void ExtractWithPassword(string baseDirectory, string password)
         {
-            InternalExtract(baseDirectory, null, password);
+            InternalExtract(baseDirectory, outstream: null, password: password);
         }
 
 
@@ -359,7 +359,7 @@ namespace Ionic.Zip
         public void ExtractWithPassword(ExtractExistingFileAction extractExistingFile, string password)
         {
             ExtractExistingFile = extractExistingFile;
-            InternalExtract(".", null, password);
+            InternalExtract(".", outstream: null, password: password);
         }
 
 
@@ -384,7 +384,7 @@ namespace Ionic.Zip
         public void ExtractWithPassword(string baseDirectory, ExtractExistingFileAction extractExistingFile, string password)
         {
             ExtractExistingFile = extractExistingFile;
-            InternalExtract(baseDirectory, null, password);
+            InternalExtract(baseDirectory, outstream: null, password: password);
         }
 
         /// <summary>
@@ -417,7 +417,7 @@ namespace Ionic.Zip
         /// </param>
         public void ExtractWithPassword(Stream stream, string password)
         {
-            InternalExtract(null, stream, password);
+            InternalExtract(baseDir: null, outstream: stream, password: password);
         }
 
 
@@ -626,7 +626,7 @@ namespace Ionic.Zip
             {
                 if (!_container.ZipFile._inExtractAll)
                 {
-                    _ioOperationCanceled = _container.ZipFile.OnSingleEntryExtract(this, path, true);
+                    _ioOperationCanceled = _container.ZipFile.OnSingleEntryExtract(this, path, before: true);
                 }
             }
         }
@@ -640,7 +640,7 @@ namespace Ionic.Zip
             {
                 if (!_container.ZipFile._inExtractAll)
                 {
-                    _container.ZipFile.OnSingleEntryExtract(this, path, false);
+                    _container.ZipFile.OnSingleEntryExtract(this, path, before: false);
                 }
             }
         }
@@ -686,7 +686,7 @@ namespace Ionic.Zip
             if (_container.ZipFile == null)
                 throw new InvalidOperationException("Use Extract() only with ZipFile.");
 
-            _container.ZipFile.Reset(false);
+            _container.ZipFile.Reset(whileSaving: false);
 
             if (this._Source != ZipEntrySource.ZipFile)
                 throw new BadStateException("You must call ZipFile.Save before calling any Extract method");
@@ -795,7 +795,7 @@ namespace Ionic.Zip
                     // move file to permanent home
                     string tmpName = targetFileName;
                     string zombie = null;
-                    targetFileName = tmpName.Substring(0,tmpName.Length-4);
+                    targetFileName = tmpName.Substring(startIndex: 0,length: tmpName.Length-4);
 
                     if (fileExistsBeforeExtraction)
                     {
@@ -815,7 +815,7 @@ namespace Ionic.Zip
                     }
 
                     File.Move(tmpName, targetFileName);
-                    _SetTimes(targetFileName, true);
+                    _SetTimes(targetFileName, isFile: true);
 
                     if (zombie != null && File.Exists(zombie))
                         ReallyDelete(zombie);
@@ -831,12 +831,12 @@ namespace Ionic.Zip
                         // the zip archive.
 
                         // String.Contains is not available on .NET CF 2.0
-                        if (this.FileName.IndexOf('/') != -1)
+                        if (this.FileName.IndexOf(value: '/') != -1)
                         {
                             string dirname = Path.GetDirectoryName(this.FileName);
                             if (this._container.ZipFile[dirname] == null)
                             {
-                                _SetTimes(Path.GetDirectoryName(targetFileName), false);
+                                _SetTimes(Path.GetDirectoryName(targetFileName), isFile: false);
                             }
                         }
                     }
@@ -1050,12 +1050,12 @@ namespace Ionic.Zip
                         // because that only happens when it is less than bytes.Length,
                         // which is much less than MAX_INT.
                         int len = (LeftToRead > bytes.Length) ? bytes.Length : (int)LeftToRead;
-                        int n = s1.Read(bytes, 0, len);
+                        int n = s1.Read(bytes, offset: 0, count: len);
 
                         // must check data read - essential for detecting corrupt zip files
                         _CheckRead(n);
 
-                        output.Write(bytes, 0, n);
+                        output.Write(bytes, offset: 0, count: n);
                         LeftToRead -= n;
                         bytesWritten += n;
 
@@ -1098,7 +1098,7 @@ namespace Ionic.Zip
                 case (short)CompressionMethod.None:
                     return input2;
                 case (short)CompressionMethod.Deflate:
-                    return new Ionic.Zlib.DeflateStream(input2, Ionic.Zlib.CompressionMode.Decompress, true);
+                    return new Ionic.Zlib.DeflateStream(input2, Ionic.Zlib.CompressionMode.Decompress, leaveOpen: true);
 #if BZIP
                 case (short)CompressionMethod.BZip2:
                     return new Ionic.BZip2.BZip2InputStream(input2, true);
@@ -1399,17 +1399,17 @@ namespace Ionic.Zip
                 string f = this.FileName.Replace("\\","/");
 
                 // workitem 11772: remove drive letter with separator
-                if (f.IndexOf(':') == 1)
-                    f= f.Substring(2);
+                if (f.IndexOf(value: ':') == 1)
+                    f= f.Substring(startIndex: 2);
 
                 if (f.StartsWith("/"))
-                    f= f.Substring(1);
+                    f= f.Substring(startIndex: 1);
 
                 // String.Contains is not available on .NET CF 2.0
 
                 if (_container.ZipFile.FlattenFoldersOnExtract)
                     outFileName = Path.Combine(basedir,
-                                              (f.IndexOf('/') != -1) ? Path.GetFileName(f) : f);
+                                              (f.IndexOf(value: '/') != -1) ? Path.GetFileName(f) : f);
                 else
                     outFileName = Path.Combine(basedir, f);
 
@@ -1422,13 +1422,13 @@ namespace Ionic.Zip
                     if (!Directory.Exists(outFileName))
                     {
                         Directory.CreateDirectory(outFileName);
-                        _SetTimes(outFileName, false);
+                        _SetTimes(outFileName, isFile: false);
                     }
                     else
                     {
                         // the dir exists, maybe we want to overwrite times.
                         if (ExtractExistingFile == ExtractExistingFileAction.OverwriteSilently)
-                            _SetTimes(outFileName, false);
+                            _SetTimes(outFileName, isFile: false);
                     }
                     return true;  // true == all done, caller will return
                 }

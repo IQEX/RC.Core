@@ -49,7 +49,7 @@ namespace RC.Framework.FileSystem
         /// <returns>A file system instance</returns>
         public DiscFileSystem Open(VolumeInfo volume)
         {
-            return Open(volume, null);
+            return Open(volume, parameters: null);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace RC.Framework.FileSystem
         /// <returns>A file system instance</returns>
         public DiscFileSystem Open(Stream stream)
         {
-            return Open(stream, null);
+            return Open(stream, parameters: null);
         }
 
         /// <summary>

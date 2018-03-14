@@ -65,7 +65,7 @@ namespace RC.Framework.FileSystem.Partitions
 
                     foreach (var type in typeof(VolumeManager).Assembly.GetTypes())
                     {
-                        foreach (PartitionTableFactoryAttribute attr in Attribute.GetCustomAttributes(type, typeof(PartitionTableFactoryAttribute), false))
+                        foreach (PartitionTableFactoryAttribute attr in Attribute.GetCustomAttributes(type, typeof(PartitionTableFactoryAttribute), inherit: false))
                         {
                             factories.Add((PartitionTableFactory)Activator.CreateInstance(type));
                         }

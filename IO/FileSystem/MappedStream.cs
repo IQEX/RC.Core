@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem
         /// maps directly onto the parent stream)</remarks>
         public static new MappedStream FromStream(Stream stream, Ownership takeOwnership)
         {
-            return new MappedWrapperStream(stream, takeOwnership, null);
+            return new MappedWrapperStream(stream, takeOwnership, extents: null);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace RC.Framework.FileSystem
                         }
                         else
                         {
-                            return new StreamExtent[] { new StreamExtent(0, _wrapped.Length) };
+                            return new StreamExtent[] { new StreamExtent(start: 0, length: _wrapped.Length) };
                         }
                     }
                 }

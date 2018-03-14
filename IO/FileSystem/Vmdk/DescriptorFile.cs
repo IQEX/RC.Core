@@ -179,7 +179,7 @@ namespace RC.Framework.FileSystem.Vmdk
             content.Append("# Disk DescriptorFile\n");
             for (int i = 0; i < _header.Count; ++i)
             {
-                content.Append(_header[i].ToString(false) + "\n");
+                content.Append(_header[i].ToString(spaceOut: false) + "\n");
             }
 
             content.Append("\n");
@@ -194,11 +194,11 @@ namespace RC.Framework.FileSystem.Vmdk
             content.Append("#DDB\n");
             for (int i = 0; i < _diskDataBase.Count; ++i)
             {
-                content.Append(_diskDataBase[i].ToString(true) + "\n");
+                content.Append(_diskDataBase[i].ToString(spaceOut: true) + "\n");
             }
 
             byte[] contentBytes = Encoding.ASCII.GetBytes(content.ToString());
-            stream.Write(contentBytes, 0, contentBytes.Length);
+            stream.Write(contentBytes, offset: 0, count: contentBytes.Length);
         }
 
         private static DiskAdapterType ParseAdapterType(string value)
@@ -409,10 +409,10 @@ namespace RC.Framework.FileSystem.Vmdk
             {
                 line = line.Trim('\0');
 
-                int commentPos = line.IndexOf('#');
+                int commentPos = line.IndexOf(value: '#');
                 if (commentPos >= 0)
                 {
-                    line = line.Substring(0, commentPos);
+                    line = line.Substring(startIndex: 0, length: commentPos);
                 }
 
                 if (line.Length > 0)

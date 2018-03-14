@@ -133,7 +133,7 @@ namespace RC.Framework.FileSystem.BootConfig
         /// <returns>The object representing the new device.</returns>
         public BcdObject CreateDevice()
         {
-            Guid obj = _store.CreateObject(Guid.NewGuid(), 0x30000000);
+            Guid obj = _store.CreateObject(Guid.NewGuid(), type: 0x30000000);
             return new BcdObject(_store, obj);
         }
 

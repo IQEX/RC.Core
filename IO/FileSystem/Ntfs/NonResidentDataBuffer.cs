@@ -39,7 +39,7 @@ namespace RC.Framework.FileSystem.Ntfs
         protected byte[] _ioBuffer;
 
         public NonResidentDataBuffer(INtfsContext context, NonResidentAttributeRecord record)
-            : this(context, new CookedDataRuns(record.DataRuns, record), false)
+            : this(context, new CookedDataRuns(record.DataRuns, record), isMft: false)
         {
         }
 
@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     extents.Add(new StreamExtent(range.Offset * _bytesPerCluster, range.Count * _bytesPerCluster));
                 }
 
-                return StreamExtent.Intersect(extents, new StreamExtent(0, Capacity));
+                return StreamExtent.Intersect(extents, new StreamExtent(start: 0, length: Capacity));
             }
         }
 
@@ -97,7 +97,7 @@ namespace RC.Framework.FileSystem.Ntfs
         public long MapPosition(long pos)
         {
             long vcn = pos / _bytesPerCluster;
-            int dataRunIdx = _cookedRuns.FindDataRun(vcn, 0);
+            int dataRunIdx = _cookedRuns.FindDataRun(vcn, startIdx: 0);
 
             if (_cookedRuns[dataRunIdx].IsSparse)
             {
@@ -138,7 +138,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 if (vcn * _bytesPerCluster != focusPos || remaining < _bytesPerCluster)
                 {
                     // Unaligned or short read
-                    _activeStream.ReadClusters(vcn, 1, _ioBuffer, 0);
+                    _activeStream.ReadClusters(vcn, count: 1, buffer: _ioBuffer, offset: 0);
 
                     int toRead = (int)Math.Min(remaining, _bytesPerCluster - clusterOffset);
 

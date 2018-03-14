@@ -67,7 +67,7 @@ namespace RC.Framework.FileSystem.HfsPlus
                 byte[] dirThreadData = Context.Catalog.Find(new CatalogKey(NodeId, string.Empty));
 
                 CatalogThread dirThread = new CatalogThread();
-                dirThread.ReadFrom(dirThreadData, 0);
+                dirThread.ReadFrom(dirThreadData, offset: 0);
 
                 byte[] dirEntryData = Context.Catalog.Find(new CatalogKey(dirThread.ParentId, dirThread.Name));
 

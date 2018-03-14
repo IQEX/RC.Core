@@ -27,7 +27,7 @@ namespace RC.Framework.FileSystem.Compression
         private byte[] _buffer;
 
         public MoveToFront()
-            : this(256, false)
+            : this(size: 256, autoInit: false)
         {
         }
 

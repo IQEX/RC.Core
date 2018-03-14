@@ -53,7 +53,7 @@ namespace RC.Framework.FileSystem
         {
             get
             {
-                return GetExtentsInRange(0, Capacity);
+                return GetExtentsInRange(start: 0, count: Capacity);
             }
         }
 
@@ -92,7 +92,7 @@ namespace RC.Framework.FileSystem
         /// </remarks>
         public virtual void Clear(long pos, int count)
         {
-            Write(pos, new byte[count], 0, count);
+            Write(pos, new byte[count], offset: 0, count: count);
         }
 
         /// <summary>

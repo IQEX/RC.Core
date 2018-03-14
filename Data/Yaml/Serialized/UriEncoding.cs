@@ -67,7 +67,7 @@ namespace RC.Framework.Yaml
         public static string Escape(string s)
         {
             return NonUriChar.Replace(s, m => {
-                var c = m.Value[0];
+                var c = m.Value[index: 0];
                 return ( c == ' ' ) ? "+" :
                        ( c < 0x80 ) ? IntToHex(c) :
                        ( c < 0x0800 ) ? IntToHex(( ( c >> 6 ) & 0x1f ) + 0xc0, ( c & 0x3f ) + 0x80) :
@@ -80,7 +80,7 @@ namespace RC.Framework.Yaml
         public static string EscapeForTag(string s)
         {
             return NonTagChar.Replace(s, m => {
-                var c = m.Value[0];
+                var c = m.Value[index: 0];
                 return ( c == ' ' ) ? "+" :
                        ( c < 0x80 ) ? IntToHex(c) :
                        ( c < 0x0800 ) ? IntToHex(( ( c >> 6 ) & 0x1f ) + 0xc0, ( c & 0x3f ) + 0x80) :
@@ -115,12 +115,12 @@ namespace RC.Framework.Yaml
 
         public static string Unescape(string s)
         {
-            s = s.Replace('+', ' ');
+            s = s.Replace(oldChar: '+', newChar: ' ');
 
             var result = new StringBuilder();
             var p = 0;
             int pp;
-            while ( ( pp = s.IndexOf('%', p) ) >= 0 ) {
+            while ( ( pp = s.IndexOf(value: '%', startIndex: p) ) >= 0 ) {
                 result.Append(s.Substring(p, pp - p));
                 p = pp;
                 var c0 = ( HexToInt(s[p + 1]) << 4 ) + HexToInt(s[p + 2]);

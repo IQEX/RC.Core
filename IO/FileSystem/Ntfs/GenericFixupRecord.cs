@@ -30,7 +30,7 @@ namespace RC.Framework.FileSystem.Ntfs
         private byte[] _content;
 
         public GenericFixupRecord(int bytesPerSector)
-            : base(null, bytesPerSector)
+            : base(magic: null, sectorSize: bytesPerSector)
         {
             _bytesPerSector = bytesPerSector;
         }
@@ -43,7 +43,7 @@ namespace RC.Framework.FileSystem.Ntfs
         protected override void Read(byte[] buffer, int offset)
         {
             _content = new byte[(UpdateSequenceCount - 1) * _bytesPerSector];
-            Array.Copy(buffer, offset, _content, 0, _content.Length);
+            Array.Copy(buffer, offset, _content, destinationIndex: 0, length: _content.Length);
         }
 
         protected override ushort Write(byte[] buffer, int offset)

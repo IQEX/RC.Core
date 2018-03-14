@@ -33,9 +33,9 @@ namespace RC.Framework.FileSystem.HfsPlus
         {
             s.Position = 1024;
 
-            byte[] headerBuf = Utilities.ReadFully(s, 512);
+            byte[] headerBuf = Utilities.ReadFully(s, count: 512);
             VolumeHeader hdr = new VolumeHeader();
-            hdr.ReadFrom(headerBuf, 0);
+            hdr.ReadFrom(headerBuf, offset: 0);
 
             Context = new HfsPlus.Context();
             Context.VolumeStream = s;
@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem.HfsPlus
             // Establish Root directory
             byte[] rootThreadData = Context.Catalog.Find(new CatalogKey(CatalogNodeId.RootFolderId, string.Empty));
             CatalogThread rootThread = new CatalogThread();
-            rootThread.ReadFrom(rootThreadData, 0);
+            rootThread.ReadFrom(rootThreadData, offset: 0);
             byte[] rootDirEntryData = Context.Catalog.Find(new CatalogKey(rootThread.ParentId, rootThread.Name));
             DirEntry rootDirEntry = new DirEntry(rootThread.Name, rootDirEntryData);
             RootDirectory = (Directory)GetFile(rootDirEntry);
@@ -59,7 +59,7 @@ namespace RC.Framework.FileSystem.HfsPlus
             {
                 byte[] rootThreadData = Context.Catalog.Find(new CatalogKey(CatalogNodeId.RootFolderId, string.Empty));
                 CatalogThread rootThread = new CatalogThread();
-                rootThread.ReadFrom(rootThreadData, 0);
+                rootThread.ReadFrom(rootThreadData, offset: 0);
 
                 return rootThread.Name;
             }

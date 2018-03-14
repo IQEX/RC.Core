@@ -33,7 +33,7 @@ namespace RC.Framework.FileSystem.Registry
         private RegistrySecurity _secDesc;
 
         public SecurityCell(RegistrySecurity secDesc)
-            : this(-1)
+            : this(index: -1)
         {
             _secDesc = secDesc;
         }
@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem.Registry
             int secDescSize = Utilities.ToInt32LittleEndian(buffer, offset + 0x10);
 
             byte[] secDesc = new byte[secDescSize];
-            Array.Copy(buffer, offset + 0x14, secDesc, 0, secDescSize);
+            Array.Copy(buffer, offset + 0x14, secDesc, destinationIndex: 0, length: secDescSize);
             _secDesc = new RegistrySecurity();
             _secDesc.SetSecurityDescriptorBinaryForm(secDesc);
 
@@ -96,12 +96,12 @@ namespace RC.Framework.FileSystem.Registry
         {
             byte[] sd = _secDesc.GetSecurityDescriptorBinaryForm();
 
-            Utilities.StringToBytes("sk", buffer, offset, 2);
+            Utilities.StringToBytes("sk", buffer, offset, count: 2);
             Utilities.WriteBytesLittleEndian(_prevIndex, buffer, offset + 0x04);
             Utilities.WriteBytesLittleEndian(_nextIndex, buffer, offset + 0x08);
             Utilities.WriteBytesLittleEndian(_usageCount, buffer, offset + 0x0C);
             Utilities.WriteBytesLittleEndian(sd.Length, buffer, offset + 0x10);
-            Array.Copy(sd, 0, buffer, offset + 0x14, sd.Length);
+            Array.Copy(sd, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + 0x14, length: sd.Length);
         }
 
         public override string ToString()

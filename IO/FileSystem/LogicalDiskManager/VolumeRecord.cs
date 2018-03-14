@@ -53,7 +53,7 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
             Name = ReadVarString(buffer, ref pos);
             GenString = ReadVarString(buffer, ref pos);
             NumberString = ReadVarString(buffer, ref pos);
-            ActiveString = ReadString(buffer, 6, ref pos);
+            ActiveString = ReadString(buffer, len: 6, offset: ref pos);
             UnknownA = ReadVarULong(buffer, ref pos);
             UnknownB = ReadULong(buffer, ref pos);
             DupCount = ReadVarULong(buffer, ref pos);

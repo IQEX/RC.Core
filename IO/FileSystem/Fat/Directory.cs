@@ -160,7 +160,7 @@ namespace RC.Framework.FileSystem.Fat
 
         public void Dispose()
         {
-            Dispose(true);
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
 
@@ -328,10 +328,10 @@ namespace RC.Framework.FileSystem.Fat
                 SparseStream stream = new FatFileStream(_fileSystem, this, fileId, fileAccess);
                 if (mode == FileMode.Create)
                 {
-                    stream.SetLength(0);
+                    stream.SetLength(value: 0);
                 }
 
-                HandleAccessed(false);
+                HandleAccessed(forWrite: false);
 
                 return stream;
             }
@@ -360,8 +360,8 @@ namespace RC.Framework.FileSystem.Fat
             long pos;
             if (_freeEntries.Count > 0)
             {
-                pos = _freeEntries[0];
-                _freeEntries.RemoveAt(0);
+                pos = _freeEntries[index: 0];
+                _freeEntries.RemoveAt(index: 0);
             }
             else
             {
@@ -376,7 +376,7 @@ namespace RC.Framework.FileSystem.Fat
             // Update internal structures to reflect new entry (as if read from disk)
             _entries.Add(pos, newEntry);
 
-            HandleAccessed(true);
+            HandleAccessed(forWrite: true);
 
             return pos;
         }
@@ -405,7 +405,7 @@ namespace RC.Framework.FileSystem.Fat
                 _entries.Remove(id);
                 _freeEntries.Add(id);
 
-                HandleAccessed(true);
+                HandleAccessed(forWrite: true);
             }
             finally
             {

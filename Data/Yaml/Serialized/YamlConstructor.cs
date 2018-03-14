@@ -52,7 +52,7 @@ namespace RC.Framework.Yaml.Serialization
         /// <returns></returns>
         public object NodeToObject(YamlNode node, YamlConfig config)
         {
-            return NodeToObject(node, null, config);
+            return NodeToObject(node, expected: null, config: config);
         }
         /// <summary>
         /// Construct YAML node tree that represents a given C# object.
@@ -93,7 +93,7 @@ namespace RC.Framework.Yaml.Serialization
                     throw new NotImplementedException();
                 }
             } else {
-                return TypeUtils.GetType(tag.Substring(1));
+                return TypeUtils.GetType(tag.Substring(startIndex: 1));
             }
         }
 
@@ -126,7 +126,7 @@ namespace RC.Framework.Yaml.Serialization
                 obj = ScalarToObject((YamlScalar)node, type);
             } else
             if ( node is YamlMapping ) {
-                obj = MappingToObject((YamlMapping)node, type, null, appeared);
+                obj = MappingToObject((YamlMapping)node, type, obj: null, appeared: appeared);
             } else
             if ( node is YamlSequence ) {
                 obj = SequenceToObject((YamlSequence)node, type, appeared);
@@ -166,7 +166,7 @@ namespace RC.Framework.Yaml.Serialization
                 byte[] binary;
                 var elementSize = Marshal.SizeOf(type.GetElementType());
                 if ( type.GetArrayRank() == 1 ) {
-                    binary = System.Convert.FromBase64CharArray(s.ToCharArray(), 0, s.Length);
+                    binary = System.Convert.FromBase64CharArray(s.ToCharArray(), offset: 0, length: s.Length);
                     var arrayLength = binary.Length / elementSize;
                     dimension = new int[] { arrayLength };
                 } else {
@@ -174,12 +174,12 @@ namespace RC.Framework.Yaml.Serialization
                     if ( !m.Success )
                         throw new FormatException("Irregal binary array");
                     // Create array from dimension
-                    dimension = m.Groups[1].Value.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
+                    dimension = m.Groups[groupnum: 1].Value.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
                     if ( type.GetArrayRank() != dimension.Length )
                         throw new FormatException("Irregal binary array");
                     // Fill values
-                    s = m.Groups[2].Value;
-                    binary = System.Convert.FromBase64CharArray(s.ToCharArray(), 0, s.Length);
+                    s = m.Groups[groupnum: 2].Value;
+                    binary = System.Convert.FromBase64CharArray(s.ToCharArray(), offset: 0, length: s.Length);
                 }
                 var paramType = dimension.Select(n => typeof(int) /* n.GetType() */).ToArray();
                 var array = (Array)type.GetConstructor(paramType).Invoke(dimension.Cast<object>().ToArray());
@@ -208,12 +208,12 @@ namespace RC.Framework.Yaml.Serialization
 
             if ( type.IsArray ) {
                 var lengthes= new int[type.GetArrayRank()];
-                GetLengthes(seq, 0, lengthes);
+                GetLengthes(seq, i: 0, lengthes: lengthes);
                 var array = (Array)type.GetConstructor(lengthes.Select(l => typeof(int) /* l.GetType() */).ToArray())
                                .Invoke(lengthes.Cast<object>().ToArray());
                 appeared.Add(seq, array);
                 var indices = new int[type.GetArrayRank()];
-                SetArrayElements(array, seq, 0, indices, type.GetElementType(), appeared);
+                SetArrayElements(array, seq, i: 0, indices: indices, elementType: type.GetElementType(), appeared: appeared);
                 return array;
             } else {
                 throw new NotImplementedException();
@@ -246,7 +246,7 @@ namespace RC.Framework.Yaml.Serialization
                 var dict = new Dictionary<object, object>();
                 appeared.Add(map, dict);
                 foreach ( var entry in map ) 
-                    dict.Add(NodeToObjectInternal(entry.Key, null, appeared), NodeToObjectInternal(entry.Value, null, appeared));
+                    dict.Add(NodeToObjectInternal(entry.Key, expected: null, appeared: appeared), NodeToObjectInternal(entry.Value, expected: null, appeared: appeared));
                 return dict;
             }
 

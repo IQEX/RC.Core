@@ -14,6 +14,6 @@ namespace RC.Framework.Security
         /// is Admin rule?
         /// </summary>
         /// <returns>rule</returns>
-        public static bool isProcessAdmin() => new WindowsPrincipal(ntIdentity: WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        public static bool isProcessAdmin() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
     }
 }

@@ -164,17 +164,17 @@ namespace RC.Framework.FileSystem
             InputStream.Position = 0;
             OutputStream.Position = 0;
 
-            int numRead = InputStream.Read(copyBuffer, 0, copyBuffer.Length);
+            int numRead = InputStream.Read(copyBuffer, offset: 0, count: copyBuffer.Length);
             while (numRead > 0)
             {
                 BytesRead += numRead;
 
-                OutputStream.Write(copyBuffer, 0, numRead);
+                OutputStream.Write(copyBuffer, offset: 0, count: numRead);
                 BytesWritten += numRead;
 
                 RaiseProgressEvent();
 
-                numRead = InputStream.Read(copyBuffer, 0, copyBuffer.Length);
+                numRead = InputStream.Read(copyBuffer, offset: 0, count: copyBuffer.Length);
             }
         }
 
@@ -204,7 +204,7 @@ namespace RC.Framework.FileSystem
                 while (extentOffset < extent.Length)
                 {
                     int toRead = (int)Math.Min(copyBuffer.Length, extent.Length - extentOffset);
-                    int numRead = Utilities.ReadFully(inStream, copyBuffer, 0, toRead);
+                    int numRead = Utilities.ReadFully(inStream, copyBuffer, offset: 0, length: toRead);
                     BytesRead += numRead;
 
                     int copyBufferOffset = 0;

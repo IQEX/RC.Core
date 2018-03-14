@@ -141,9 +141,9 @@ namespace RC.Framework.FileSystem.Iscsi
 
             foreach (var entry in _records)
             {
-                i += Encoding.ASCII.GetBytes(entry.Key, 0, entry.Key.Length, buffer, i);
+                i += Encoding.ASCII.GetBytes(entry.Key, charIndex: 0, charCount: entry.Key.Length, bytes: buffer, byteIndex: i);
                 buffer[i++] = (byte)'=';
-                i += Encoding.ASCII.GetBytes(entry.Value, 0, entry.Value.Length, buffer, i);
+                i += Encoding.ASCII.GetBytes(entry.Value, charIndex: 0, charCount: entry.Value.Length, bytes: buffer, byteIndex: i);
                 buffer[i++] = 0;
             }
 

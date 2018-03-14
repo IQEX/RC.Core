@@ -33,7 +33,7 @@ namespace RC.Framework.FileSystem.HfsPlus
 
         public BTreeHeaderRecord HeaderRecord
         {
-            get { return Records[0] as BTreeHeaderRecord; }
+            get { return Records[index: 0] as BTreeHeaderRecord; }
         }
 
         protected override IList<BTreeNodeRecord> ReadRecords(byte[] buffer, int offset)

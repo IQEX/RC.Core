@@ -202,8 +202,8 @@ namespace RC.Framework.RMath
         }
         public static void svdcmp(double[,] a, out double[] w, out double[,] v)
         {
-            int length = a.GetLength(0);
-            int length2 = a.GetLength(1);
+            int length = a.GetLength(dimension: 0);
+            int length2 = a.GetLength(dimension: 1);
             if (length < length2)
             {
                 throw new ArgumentException("Number of rows in A must be greater or equal to number of columns");
@@ -452,7 +452,7 @@ namespace RC.Framework.RMath
                         num3 = array[num];
                         double num7 = array[k];
                         double num6 = ((num10 - num11) * (num10 + num11) + (num3 - num7) * (num3 + num7)) / (2.0 * num7 * num10);
-                        num3 = Pythag(num6, 1.0);
+                        num3 = Pythag(num6, b: 1.0);
                         num6 = ((num12 - num11) * (num12 + num11) + num7 * (num10 / (num6 + Sign(num3, num6)) - num7)) / num12;
                         double num9;
                         double num5 = num9 = 1.0;

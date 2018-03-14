@@ -44,7 +44,7 @@ namespace RC.Framework.FileSystem.Ntfs.Internals
         {
             byte[] content = Utilities.ReadAll(Content);
             _list = new AttributeList();
-            _list.ReadFrom(content, 0);
+            _list.ReadFrom(content, offset: 0);
         }
 
         /// <summary>

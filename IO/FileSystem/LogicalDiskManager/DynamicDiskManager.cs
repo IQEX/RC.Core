@@ -117,11 +117,11 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
                 {
                     LogicalVolumeInfo lvi = new LogicalVolumeInfo(
                         volume.Identity,
-                        null,
-                        volume.Open,
-                        volume.Length,
-                        volume.BiosType,
-                        volume.Status);
+                        physicalVolume: null,
+                        opener: volume.Open,
+                        length: volume.Length,
+                        biosType: volume.BiosType,
+                        status: volume.Status);
                     result.Add(lvi);
                 }
             }

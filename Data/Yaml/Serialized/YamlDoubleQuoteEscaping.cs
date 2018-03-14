@@ -66,13 +66,13 @@ namespace RC.Framework.Yaml
         {
 
             // Create (additional) escaping table
-            escapeTable['\\'] = @"\\";
-            escapeTable['"'] = "\\\"";
-            escapeTable['/'] = @"\/";
-            escapeTable['\x85'] = @"\N";
-            escapeTable['\xa0'] = @"\_";
-            escapeTable['\u2028'] = @"\L";
-            escapeTable['\u2029'] = @"\P";
+            escapeTable[key: '\\'] = @"\\";
+            escapeTable[key: '"'] = "\\\"";
+            escapeTable[key: '/'] = @"\/";
+            escapeTable[key: '\x85'] = @"\N";
+            escapeTable[key: '\xa0'] = @"\_";
+            escapeTable[key: '\u2028'] = @"\L";
+            escapeTable[key: '\u2029'] = @"\P";
             
             // Create escaping regexp
             escapeRegexp = new Regex(@"[\x00-\x1f\/\x85\xa0\u2028\u2029" + "\"]");
@@ -103,13 +103,13 @@ namespace RC.Framework.Yaml
             s = s.Replace(@"\", @"\\");
             s = escapeRegexp.Replace(s, escapeChar);
             return escapeNonprintable.Replace(s, m => {
-                var c = m.Value[0];
+                var c = m.Value[index: 0];
                 return c < 0x100 ? string.Format(@"\x{0:x2}", (int)c) : string.Format(@"\u{0:x4}", (int)c);
             });
         }
         static string escapeChar(Match m)
         {
-            var c = m.Value[0];
+            var c = m.Value[index: 0];
             return c < controlCodes.Length ? controlCodes[c] : escapeTable[c];
         }
 
@@ -123,11 +123,11 @@ namespace RC.Framework.Yaml
         static string unescapeChar(Match m)
         {
             string s;
-            switch ( m.Value[1] ) {
+            switch ( m.Value[index: 1] ) {
             case 'x':
             case 'u':
             case 'U':
-                s = ( (char)Convert.ToInt32("0x" + m.Value.Substring(2)) ).ToString();
+                s = ( (char)Convert.ToInt32("0x" + m.Value.Substring(startIndex: 2)) ).ToString();
                 break;
             default:
                 s = unescapeTable[m.Value];

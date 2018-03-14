@@ -67,7 +67,7 @@ namespace RC.Framework.FileSystem.Partitions
         /// <param name="capacity">The capacity of the disk (in bytes)</param>
         /// <param name="bootSectors">The boot sector(s) of the disk.</param>
         /// <param name="biosGeometry">The BIOS geometry of the disk.</param>
-        [Obsolete("Use the variant that takes VirtualDisk, this method breaks for disks with extended partitions", false)]
+        [Obsolete("Use the variant that takes VirtualDisk, this method breaks for disks with extended partitions", error: false)]
         public BiosPartitionedDiskBuilder(long capacity, byte[] bootSectors, Geometry biosGeometry)
         {
             _capacity = capacity;
@@ -75,7 +75,7 @@ namespace RC.Framework.FileSystem.Partitions
 
             _bootSectors = new SparseMemoryStream();
             _bootSectors.SetLength(capacity);
-            _bootSectors.Write(bootSectors, 0, bootSectors.Length);
+            _bootSectors.Write(bootSectors, offset: 0, count: bootSectors.Length);
             _partitionTable = new BiosPartitionTable(_bootSectors, biosGeometry);
 
             _partitionContents = new Dictionary<int, BuilderExtent>();
@@ -99,7 +99,7 @@ namespace RC.Framework.FileSystem.Partitions
                 sourceDisk.Content.Position = extent.Start;
                 byte[] buffer = Utilities.ReadFully(sourceDisk.Content, (int)extent.Length);
                 _bootSectors.Position = extent.Start;
-                _bootSectors.Write(buffer, 0, buffer.Length);
+                _bootSectors.Write(buffer, offset: 0, count: buffer.Length);
             }
 
             _partitionTable = new BiosPartitionTable(_bootSectors, _biosGeometry);

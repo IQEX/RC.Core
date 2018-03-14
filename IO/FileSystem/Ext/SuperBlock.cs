@@ -141,8 +141,8 @@ namespace RC.Framework.FileSystem.Ext
             IncompatibleFeatures = (IncompatibleFeatures)Utilities.ToUInt32LittleEndian(buffer, offset + 96);
             ReadOnlyCompatibleFeatures = (ReadOnlyCompatibleFeatures)Utilities.ToUInt32LittleEndian(buffer, offset + 100);
             UniqueId = Utilities.ToGuidLittleEndian(buffer, offset + 104);
-            VolumeName = Utilities.BytesToZString(buffer, offset + 120, 16);
-            LastMountPoint = Utilities.BytesToZString(buffer, offset + 136, 64);
+            VolumeName = Utilities.BytesToZString(buffer, offset + 120, count: 16);
+            LastMountPoint = Utilities.BytesToZString(buffer, offset + 136, count: 64);
             CompressionAlgorithmUsageBitmap = Utilities.ToUInt32LittleEndian(buffer, offset + 200);
 
             PreallocateBlockCount = buffer[offset + 204];

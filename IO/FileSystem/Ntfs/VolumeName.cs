@@ -57,7 +57,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public void WriteTo(byte[] buffer, int offset)
         {
-            Encoding.Unicode.GetBytes(_name, 0, _name.Length, buffer, offset);
+            Encoding.Unicode.GetBytes(_name, charIndex: 0, charCount: _name.Length, bytes: buffer, byteIndex: offset);
         }
 
         public void Dump(TextWriter writer, string indent)

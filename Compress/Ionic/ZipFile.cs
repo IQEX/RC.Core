@@ -123,7 +123,7 @@ namespace Ionic.Zip
     ///
     /// </remarks>
     [Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d00005")]
-    [Interop.ComVisible(true)]
+    [Interop.ComVisible(visibility: true)]
 #if !NETCF
     [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
 #endif
@@ -1082,7 +1082,7 @@ namespace Ionic.Zip
             get
             {
                 if (_entries.Count > 65534)
-                    return new Nullable<bool>(true);
+                    return new Nullable<bool>(value: true);
 
                 // If the <c>ZipFile</c> has not been saved or if the contents have changed, then
                 // it is not known if ZIP64 is required.
@@ -1091,10 +1091,10 @@ namespace Ionic.Zip
                 // Whether ZIP64 is required is knowable.
                 foreach (ZipEntry e in _entries.Values)
                 {
-                    if (e.RequiresZip64.Value) return new Nullable<bool>(true);
+                    if (e.RequiresZip64.Value) return new Nullable<bool>(value: true);
                 }
 
-                return new Nullable<bool>(false);
+                return new Nullable<bool>(value: false);
             }
         }
 
@@ -2482,7 +2482,7 @@ namespace Ionic.Zip
         {
             try
             {
-                _InitInstance(fileName, null);
+                _InitInstance(fileName, statusMessageWriter: null);
             }
             catch (Exception e1)
             {
@@ -2534,7 +2534,7 @@ namespace Ionic.Zip
             {
                 AlternateEncoding = encoding;
                 AlternateEncodingUsage = ZipOption.Always;
-                _InitInstance(fileName, null);
+                _InitInstance(fileName, statusMessageWriter: null);
             }
             catch (Exception e1)
             {
@@ -2600,7 +2600,7 @@ namespace Ionic.Zip
         /// </example>
         public ZipFile()
         {
-            _InitInstance(null, null);
+            _InitInstance(zipFileName: null, statusMessageWriter: null);
         }
 
 
@@ -2626,7 +2626,7 @@ namespace Ionic.Zip
         {
             AlternateEncoding = encoding;
             AlternateEncodingUsage = ZipOption.Always;
-            _InitInstance(null, null);
+            _InitInstance(zipFileName: null, statusMessageWriter: null);
         }
 
 
@@ -2813,7 +2813,7 @@ namespace Ionic.Zip
         {
             try
             {
-                _InitInstance(fileName, null);
+                _InitInstance(fileName, statusMessageWriter: null);
             }
             catch (Exception e1)
             {
@@ -3407,7 +3407,7 @@ namespace Ionic.Zip
         ///
         public void RemoveEntry(String fileName)
         {
-            string modifiedName = ZipEntry.NameInArchive(fileName, null);
+            string modifiedName = ZipEntry.NameInArchive(fileName, directoryPathInArchive: null);
             ZipEntry e = this[modifiedName];
             if (e == null)
                 throw new ArgumentException("The entry you specified was not found in the zip archive.");
@@ -3474,7 +3474,7 @@ namespace Ionic.Zip
         public void Dispose()
         {
             // dispose of the managed and unmanaged resources
-            Dispose(true);
+            Dispose(disposeManagedResources: true);
 
             // tell the GC that the Finalize process no longer needs
             // to be run for this object.

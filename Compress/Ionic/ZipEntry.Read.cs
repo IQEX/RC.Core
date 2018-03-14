@@ -43,7 +43,7 @@ namespace Ionic.Zip
             Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(this.ArchiveStream);
 
             byte[] block = new byte[30];
-            this.ArchiveStream.Read(block, 0, block.Length);
+            this.ArchiveStream.Read(block, offset: 0, count: block.Length);
             int i = 26;
             Int16 filenameLength = (short)(block[i++] + block[i++] * 256);
             Int16 extraFieldLength = (short)(block[i++] + block[i++] * 256);
@@ -84,7 +84,7 @@ namespace Ionic.Zip
                 //
                 // Anything else is a surprise.
 
-                ze.ArchiveStream.Seek(-4, SeekOrigin.Current); // unread the signature
+                ze.ArchiveStream.Seek(offset: -4, origin: SeekOrigin.Current); // unread the signature
                 // workitem 10178
                 Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(ze.ArchiveStream);
                 if (ZipEntry.IsNotValidZipDirEntrySig(signature) && (signature != ZipConstants.EndOfCentralDirectorySignature))
@@ -95,7 +95,7 @@ namespace Ionic.Zip
             }
 
             byte[] block = new byte[26];
-            int n = ze.ArchiveStream.Read(block, 0, block.Length);
+            int n = ze.ArchiveStream.Read(block, offset: 0, count: block.Length);
             if (n != block.Length) return false;
             bytesRead += n;
 
@@ -133,7 +133,7 @@ namespace Ionic.Zip
             Int16 extraFieldLength = (short)(block[i++] + block[i++] * 256);
 
             block = new byte[filenameLength];
-            n = ze.ArchiveStream.Read(block, 0, block.Length);
+            n = ze.ArchiveStream.Read(block, offset: 0, count: block.Length);
             bytesRead += n;
 
             // if the UTF8 bit is set for this entry, override the
@@ -147,7 +147,7 @@ namespace Ionic.Zip
             }
 
             // need to use this form of GetString() for .NET CF
-            ze._FileNameInArchive = ze.AlternateEncoding.GetString(block, 0, block.Length);
+            ze._FileNameInArchive = ze.AlternateEncoding.GetString(block, index: 0, count: block.Length);
 
             // workitem 6898
             if (ze._FileNameInArchive.EndsWith("/")) ze.MarkAsDirectory();
@@ -203,7 +203,7 @@ namespace Ionic.Zip
                     {
                         // read 1x 4-byte (CRC) and 2x 8-bytes (Compressed Size, Uncompressed Size)
                         block = new byte[20];
-                        n = ze.ArchiveStream.Read(block, 0, block.Length);
+                        n = ze.ArchiveStream.Read(block, offset: 0, count: block.Length);
                         if (n != 20) return false;
 
                         // do not increment bytesRead - it is for entry header only.
@@ -223,7 +223,7 @@ namespace Ionic.Zip
                     {
                         // read 3x 4-byte fields (CRC, Compressed Size, Uncompressed Size)
                         block = new byte[12];
-                        n = ze.ArchiveStream.Read(block, 0, block.Length);
+                        n = ze.ArchiveStream.Read(block, offset: 0, count: block.Length);
                         if (n != 12) return false;
 
                         // do not increment bytesRead - it is for entry header only.
@@ -246,7 +246,7 @@ namespace Ionic.Zip
                         // Seek back to un-read the last 12 bytes  - maybe THEY contain
                         // the ZipEntryDataDescriptorSignature.
                         // (12 bytes for the CRC, Comp and Uncomp size.)
-                        ze.ArchiveStream.Seek(-12, SeekOrigin.Current);
+                        ze.ArchiveStream.Seek(offset: -12, origin: SeekOrigin.Current);
                         // workitem 10178
                         Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(ze.ArchiveStream);
 
@@ -325,7 +325,7 @@ namespace Ionic.Zip
             // in PKZIP and implemented in the CRC32.cs module in this project.
 
             // read the 12-byte encryption header
-            int additionalBytesRead = s.Read(buffer, 0, 12);
+            int additionalBytesRead = s.Read(buffer, offset: 0, count: 12);
             if (additionalBytesRead != 12)
                 throw new ZipException(String.Format("Unexpected end of data at position 0x{0:X8}", s.Position));
 
@@ -360,7 +360,7 @@ namespace Ionic.Zip
             entry._container = zc;
             entry._archiveStream = s;
             if (zf != null)
-                zf.OnReadEntry(true, null);
+                zf.OnReadEntry(before: true, entry: null);
 
             if (first) HandlePK00Prefix(s);
 
@@ -391,7 +391,7 @@ namespace Ionic.Zip
             if (zf != null)
             {
                 zf.OnReadBytes(entry);
-                zf.OnReadEntry(false, entry);
+                zf.OnReadEntry(before: false, entry: entry);
             }
 
             return entry;
@@ -405,7 +405,7 @@ namespace Ionic.Zip
             uint datum = (uint)Ionic.Zip.SharedUtilities.ReadInt(s);
             if (datum != ZipConstants.PackedToRemovableMedia)
             {
-                s.Seek(-4, SeekOrigin.Current); // unread the block
+                s.Seek(offset: -4, origin: SeekOrigin.Current); // unread the block
                 // workitem 10178
                 Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(s);
             }
@@ -435,7 +435,7 @@ namespace Ionic.Zip
                     }
                     else
                     {
-                        s.Seek(-12, SeekOrigin.Current); // unread the three blocks
+                        s.Seek(offset: -12, origin: SeekOrigin.Current); // unread the three blocks
 
                         // workitem 10178
                         Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(s);
@@ -443,7 +443,7 @@ namespace Ionic.Zip
                 }
                 else
                 {
-                    s.Seek(-8, SeekOrigin.Current); // unread the two blocks
+                    s.Seek(offset: -8, origin: SeekOrigin.Current); // unread the two blocks
 
                     // workitem 10178
                     Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(s);
@@ -451,7 +451,7 @@ namespace Ionic.Zip
             }
             else
             {
-                s.Seek(-4, SeekOrigin.Current); // unread the block
+                s.Seek(offset: -4, origin: SeekOrigin.Current); // unread the block
 
                 // workitem 10178
                 Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(s);
@@ -495,7 +495,7 @@ namespace Ionic.Zip
             if (extraFieldLength > 0)
             {
                 byte[] buffer = this._Extra = new byte[extraFieldLength];
-                additionalBytesRead = s.Read(buffer, 0, buffer.Length);
+                additionalBytesRead = s.Read(buffer, offset: 0, count: buffer.Length);
                 long posn = s.Position - additionalBytesRead;
                 int j = 0;
                 while (j + 3 < buffer.Length)

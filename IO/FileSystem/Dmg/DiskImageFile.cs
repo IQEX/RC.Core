@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem.Dmg
             stream.Position = stream.Length - _udifHeader.Size;
             byte[] data = Utilities.ReadFully(stream, _udifHeader.Size);
 
-            _udifHeader.ReadFrom(data, 0);
+            _udifHeader.ReadFrom(data, offset: 0);
 
             if (_udifHeader.SignatureValid)
             {

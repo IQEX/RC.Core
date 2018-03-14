@@ -152,7 +152,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
         public override IEnumerable<StreamExtent> Extents
         {
-            get { return GetExtentsInRange(0, Length); }
+            get { return GetExtentsInRange(start: 0, count: Length); }
         }
 
         public override void Flush()

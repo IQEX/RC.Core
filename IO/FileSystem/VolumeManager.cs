@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem
 
                     foreach (var type in typeof(VolumeManager).Assembly.GetTypes())
                     {
-                        foreach (LogicalVolumeFactoryAttribute attr in Attribute.GetCustomAttributes(type, typeof(LogicalVolumeFactoryAttribute), false))
+                        foreach (LogicalVolumeFactoryAttribute attr in Attribute.GetCustomAttributes(type, typeof(LogicalVolumeFactoryAttribute), inherit: false))
                         {
                             factories.Add((LogicalVolumeFactory)Activator.CreateInstance(type));
                         }

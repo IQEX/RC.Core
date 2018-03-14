@@ -275,11 +275,11 @@ namespace RC.Framework.FileSystem.Iscsi
 
             TargetInfo targetInfo = new TargetInfo(targetName, new TargetAddress[] { new TargetAddress(address, port, targetGroupTag) });
 
-            foreach (var queryElem in uri.Query.Substring(1).Split('&'))
+            foreach (var queryElem in uri.Query.Substring(startIndex: 1).Split('&'))
             {
                 if (queryElem.StartsWith("LUN=", StringComparison.OrdinalIgnoreCase))
                 {
-                    lun = ulong.Parse(queryElem.Substring(4), CultureInfo.InvariantCulture);
+                    lun = ulong.Parse(queryElem.Substring(startIndex: 4), CultureInfo.InvariantCulture);
                     if (lun < 256)
                     {
                         lun = lun << (6 * 8);
@@ -287,7 +287,7 @@ namespace RC.Framework.FileSystem.Iscsi
                 }
             }
 
-            return new LunInfo(targetInfo, (long)lun, LunClass.Unknown, false, string.Empty, string.Empty, string.Empty);
+            return new LunInfo(targetInfo, (long)lun, LunClass.Unknown, removable: false, vendor: string.Empty, product: string.Empty, revision: string.Empty);
         }
 
         /// <summary>

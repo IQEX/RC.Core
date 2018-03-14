@@ -179,7 +179,7 @@ namespace Ionic.Zlib
         {
             return (dist < 256)
                 ? _dist_code[dist]
-                : _dist_code[256 + SharedUtils.URShift(dist, 7)];
+                : _dist_code[256 + SharedUtils.URShift(dist, bits: 7)];
         }
 
         internal short[] dyn_tree; // the dynamic tree
@@ -340,7 +340,7 @@ namespace Ionic.Zlib
                 // n = node of least frequency
                 n = s.heap[1];
                 s.heap[1] = s.heap[s.heap_len--];
-                s.pqdownheap(tree, 1);
+                s.pqdownheap(tree, k: 1);
                 m = s.heap[1]; // m = node of next least frequency
                                 
                 s.heap[--s.heap_max] = n; // keep the nodes sorted by frequency
@@ -353,7 +353,7 @@ namespace Ionic.Zlib
                                 
                 // and insert the new node in the heap
                 s.heap[1] = node++;
-                s.pqdownheap(tree, 1);
+                s.pqdownheap(tree, k: 1);
             }
             while (s.heap_len >= 2);
                         

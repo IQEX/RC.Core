@@ -295,7 +295,7 @@ namespace Ionic
             CriterionTrace("NameCriterion::Evaluate({0})", fullpath);
             // No slash in the pattern implicitly means recurse, which means compare to
             // filename only, not full path.
-            String f = (_MatchingFileSpec.IndexOf('\\') == -1)
+            String f = (_MatchingFileSpec.IndexOf(value: '\\') == -1)
                 ? System.IO.Path.GetFileName(fullpath)
                 : fullpath; // compare to fullpath
 
@@ -321,9 +321,9 @@ namespace Ionic
             set
             {
                 if (value.Length != 1 ||
-                    (value[0]!='D' && value[0]!='F'))
+                    (value[index: 0]!='D' && value[index: 0]!='F'))
                     throw new ArgumentException("Specify a single character: either D or F");
-                ObjectType = value[0];
+                ObjectType = value[index: 0];
             }
         }
 
@@ -618,7 +618,7 @@ namespace Ionic
         ///
         /// <param name="selectionCriteria">The criteria for file selection.</param>
         public FileSelector(String selectionCriteria)
-        : this(selectionCriteria, true)
+        : this(selectionCriteria, traverseDirectoryReparsePoints: true)
         {
         }
 
@@ -1033,7 +1033,7 @@ namespace Ionic
                         if (tokens.Length <= i + 3)
                             throw new ArgumentException(String.Join(" ", tokens, i, tokens.Length - i));
 
-                        pendingConjunction = (LogicalConjunction)Enum.Parse(typeof(LogicalConjunction), tokens[i].ToUpper(), true);
+                        pendingConjunction = (LogicalConjunction)Enum.Parse(typeof(LogicalConjunction), tokens[i].ToUpper(), ignoreCase: true);
                         current = new CompoundCriterion { Left = current, Right = null, Conjunction = pendingConjunction };
                         stateStack.Push(state);
                         stateStack.Push(ParseState.ConjunctionPending);
@@ -1069,29 +1069,29 @@ namespace Ionic
                         DateTime t;
                         try
                         {
-                            t = DateTime.ParseExact(tokens[i + 2], "yyyy-MM-dd-HH:mm:ss", null);
+                            t = DateTime.ParseExact(tokens[i + 2], "yyyy-MM-dd-HH:mm:ss", provider: null);
                         }
                         catch (FormatException)
                         {
                             try
                             {
-                                t = DateTime.ParseExact(tokens[i + 2], "yyyy/MM/dd-HH:mm:ss", null);
+                                t = DateTime.ParseExact(tokens[i + 2], "yyyy/MM/dd-HH:mm:ss", provider: null);
                             }
                             catch (FormatException)
                             {
                                 try
                                 {
-                                    t = DateTime.ParseExact(tokens[i + 2], "yyyy/MM/dd", null);
+                                    t = DateTime.ParseExact(tokens[i + 2], "yyyy/MM/dd", provider: null);
                                 }
                                 catch (FormatException)
                                 {
                                     try
                                     {
-                                        t = DateTime.ParseExact(tokens[i + 2], "MM/dd/yyyy", null);
+                                        t = DateTime.ParseExact(tokens[i + 2], "MM/dd/yyyy", provider: null);
                                     }
                                     catch (FormatException)
                                     {
-                                        t = DateTime.ParseExact(tokens[i + 2], "yyyy-MM-dd", null);
+                                        t = DateTime.ParseExact(tokens[i + 2], "yyyy-MM-dd", provider: null);
                                     }
                                 }
                             }
@@ -1099,7 +1099,7 @@ namespace Ionic
                         t= DateTime.SpecifyKind(t, DateTimeKind.Local).ToUniversalTime();
                         current = new TimeCriterion
                         {
-                            Which = (WhichTime)Enum.Parse(typeof(WhichTime), tokens[i], true),
+                            Which = (WhichTime)Enum.Parse(typeof(WhichTime), tokens[i], ignoreCase: true),
                             Operator = (ComparisonOperator)EnumUtil.Parse(typeof(ComparisonOperator), tokens[i + 1]),
                             Time = t
                         };
@@ -1116,17 +1116,17 @@ namespace Ionic
                         Int64 sz = 0;
                         string v = tokens[i + 2];
                         if (v.ToUpper().EndsWith("K"))
-                            sz = Int64.Parse(v.Substring(0, v.Length - 1)) * 1024;
+                            sz = Int64.Parse(v.Substring(startIndex: 0, length: v.Length - 1)) * 1024;
                         else if (v.ToUpper().EndsWith("KB"))
-                            sz = Int64.Parse(v.Substring(0, v.Length - 2)) * 1024;
+                            sz = Int64.Parse(v.Substring(startIndex: 0, length: v.Length - 2)) * 1024;
                         else if (v.ToUpper().EndsWith("M"))
-                            sz = Int64.Parse(v.Substring(0, v.Length - 1)) * 1024 * 1024;
+                            sz = Int64.Parse(v.Substring(startIndex: 0, length: v.Length - 1)) * 1024 * 1024;
                         else if (v.ToUpper().EndsWith("MB"))
-                            sz = Int64.Parse(v.Substring(0, v.Length - 2)) * 1024 * 1024;
+                            sz = Int64.Parse(v.Substring(startIndex: 0, length: v.Length - 2)) * 1024 * 1024;
                         else if (v.ToUpper().EndsWith("G"))
-                            sz = Int64.Parse(v.Substring(0, v.Length - 1)) * 1024 * 1024 * 1024;
+                            sz = Int64.Parse(v.Substring(startIndex: 0, length: v.Length - 1)) * 1024 * 1024 * 1024;
                         else if (v.ToUpper().EndsWith("GB"))
-                            sz = Int64.Parse(v.Substring(0, v.Length - 2)) * 1024 * 1024 * 1024;
+                            sz = Int64.Parse(v.Substring(startIndex: 0, length: v.Length - 2)) * 1024 * 1024 * 1024;
                         else sz = Int64.Parse(tokens[i + 2]);
 
                         current = new SizeCriterion
@@ -1158,7 +1158,7 @@ namespace Ionic
                             {
                                 // trim off leading and trailing single quotes and
                                 // revert the control characters to spaces.
-                                m = m.Substring(1, m.Length - 2)
+                                m = m.Substring(startIndex: 1, length: m.Length - 2)
                                     .Replace("\u0006", " ");
                             }
 
@@ -1299,7 +1299,7 @@ namespace Ionic
         /// </returns>
         public System.Collections.Generic.ICollection<String> SelectFiles(String directory)
         {
-            return SelectFiles(directory, false);
+            return SelectFiles(directory, recurseDirectories: false);
         }
 
 
@@ -1400,7 +1400,7 @@ namespace Ionic
         internal static string GetDescription(System.Enum value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
-            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), inherit: false);
             if (attributes.Length > 0)
                 return attributes[0].Description;
             else
@@ -1419,7 +1419,7 @@ namespace Ionic
         /// <returns></returns>
         internal static object Parse(Type enumType, string stringRepresentation)
         {
-            return Parse(enumType, stringRepresentation, false);
+            return Parse(enumType, stringRepresentation, ignoreCase: false);
         }
 
 

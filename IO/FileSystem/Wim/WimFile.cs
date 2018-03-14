@@ -44,9 +44,9 @@ namespace RC.Framework.FileSystem.Wim
         {
             _fileStream = stream;
 
-            byte[] buffer = Utilities.ReadFully(stream, 512);
+            byte[] buffer = Utilities.ReadFully(stream, count: 512);
             _fileHeader = new FileHeader();
-            _fileHeader.Read(buffer, 0);
+            _fileHeader.Read(buffer, offset: 0);
 
             if (!_fileHeader.IsValid())
             {
@@ -86,7 +86,7 @@ namespace RC.Framework.FileSystem.Wim
             {
                 using (Stream s = OpenResourceStream(_fileHeader.XmlDataHeader))
                 {
-                    using (StreamReader reader = new StreamReader(s, true))
+                    using (StreamReader reader = new StreamReader(s, detectEncodingFromByteOrderMarks: true))
                     {
                         return reader.ReadToEnd();
                     }
@@ -135,7 +135,7 @@ namespace RC.Framework.FileSystem.Wim
                     numRead += ResourceInfo.Size;
 
                     ResourceInfo info = new ResourceInfo();
-                    info.Read(resBuffer, 0);
+                    info.Read(resBuffer, offset: 0);
 
                     if ((info.Header.Flags & ResourceFlags.MetaData) != 0)
                     {
@@ -154,7 +154,7 @@ namespace RC.Framework.FileSystem.Wim
 
         internal ShortResourceHeader LocateResource(byte[] hash)
         {
-            uint hashHash = Utilities.ToUInt32LittleEndian(hash, 0);
+            uint hashHash = Utilities.ToUInt32LittleEndian(hash, offset: 0);
 
             if (!_resources.ContainsKey(hashHash))
             {
@@ -195,13 +195,13 @@ namespace RC.Framework.FileSystem.Wim
                     numRead += ResourceInfo.Size;
 
                     ResourceInfo info = new ResourceInfo();
-                    info.Read(resBuffer, 0);
+                    info.Read(resBuffer, offset: 0);
 
-                    uint hashHash = Utilities.ToUInt32LittleEndian(info.Hash, 0);
+                    uint hashHash = Utilities.ToUInt32LittleEndian(info.Hash, offset: 0);
 
                     if (!_resources.ContainsKey(hashHash))
                     {
-                        _resources[hashHash] = new List<ResourceInfo>(1);
+                        _resources[hashHash] = new List<ResourceInfo>(capacity: 1);
                     }
 
                     _resources[hashHash].Add(info);

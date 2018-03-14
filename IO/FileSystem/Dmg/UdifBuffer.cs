@@ -269,9 +269,9 @@ namespace RC.Framework.FileSystem.Dmg
             {
                 case RunType.ZlibCompressed:
                     _stream.Position = run.CompOffset + 2; // 2 byte zlib header
-                    using (DeflateStream ds = new DeflateStream(_stream, CompressionMode.Decompress, true))
+                    using (DeflateStream ds = new DeflateStream(_stream, CompressionMode.Decompress, leaveOpen: true))
                     {
-                        Utilities.ReadFully(ds, _decompBuffer, 0, toCopy);
+                        Utilities.ReadFully(ds, _decompBuffer, offset: 0, length: toCopy);
                     }
 
                     break;
@@ -279,7 +279,7 @@ namespace RC.Framework.FileSystem.Dmg
                 case RunType.AdcCompressed:
                     _stream.Position = run.CompOffset;
                     byte[] compressed = Utilities.ReadFully(_stream, (int)run.CompLength);
-                    if (ADCDecompress(compressed, 0, compressed.Length, _decompBuffer, 0) != toCopy)
+                    if (ADCDecompress(compressed, inputOffset: 0, inputCount: compressed.Length, outputBuffer: _decompBuffer, outputOffset: 0) != toCopy)
                     {
                         throw new InvalidDataException("Run too short when decompressed");
                     }
@@ -289,7 +289,7 @@ namespace RC.Framework.FileSystem.Dmg
                 case RunType.BZlibCompressed:
                     using (BZip2DecoderStream ds = new BZip2DecoderStream(new SubStream(_stream, run.CompOffset, run.CompLength), Ownership.None))
                     {
-                        Utilities.ReadFully(ds, _decompBuffer, 0, toCopy);
+                        Utilities.ReadFully(ds, _decompBuffer, offset: 0, length: toCopy);
                     }
 
                     break;

@@ -31,7 +31,7 @@ namespace RC.Framework.FileSystem
         /// <summary>
         /// The address of the first sector on any disk.
         /// </summary>
-        public static readonly ChsAddress First = new ChsAddress(0, 0, 1);
+        public static readonly ChsAddress First = new ChsAddress(cylinder: 0, head: 0, sector: 1);
 
         private int _cylinder;
         private int _head;

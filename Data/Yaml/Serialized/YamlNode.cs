@@ -754,7 +754,7 @@ namespace RC.Framework.Yaml
         /// When the node appeared multiple times in the document, this property returns the position
         /// where it appeared for the first time.
         /// </summary>
-        [DefaultValue(0)]
+        [DefaultValue(value: 0)]
         public int Raw { get; set; }
 
         /// <summary>
@@ -763,7 +763,7 @@ namespace RC.Framework.Yaml
         /// When the node appeared multiple times in the document, this property returns the position
         /// where it appeared for the first time.
         /// </summary>
-        [DefaultValue(0)]
+        [DefaultValue(value: 0)]
         public int Column { get; set; }
 
         /// <summary>
@@ -1263,7 +1263,7 @@ namespace RC.Framework.Yaml
         public static string ExpandTag(string tag)
         {
             if ( tag.StartsWith("!!") )
-                return DefaultTagPrefix + tag.Substring(2);
+                return DefaultTagPrefix + tag.Substring(startIndex: 2);
             return tag;
         }
 
@@ -1535,7 +1535,7 @@ namespace RC.Framework.Yaml
             if ( length <= 0 )
                 return tag + "\"" + "...";
             if ( Value.Length > length )
-                return tag + "\"" + Value.Substring(0, length) + "...";
+                return tag + "\"" + Value.Substring(startIndex: 0, length: length) + "...";
             length -= Value.Length + 1;
             return tag + "\"" + Value + "\"";
         }
@@ -1555,8 +1555,8 @@ namespace RC.Framework.Yaml
         /// <returns>Hash value for the object.</returns>
         protected override int GetHashCodeCore() 
         {
-            return GetHashCodeCoreSub(0,
-                new Dictionary<YamlNode, int>(
+            return GetHashCodeCoreSub(path: 0,
+                dict: new Dictionary<YamlNode, int>(
                         TypeUtils.EqualityComparerByRef<YamlNode>.Default));
         }
 

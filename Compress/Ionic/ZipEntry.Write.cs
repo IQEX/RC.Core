@@ -173,7 +173,7 @@ namespace Ionic.Zip
             // contains the "updated" extra field (after PostProcessOutput) at
             // offset (30 + filenameLength).
 
-            _Extra = ConstructExtraField(true);
+            _Extra = ConstructExtraField(forCentralDirectory: true);
 
             Int16 extraFieldLength = (Int16)((_Extra == null) ? 0 : _Extra.Length);
             bytes[i++] = (byte)(extraFieldLength & 0x00FF);
@@ -243,7 +243,7 @@ namespace Ionic.Zip
             }
 
             // actual filename
-            Buffer.BlockCopy(fileNameBytes, 0, bytes, i, filenameLength);
+            Buffer.BlockCopy(fileNameBytes, srcOffset: 0, dst: bytes, dstOffset: i, count: filenameLength);
             i += filenameLength;
 
             // "Extra field"
@@ -274,13 +274,13 @@ namespace Ionic.Zip
             if (commentLength != 0)
             {
                 // now actually write the comment itself into the byte buffer
-                Buffer.BlockCopy(_CommentBytes, 0, bytes, i, commentLength);
+                Buffer.BlockCopy(_CommentBytes, srcOffset: 0, dst: bytes, dstOffset: i, count: commentLength);
                 // for (j = 0; (j < commentLength) && (i + j < bytes.Length); j++)
                 //     bytes[i + j] = _CommentBytes[j];
                 i += commentLength;
             }
 
-            s.Write(bytes, 0, i);
+            s.Write(bytes, offset: 0, count: i);
         }
 
 
@@ -348,10 +348,10 @@ namespace Ionic.Zip
                 // The actual metadata - we may or may not have real values yet...
 
                 // uncompressed size
-                Array.Copy(BitConverter.GetBytes(_UncompressedSize), 0, block, i, 8);
+                Array.Copy(BitConverter.GetBytes(_UncompressedSize), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 8);
                 i += 8;
                 // compressed size
-                Array.Copy(BitConverter.GetBytes(_CompressedSize), 0, block, i, 8);
+                Array.Copy(BitConverter.GetBytes(_CompressedSize), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 8);
                 i += 8;
 
                 // workitem 7924 - only include this if the "extra" field is for
@@ -360,11 +360,11 @@ namespace Ionic.Zip
                 if (forCentralDirectory)
                 {
                     // relative offset
-                    Array.Copy(BitConverter.GetBytes(_RelativeOffsetOfLocalHeader), 0, block, i, 8);
+                    Array.Copy(BitConverter.GetBytes(_RelativeOffsetOfLocalHeader), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 8);
                     i += 8;
 
                     // starting disk number
-                    Array.Copy(BitConverter.GetBytes(0), 0, block, i, 4);
+                    Array.Copy(BitConverter.GetBytes(value: 0), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 4);
                 }
                 listOfBlocks.Add(block);
             }
@@ -443,13 +443,13 @@ namespace Ionic.Zip
                 block[i++] = 0;
 
                 Int64 z = _Mtime.ToFileTime();
-                Array.Copy(BitConverter.GetBytes(z), 0, block, i, 8);
+                Array.Copy(BitConverter.GetBytes(z), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 8);
                 i += 8;
                 z = _Atime.ToFileTime();
-                Array.Copy(BitConverter.GetBytes(z), 0, block, i, 8);
+                Array.Copy(BitConverter.GetBytes(z), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 8);
                 i += 8;
                 z = _Ctime.ToFileTime();
-                Array.Copy(BitConverter.GetBytes(z), 0, block, i, 8);
+                Array.Copy(BitConverter.GetBytes(z), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 8);
                 i += 8;
 
                 listOfBlocks.Add(block);
@@ -491,15 +491,15 @@ namespace Ionic.Zip
                 block[i++] = 0x07;
 
                 Int32 z = unchecked((int)((_Mtime - _unixEpoch).TotalSeconds));
-                Array.Copy(BitConverter.GetBytes(z), 0, block, i, 4);
+                Array.Copy(BitConverter.GetBytes(z), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 4);
                 i += 4;
                 if (!forCentralDirectory)
                 {
                     z = unchecked((int)((_Atime - _unixEpoch).TotalSeconds));
-                    Array.Copy(BitConverter.GetBytes(z), 0, block, i, 4);
+                    Array.Copy(BitConverter.GetBytes(z), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 4);
                     i += 4;
                     z = unchecked((int)((_Ctime - _unixEpoch).TotalSeconds));
-                    Array.Copy(BitConverter.GetBytes(z), 0, block, i, 4);
+                    Array.Copy(BitConverter.GetBytes(z), sourceIndex: 0, destinationArray: block, destinationIndex: i, length: 4);
                     i += 4;
                 }
                 listOfBlocks.Add(block);
@@ -520,7 +520,7 @@ namespace Ionic.Zip
                 aggregateBlock = new byte[totalLength];
                 for (i = 0; i < listOfBlocks.Count; i++)
                 {
-                    System.Array.Copy(listOfBlocks[i], 0, aggregateBlock, current, listOfBlocks[i].Length);
+                    System.Array.Copy(listOfBlocks[i], sourceIndex: 0, destinationArray: aggregateBlock, destinationIndex: current, length: listOfBlocks[i].Length);
                     current += listOfBlocks[i].Length;
                 }
             }
@@ -563,24 +563,24 @@ namespace Ionic.Zip
             string SlashFixed = FileName.Replace("\\", "/");
             string s1 = null;
             if ((_TrimVolumeFromFullyQualifiedPaths) && (FileName.Length >= 3)
-                && (FileName[1] == ':') && (SlashFixed[2] == '/'))
+                && (FileName[index: 1] == ':') && (SlashFixed[index: 2] == '/'))
             {
                 // trim off volume letter, colon, and slash
-                s1 = SlashFixed.Substring(3);
+                s1 = SlashFixed.Substring(startIndex: 3);
             }
             else if ((FileName.Length >= 4)
-                     && ((SlashFixed[0] == '/') && (SlashFixed[1] == '/')))
+                     && ((SlashFixed[index: 0] == '/') && (SlashFixed[index: 1] == '/')))
             {
-                int n = SlashFixed.IndexOf('/', 2);
+                int n = SlashFixed.IndexOf(value: '/', startIndex: 2);
                 if (n == -1)
                     throw new ArgumentException("The path for that entry appears to be badly formatted");
                 s1 = SlashFixed.Substring(n + 1);
             }
             else if ((FileName.Length >= 3)
-                     && ((SlashFixed[0] == '.') && (SlashFixed[1] == '/')))
+                     && ((SlashFixed[index: 0] == '.') && (SlashFixed[index: 1] == '/')))
             {
                 // trim off dot and slash
-                s1 = SlashFixed.Substring(2);
+                s1 = SlashFixed.Substring(startIndex: 2);
             }
             else
             {
@@ -632,7 +632,7 @@ namespace Ionic.Zip
 
             byte[] result = ibm437.GetBytes(s1);
             // need to use this form of GetString() for .NET CF
-            string s2 = ibm437.GetString(result, 0, result.Length);
+            string s2 = ibm437.GetString(result, index: 0, count: result.Length);
             _CommentBytes = null;
             if (s2 != s1)
             {
@@ -657,7 +657,7 @@ namespace Ionic.Zip
 
             // there is a comment. Get the encoded form.
             byte[] cbytes = ibm437.GetBytes(_Comment);
-            string c2 = ibm437.GetString(cbytes,0,cbytes.Length);
+            string c2 = ibm437.GetString(cbytes,index: 0,count: cbytes.Length);
 
             // Check for round-trip.
             if (c2 != Comment)
@@ -1087,7 +1087,7 @@ namespace Ionic.Zip
             block[i++] = (byte)(filenameLength & 0x00FF);
             block[i++] = (byte)((filenameLength & 0xFF00) >> 8);
 
-            _Extra = ConstructExtraField(false);
+            _Extra = ConstructExtraField(forCentralDirectory: false);
 
             // (i==28) extra field length (short)
             Int16 extraFieldLength = (Int16)((_Extra == null) ? 0 : _Extra.Length);
@@ -1098,11 +1098,11 @@ namespace Ionic.Zip
             byte[] bytes = new byte[i + filenameLength + extraFieldLength];
 
             // get the fixed portion
-            Buffer.BlockCopy(block, 0, bytes, 0, i);
+            Buffer.BlockCopy(block, srcOffset: 0, dst: bytes, dstOffset: 0, count: i);
             //for (j = 0; j < i; j++) bytes[j] = block[j];
 
             // The filename written to the archive.
-            Buffer.BlockCopy(fileNameBytes, 0, bytes, i, fileNameBytes.Length);
+            Buffer.BlockCopy(fileNameBytes, srcOffset: 0, dst: bytes, dstOffset: i, count: fileNameBytes.Length);
             // for (j = 0; j < fileNameBytes.Length; j++)
             //     bytes[i + j] = fileNameBytes[j];
 
@@ -1111,7 +1111,7 @@ namespace Ionic.Zip
             // "Extra field"
             if (_Extra != null)
             {
-                Buffer.BlockCopy(_Extra, 0, bytes, i, _Extra.Length);
+                Buffer.BlockCopy(_Extra, srcOffset: 0, dst: bytes, dstOffset: i, count: _Extra.Length);
                 // for (j = 0; j < _Extra.Length; j++)
                 //     bytes[i + j] = _Extra[j];
                 i += _Extra.Length;
@@ -1139,7 +1139,7 @@ namespace Ionic.Zip
 
 
             // finally, write the header to the stream
-            s.Write(bytes, 0, i);
+            s.Write(bytes, offset: 0, count: i);
 
             // now that the header is written, we can turn off the contiguous write restriction.
             if (zss != null)
@@ -1384,7 +1384,7 @@ namespace Ionic.Zip
 
                 // Wrap a CrcCalculatorStream around that.
                 // This will happen BEFORE compression (if any) as we write data out.
-                var output = new Ionic.Crc.CrcCalculatorStream(compressor, true);
+                var output = new Ionic.Crc.CrcCalculatorStream(compressor, leaveOpen: true);
 
                 // output.Write() causes this flow:
                 // calc-crc -> compress -> encrypt -> count -> actually write
@@ -1399,9 +1399,9 @@ namespace Ionic.Zip
                     // synchronously copy the input stream to the output stream-chain
                     byte[] buffer = new byte[BufferSize];
                     int n;
-                    while ((n = SharedUtilities.ReadWithRetry(input, buffer, 0, buffer.Length, FileName)) != 0)
+                    while ((n = SharedUtilities.ReadWithRetry(input, buffer, offset: 0, count: buffer.Length, FileName: FileName)) != 0)
                     {
-                        output.Write(buffer, 0, n);
+                        output.Write(buffer, offset: 0, count: n);
                         OnWriteBlock(output.TotalBytesSlurped, fileLength);
                         if (_ioOperationCanceled)
                             break;
@@ -1688,9 +1688,9 @@ namespace Ionic.Zip
 
                 i += 2; // skip over data size, which is 16+4
 
-                Array.Copy(BitConverter.GetBytes(_UncompressedSize), 0, _EntryHeader, i, 8);
+                Array.Copy(BitConverter.GetBytes(_UncompressedSize), sourceIndex: 0, destinationArray: _EntryHeader, destinationIndex: i, length: 8);
                 i += 8;
-                Array.Copy(BitConverter.GetBytes(_CompressedSize), 0, _EntryHeader, i, 8);
+                Array.Copy(BitConverter.GetBytes(_CompressedSize), sourceIndex: 0, destinationArray: _EntryHeader, destinationIndex: i, length: 8);
             }
             else
             {
@@ -1792,7 +1792,7 @@ namespace Ionic.Zip
                     using (Stream hseg = ZipSegmentedStream.ForUpdate(this._container.ZipFile.Name, _diskNumber))
                     {
                         hseg.Seek(this._RelativeOffsetOfLocalHeader, SeekOrigin.Begin);
-                        hseg.Write(_EntryHeader, 0, _EntryHeader.Length);
+                        hseg.Write(_EntryHeader, offset: 0, count: _EntryHeader.Length);
                     }
                 }
                 else
@@ -1803,7 +1803,7 @@ namespace Ionic.Zip
                     s.Seek(this._RelativeOffsetOfLocalHeader, SeekOrigin.Begin);
 
                     // write the updated header to the output stream
-                    s.Write(_EntryHeader, 0, _EntryHeader.Length);
+                    s.Write(_EntryHeader, offset: 0, count: _EntryHeader.Length);
 
                     // adjust the count on the CountingStream as necessary
                     if (s1 != null) s1.Adjust(_EntryHeader.Length);
@@ -1821,22 +1821,22 @@ namespace Ionic.Zip
                 i = 0;
 
                 // signature
-                Array.Copy(BitConverter.GetBytes(ZipConstants.ZipEntryDataDescriptorSignature), 0, Descriptor, i, 4);
+                Array.Copy(BitConverter.GetBytes(ZipConstants.ZipEntryDataDescriptorSignature), sourceIndex: 0, destinationArray: Descriptor, destinationIndex: i, length: 4);
                 i += 4;
 
                 // CRC - the correct value now
-                Array.Copy(BitConverter.GetBytes(_Crc32), 0, Descriptor, i, 4);
+                Array.Copy(BitConverter.GetBytes(_Crc32), sourceIndex: 0, destinationArray: Descriptor, destinationIndex: i, length: 4);
                 i += 4;
 
                 // workitem 7917
                 if (_OutputUsesZip64.Value)
                 {
                     // CompressedSize - the correct value now
-                    Array.Copy(BitConverter.GetBytes(_CompressedSize), 0, Descriptor, i, 8);
+                    Array.Copy(BitConverter.GetBytes(_CompressedSize), sourceIndex: 0, destinationArray: Descriptor, destinationIndex: i, length: 8);
                     i += 8;
 
                     // UncompressedSize - the correct value now
-                    Array.Copy(BitConverter.GetBytes(_UncompressedSize), 0, Descriptor, i, 8);
+                    Array.Copy(BitConverter.GetBytes(_UncompressedSize), sourceIndex: 0, destinationArray: Descriptor, destinationIndex: i, length: 8);
                     i += 8;
                 }
                 else
@@ -1855,7 +1855,7 @@ namespace Ionic.Zip
                 }
 
                 // finally, write the trailing descriptor to the output stream
-                s.Write(Descriptor, 0, Descriptor.Length);
+                s.Write(Descriptor, offset: 0, count: Descriptor.Length);
 
                 _LengthOfTrailer += Descriptor.Length;
             }
@@ -1928,7 +1928,7 @@ namespace Ionic.Zip
             }
             // Wrap a CrcCalculatorStream around that.
             // This will happen BEFORE compression (if any) as we write data out.
-            output = new Ionic.Crc.CrcCalculatorStream(compressor, true);
+            output = new Ionic.Crc.CrcCalculatorStream(compressor, leaveOpen: true);
         }
 
 
@@ -1970,7 +1970,7 @@ namespace Ionic.Zip
                             new Ionic.Zlib.ParallelDeflateOutputStream(s,
                                                                        CompressionLevel,
                                                                        _container.Strategy,
-                                                                       true);
+                                                                       leaveOpen: true);
                         // can set the codec buffer size only before the first call to Write().
                         if (_container.CodecBufferSize > 0)
                             _container.ParallelDeflater.BufferSize = _container.CodecBufferSize;
@@ -1986,7 +1986,7 @@ namespace Ionic.Zip
 #endif
                 var o = new Ionic.Zlib.DeflateStream(s, Ionic.Zlib.CompressionMode.Compress,
                                                      CompressionLevel,
-                                                     true);
+                                                     leaveOpen: true);
                 if (_container.CodecBufferSize > 0)
                     o.BufferSize = _container.CodecBufferSize;
                 o.Strategy = _container.Strategy;
@@ -2093,7 +2093,7 @@ namespace Ionic.Zip
                     // Is the entry a directory?  If so, the write is relatively simple.
                     if (IsDirectory)
                     {
-                        WriteHeader(s, 1);
+                        WriteHeader(s, cycle: 1);
                         StoreRelativeOffset();
                         _entryRequiresZip64 = new Nullable<bool>(_RelativeOffsetOfLocalHeader >= 0xFFFFFFFF);
                         _OutputUsesZip64 = new Nullable<bool>(_container.Zip64 == Zip64Option.Always || _entryRequiresZip64.Value);
@@ -2337,7 +2337,7 @@ namespace Ionic.Zip
                 byte[] cipherText = _zipCrypto_forWrite.EncryptMessage(encryptionHeader, encryptionHeader.Length);
 
                 // Write the ciphered bonafide encryption header.
-                outstream.Write(cipherText, 0, cipherText.Length);
+                outstream.Write(cipherText, offset: 0, count: cipherText.Length);
                 _LengthOfHeader += cipherText.Length;  // 12 bytes
             }
 
@@ -2412,7 +2412,7 @@ namespace Ionic.Zip
             // WriteHeader() has the side effect of changing _RelativeOffsetOfLocalHeader
             // and setting _LengthOfHeader.  While ReadHeader() reads the crypto header if
             // present, WriteHeader() does not write the crypto header.
-            WriteHeader(outstream, 0);
+            WriteHeader(outstream, cycle: 0);
             StoreRelativeOffset();
 
             if (!this.FileName.EndsWith("/"))
@@ -2435,11 +2435,11 @@ namespace Ionic.Zip
                     len = (remaining > bytes.Length) ? bytes.Length : (int)remaining;
 
                     // read
-                    n = input.Read(bytes, 0, len);
+                    n = input.Read(bytes, offset: 0, count: len);
                     //_CheckRead(n);
 
                     // write
-                    outstream.Write(bytes, 0, n);
+                    outstream.Write(bytes, offset: 0, count: n);
                     remaining -= n;
                     OnWriteBlock(input.BytesRead, this._CompressedSize);
                     if (_ioOperationCanceled)
@@ -2452,24 +2452,24 @@ namespace Ionic.Zip
                     int size = 16;
                     if (_InputUsesZip64) size += 8;
                     byte[] Descriptor = new byte[size];
-                    input.Read(Descriptor, 0, size);
+                    input.Read(Descriptor, offset: 0, count: size);
 
                     if (_InputUsesZip64 && _container.UseZip64WhenSaving == Zip64Option.Never)
                     {
                         // original descriptor was 24 bytes, now we need 16.
                         // Must check for underflow here.
                         // signature + CRC.
-                        outstream.Write(Descriptor, 0, 8);
+                        outstream.Write(Descriptor, offset: 0, count: 8);
 
                         // Compressed
                         if (_CompressedSize > 0xFFFFFFFF)
                             throw new InvalidOperationException("ZIP64 is required");
-                        outstream.Write(Descriptor, 8, 4);
+                        outstream.Write(Descriptor, offset: 8, count: 4);
 
                         // UnCompressed
                         if (_UncompressedSize > 0xFFFFFFFF)
                             throw new InvalidOperationException("ZIP64 is required");
-                        outstream.Write(Descriptor, 16, 4);
+                        outstream.Write(Descriptor, offset: 16, count: 4);
                         _LengthOfTrailer -= 8;
                     }
                     else if (!_InputUsesZip64 && _container.UseZip64WhenSaving == Zip64Option.Always)
@@ -2477,19 +2477,19 @@ namespace Ionic.Zip
                         // original descriptor was 16 bytes, now we need 24
                         // signature + CRC
                         byte[] pad = new byte[4];
-                        outstream.Write(Descriptor, 0, 8);
+                        outstream.Write(Descriptor, offset: 0, count: 8);
                         // Compressed
-                        outstream.Write(Descriptor, 8, 4);
-                        outstream.Write(pad, 0, 4);
+                        outstream.Write(Descriptor, offset: 8, count: 4);
+                        outstream.Write(pad, offset: 0, count: 4);
                         // UnCompressed
-                        outstream.Write(Descriptor, 12, 4);
-                        outstream.Write(pad, 0, 4);
+                        outstream.Write(Descriptor, offset: 12, count: 4);
+                        outstream.Write(pad, offset: 0, count: 4);
                         _LengthOfTrailer += 8;
                     }
                     else
                     {
                         // same descriptor on input and output. Copy it through.
-                        outstream.Write(Descriptor, 0, size);
+                        outstream.Write(Descriptor, offset: 0, count: size);
                         //_LengthOfTrailer += size;
                     }
                 }
@@ -2545,11 +2545,11 @@ namespace Ionic.Zip
                 int len = (remaining > bytes.Length) ? bytes.Length : (int)remaining;
 
                 // read
-                n = input.Read(bytes, 0, len);
+                n = input.Read(bytes, offset: 0, count: len);
                 //_CheckRead(n);
 
                 // write
-                outstream.Write(bytes, 0, n);
+                outstream.Write(bytes, offset: 0, count: n);
                 remaining -= n;
                 OnWriteBlock(input.BytesRead, this._TotalEntrySize);
                 if (_ioOperationCanceled)

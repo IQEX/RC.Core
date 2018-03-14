@@ -61,7 +61,7 @@ namespace RC.Framework.FileSystem.SquashFs
             }
 
             byte[] buffer = Utilities.ReadFully(stream, superBlock.Size);
-            superBlock.ReadFrom(buffer, 0);
+            superBlock.ReadFrom(buffer, offset: 0);
 
             return superBlock.Magic == SuperBlock.SquashFsMagic;
         }

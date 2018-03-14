@@ -87,7 +87,7 @@ namespace RC.Framework.FileSystem.SquashFs
                 }
 
                 long startPos = outStream.Position;
-                int bufferedBytes = Utilities.ReadFully(_source, context.IoBuffer, 0, context.DataBlockSize);
+                int bufferedBytes = Utilities.ReadFully(_source, context.IoBuffer, offset: 0, length: context.DataBlockSize);
 
                 if (bufferedBytes < context.DataBlockSize)
                 {
@@ -107,8 +107,8 @@ namespace RC.Framework.FileSystem.SquashFs
                     _inode.FileSize = bufferedBytes;
                     while (bufferedBytes > 0)
                     {
-                        _lengths.Add(context.WriteDataBlock(context.IoBuffer, 0, bufferedBytes));
-                        bufferedBytes = Utilities.ReadFully(_source, context.IoBuffer, 0, context.DataBlockSize);
+                        _lengths.Add(context.WriteDataBlock(context.IoBuffer, offset: 0, count: bufferedBytes));
+                        bufferedBytes = Utilities.ReadFully(_source, context.IoBuffer, offset: 0, length: context.DataBlockSize);
                         _inode.FileSize += (uint)bufferedBytes;
                     }
                 }
@@ -135,7 +135,7 @@ namespace RC.Framework.FileSystem.SquashFs
             InodeRef = context.InodeWriter.Position;
 
             int totalSize = _inode.Size;
-            _inode.WriteTo(context.IoBuffer, 0);
+            _inode.WriteTo(context.IoBuffer, offset: 0);
             if (_lengths != null && _lengths.Count > 0)
             {
                 for (int i = 0; i < _lengths.Count; ++i)
@@ -146,7 +146,7 @@ namespace RC.Framework.FileSystem.SquashFs
                 totalSize += _lengths.Count * 4;
             }
 
-            context.InodeWriter.Write(context.IoBuffer, 0, totalSize);
+            context.InodeWriter.Write(context.IoBuffer, offset: 0, count: totalSize);
         }
     }
 }

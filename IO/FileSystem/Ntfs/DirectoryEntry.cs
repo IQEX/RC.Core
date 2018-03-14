@@ -55,7 +55,7 @@ namespace RC.Framework.FileSystem.Ntfs
             get
             {
                 string fileName = _fileDetails.FileName;
-                if (fileName.IndexOf('.') == -1)
+                if (fileName.IndexOf(value: '.') == -1)
                 {
                     return fileName + ".";
                 }
@@ -68,7 +68,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal void UpdateFrom(File file)
         {
-            file.FreshenFileName(_fileDetails, true);
+            file.FreshenFileName(_fileDetails, updateMftRecord: true);
             _directory.UpdateEntry(this);
         }
     }

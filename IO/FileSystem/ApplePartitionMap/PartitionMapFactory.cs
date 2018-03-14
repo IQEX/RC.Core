@@ -37,17 +37,17 @@ namespace RC.Framework.FileSystem.ApplePartitionMap
 
             s.Position = 0;
 
-            byte[] initialBytes = Utilities.ReadFully(s, 1024);
+            byte[] initialBytes = Utilities.ReadFully(s, count: 1024);
 
             BlockZero b0 = new BlockZero();
-            b0.ReadFrom(initialBytes, 0);
+            b0.ReadFrom(initialBytes, offset: 0);
             if (b0.Signature != 0x4552)
             {
                 return false;
             }
 
             PartitionMapEntry initialPart = new PartitionMapEntry(s);
-            initialPart.ReadFrom(initialBytes, 512);
+            initialPart.ReadFrom(initialBytes, offset: 512);
 
             return initialPart.Signature == 0x504d;
         }

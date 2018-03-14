@@ -404,7 +404,7 @@ namespace RC.Framework.FileSystem.HfsPlus
         public static DateTime ReadHFSPlusDate(DateTimeKind kind, byte[] buffer, int offset)
         {
             uint val = Utilities.ToUInt32BigEndian(buffer, offset);
-            DateTime epoch = new DateTime(1904, 1, 1, 0, 0, 0, 0, kind);
+            DateTime epoch = new DateTime(year: 1904, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0, kind: kind);
             DateTime result = epoch.AddSeconds(val);
 
             return result;

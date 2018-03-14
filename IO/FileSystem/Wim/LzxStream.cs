@@ -76,7 +76,7 @@ namespace RC.Framework.FileSystem.Wim
 
         public LzxStream(Stream stream, int windowBits, int fileSize)
         {
-            _bitStream = new LzxBitStream(new BufferedStream(stream, 8192));
+            _bitStream = new LzxBitStream(new BufferedStream(stream, bufferSize: 8192));
             _windowBits = windowBits;
             _fileSize = fileSize;
             _numPositionSlots = _windowBits * 2;
@@ -160,14 +160,14 @@ namespace RC.Framework.FileSystem.Wim
 
         private void ReadBlocks()
         {
-            BlockType blockType = (BlockType)_bitStream.Read(3);
+            BlockType blockType = (BlockType)_bitStream.Read(count: 3);
 
             _buffer = new byte[32768];
             _bufferCount = 0;
 
             while (blockType != BlockType.None)
             {
-                int blockSize = (_bitStream.Read(1) == 1) ? (1 << 15) : (int)_bitStream.Read(16);
+                int blockSize = (_bitStream.Read(count: 1) == 1) ? (1 << 15) : (int)_bitStream.Read(count: 16);
 
                 if (blockType == BlockType.Uncompressed)
                 {
@@ -181,7 +181,7 @@ namespace RC.Framework.FileSystem.Wim
                 }
 
                 // Read start of next block (if any)
-                blockType = (BlockType)_bitStream.Read(3);
+                blockType = (BlockType)_bitStream.Read(count: 3);
             }
 
             FixupBlockBuffer();
@@ -203,7 +203,7 @@ namespace RC.Framework.FileSystem.Wim
             {
                 if (_buffer[i] == 0xE8)
                 {
-                    Array.Copy(_buffer, i + 1, temp, 0, 4);
+                    Array.Copy(_buffer, i + 1, temp, destinationIndex: 0, length: 4);
                     int absoluteValue = Utilities.ToInt32LittleEndian(_buffer, i + 1);
 
                     if (absoluteValue >= -i && absoluteValue < _fileSize)
@@ -230,16 +230,16 @@ namespace RC.Framework.FileSystem.Wim
 
         private void DecodeUncompressedBlock(int blockSize)
         {
-            _bitStream.Align(16);
-            _repeatedOffsets[0] = Utilities.ToUInt32LittleEndian(_bitStream.ReadBytes(4), 0);
-            _repeatedOffsets[1] = Utilities.ToUInt32LittleEndian(_bitStream.ReadBytes(4), 0);
-            _repeatedOffsets[2] = Utilities.ToUInt32LittleEndian(_bitStream.ReadBytes(4), 0);
+            _bitStream.Align(bits: 16);
+            _repeatedOffsets[0] = Utilities.ToUInt32LittleEndian(_bitStream.ReadBytes(count: 4), offset: 0);
+            _repeatedOffsets[1] = Utilities.ToUInt32LittleEndian(_bitStream.ReadBytes(count: 4), offset: 0);
+            _repeatedOffsets[2] = Utilities.ToUInt32LittleEndian(_bitStream.ReadBytes(count: 4), offset: 0);
             int numRead = _bitStream.ReadBytes(_buffer, _bufferCount, blockSize);
             _bufferCount += numRead;
 
             if ((numRead & 1) != 0)
             {
-                _bitStream.ReadBytes(1);
+                _bitStream.ReadBytes(count: 1);
             }
         }
 
@@ -247,7 +247,7 @@ namespace RC.Framework.FileSystem.Wim
         {
             if (blockType == BlockType.AlignedOffset)
             {
-                _alignedOffsetTree = ReadFixedHuffmanTree(8, 3);
+                _alignedOffsetTree = ReadFixedHuffmanTree(count: 8, bits: 3);
             }
 
             ReadMainTree();
@@ -347,18 +347,18 @@ namespace RC.Framework.FileSystem.Wim
                 lengths = _mainTree.Lengths;
             }
 
-            HuffmanTree preTree = ReadFixedHuffmanTree(20, 4);
-            ReadLengths(preTree, lengths, 0, 256);
-            preTree = ReadFixedHuffmanTree(20, 4);
-            ReadLengths(preTree, lengths, 256, 8 * _numPositionSlots);
+            HuffmanTree preTree = ReadFixedHuffmanTree(count: 20, bits: 4);
+            ReadLengths(preTree, lengths, offset: 0, count: 256);
+            preTree = ReadFixedHuffmanTree(count: 20, bits: 4);
+            ReadLengths(preTree, lengths, offset: 256, count: 8 * _numPositionSlots);
 
             _mainTree = new HuffmanTree(lengths);
         }
 
         private void ReadLengthTree()
         {
-            HuffmanTree preTree = ReadFixedHuffmanTree(20, 4);
-            _lengthTree = ReadDynamicHuffmanTree(249, preTree, _lengthTree);
+            HuffmanTree preTree = ReadFixedHuffmanTree(count: 20, bits: 4);
+            _lengthTree = ReadDynamicHuffmanTree(count: 249, preTree: preTree, oldTree: _lengthTree);
         }
 
         private HuffmanTree ReadFixedHuffmanTree(int count, int bits)
@@ -385,7 +385,7 @@ namespace RC.Framework.FileSystem.Wim
                 lengths = oldTree.Lengths;
             }
 
-            ReadLengths(preTree, lengths, 0, count);
+            ReadLengths(preTree, lengths, offset: 0, count: count);
 
             return new HuffmanTree(lengths);
         }
@@ -400,7 +400,7 @@ namespace RC.Framework.FileSystem.Wim
 
                 if (value == 17)
                 {
-                    uint numZeros = 4 + _bitStream.Read(4);
+                    uint numZeros = 4 + _bitStream.Read(count: 4);
                     for (uint j = 0; j < numZeros; ++j)
                     {
                         lengths[offset + i] = 0;
@@ -409,7 +409,7 @@ namespace RC.Framework.FileSystem.Wim
                 }
                 else if (value == 18)
                 {
-                    uint numZeros = 20 + _bitStream.Read(5);
+                    uint numZeros = 20 + _bitStream.Read(count: 5);
                     for (uint j = 0; j < numZeros; ++j)
                     {
                         lengths[offset + i] = 0;
@@ -418,7 +418,7 @@ namespace RC.Framework.FileSystem.Wim
                 }
                 else if (value == 19)
                 {
-                    uint same = _bitStream.Read(1);
+                    uint same = _bitStream.Read(count: 1);
                     value = preTree.NextSymbol(_bitStream);
 
                     if (value > 16)

@@ -112,7 +112,7 @@ namespace RC.Framework.FileSystem
         /// <param name="destinationFileName">The destination file</param>
         public void CopyTo(string destinationFileName)
         {
-            CopyTo(destinationFileName, false);
+            CopyTo(destinationFileName, overwrite: false);
         }
 
         /// <summary>
