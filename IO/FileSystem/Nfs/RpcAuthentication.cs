@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Nfs
         public RpcAuthentication(XdrDataReader reader)
         {
             _flavour = (RpcAuthFlavour)reader.ReadInt32();
-            _body = reader.ReadBuffer(400);
+            _body = reader.ReadBuffer(maxLength: 400);
         }
 
         public RpcAuthentication(RpcCredentials credential)

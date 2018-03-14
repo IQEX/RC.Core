@@ -69,7 +69,7 @@ namespace RC.Framework.FileSystem.SquashFs
             }
 
             offset = (uint)_currentOffset;
-            Array.Copy(_context.IoBuffer, 0, _currentBlock, _currentOffset, length);
+            Array.Copy(_context.IoBuffer, sourceIndex: 0, destinationArray: _currentBlock, destinationIndex: _currentOffset, length: length);
             _currentOffset += length;
 
             ++_fragmentCount;
@@ -89,8 +89,8 @@ namespace RC.Framework.FileSystem.SquashFs
                 // Persist the table that references the block containing the fragment records
                 long blockPos = _context.RawStream.Position + 8;
                 byte[] tableBuffer = new byte[8];
-                Utilities.WriteBytesLittleEndian(blockPos, tableBuffer, 0);
-                _context.RawStream.Write(tableBuffer, 0, 8);
+                Utilities.WriteBytesLittleEndian(blockPos, tableBuffer, offset: 0);
+                _context.RawStream.Write(tableBuffer, offset: 0, count: 8);
 
                 int recordSize = FragmentRecord.RecordSize;
                 byte[] buffer = new byte[_fragmentBlocks.Count * recordSize];
@@ -100,7 +100,7 @@ namespace RC.Framework.FileSystem.SquashFs
                 }
 
                 MetablockWriter writer = new MetablockWriter();
-                writer.Write(buffer, 0, buffer.Length);
+                writer.Write(buffer, offset: 0, count: buffer.Length);
                 writer.Persist(_context.RawStream);
             }
         }
@@ -109,7 +109,7 @@ namespace RC.Framework.FileSystem.SquashFs
         {
             long position = _context.RawStream.Position;
 
-            uint writeLen = _context.WriteDataBlock(_currentBlock, 0, _currentOffset);
+            uint writeLen = _context.WriteDataBlock(_currentBlock, offset: 0, count: _currentOffset);
             FragmentRecord blockRecord = new FragmentRecord()
             {
                 StartBlock = position,

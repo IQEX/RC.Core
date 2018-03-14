@@ -57,7 +57,7 @@ namespace RC.Framework.FileSystem.Ntfs
             using (Stream s = _file.OpenStream(AttributeType.IndexRoot, _name, FileAccess.Read))
             {
                 byte[] buffer = Utilities.ReadFully(s, (int)s.Length);
-                _rootNode = new IndexNode(WriteRootNodeToDisk, 0, this, true, buffer, IndexRoot.HeaderOffset);
+                _rootNode = new IndexNode(WriteRootNodeToDisk, storeOverhead: 0, index: this, isRoot: true, buffer: buffer, offset: IndexRoot.HeaderOffset);
 
                 // Give the attribute some room to breathe, so long as it doesn't squeeze others out
                 // BROKEN, BROKEN, BROKEN - how to figure this out?  Query at the point of adding entries to the root node?
@@ -96,7 +96,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
             _comparer = _root.GetCollator(upCase);
 
-            _rootNode = new IndexNode(WriteRootNodeToDisk, 0, this, true, 32);
+            _rootNode = new IndexNode(WriteRootNodeToDisk, storeOverhead: 0, index: this, isRoot: true, allocatedSize: 32);
         }
 
         public IEnumerable<KeyValuePair<byte[], byte[]>> Entries
@@ -272,8 +272,8 @@ namespace RC.Framework.FileSystem.Ntfs
             {
                 if (keyValue != null && dataValue != null)
                 {
-                    keyValue.ReadFrom(entry.KeyBuffer, 0);
-                    dataValue.ReadFrom(entry.DataBuffer, 0);
+                    keyValue.ReadFrom(entry.KeyBuffer, offset: 0);
+                    dataValue.ReadFrom(entry.DataBuffer, offset: 0);
                     return "{" + keyValue + "-->" + dataValue + "}";
                 }
             }
@@ -302,7 +302,7 @@ namespace RC.Framework.FileSystem.Ntfs
             IndexBlock block = _blockCache[parentEntry.ChildrenVirtualCluster];
             if (block == null)
             {
-                block = new IndexBlock(this, false, parentEntry, _bpb);
+                block = new IndexBlock(this, isRoot: false, parentEntry: parentEntry, bpb: _bpb);
                 _blockCache[parentEntry.ChildrenVirtualCluster] = block;
             }
 
@@ -323,12 +323,12 @@ namespace RC.Framework.FileSystem.Ntfs
                 _indexBitmap = new Bitmap(_file.OpenStream(AttributeType.Bitmap, _name, FileAccess.ReadWrite), long.MaxValue);
             }
 
-            long idx = _indexBitmap.AllocateFirstAvailable(0);
+            long idx = _indexBitmap.AllocateFirstAvailable(minValue: 0);
 
             parentEntry.ChildrenVirtualCluster = idx * Utilities.Ceil(_bpb.IndexBufferSize, _bpb.SectorsPerCluster * _bpb.BytesPerSector);
             parentEntry.Flags |= IndexEntryFlags.Node;
 
-            IndexBlock block = IndexBlock.Initialize(this, false, parentEntry, _bpb);
+            IndexBlock block = IndexBlock.Initialize(this, isRoot: false, parentEntry: parentEntry, bpb: _bpb);
             _blockCache[parentEntry.ChildrenVirtualCluster] = block;
             return block;
         }
@@ -420,12 +420,12 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             _rootNode.Header.AllocatedSizeOfEntries = (uint)_rootNode.CalcSize();
             byte[] buffer = new byte[_rootNode.Header.AllocatedSizeOfEntries + _root.Size];
-            _root.WriteTo(buffer, 0);
+            _root.WriteTo(buffer, offset: 0);
             _rootNode.WriteTo(buffer, _root.Size);
             using (Stream s = _file.OpenStream(AttributeType.IndexRoot, _name, FileAccess.Write))
             {
                 s.Position = 0;
-                s.Write(buffer, 0, buffer.Length);
+                s.Write(buffer, offset: 0, count: buffer.Length);
                 s.SetLength(s.Position);
             }
         }

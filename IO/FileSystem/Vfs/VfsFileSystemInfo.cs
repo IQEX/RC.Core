@@ -90,7 +90,7 @@ namespace RC.Framework.FileSystem.Vfs
         /// <returns>A file system instance</returns>
         public override DiscFileSystem Open(Stream stream, FileSystemParameters parameters)
         {
-            return _openDelegate(stream, null, parameters);
+            return _openDelegate(stream, volumeInfo: null, parameters: parameters);
         }
     }
 }

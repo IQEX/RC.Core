@@ -50,10 +50,10 @@ namespace RC.Framework.Yaml
             return
                 Accept("tag:") &&
                 taggingEntity() &&
-                Accept(':') &&
+                Accept(c: ':') &&
                 specific() &&
                 Optional(
-                    Accept('#') &&
+                    Accept(c: '#') &&
                     fragment()
                 ) &&
                 EndOfString();
@@ -64,7 +64,7 @@ namespace RC.Framework.Yaml
             return
                 RewindUnless(() =>
                     authorityName() &&
-                    Accept(',') &&
+                    Accept(c: ',') &&
                     date()
                 );
         }
@@ -81,7 +81,7 @@ namespace RC.Framework.Yaml
             return
                 DNScomp() &&
                 Repeat(() =>
-                    Accept('.') &&
+                    Accept(c: '.') &&
                     DNScomp()
                 );
         }
@@ -91,7 +91,7 @@ namespace RC.Framework.Yaml
             return RewindUnless(() =>
                 OneAndRepeat(alphaNum) &&
                 Repeat(() => RewindUnless(() =>
-                    Accept('-') &&
+                    Accept(c: '-') &&
                     OneAndRepeat(alphaNum)
                 ))
             );
@@ -113,8 +113,8 @@ namespace RC.Framework.Yaml
         private bool emailAddress()
         {
             return RewindUnless(() =>
-                OneAndRepeat(() => alphaNum() || Accept('-') || Accept('.') || Accept('_')) &&
-                Accept('@') &&
+                OneAndRepeat(() => alphaNum() || Accept(c: '-') || Accept(c: '.') || Accept(c: '_')) &&
+                Accept(c: '@') &&
                 DNSname()
             );
         }
@@ -139,13 +139,13 @@ namespace RC.Framework.Yaml
         private bool specific()
         {
             return
-                Repeat(() => pchar() || Accept('/') || Accept('?'));
+                Repeat(() => pchar() || Accept(c: '/') || Accept(c: '?'));
         }
 
         private bool fragment()
         {
             return
-                Repeat(() => pchar() || Accept('/') || Accept('?'));
+                Repeat(() => pchar() || Accept(c: '/') || Accept(c: '?'));
         }
 
         private bool EndOfString()
@@ -158,7 +158,7 @@ namespace RC.Framework.Yaml
             return
                 Accept(pcharCharsetSub) ||
                 RewindUnless(() =>
-                    Accept('%') &&
+                    Accept(c: '%') &&
                     hexDig() &&
                     hexDig()
                 );

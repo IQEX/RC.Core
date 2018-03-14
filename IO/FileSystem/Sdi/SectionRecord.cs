@@ -34,7 +34,7 @@ namespace RC.Framework.FileSystem.Sdi
 
         public void ReadFrom(byte[] buffer, int offset)
         {
-            SectionType = Utilities.BytesToString(buffer, offset, 8).TrimEnd('\0');
+            SectionType = Utilities.BytesToString(buffer, offset, count: 8).TrimEnd('\0');
             Attr = Utilities.ToUInt64LittleEndian(buffer, offset + 8);
             Offset = Utilities.ToInt64LittleEndian(buffer, offset + 16);
             Size = Utilities.ToInt64LittleEndian(buffer, offset + 24);

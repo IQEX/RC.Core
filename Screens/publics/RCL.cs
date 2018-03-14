@@ -238,7 +238,7 @@
                 case ConsoleColor.White:
                     return Color.White;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(c), c, null);
+                    throw new ArgumentOutOfRangeException(nameof(c), c, message: null);
             }
         }
 

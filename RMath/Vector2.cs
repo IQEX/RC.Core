@@ -508,7 +508,7 @@ namespace RC.Framework.RMath
         /// </remarks>
         public Vector3 ToVector4()
         {
-            return new Vector3(this.X, this.Y, 1f);
+            return new Vector3(this.X, this.Y, z: 1f);
         }
     }
 }

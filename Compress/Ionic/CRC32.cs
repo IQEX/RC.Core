@@ -43,7 +43,7 @@ namespace Ionic.Crc
     /// </remarks>
 
     [Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d0000C")]
-    [Interop.ComVisible(true)]
+    [Interop.ComVisible(visibility: true)]
 #if !NETCF
     [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
 #endif
@@ -78,7 +78,7 @@ namespace Ionic.Crc
         /// <returns>the CRC32 calculation</returns>
         public Int32 GetCrc32(System.IO.Stream input)
         {
-            return GetCrc32AndCopy(input, null);
+            return GetCrc32AndCopy(input, output: null);
         }
 
         /// <summary>
@@ -99,14 +99,14 @@ namespace Ionic.Crc
                 int readSize = BUFFER_SIZE;
 
                 _TotalBytesRead = 0;
-                int count = input.Read(buffer, 0, readSize);
-                if (output != null) output.Write(buffer, 0, count);
+                int count = input.Read(buffer, offset: 0, count: readSize);
+                if (output != null) output.Write(buffer, offset: 0, count: count);
                 _TotalBytesRead += count;
                 while (count > 0)
                 {
-                    SlurpBlock(buffer, 0, count);
-                    count = input.Read(buffer, 0, readSize);
-                    if (output != null) output.Write(buffer, 0, count);
+                    SlurpBlock(buffer, offset: 0, count: count);
+                    count = input.Read(buffer, offset: 0, count: readSize);
+                    if (output != null) output.Write(buffer, offset: 0, count: count);
                     _TotalBytesRead += count;
                 }
 
@@ -395,7 +395,7 @@ namespace Ionic.Crc
         ///   Create an instance of the CRC32 class using the default settings: no
         ///   bit reversal, and a polynomial of 0xEDB88320.
         /// </summary>
-        public CRC32() : this(false)
+        public CRC32() : this(reverseBits: false)
         {
         }
 
@@ -517,7 +517,7 @@ namespace Ionic.Crc
         /// </remarks>
         /// <param name="stream">The underlying stream</param>
         public CrcCalculatorStream(System.IO.Stream stream)
-            : this(true, CrcCalculatorStream.UnsetLengthLimit, stream, null)
+            : this(leaveOpen: true, length: CrcCalculatorStream.UnsetLengthLimit, stream: stream, crc32: null)
         {
         }
 
@@ -535,7 +535,7 @@ namespace Ionic.Crc
         /// <param name="leaveOpen">true to leave the underlying stream
         /// open upon close of the <c>CrcCalculatorStream</c>; false otherwise.</param>
         public CrcCalculatorStream(System.IO.Stream stream, bool leaveOpen)
-            : this(leaveOpen, CrcCalculatorStream.UnsetLengthLimit, stream, null)
+            : this(leaveOpen, CrcCalculatorStream.UnsetLengthLimit, stream, crc32: null)
         {
         }
 
@@ -556,7 +556,7 @@ namespace Ionic.Crc
         /// <param name="stream">The underlying stream</param>
         /// <param name="length">The length of the stream to slurp</param>
         public CrcCalculatorStream(System.IO.Stream stream, Int64 length)
-            : this(true, length, stream, null)
+            : this(leaveOpen: true, length: length, stream: stream, crc32: null)
         {
             if (length < 0)
                 throw new ArgumentException("length");
@@ -578,7 +578,7 @@ namespace Ionic.Crc
         /// <param name="leaveOpen">true to leave the underlying stream
         /// open upon close of the <c>CrcCalculatorStream</c>; false otherwise.</param>
         public CrcCalculatorStream(System.IO.Stream stream, Int64 length, bool leaveOpen)
-            : this(leaveOpen, length, stream, null)
+            : this(leaveOpen, length, stream, crc32: null)
         {
             if (length < 0)
                 throw new ArgumentException("length");

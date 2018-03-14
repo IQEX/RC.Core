@@ -149,11 +149,11 @@ namespace RC.Framework.FileSystem.Udf
             LogicalPartition partition = context.LogicalPartitions[icb.ExtentLocation.Partition];
 
             byte[] rootDirData = UdfUtilities.ReadExtent(context, icb);
-            DescriptorTag rootDirTag = Utilities.ToStruct<DescriptorTag>(rootDirData, 0);
+            DescriptorTag rootDirTag = Utilities.ToStruct<DescriptorTag>(rootDirData, offset: 0);
 
             if (rootDirTag.TagIdentifier == TagIdentifier.ExtendedFileEntry)
             {
-                ExtendedFileEntry fileEntry = Utilities.ToStruct<ExtendedFileEntry>(rootDirData, 0);
+                ExtendedFileEntry fileEntry = Utilities.ToStruct<ExtendedFileEntry>(rootDirData, offset: 0);
                 if (fileEntry.InformationControlBlock.FileType == FileType.Directory)
                 {
                     return new Directory(context, partition, fileEntry);
@@ -165,7 +165,7 @@ namespace RC.Framework.FileSystem.Udf
             }
             else if (rootDirTag.TagIdentifier == TagIdentifier.FileEntry)
             {
-                FileEntry fileEntry = Utilities.ToStruct<FileEntry>(rootDirData, 0);
+                FileEntry fileEntry = Utilities.ToStruct<FileEntry>(rootDirData, offset: 0);
                 if (fileEntry.InformationControlBlock.FileType == FileType.Directory)
                 {
                     return new Directory(context, partition, fileEntry);

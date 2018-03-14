@@ -51,7 +51,7 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             DateTime now = DateTime.UtcNow;
 
-            NtfsStream siStream = file.CreateStream(AttributeType.StandardInformation, null);
+            NtfsStream siStream = file.CreateStream(AttributeType.StandardInformation, name: null);
             StandardInformation si = new StandardInformation();
             si.CreationTime = now;
             si.ModificationTime = now;
@@ -65,21 +65,21 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public int ReadFrom(byte[] buffer, int offset)
         {
-            CreationTime = ReadDateTime(buffer, 0x00);
-            ModificationTime = ReadDateTime(buffer, 0x08);
-            MftChangedTime = ReadDateTime(buffer, 0x10);
-            LastAccessTime = ReadDateTime(buffer, 0x18);
-            FileAttributes = (FileAttributeFlags)Utilities.ToUInt32LittleEndian(buffer, 0x20);
-            MaxVersions = Utilities.ToUInt32LittleEndian(buffer, 0x24);
-            Version = Utilities.ToUInt32LittleEndian(buffer, 0x28);
-            ClassId = Utilities.ToUInt32LittleEndian(buffer, 0x2C);
+            CreationTime = ReadDateTime(buffer, offset: 0x00);
+            ModificationTime = ReadDateTime(buffer, offset: 0x08);
+            MftChangedTime = ReadDateTime(buffer, offset: 0x10);
+            LastAccessTime = ReadDateTime(buffer, offset: 0x18);
+            FileAttributes = (FileAttributeFlags)Utilities.ToUInt32LittleEndian(buffer, offset: 0x20);
+            MaxVersions = Utilities.ToUInt32LittleEndian(buffer, offset: 0x24);
+            Version = Utilities.ToUInt32LittleEndian(buffer, offset: 0x28);
+            ClassId = Utilities.ToUInt32LittleEndian(buffer, offset: 0x2C);
 
             if (buffer.Length > 0x30)
             {
-                OwnerId = Utilities.ToUInt32LittleEndian(buffer, 0x30);
-                SecurityId = Utilities.ToUInt32LittleEndian(buffer, 0x34);
-                QuotaCharged = Utilities.ToUInt64LittleEndian(buffer, 0x38);
-                UpdateSequenceNumber = Utilities.ToUInt64LittleEndian(buffer, 0x40);
+                OwnerId = Utilities.ToUInt32LittleEndian(buffer, offset: 0x30);
+                SecurityId = Utilities.ToUInt32LittleEndian(buffer, offset: 0x34);
+                QuotaCharged = Utilities.ToUInt64LittleEndian(buffer, offset: 0x38);
+                UpdateSequenceNumber = Utilities.ToUInt64LittleEndian(buffer, offset: 0x40);
                 _haveExtraFields = true;
                 return 0x48;
             }
@@ -92,21 +92,21 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public void WriteTo(byte[] buffer, int offset)
         {
-            Utilities.WriteBytesLittleEndian(CreationTime.ToFileTimeUtc(), buffer, 0x00);
-            Utilities.WriteBytesLittleEndian(ModificationTime.ToFileTimeUtc(), buffer, 0x08);
-            Utilities.WriteBytesLittleEndian(MftChangedTime.ToFileTimeUtc(), buffer, 0x10);
-            Utilities.WriteBytesLittleEndian(LastAccessTime.ToFileTimeUtc(), buffer, 0x18);
-            Utilities.WriteBytesLittleEndian((uint)FileAttributes, buffer, 0x20);
-            Utilities.WriteBytesLittleEndian(MaxVersions, buffer, 0x24);
-            Utilities.WriteBytesLittleEndian(Version, buffer, 0x28);
-            Utilities.WriteBytesLittleEndian(ClassId, buffer, 0x2C);
+            Utilities.WriteBytesLittleEndian(CreationTime.ToFileTimeUtc(), buffer, offset: 0x00);
+            Utilities.WriteBytesLittleEndian(ModificationTime.ToFileTimeUtc(), buffer, offset: 0x08);
+            Utilities.WriteBytesLittleEndian(MftChangedTime.ToFileTimeUtc(), buffer, offset: 0x10);
+            Utilities.WriteBytesLittleEndian(LastAccessTime.ToFileTimeUtc(), buffer, offset: 0x18);
+            Utilities.WriteBytesLittleEndian((uint)FileAttributes, buffer, offset: 0x20);
+            Utilities.WriteBytesLittleEndian(MaxVersions, buffer, offset: 0x24);
+            Utilities.WriteBytesLittleEndian(Version, buffer, offset: 0x28);
+            Utilities.WriteBytesLittleEndian(ClassId, buffer, offset: 0x2C);
 
             if (_haveExtraFields)
             {
-                Utilities.WriteBytesLittleEndian(OwnerId, buffer, 0x30);
-                Utilities.WriteBytesLittleEndian(SecurityId, buffer, 0x34);
-                Utilities.WriteBytesLittleEndian(QuotaCharged, buffer, 0x38);
-                Utilities.WriteBytesLittleEndian(UpdateSequenceNumber, buffer, 0x38);
+                Utilities.WriteBytesLittleEndian(OwnerId, buffer, offset: 0x30);
+                Utilities.WriteBytesLittleEndian(SecurityId, buffer, offset: 0x34);
+                Utilities.WriteBytesLittleEndian(QuotaCharged, buffer, offset: 0x38);
+                Utilities.WriteBytesLittleEndian(UpdateSequenceNumber, buffer, offset: 0x38);
             }
         }
 
@@ -150,7 +150,7 @@ namespace RC.Framework.FileSystem.Ntfs
             }
             catch (ArgumentException)
             {
-                return DateTime.FromFileTimeUtc(0);
+                return DateTime.FromFileTimeUtc(fileTime: 0);
             }
         }
     }

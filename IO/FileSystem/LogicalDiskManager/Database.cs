@@ -36,9 +36,9 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
             long dbStart = stream.Position;
 
             byte[] buffer = new byte[Sizes.Sector];
-            stream.Read(buffer, 0, buffer.Length);
+            stream.Read(buffer, offset: 0, count: buffer.Length);
             _vmdb = new DatabaseHeader();
-            _vmdb.ReadFrom(buffer, 0);
+            _vmdb.ReadFrom(buffer, offset: 0);
 
             stream.Position = dbStart + _vmdb.HeaderSize;
 

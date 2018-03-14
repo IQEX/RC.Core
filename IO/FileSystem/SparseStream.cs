@@ -55,7 +55,7 @@ namespace RC.Framework.FileSystem
         /// single extent.</remarks>
         public static SparseStream FromStream(Stream stream, Ownership takeOwnership)
         {
-            return new SparseWrapperStream(stream, takeOwnership, null);
+            return new SparseWrapperStream(stream, takeOwnership, extents: null);
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace RC.Framework.FileSystem
         /// </remarks>
         public virtual void Clear(int count)
         {
-            Write(new byte[count], 0, count);
+            Write(new byte[count], offset: 0, count: count);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace RC.Framework.FileSystem
                         }
                         else
                         {
-                            return new StreamExtent[] { new StreamExtent(0, _wrapped.Length) };
+                            return new StreamExtent[] { new StreamExtent(start: 0, length: _wrapped.Length) };
                         }
                     }
                 }

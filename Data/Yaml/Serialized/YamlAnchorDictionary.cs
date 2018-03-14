@@ -55,7 +55,7 @@ namespace RC.Framework.Yaml
                 ItemsToRewind.Push(new RewindInfo(anchor_name, this[anchor_name]));
                 Items[anchor_name] = node;
             } else {
-                ItemsToRewind.Push(new RewindInfo(anchor_name, null));
+                ItemsToRewind.Push(new RewindInfo(anchor_name, old_value: null));
                 Items.Add(anchor_name, node);
             }
         }

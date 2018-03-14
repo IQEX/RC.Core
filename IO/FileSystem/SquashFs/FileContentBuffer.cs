@@ -48,7 +48,7 @@ namespace RC.Framework.FileSystem.SquashFs
             }
 
             byte[] lengthData = new byte[numBlocks * 4];
-            context.InodeReader.Read(lengthData, 0, lengthData.Length);
+            context.InodeReader.Read(lengthData, offset: 0, count: lengthData.Length);
 
             _blockLengths = new int[numBlocks];
             for (int i = 0; i < numBlocks; ++i)
@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.SquashFs
 
         public IEnumerable<StreamExtent> Extents
         {
-            get { return new StreamExtent[] { new StreamExtent(0, Capacity) }; }
+            get { return new StreamExtent[] { new StreamExtent(start: 0, length: Capacity) }; }
         }
 
         public int Read(long pos, byte[] buffer, int offset, int count)
@@ -150,11 +150,11 @@ namespace RC.Framework.FileSystem.SquashFs
 
             byte[] fragRecordData = new byte[FragmentRecord.RecordSize];
 
-            _context.FragmentTableReaders[fragTable].SetPosition(0, recordOffset);
-            _context.FragmentTableReaders[fragTable].Read(fragRecordData, 0, fragRecordData.Length);
+            _context.FragmentTableReaders[fragTable].SetPosition(blockStart: 0, blockOffset: recordOffset);
+            _context.FragmentTableReaders[fragTable].Read(fragRecordData, offset: 0, count: fragRecordData.Length);
 
             FragmentRecord fragRecord = new FragmentRecord();
-            fragRecord.ReadFrom(fragRecordData, 0);
+            fragRecord.ReadFrom(fragRecordData, offset: 0);
 
             Block frag = _context.ReadBlock(fragRecord.StartBlock, fragRecord.CompressedSize);
 

@@ -66,7 +66,7 @@ namespace RC.Framework.FileSystem.Wim
             _chunkLength = new long[numChunks];
             for (int i = 1; i < numChunks; ++i)
             {
-                _chunkOffsets[i] = Utilities.ToUInt32LittleEndian(Utilities.ReadFully(_baseStream, 4), 0);
+                _chunkOffsets[i] = Utilities.ToUInt32LittleEndian(Utilities.ReadFully(_baseStream, count: 4), offset: 0);
                 _chunkLength[i - 1] = _chunkOffsets[i] - _chunkOffsets[i - 1];
             }
 
@@ -113,7 +113,7 @@ namespace RC.Framework.FileSystem.Wim
         {
             get
             {
-                return new StreamExtent[] { new StreamExtent(0, Length) };
+                return new StreamExtent[] { new StreamExtent(start: 0, length: Length) };
             }
         }
 
@@ -185,7 +185,7 @@ namespace RC.Framework.FileSystem.Wim
             {
                 if (_lzxCompression)
                 {
-                    return new LzxStream(rawChunkStream, 15, E8DecodeFileSize);
+                    return new LzxStream(rawChunkStream, windowBits: 15, fileSize: E8DecodeFileSize);
                 }
                 else
                 {

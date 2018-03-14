@@ -42,7 +42,7 @@ namespace RC.Framework.FileSystem.HfsPlus
         public override int ReadFrom(byte[] buffer, int offset)
         {
             _data = new byte[_size];
-            Array.Copy(buffer, offset, _data, 0, _size);
+            Array.Copy(buffer, offset, _data, destinationIndex: 0, length: _size);
             return _size;
         }
 

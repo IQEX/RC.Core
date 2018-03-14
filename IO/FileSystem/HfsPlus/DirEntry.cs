@@ -99,13 +99,13 @@ namespace RC.Framework.FileSystem.HfsPlus
 
         internal static bool IsFileOrDirectory(byte[] dirEntryData)
         {
-            CatalogRecordType type = (CatalogRecordType)Utilities.ToInt16BigEndian(dirEntryData, 0);
+            CatalogRecordType type = (CatalogRecordType)Utilities.ToInt16BigEndian(dirEntryData, offset: 0);
             return type == CatalogRecordType.FolderRecord || type == CatalogRecordType.FileRecord;
         }
 
         private static CommonCatalogFileInfo ParseDirEntryData(byte[] dirEntryData)
         {
-            CatalogRecordType type = (CatalogRecordType)Utilities.ToInt16BigEndian(dirEntryData, 0);
+            CatalogRecordType type = (CatalogRecordType)Utilities.ToInt16BigEndian(dirEntryData, offset: 0);
 
             CommonCatalogFileInfo result = null;
             switch (type)
@@ -120,7 +120,7 @@ namespace RC.Framework.FileSystem.HfsPlus
                     throw new NotImplementedException("Unknown catalog record type: " + type);
             }
 
-            result.ReadFrom(dirEntryData, 0);
+            result.ReadFrom(dirEntryData, offset: 0);
             return result;
         }
     }

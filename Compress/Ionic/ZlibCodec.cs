@@ -80,7 +80,7 @@ namespace Ionic.Zlib
     /// href="http://www.ietf.org/rfc/rfc1951.txt">RFC 1951 - DEFLATE</see>.
     /// </remarks>
     [Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d0000D")]
-    [Interop.ComVisible(true)]
+    [Interop.ComVisible(visibility: true)]
 #if !NETCF    
     [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]
 #endif
@@ -258,7 +258,7 @@ namespace Ionic.Zlib
         public int InitializeInflate(int windowBits)
         {
             this.WindowBits = windowBits;            
-            return InitializeInflate(windowBits, true);
+            return InitializeInflate(windowBits, expectRfc1950Header: true);
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace Ionic.Zlib
         /// <returns>Z_OK if all goes well. You generally don't need to check the return code.</returns>
         public int InitializeDeflate()
         {
-            return _InternalInitializeDeflate(true);
+            return _InternalInitializeDeflate(wantRfc1950Header: true);
         }
 
         /// <summary>
@@ -445,7 +445,7 @@ namespace Ionic.Zlib
         public int InitializeDeflate(CompressionLevel level)
         {
             this.CompressLevel = level;
-            return _InternalInitializeDeflate(true);
+            return _InternalInitializeDeflate(wantRfc1950Header: true);
         }
 
 
@@ -484,7 +484,7 @@ namespace Ionic.Zlib
         {
             this.CompressLevel = level;
             this.WindowBits = bits;
-            return _InternalInitializeDeflate(true);
+            return _InternalInitializeDeflate(wantRfc1950Header: true);
         }
 
         /// <summary>

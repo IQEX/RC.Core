@@ -227,7 +227,7 @@ namespace  Ionic.Zip
         /// End Sub
         /// </code>
         /// </example>
-        public ZipInputStream(Stream stream)  : this (stream, false) { }
+        public ZipInputStream(Stream stream)  : this (stream, leaveOpen: false) { }
 
 
 
@@ -310,7 +310,7 @@ namespace  Ionic.Zip
         public ZipInputStream(String fileName)
         {
             Stream stream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.Read );
-            _Init(stream, false, fileName);
+            _Init(stream, leaveOpen: false, name: fileName);
         }
 
 
@@ -335,7 +335,7 @@ namespace  Ionic.Zip
         /// </param>
         public ZipInputStream(Stream stream, bool leaveOpen)
         {
-            _Init(stream, leaveOpen, null);
+            _Init(stream, leaveOpen, name: null);
         }
 
         private void _Init(Stream stream, bool leaveOpen, string name)
@@ -629,7 +629,7 @@ namespace  Ionic.Zip
                 long d = SharedUtilities.FindSignature(_inputStream, ZipConstants.ZipEntrySignature);
                 if (d == -1) return null;
                 // back up 4 bytes: ReadEntry assumes the file pointer is positioned before the entry signature
-                _inputStream.Seek(-4, SeekOrigin.Current);
+                _inputStream.Seek(offset: -4, origin: SeekOrigin.Current);
                 // workitem 10178
                 Ionic.Zip.SharedUtilities.Workaround_Ladybug318918(_inputStream);
             }

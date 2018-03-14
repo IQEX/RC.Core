@@ -52,7 +52,7 @@ namespace RC.Framework.FileSystem.Vhd
             _files = new List<RC.Framework.FileSystem.Tuple<DiskImageFile, Ownership>>();
             _files.Add(new RC.Framework.FileSystem.Tuple<DiskImageFile, Ownership>(new DiskImageFile(stream, ownsStream), Ownership.Dispose));
 
-            if (_files[0].First.NeedsParent)
+            if (_files[index: 0].First.NeedsParent)
             {
                 throw new NotSupportedException("Differencing disks cannot be opened from a stream");
             }
@@ -216,7 +216,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// </summary>
         public override Geometry Geometry
         {
-            get { return _files[0].First.Geometry; }
+            get { return _files[index: 0].First.Geometry; }
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// </summary>
         public override long Capacity
         {
-            get { return _files[0].First.Capacity; }
+            get { return _files[index: 0].First.Capacity; }
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// <returns>An object that accesses the stream as a VHD file</returns>
         public static Disk InitializeFixed(Stream stream, Ownership ownsStream, long capacity)
         {
-            return InitializeFixed(stream, ownsStream, capacity, null);
+            return InitializeFixed(stream, ownsStream, capacity, geometry: null);
         }
 
         /// <summary>
@@ -348,7 +348,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// <returns>An object that accesses the stream as a VHD file</returns>
         public static Disk InitializeDynamic(Stream stream, Ownership ownsStream, long capacity)
         {
-            return InitializeDynamic(stream, ownsStream, capacity, null);
+            return InitializeDynamic(stream, ownsStream, capacity, geometry: null);
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace RC.Framework.FileSystem.Vhd
         public override VirtualDisk CreateDifferencingDisk(DiscFileSystem fileSystem, string path)
         {
             FileLocator locator = new DiscFileLocator(fileSystem, Utilities.GetDirectoryFromPath(path));
-            DiskImageFile file = _files[0].First.CreateDifferencing(locator, Utilities.GetFileFromPath(path));
+            DiskImageFile file = _files[index: 0].First.CreateDifferencing(locator, Utilities.GetFileFromPath(path));
             return new Disk(file, Ownership.Dispose);
         }
 
@@ -443,7 +443,7 @@ namespace RC.Framework.FileSystem.Vhd
         public override VirtualDisk CreateDifferencingDisk(string path)
         {
             FileLocator locator = new LocalFileLocator(Path.GetDirectoryName(path));
-            DiskImageFile file = _files[0].First.CreateDifferencing(locator, Path.GetFileName(path));
+            DiskImageFile file = _files[index: 0].First.CreateDifferencing(locator, Path.GetFileName(path));
             return new Disk(file, Ownership.Dispose);
         }
 

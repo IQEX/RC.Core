@@ -137,7 +137,7 @@ namespace RC.Framework.FileSystem.Vmdk
         /// </summary>
         public override long Capacity
         {
-            get { return _files[0].First.Capacity; }
+            get { return _files[index: 0].First.Capacity; }
         }
 
         /// <summary>
@@ -249,7 +249,7 @@ namespace RC.Framework.FileSystem.Vmdk
         /// <returns>The newly created disk image</returns>
         public static Disk Initialize(string path, long capacity, DiskCreateType type)
         {
-            return Initialize(path, capacity, null, type);
+            return Initialize(path, capacity, geometry: null, type: type);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace RC.Framework.FileSystem.Vmdk
         /// <returns>The newly created disk image</returns>
         public static Disk Initialize(string path, long capacity, DiskCreateType type, DiskAdapterType adapterType)
         {
-            return Initialize(path, capacity, null, type, adapterType);
+            return Initialize(path, capacity, geometry: null, type: type, adapterType: adapterType);
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace RC.Framework.FileSystem.Vmdk
         /// <returns>The newly created disk</returns>
         public override VirtualDisk CreateDifferencingDisk(DiscFileSystem fileSystem, string path)
         {
-            return InitializeDifferencing(fileSystem, path, DiffDiskCreateType(_files[0].First), _path);
+            return InitializeDifferencing(fileSystem, path, DiffDiskCreateType(_files[index: 0].First), _path);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace RC.Framework.FileSystem.Vmdk
         /// <returns>The newly created disk</returns>
         public override VirtualDisk CreateDifferencingDisk(string path)
         {
-            var firstLayer = _files[0].First;
+            var firstLayer = _files[index: 0].First;
             return InitializeDifferencing(path, DiffDiskCreateType(firstLayer), firstLayer.RelativeFileLocator.GetFullPath(_path));
         }
 

@@ -51,17 +51,17 @@ namespace RC.Framework.FileSystem.LogicalDiskManager
 
         public void ReadFrom(byte[] buffer, int offset)
         {
-            Signature = Utilities.BytesToString(buffer, offset + 0x00, 8);
+            Signature = Utilities.BytesToString(buffer, offset + 0x00, count: 8);
             Checksum = Utilities.ToUInt32BigEndian(buffer, offset + 0x08);
             Version = Utilities.ToUInt32BigEndian(buffer, offset + 0x0C);
             Timestamp = DateTime.FromFileTimeUtc(Utilities.ToInt64BigEndian(buffer, offset + 0x10));
             Unknown2 = Utilities.ToInt64BigEndian(buffer, offset + 0x18);
             Unknown3 = Utilities.ToInt64BigEndian(buffer, offset + 0x20);
             Unknown4 = Utilities.ToInt64BigEndian(buffer, offset + 0x28);
-            DiskId = Utilities.BytesToString(buffer, offset + 0x30, 0x40).Trim('\0');
-            HostId = Utilities.BytesToString(buffer, offset + 0x70, 0x40).Trim('\0');
-            DiskGroupId = Utilities.BytesToString(buffer, offset + 0xB0, 0x40).Trim('\0');
-            DiskGroupName = Utilities.BytesToString(buffer, offset + 0xF0, 31).Trim('\0');
+            DiskId = Utilities.BytesToString(buffer, offset + 0x30, count: 0x40).Trim('\0');
+            HostId = Utilities.BytesToString(buffer, offset + 0x70, count: 0x40).Trim('\0');
+            DiskGroupId = Utilities.BytesToString(buffer, offset + 0xB0, count: 0x40).Trim('\0');
+            DiskGroupName = Utilities.BytesToString(buffer, offset + 0xF0, count: 31).Trim('\0');
             Unknown5 = Utilities.ToUInt32BigEndian(buffer, offset + 0x10F);
             DataStartLba = Utilities.ToInt64BigEndian(buffer, offset + 0x11B);
             DataSizeLba = Utilities.ToInt64BigEndian(buffer, offset + 0x123);

@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Udf
             ExtentLength = Utilities.ToUInt32LittleEndian(buffer, offset);
             ExtentLocation = new LogicalBlockAddress();
             ExtentLocation.ReadFrom(buffer, offset + 4);
-            ImplementationUse = Utilities.ToByteArray(buffer, offset + 10, 6);
+            ImplementationUse = Utilities.ToByteArray(buffer, offset + 10, length: 6);
             return 16;
         }
 

@@ -23,7 +23,7 @@ namespace RC.Framework.Security
             FileStream fs = File.OpenRead(path);
             MD5 md5 = new MD5CryptoServiceProvider();
             var fileData = new byte[fs.Length];
-            fs.Read(fileData, 0, (int)fs.Length);
+            fs.Read(fileData, offset: 0, count: (int)fs.Length);
             fs.Close();
             return BitConverter.ToString(md5.ComputeHash(fileData)).Replace("-", string.Empty);
         }

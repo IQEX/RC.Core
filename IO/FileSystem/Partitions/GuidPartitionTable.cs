@@ -113,7 +113,7 @@ namespace RC.Framework.FileSystem.Partitions
         {
             // Create the protective MBR partition record.
             BiosPartitionTable pt = BiosPartitionTable.Initialize(disk, diskGeometry);
-            pt.CreatePrimaryByCylinder(0, diskGeometry.Cylinders - 1, BiosPartitionTypes.GptProtective, false);
+            pt.CreatePrimaryByCylinder(first: 0, last: diskGeometry.Cylinders - 1, type: BiosPartitionTypes.GptProtective, markActive: false);
 
             // Create the GPT headers, and blank-out the entry areas
             const int EntryCount = 128;
@@ -137,9 +137,9 @@ namespace RC.Framework.FileSystem.Partitions
 
             // Write the primary header
             byte[] headerBuffer = new byte[diskGeometry.BytesPerSector];
-            header.WriteTo(headerBuffer, 0);
+            header.WriteTo(headerBuffer, offset: 0);
             disk.Position = header.HeaderLba * diskGeometry.BytesPerSector;
-            disk.Write(headerBuffer, 0, headerBuffer.Length);
+            disk.Write(headerBuffer, offset: 0, count: headerBuffer.Length);
 
             // Calc alternate header
             header.HeaderLba = header.AlternateHeaderLba;
@@ -147,9 +147,9 @@ namespace RC.Framework.FileSystem.Partitions
             header.PartitionEntriesLba = header.HeaderLba - entrySectors;
 
             // Write the alternate header
-            header.WriteTo(headerBuffer, 0);
+            header.WriteTo(headerBuffer, offset: 0);
             disk.Position = header.HeaderLba * diskGeometry.BytesPerSector;
-            disk.Write(headerBuffer, 0, headerBuffer.Length);
+            disk.Write(headerBuffer, offset: 0, count: headerBuffer.Length);
 
             return new GuidPartitionTable(disk, diskGeometry);
         }
@@ -163,7 +163,7 @@ namespace RC.Framework.FileSystem.Partitions
         public static GuidPartitionTable Initialize(VirtualDisk disk, WellKnownPartitionType type)
         {
             GuidPartitionTable pt = Initialize(disk);
-            pt.Create(type, true);
+            pt.Create(type, active: true);
             return pt;
         }
 
@@ -185,7 +185,7 @@ namespace RC.Framework.FileSystem.Partitions
             long start = FirstAvailableSector(allEntries);
             long end = FindLastFreeSector(start, allEntries);
 
-            return Create(start, end, GuidPartitionTypes.Convert(type), 0, "Data Partition");
+            return Create(start, end, GuidPartitionTypes.Convert(type), attributes: 0, name: "Data Partition");
         }
 
         /// <summary>
@@ -203,9 +203,9 @@ namespace RC.Framework.FileSystem.Partitions
             }
 
             long sectorLength = size / _diskGeometry.BytesPerSector;
-            long start = FindGap(size / _diskGeometry.BytesPerSector, 1);
+            long start = FindGap(size / _diskGeometry.BytesPerSector, alignmentSectors: 1);
 
-            return Create(start, start + sectorLength - 1, GuidPartitionTypes.Convert(type), 0, "Data Partition");
+            return Create(start, start + sectorLength - 1, GuidPartitionTypes.Convert(type), attributes: 0, name: "Data Partition");
         }
 
         /// <summary>
@@ -242,7 +242,7 @@ namespace RC.Framework.FileSystem.Partitions
                 throw new IOException("No available space");
             }
 
-            return Create(start, end - 1, GuidPartitionTypes.Convert(type), 0, "Data Partition");
+            return Create(start, end - 1, GuidPartitionTypes.Convert(type), attributes: 0, name: "Data Partition");
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace RC.Framework.FileSystem.Partitions
             long sectorLength = size / _diskGeometry.BytesPerSector;
             long start = FindGap(size / _diskGeometry.BytesPerSector, alignment / _diskGeometry.BytesPerSector);
 
-            return Create(start, start + sectorLength - 1, GuidPartitionTypes.Convert(type), 0, "Data Partition");
+            return Create(start, start + sectorLength - 1, GuidPartitionTypes.Convert(type), attributes: 0, name: "Data Partition");
         }
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace RC.Framework.FileSystem.Partitions
 
         private static uint CalcEntriesCrc(byte[] buffer)
         {
-            return Crc32.Compute(0xFFFFFFFF, buffer, 0, buffer.Length) ^ 0xFFFFFFFF;
+            return Crc32.Compute(crc: 0xFFFFFFFF, buffer: buffer, offset: 0, count: buffer.Length) ^ 0xFFFFFFFF;
         }
 
         private static int CountEntries<T>(ICollection<T> values, Func<T, bool> pred)
@@ -348,7 +348,7 @@ namespace RC.Framework.FileSystem.Partitions
                 throw new IOException("Invalid GPT disk, protective MBR table not present or invalid", ioe);
             }
 
-            if (bpt.Count != 1 || bpt[0].BiosType != BiosPartitionTypes.GptProtective)
+            if (bpt.Count != 1 || bpt[index: 0].BiosType != BiosPartitionTypes.GptProtective)
             {
                 throw new IOException("Invalid GPT disk, protective MBR table is not valid");
             }
@@ -360,12 +360,12 @@ namespace RC.Framework.FileSystem.Partitions
             byte[] sector = Utilities.ReadFully(disk, diskGeometry.BytesPerSector);
 
             _primaryHeader = new GptHeader(diskGeometry.BytesPerSector);
-            if (!_primaryHeader.ReadFrom(sector, 0) || !ReadEntries(_primaryHeader))
+            if (!_primaryHeader.ReadFrom(sector, offset: 0) || !ReadEntries(_primaryHeader))
             {
                 disk.Position = disk.Length - diskGeometry.BytesPerSector;
-                disk.Read(sector, 0, sector.Length);
+                disk.Read(sector, offset: 0, count: sector.Length);
                 _secondaryHeader = new GptHeader(diskGeometry.BytesPerSector);
-                if (!_secondaryHeader.ReadFrom(sector, 0) || !ReadEntries(_secondaryHeader))
+                if (!_secondaryHeader.ReadFrom(sector, offset: 0) || !ReadEntries(_secondaryHeader))
                 {
                     throw new IOException("No valid GUID Partition Table found");
                 }
@@ -388,8 +388,8 @@ namespace RC.Framework.FileSystem.Partitions
             {
                 _secondaryHeader = new GptHeader(diskGeometry.BytesPerSector);
                 disk.Position = disk.Length - diskGeometry.BytesPerSector;
-                disk.Read(sector, 0, sector.Length);
-                if (!_secondaryHeader.ReadFrom(sector, 0) || !ReadEntries(_secondaryHeader))
+                disk.Read(sector, offset: 0, count: sector.Length);
+                if (!_secondaryHeader.ReadFrom(sector, offset: 0) || !ReadEntries(_secondaryHeader))
                 {
                     // Generate from the secondary table from the primary one
                     _secondaryHeader = new GptHeader(_primaryHeader);
@@ -526,24 +526,24 @@ namespace RC.Framework.FileSystem.Partitions
         {
             byte[] buffer = new byte[_diskGeometry.BytesPerSector];
             _primaryHeader.EntriesCrc = CalcEntriesCrc();
-            _primaryHeader.WriteTo(buffer, 0);
+            _primaryHeader.WriteTo(buffer, offset: 0);
             _diskData.Position = _diskGeometry.BytesPerSector;
-            _diskData.Write(buffer, 0, buffer.Length);
+            _diskData.Write(buffer, offset: 0, count: buffer.Length);
 
             _diskData.Position = 2 * _diskGeometry.BytesPerSector;
-            _diskData.Write(_entryBuffer, 0, _entryBuffer.Length);
+            _diskData.Write(_entryBuffer, offset: 0, count: _entryBuffer.Length);
         }
 
         private void WriteSecondaryHeader()
         {
             byte[] buffer = new byte[_diskGeometry.BytesPerSector];
             _secondaryHeader.EntriesCrc = CalcEntriesCrc();
-            _secondaryHeader.WriteTo(buffer, 0);
+            _secondaryHeader.WriteTo(buffer, offset: 0);
             _diskData.Position = _diskData.Length - _diskGeometry.BytesPerSector;
-            _diskData.Write(buffer, 0, buffer.Length);
+            _diskData.Write(buffer, offset: 0, count: buffer.Length);
 
             _diskData.Position = _secondaryHeader.PartitionEntriesLba * _diskGeometry.BytesPerSector;
-            _diskData.Write(_entryBuffer, 0, _entryBuffer.Length);
+            _diskData.Write(_entryBuffer, offset: 0, count: _entryBuffer.Length);
         }
 
         private bool ReadEntries(GptHeader header)
@@ -560,7 +560,7 @@ namespace RC.Framework.FileSystem.Partitions
 
         private uint CalcEntriesCrc()
         {
-            return Crc32.Compute(0xFFFFFFFF, _entryBuffer, 0, _entryBuffer.Length) ^ 0xFFFFFFFF;
+            return Crc32.Compute(crc: 0xFFFFFFFF, buffer: _entryBuffer, offset: 0, count: _entryBuffer.Length) ^ 0xFFFFFFFF;
         }
 
         private IEnumerable<GptEntry> GetAllEntries()

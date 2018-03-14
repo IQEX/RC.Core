@@ -77,7 +77,7 @@ namespace RC.Framework.FileSystem.Registry
 
         public override int ReadFrom(byte[] buffer, int offset)
         {
-            _listType = Utilities.BytesToString(buffer, offset, 2);
+            _listType = Utilities.BytesToString(buffer, offset, count: 2);
             int numElements = Utilities.ToInt16LittleEndian(buffer, offset + 2);
             _listIndexes = new List<int>(numElements);
 
@@ -91,7 +91,7 @@ namespace RC.Framework.FileSystem.Registry
 
         public override void WriteTo(byte[] buffer, int offset)
         {
-            Utilities.StringToBytes(_listType, buffer, offset, 2);
+            Utilities.StringToBytes(_listType, buffer, offset, count: 2);
             Utilities.WriteBytesLittleEndian((ushort)_listIndexes.Count, buffer, offset + 2);
             for (int i = 0; i < _listIndexes.Count; ++i)
             {
@@ -108,7 +108,7 @@ namespace RC.Framework.FileSystem.Registry
             }
 
             // Check first and last, to early abort if the name is outside the range of this list
-            int result = DoFindKey(name, 0, out cellIndex);
+            int result = DoFindKey(name, listIndex: 0, cellIndex: out cellIndex);
             if (result <= 0)
             {
                 return result;
@@ -121,7 +121,7 @@ namespace RC.Framework.FileSystem.Registry
             }
 
             KeyFinder finder = new KeyFinder(_hive, name);
-            int idx = _listIndexes.BinarySearch(-1, finder);
+            int idx = _listIndexes.BinarySearch(item: -1, comparer: finder);
             cellIndex = finder.CellIndex;
             return (idx < 0) ? -1 : 0;
         }
@@ -180,13 +180,13 @@ namespace RC.Framework.FileSystem.Registry
                     if (cell.FindKey(name, out tempIndex) <= 0)
                     {
                         _listIndexes[i] = cell.LinkSubKey(name, cellIndex);
-                        return _hive.UpdateCell(this, false);
+                        return _hive.UpdateCell(this, canRelocate: false);
                     }
                 }
 
                 ListCell lastCell = _hive.GetCell<ListCell>(_listIndexes[_listIndexes.Count - 1]);
                 _listIndexes[_listIndexes.Count - 1] = lastCell.LinkSubKey(name, cellIndex);
-                return _hive.UpdateCell(this, false);
+                return _hive.UpdateCell(this, canRelocate: false);
             }
             else
             {
@@ -196,12 +196,12 @@ namespace RC.Framework.FileSystem.Registry
                     if (string.Compare(name, cell.Name, StringComparison.OrdinalIgnoreCase) < 0)
                     {
                         _listIndexes.Insert(i, cellIndex);
-                        return _hive.UpdateCell(this, true);
+                        return _hive.UpdateCell(this, canRelocate: true);
                     }
                 }
 
                 _listIndexes.Add(cellIndex);
-                return _hive.UpdateCell(this, true);
+                return _hive.UpdateCell(this, canRelocate: true);
             }
         }
 
@@ -227,7 +227,7 @@ namespace RC.Framework.FileSystem.Registry
                             _listIndexes.RemoveAt(i);
                         }
 
-                        return _hive.UpdateCell(this, false);
+                        return _hive.UpdateCell(this, canRelocate: false);
                     }
                 }
             }
@@ -239,7 +239,7 @@ namespace RC.Framework.FileSystem.Registry
                     if (string.Compare(name, cell.Name, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         _listIndexes.RemoveAt(i);
-                        return _hive.UpdateCell(this, true);
+                        return _hive.UpdateCell(this, canRelocate: true);
                     }
                 }
             }

@@ -52,7 +52,7 @@ namespace RC.Framework.FileSystem.Ntfs
             _streamPosition = parentEntry.ChildrenVirtualCluster * bpb.BytesPerSector * bpb.SectorsPerCluster;
             stream.Position = _streamPosition;
             byte[] buffer = Utilities.ReadFully(stream, (int)index.IndexBufferSize);
-            FromBytes(buffer, 0);
+            FromBytes(buffer, offset: 0);
         }
 
         private IndexBlock(Index index, bool isRoot, long vcn, BiosParameterBlock bpb)
@@ -83,11 +83,11 @@ namespace RC.Framework.FileSystem.Ntfs
         internal void WriteToDisk()
         {
             byte[] buffer = new byte[_index.IndexBufferSize];
-            ToBytes(buffer, 0);
+            ToBytes(buffer, offset: 0);
 
             Stream stream = _index.AllocationStream;
             stream.Position = _streamPosition;
-            stream.Write(buffer, 0, buffer.Length);
+            stream.Write(buffer, offset: 0, count: buffer.Length);
             stream.Flush();
         }
 

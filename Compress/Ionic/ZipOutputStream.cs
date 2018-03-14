@@ -228,7 +228,7 @@ namespace Ionic.Zip
         /// End Sub
         /// </code>
         /// </example>
-        public ZipOutputStream(Stream stream) : this(stream, false) { }
+        public ZipOutputStream(Stream stream) : this(stream, leaveOpen: false) { }
 
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace Ionic.Zip
         public ZipOutputStream(String fileName)
         {
             Stream stream = File.Open(fileName, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-            _Init(stream, false, fileName);
+            _Init(stream, leaveOpen: false, name: fileName);
         }
 
 
@@ -338,7 +338,7 @@ namespace Ionic.Zip
         /// </param>
         public ZipOutputStream(Stream stream, bool leaveOpen)
         {
-            _Init(stream, leaveOpen, null);
+            _Init(stream, leaveOpen, name: null);
         }
 
         private void _Init(Stream stream, bool leaveOpen, string name)
@@ -1279,7 +1279,7 @@ namespace Ionic.Zip
             }
 
             if (_needToWriteEntryHeader)
-                _InitiateCurrentEntry(false);
+                _InitiateCurrentEntry(finishing: false);
 
             if (count != 0)
                 _entryOutputStream.Write(buffer, offset, count);
@@ -1455,7 +1455,7 @@ namespace Ionic.Zip
             if (_currentEntry != null)
             {
                 if (_needToWriteEntryHeader)
-                    _InitiateCurrentEntry(true); // an empty entry - no writes
+                    _InitiateCurrentEntry(finishing: true); // an empty entry - no writes
 
                 _currentEntry.FinishOutputStream(_outputStream, _outputCounter, _encryptor, _deflater, _entryOutputStream);
                 _currentEntry.PostProcessOutput(_outputStream);
@@ -1500,10 +1500,10 @@ namespace Ionic.Zip
                     _FinishCurrentEntry();
                     _directoryNeededZip64 = ZipOutput.WriteCentralDirectoryStructure(_outputStream,
                                                                                      _entriesWritten.Values,
-                                                                                     1, // _numberOfSegmentsForMostRecentSave,
-                                                                                     _zip64,
-                                                                                     Comment,
-                                                                                     new ZipContainer(this));
+                                                                                     numSegments: 1, // _numberOfSegmentsForMostRecentSave,
+                                                                                     zip64: _zip64,
+                                                                                     comment: Comment,
+                                                                                     container: new ZipContainer(this));
                     Stream wrappedStream = null;
                     CountingStream cs = _outputStream as CountingStream;
                     if (cs != null)

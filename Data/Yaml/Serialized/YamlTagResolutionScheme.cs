@@ -35,33 +35,33 @@ namespace RC.Framework.Yaml
         {
             BeginUpdate();
             AddRule<int>("!!int", @"([-+]?(0|[1-9][0-9_]*))", 
-                m => Convert.ToInt32(m.Value.Replace("_", "")), null);
+                m => Convert.ToInt32(m.Value.Replace("_", "")), encode: null);
             AddRule<int>("!!int", @"([-+]?)0b([01_]+)", m => {
-                var v = Convert.ToInt32(m.Groups[2].Value.Replace("_", ""), 2);
-                return m.Groups[1].Value == "-" ? -v : v;
-                }, null);
+                var v = Convert.ToInt32(m.Groups[groupnum: 2].Value.Replace("_", ""), fromBase: 2);
+                return m.Groups[groupnum: 1].Value == "-" ? -v : v;
+                }, encode: null);
             AddRule<int>("!!int", @"([-+]?)0o?([0-7_]+)", m => {
-                var v = Convert.ToInt32(m.Groups[2].Value.Replace("_", ""), 8);
-                return m.Groups[1].Value == "-" ? -v : v;
-            }, null);
+                var v = Convert.ToInt32(m.Groups[groupnum: 2].Value.Replace("_", ""), fromBase: 8);
+                return m.Groups[groupnum: 1].Value == "-" ? -v : v;
+            }, encode: null);
             AddRule<int>("!!int", @"([-+]?)0x([0-9a-fA-F_]+)", m => {
-                var v = Convert.ToInt32(m.Groups[2].Value.Replace("_", ""), 16);
-                return m.Groups[1].Value == "-" ? -v : v;
-            }, null);
+                var v = Convert.ToInt32(m.Groups[groupnum: 2].Value.Replace("_", ""), fromBase: 16);
+                return m.Groups[groupnum: 1].Value == "-" ? -v : v;
+            }, encode: null);
             // Todo: http://yaml.org/type/float.html is wrong  => [0-9.] should be [0-9_]
             AddRule<double>("!!float", @"[-+]?(0|[1-9][0-9_]*)\.[0-9_]*([eE][-+]?[0-9]+)?",
-                m => Convert.ToDouble(m.Value.Replace("_", "")), null);
+                m => Convert.ToDouble(m.Value.Replace("_", "")), encode: null);
             AddRule<double>("!!float", @"[-+]?\._*[0-9][0-9_]*([eE][-+]?[0-9]+)?",
-                m => Convert.ToDouble(m.Value.Replace("_", "")), null);
+                m => Convert.ToDouble(m.Value.Replace("_", "")), encode: null);
             AddRule<double>("!!float", @"[-+]?(0|[1-9][0-9_]*)([eE][-+]?[0-9]+)",
-                m => Convert.ToDouble(m.Value.Replace("_", "")), null);
-            AddRule<double>("!!float", @"\+?(\.inf|\.Inf|\.INF)", m => double.PositiveInfinity, null);
-            AddRule<double>("!!float", @"-(\.inf|\.Inf|\.INF)", m => double.NegativeInfinity, null);
-            AddRule<double>("!!float", @"\.nan|\.NaN|\.NAN", m => double.NaN, null);
-            AddRule<bool>("!!bool", @"y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON", m => true, null);
-            AddRule<bool>("!!bool", @"n|N|no|No|NO|false|False|FALSE|off|Off|OFF", m => false, null);
-            AddRule<object>("!!null", @"null|Null|NULL|\~|", m => null, null);
-            AddRule<string>("!!merge", @"<<", m => "<<", null);
+                m => Convert.ToDouble(m.Value.Replace("_", "")), encode: null);
+            AddRule<double>("!!float", @"\+?(\.inf|\.Inf|\.INF)", m => double.PositiveInfinity, encode: null);
+            AddRule<double>("!!float", @"-(\.inf|\.Inf|\.INF)", m => double.NegativeInfinity, encode: null);
+            AddRule<double>("!!float", @"\.nan|\.NaN|\.NAN", m => double.NaN, encode: null);
+            AddRule<bool>("!!bool", @"y|Y|yes|Yes|YES|true|True|TRUE|on|On|ON", m => true, encode: null);
+            AddRule<bool>("!!bool", @"n|N|no|No|NO|false|False|FALSE|off|Off|OFF", m => false, encode: null);
+            AddRule<object>("!!null", @"null|Null|NULL|\~|", m => null, encode: null);
+            AddRule<string>("!!merge", @"<<", m => "<<", encode: null);
             AddRule<DateTime>("!!timestamp",  // Todo: spec is wrong (([ \t]*)Z|[-+][0-9][0-9]?(:[0-9][0-9])?)? should be (([ \t]*)(Z|[-+][0-9][0-9]?(:[0-9][0-9])?))? to accept "2001-12-14 21:59:43.10 -5"
                 @"([0-9]{4})-([0-9]{2})-([0-9]{2})" +
                 @"(" +
@@ -94,7 +94,7 @@ namespace RC.Framework.Yaml
         {
             tag= YamlNode.ExpandTag(tag);
             if ( types.ContainsKey(tag) )
-                return types[tag][0].GetTypeOfValue();
+                return types[tag][index: 0].GetTypeOfValue();
             return null;
         }
 

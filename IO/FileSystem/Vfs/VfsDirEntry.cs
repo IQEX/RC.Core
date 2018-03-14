@@ -117,7 +117,7 @@ namespace RC.Framework.FileSystem.Vfs
             get
             {
                 string fileName = FileName;
-                if (fileName.IndexOf('.') == -1)
+                if (fileName.IndexOf(value: '.') == -1)
                 {
                     return fileName + ".";
                 }

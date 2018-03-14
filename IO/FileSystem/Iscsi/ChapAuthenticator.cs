@@ -107,7 +107,7 @@ namespace RC.Framework.FileSystem.Iscsi
             byte[] data = new byte[(p.Length - 2) / 2];
             for (int i = 0; i < data.Length; ++i)
             {
-                data[i] = byte.Parse(p.Substring(2 + (i * 2), 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+                data[i] = byte.Parse(p.Substring(2 + (i * 2), length: 2), NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             }
 
             return data;
@@ -119,8 +119,8 @@ namespace RC.Framework.FileSystem.Iscsi
 
             byte[] toHash = new byte[1 + _password.Length + _challenge.Length];
             toHash[0] = _identifier;
-            Encoding.ASCII.GetBytes(_password, 0, _password.Length, toHash, 1);
-            Array.Copy(_challenge, 0, toHash, _password.Length + 1, _challenge.Length);
+            Encoding.ASCII.GetBytes(_password, charIndex: 0, charCount: _password.Length, bytes: toHash, byteIndex: 1);
+            Array.Copy(_challenge, sourceIndex: 0, destinationArray: toHash, destinationIndex: _password.Length + 1, length: _challenge.Length);
 
             byte[] hash = md5.ComputeHash(toHash);
 

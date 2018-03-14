@@ -69,7 +69,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 long attrStart = _file.GetAttributeOffset(attrRef);
                 long mftPos = attrStart + attrRecord.DataOffset + pos;
 
-                return _file.Context.GetFileByIndex(MasterFileTable.MftIndex).GetAttribute(AttributeType.Data, null).OffsetToAbsolutePos(mftPos);
+                return _file.Context.GetFileByIndex(MasterFileTable.MftIndex).GetAttribute(AttributeType.Data, name: null).OffsetToAbsolutePos(mftPos);
             }
         }
 
@@ -193,7 +193,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public override IEnumerable<StreamExtent> GetExtentsInRange(long start, long count)
         {
-            return StreamExtent.Intersect(_attribute.RawBuffer.GetExtentsInRange(start, count), new StreamExtent(0, Capacity));
+            return StreamExtent.Intersect(_attribute.RawBuffer.GetExtentsInRange(start, count), new StreamExtent(start: 0, length: Capacity));
         }
     }
 }

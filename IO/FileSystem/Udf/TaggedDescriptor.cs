@@ -36,10 +36,10 @@ namespace RC.Framework.FileSystem.Udf
         public static T FromStream(Stream stream, uint sector, uint sectorSize)
         {
             stream.Position = sector * (long)sectorSize;
-            byte[] buffer = Utilities.ReadFully(stream, 512);
+            byte[] buffer = Utilities.ReadFully(stream, count: 512);
 
             T result = new T();
-            result.ReadFrom(buffer, 0);
+            result.ReadFrom(buffer, offset: 0);
             if (result.Tag.TagIdentifier != result.RequiredTagIdentifier
                 || result.Tag.TagLocation != sector)
             {

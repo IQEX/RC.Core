@@ -133,17 +133,17 @@ namespace Ionic.Zlib
             static Config()
             {
                 Table = new Config[] {
-                    new Config(0, 0, 0, 0, DeflateFlavor.Store),
-                    new Config(4, 4, 8, 4, DeflateFlavor.Fast),
-                    new Config(4, 5, 16, 8, DeflateFlavor.Fast),
-                    new Config(4, 6, 32, 32, DeflateFlavor.Fast),
+                    new Config(goodLength: 0, maxLazy: 0, niceLength: 0, maxChainLength: 0, flavor: DeflateFlavor.Store),
+                    new Config(goodLength: 4, maxLazy: 4, niceLength: 8, maxChainLength: 4, flavor: DeflateFlavor.Fast),
+                    new Config(goodLength: 4, maxLazy: 5, niceLength: 16, maxChainLength: 8, flavor: DeflateFlavor.Fast),
+                    new Config(goodLength: 4, maxLazy: 6, niceLength: 32, maxChainLength: 32, flavor: DeflateFlavor.Fast),
 
-                    new Config(4, 4, 16, 16, DeflateFlavor.Slow),
-                    new Config(8, 16, 32, 32, DeflateFlavor.Slow),
-                    new Config(8, 16, 128, 128, DeflateFlavor.Slow),
-                    new Config(8, 32, 128, 256, DeflateFlavor.Slow),
-                    new Config(32, 128, 258, 1024, DeflateFlavor.Slow),
-                    new Config(32, 258, 258, 4096, DeflateFlavor.Slow),
+                    new Config(goodLength: 4, maxLazy: 4, niceLength: 16, maxChainLength: 16, flavor: DeflateFlavor.Slow),
+                    new Config(goodLength: 8, maxLazy: 16, niceLength: 32, maxChainLength: 32, flavor: DeflateFlavor.Slow),
+                    new Config(goodLength: 8, maxLazy: 16, niceLength: 128, maxChainLength: 128, flavor: DeflateFlavor.Slow),
+                    new Config(goodLength: 8, maxLazy: 32, niceLength: 128, maxChainLength: 256, flavor: DeflateFlavor.Slow),
+                    new Config(goodLength: 32, maxLazy: 128, niceLength: 258, maxChainLength: 1024, flavor: DeflateFlavor.Slow),
+                    new Config(goodLength: 32, maxLazy: 258, niceLength: 258, maxChainLength: 4096, flavor: DeflateFlavor.Slow),
                 };
             }
 
@@ -349,7 +349,7 @@ namespace Ionic.Zlib
             window_size = 2 * w_size;
 
             // clear the hash - workitem 9063
-            Array.Clear(head, 0, hash_size);
+            Array.Clear(head, index: 0, length: hash_size);
             //for (int i = 0; i < hash_size; i++) head[i] = 0;
 
             config = Config.Lookup(compressionLevel);
@@ -529,12 +529,12 @@ namespace Ionic.Zlib
         {
             int rank; // index in bl_order
 
-            send_bits(lcodes - 257, 5); // not +255 as stated in appnote.txt
-            send_bits(dcodes - 1, 5);
-            send_bits(blcodes - 4, 4); // not -3 as stated in appnote.txt
+            send_bits(lcodes - 257, length: 5); // not +255 as stated in appnote.txt
+            send_bits(dcodes - 1, length: 5);
+            send_bits(blcodes - 4, length: 4); // not -3 as stated in appnote.txt
             for (rank = 0; rank < blcodes; rank++)
             {
-                send_bits(bl_tree[Tree.bl_order[rank] * 2 + 1], 3);
+                send_bits(bl_tree[Tree.bl_order[rank] * 2 + 1], length: 3);
             }
             send_tree(dyn_ltree, lcodes - 1); // literal tree
             send_tree(dyn_dtree, dcodes - 1); // distance tree
@@ -579,17 +579,17 @@ namespace Ionic.Zlib
                         send_code(curlen, bl_tree); count--;
                     }
                     send_code(InternalConstants.REP_3_6, bl_tree);
-                    send_bits(count - 3, 2);
+                    send_bits(count - 3, length: 2);
                 }
                 else if (count <= 10)
                 {
                     send_code(InternalConstants.REPZ_3_10, bl_tree);
-                    send_bits(count - 3, 3);
+                    send_bits(count - 3, length: 3);
                 }
                 else
                 {
                     send_code(InternalConstants.REPZ_11_138, bl_tree);
-                    send_bits(count - 11, 7);
+                    send_bits(count - 11, length: 7);
                 }
                 count = 0; prevlen = curlen;
                 if (nextlen == 0)
@@ -686,7 +686,7 @@ namespace Ionic.Zlib
         // on one bit only.
         internal void _tr_align()
         {
-            send_bits(STATIC_TREES << 1, 3);
+            send_bits(STATIC_TREES << 1, length: 3);
             send_code(END_BLOCK, StaticTree.lengthAndLiteralsTreeCodes);
 
             bi_flush();
@@ -697,7 +697,7 @@ namespace Ionic.Zlib
             // of the EOB plus what we have just sent of the empty static block.
             if (1 + last_eob_len + 10 - bi_valid < 9)
             {
-                send_bits(STATIC_TREES << 1, 3);
+                send_bits(STATIC_TREES << 1, length: 3);
                 send_code(END_BLOCK, StaticTree.lengthAndLiteralsTreeCodes);
                 bi_flush();
             }
@@ -950,7 +950,7 @@ namespace Ionic.Zlib
                     lookahead = (int)(strstart - max_start);
                     strstart = (int)max_start;
 
-                    flush_block_only(false);
+                    flush_block_only(eof: false);
                     if (_codec.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
@@ -959,7 +959,7 @@ namespace Ionic.Zlib
                 // negative and the data will be gone:
                 if (strstart - block_start >= w_size - MIN_LOOKAHEAD)
                 {
-                    flush_block_only(false);
+                    flush_block_only(eof: false);
                     if (_codec.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
@@ -976,8 +976,8 @@ namespace Ionic.Zlib
         // Send a stored block
         internal void _tr_stored_block(int buf, int stored_len, bool eof)
         {
-            send_bits((STORED_BLOCK << 1) + (eof ? 1 : 0), 3); // send block type
-            copy_block(buf, stored_len, true); // with header
+            send_bits((STORED_BLOCK << 1) + (eof ? 1 : 0), length: 3); // send block type
+            copy_block(buf, stored_len, header: true); // with header
         }
 
         // Determine the best encoding for the current block: dynamic trees, static
@@ -1030,12 +1030,12 @@ namespace Ionic.Zlib
             }
             else if (static_lenb == opt_lenb)
             {
-                send_bits((STATIC_TREES << 1) + (eof ? 1 : 0), 3);
+                send_bits((STATIC_TREES << 1) + (eof ? 1 : 0), length: 3);
                 send_compressed_block(StaticTree.lengthAndLiteralsTreeCodes, StaticTree.distTreeCodes);
             }
             else
             {
-                send_bits((DYN_TREES << 1) + (eof ? 1 : 0), 3);
+                send_bits((DYN_TREES << 1) + (eof ? 1 : 0), length: 3);
                 send_all_trees(treeLiterals.max_code + 1, treeDistances.max_code + 1, max_blindex + 1);
                 send_compressed_block(dyn_ltree, dyn_dtree);
             }
@@ -1085,7 +1085,7 @@ namespace Ionic.Zlib
                 }
                 else if (strstart >= w_size + w_size - MIN_LOOKAHEAD)
                 {
-                    Array.Copy(window, w_size, window, 0, w_size);
+                    Array.Copy(window, w_size, window, destinationIndex: 0, length: w_size);
                     match_start -= w_size;
                     strstart -= w_size; // we now have strstart >= MAX_DIST
                     block_start -= w_size;
@@ -1245,13 +1245,13 @@ namespace Ionic.Zlib
                 {
                     // No match, output a literal byte
 
-                    bflush = _tr_tally(0, window[strstart] & 0xff);
+                    bflush = _tr_tally(dist: 0, lc: window[strstart] & 0xff);
                     lookahead--;
                     strstart++;
                 }
                 if (bflush)
                 {
-                    flush_block_only(false);
+                    flush_block_only(eof: false);
                     if (_codec.AvailableBytesOut == 0)
                         return BlockState.NeedMore;
                 }
@@ -1370,7 +1370,7 @@ namespace Ionic.Zlib
 
                     if (bflush)
                     {
-                        flush_block_only(false);
+                        flush_block_only(eof: false);
                         if (_codec.AvailableBytesOut == 0)
                             return BlockState.NeedMore;
                     }
@@ -1382,11 +1382,11 @@ namespace Ionic.Zlib
                     // single literal. If there was a match but the current match
                     // is longer, truncate the previous match to a single literal.
 
-                    bflush = _tr_tally(0, window[strstart - 1] & 0xff);
+                    bflush = _tr_tally(dist: 0, lc: window[strstart - 1] & 0xff);
 
                     if (bflush)
                     {
-                        flush_block_only(false);
+                        flush_block_only(eof: false);
                     }
                     strstart++;
                     lookahead--;
@@ -1406,7 +1406,7 @@ namespace Ionic.Zlib
 
             if (match_available != 0)
             {
-                bflush = _tr_tally(0, window[strstart - 1] & 0xff);
+                bflush = _tr_tally(dist: 0, lc: window[strstart - 1] & 0xff);
                 match_available = 0;
             }
             flush_block_only(flush == FlushType.Finish);
@@ -1598,7 +1598,7 @@ namespace Ionic.Zlib
             Rfc1950BytesEmitted = false;
 
             status = (WantRfc1950HeaderBytes) ? INIT_STATE : BUSY_STATE;
-            _codec._Adler32 = Adler.Adler32(0, null, 0, 0);
+            _codec._Adler32 = Adler.Adler32(adler: 0, buf: null, index: 0, len: 0);
 
             last_flush = (int)FlushType.None;
 
@@ -1676,7 +1676,7 @@ namespace Ionic.Zlib
             if (dictionary == null || status != INIT_STATE)
                 throw new ZlibException("Stream error.");
 
-            _codec._Adler32 = Adler.Adler32(_codec._Adler32, dictionary, 0, dictionary.Length);
+            _codec._Adler32 = Adler.Adler32(_codec._Adler32, dictionary, index: 0, len: dictionary.Length);
 
             if (length < MIN_MATCH)
                 return ZlibConstants.Z_OK;
@@ -1685,7 +1685,7 @@ namespace Ionic.Zlib
                 length = w_size - MIN_LOOKAHEAD;
                 index = dictionary.Length - length; // use the tail of the dictionary
             }
-            Array.Copy(dictionary, index, window, 0, length);
+            Array.Copy(dictionary, index, window, destinationIndex: 0, length: length);
             strstart = length;
             block_start = length;
 
@@ -1755,7 +1755,7 @@ namespace Ionic.Zlib
                     pending[pendingCount++] = (byte)((_codec._Adler32 & 0x0000FF00) >> 8);
                     pending[pendingCount++] = (byte)(_codec._Adler32 & 0x000000FF);
                 }
-                _codec._Adler32 = Adler.Adler32(0, null, 0, 0);
+                _codec._Adler32 = Adler.Adler32(adler: 0, buf: null, index: 0, len: 0);
             }
 
             // Flush as much pending output as possible
@@ -1835,7 +1835,7 @@ namespace Ionic.Zlib
                     else
                     {
                         // FlushType.Full or FlushType.Sync
-                        _tr_stored_block(0, 0, false);
+                        _tr_stored_block(buf: 0, stored_len: 0, eof: false);
                         // For a full flush, this empty block will be recognized
                         // as a special marker by inflate_sync().
                         if (flush == FlushType.Full)

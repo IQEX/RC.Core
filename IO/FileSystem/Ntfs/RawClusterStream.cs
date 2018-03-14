@@ -107,7 +107,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public override bool IsClusterStored(long vcn)
         {
-            int runIdx = _cookedRuns.FindDataRun(vcn, 0);
+            int runIdx = _cookedRuns.FindDataRun(vcn, startIdx: 0);
             return !_cookedRuns[runIdx].IsSparse;
         }
 
@@ -142,7 +142,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     realExtent = _cookedRuns.Last.AttributeExtent;
                 }
 
-                DataRun newRun = new DataRun(0, numVirtualClusters - totalVirtualClusters, true);
+                DataRun newRun = new DataRun(offset: 0, length: numVirtualClusters - totalVirtualClusters, isSparse: true);
                 realExtent.DataRuns.Add(newRun);
                 _cookedRuns.Append(newRun, extent);
                 realExtent.LastVcn = numVirtualClusters - 1;
@@ -160,7 +160,7 @@ namespace RC.Framework.FileSystem.Ntfs
             {
                 ReleaseClusters(numVirtualClusters, (int)(_cookedRuns.NextVirtualCluster - numVirtualClusters));
 
-                int runIdx = _cookedRuns.FindDataRun(numVirtualClusters, 0);
+                int runIdx = _cookedRuns.FindDataRun(numVirtualClusters, startIdx: 0);
 
                 if (numVirtualClusters != _cookedRuns[runIdx].StartVcn)
                 {
@@ -221,7 +221,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     long lcn = runIdx == 0 ? 0 : _cookedRuns[runIdx - 1].StartLcn;
                     foreach (var allocation in alloced)
                     {
-                        runs.Add(new DataRun(allocation.First - lcn, allocation.Second, false));
+                        runs.Add(new DataRun(allocation.First - lcn, allocation.Second, isSparse: false));
                         lcn = allocation.First;
                     }
 
@@ -361,9 +361,9 @@ namespace RC.Framework.FileSystem.Ntfs
             int numWritten = 0;
             while (numWritten < count)
             {
-                int toWrite = Math.Min(count - numWritten, 16);
+                int toWrite = Math.Min(count - numWritten, val2: 16);
 
-                clustersAllocated += WriteClusters(startVcn + numWritten, toWrite, zeroBuffer, 0);
+                clustersAllocated += WriteClusters(startVcn + numWritten, toWrite, zeroBuffer, offset: 0);
 
                 numWritten += toWrite;
             }

@@ -44,7 +44,7 @@ namespace RC.Framework.FileSystem.BootConfig
 
             if (Type == 5)
             {
-                Array.Clear(data, offset + 0x10, 0x38);
+                Array.Clear(data, offset + 0x10, length: 0x38);
             }
             else if (Type == 6)
             {
@@ -52,13 +52,13 @@ namespace RC.Framework.FileSystem.BootConfig
 
                 if (PartitionType == 1)
                 {
-                    Array.Copy(DiskIdentity, 0, data, offset + 0x28, 4);
-                    Array.Copy(PartitionIdentity, 0, data, offset + 0x10, 8);
+                    Array.Copy(DiskIdentity, sourceIndex: 0, destinationArray: data, destinationIndex: offset + 0x28, length: 4);
+                    Array.Copy(PartitionIdentity, sourceIndex: 0, destinationArray: data, destinationIndex: offset + 0x10, length: 8);
                 }
                 else if (PartitionType == 0)
                 {
-                    Array.Copy(DiskIdentity, 0, data, offset + 0x28, 16);
-                    Array.Copy(PartitionIdentity, 0, data, offset + 0x10, 16);
+                    Array.Copy(DiskIdentity, sourceIndex: 0, destinationArray: data, destinationIndex: offset + 0x28, length: 16);
+                    Array.Copy(PartitionIdentity, sourceIndex: 0, destinationArray: data, destinationIndex: offset + 0x10, length: 16);
                 }
                 else
                 {
@@ -88,12 +88,12 @@ namespace RC.Framework.FileSystem.BootConfig
                         DiskIdentity[1],
                         DiskIdentity[2],
                         DiskIdentity[3],
-                        Utilities.ToUInt64LittleEndian(PartitionIdentity, 0));
+                        Utilities.ToUInt64LittleEndian(PartitionIdentity, offset: 0));
                 }
                 else
                 {
-                    Guid diskGuid = Utilities.ToGuidLittleEndian(DiskIdentity, 0);
-                    Guid partitionGuid = Utilities.ToGuidLittleEndian(PartitionIdentity, 0);
+                    Guid diskGuid = Utilities.ToGuidLittleEndian(DiskIdentity, offset: 0);
+                    Guid partitionGuid = Utilities.ToGuidLittleEndian(PartitionIdentity, offset: 0);
                     return string.Format(CultureInfo.InvariantCulture, "(disk:{0} partition:{1})", diskGuid, partitionGuid);
                 }
             }
@@ -123,17 +123,17 @@ namespace RC.Framework.FileSystem.BootConfig
                 {
                     // BIOS disk
                     DiskIdentity = new byte[4];
-                    Array.Copy(data, offset + 0x28, DiskIdentity, 0, 4);
+                    Array.Copy(data, offset + 0x28, DiskIdentity, destinationIndex: 0, length: 4);
                     PartitionIdentity = new byte[8];
-                    Array.Copy(data, offset + 0x10, PartitionIdentity, 0, 8);
+                    Array.Copy(data, offset + 0x10, PartitionIdentity, destinationIndex: 0, length: 8);
                 }
                 else if (PartitionType == 0)
                 {
                     // GPT disk
                     DiskIdentity = new byte[16];
-                    Array.Copy(data, offset + 0x28, DiskIdentity, 0, 16);
+                    Array.Copy(data, offset + 0x28, DiskIdentity, destinationIndex: 0, length: 16);
                     PartitionIdentity = new byte[16];
-                    Array.Copy(data, offset + 0x10, PartitionIdentity, 0, 16);
+                    Array.Copy(data, offset + 0x10, PartitionIdentity, destinationIndex: 0, length: 16);
                 }
                 else
                 {

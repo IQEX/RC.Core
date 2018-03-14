@@ -83,8 +83,8 @@ namespace Colorful
 
         private static void MapToScreen(StyledString styledString, string trailer)
         {
-            int rowLength = styledString.CharacterGeometry.GetLength(0);
-            int columnLength = styledString.CharacterGeometry.GetLength(1);
+            int rowLength = styledString.CharacterGeometry.GetLength(dimension: 0);
+            int columnLength = styledString.CharacterGeometry.GetLength(dimension: 1);
             for (int row = 0; row < rowLength; row++)
             {
                 for (int column = 0; column < columnLength; column++)
@@ -168,8 +168,8 @@ namespace Colorful
                     // Just need to keep a third array that keeps track of each abstract char's width, so you never iterate past that.
                     // This third array would be one-dimensional.
 
-                    int rowLength = target.CharacterIndexGeometry.GetLength(0);
-                    int columnLength = target.CharacterIndexGeometry.GetLength(1);
+                    int rowLength = target.CharacterIndexGeometry.GetLength(dimension: 0);
+                    int columnLength = target.CharacterIndexGeometry.GetLength(dimension: 1);
                     for (int row = 0; row < rowLength; row++)
                     {
                         for (int column = 0; column < columnLength; column++)
@@ -364,22 +364,22 @@ namespace Colorful
             }
         }
 
-        private static readonly Color blackEquivalent = Color.FromArgb(0, 0, 0);
-        private static readonly Color blueEquivalent = Color.FromArgb(0, 0, 255);
-        private static readonly Color cyanEquivalent = Color.FromArgb(0, 255, 255);
-        private static readonly Color darkBlueEquivalent = Color.FromArgb(0, 0, 128);
-        private static readonly Color darkCyanEquivalent = Color.FromArgb(0, 128, 128);
-        private static readonly Color darkGrayEquivalent = Color.FromArgb(128, 128, 128);
-        private static readonly Color darkGreenEquivalent = Color.FromArgb(0, 128, 0);
-        private static readonly Color darkMagentaEquivalent = Color.FromArgb(128, 0, 128);
-        private static readonly Color darkRedEquivalent = Color.FromArgb(128, 0, 0);
-        private static readonly Color darkYellowEquivalent = Color.FromArgb(128, 128, 0);
-        private static readonly Color grayEquivalent = Color.FromArgb(192, 192, 192);
-        private static readonly Color greenEquivalent = Color.FromArgb(0, 255, 0);
-        private static readonly Color magentaEquivalent = Color.FromArgb(255, 0, 255);
-        private static readonly Color redEquivalent = Color.FromArgb(255, 0, 0);
-        private static readonly Color whiteEquivalent = Color.FromArgb(255, 255, 255);
-        private static readonly Color yellowEquivalent = Color.FromArgb(255, 255, 0);
+        private static readonly Color blackEquivalent = Color.FromArgb(red: 0, green: 0, blue: 0);
+        private static readonly Color blueEquivalent = Color.FromArgb(red: 0, green: 0, blue: 255);
+        private static readonly Color cyanEquivalent = Color.FromArgb(red: 0, green: 255, blue: 255);
+        private static readonly Color darkBlueEquivalent = Color.FromArgb(red: 0, green: 0, blue: 128);
+        private static readonly Color darkCyanEquivalent = Color.FromArgb(red: 0, green: 128, blue: 128);
+        private static readonly Color darkGrayEquivalent = Color.FromArgb(red: 128, green: 128, blue: 128);
+        private static readonly Color darkGreenEquivalent = Color.FromArgb(red: 0, green: 128, blue: 0);
+        private static readonly Color darkMagentaEquivalent = Color.FromArgb(red: 128, green: 0, blue: 128);
+        private static readonly Color darkRedEquivalent = Color.FromArgb(red: 128, green: 0, blue: 0);
+        private static readonly Color darkYellowEquivalent = Color.FromArgb(red: 128, green: 128, blue: 0);
+        private static readonly Color grayEquivalent = Color.FromArgb(red: 192, green: 192, blue: 192);
+        private static readonly Color greenEquivalent = Color.FromArgb(red: 0, green: 255, blue: 0);
+        private static readonly Color magentaEquivalent = Color.FromArgb(red: 255, green: 0, blue: 255);
+        private static readonly Color redEquivalent = Color.FromArgb(red: 255, green: 0, blue: 0);
+        private static readonly Color whiteEquivalent = Color.FromArgb(red: 255, green: 255, blue: 255);
+        private static readonly Color yellowEquivalent = Color.FromArgb(red: 255, green: 255, blue: 0);
 
         private static ColorStore GetColorStore()
         {

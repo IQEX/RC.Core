@@ -41,7 +41,7 @@ namespace RC.Framework.FileSystem.Ext
 
         public int Size
         {
-            get { return Utilities.RoundUp(8 + Name.Length, 4); }
+            get { return Utilities.RoundUp(8 + Name.Length, unit: 4); }
         }
 
         public int ReadFrom(byte[] buffer, int offset)

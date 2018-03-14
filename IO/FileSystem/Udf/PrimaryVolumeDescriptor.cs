@@ -56,14 +56,14 @@ namespace RC.Framework.FileSystem.Udf
         {
             VolumeDescriptorSequenceNumber = Utilities.ToUInt32LittleEndian(buffer, offset + 16);
             PrimaryVolumeDescriptorNumber = Utilities.ToUInt32LittleEndian(buffer, offset + 20);
-            VolumeIdentifier = UdfUtilities.ReadDString(buffer, offset + 24, 32);
+            VolumeIdentifier = UdfUtilities.ReadDString(buffer, offset + 24, count: 32);
             VolumeSequenceNumber = Utilities.ToUInt16LittleEndian(buffer, offset + 56);
             MaxVolumeSquenceNumber = Utilities.ToUInt16LittleEndian(buffer, offset + 58);
             InterchangeLevel = Utilities.ToUInt16LittleEndian(buffer, offset + 60);
             MaxInterchangeLevel = Utilities.ToUInt16LittleEndian(buffer, offset + 62);
             CharacterSetList = Utilities.ToUInt32LittleEndian(buffer, offset + 64);
             MaxCharacterSetList = Utilities.ToUInt32LittleEndian(buffer, offset + 68);
-            VolumeSetIdentifier = UdfUtilities.ReadDString(buffer, offset + 72, 128);
+            VolumeSetIdentifier = UdfUtilities.ReadDString(buffer, offset + 72, count: 128);
             DescriptorCharSet = Utilities.ToStruct<CharacterSetSpecification>(buffer, offset + 200);
             ExplanatoryCharSet = Utilities.ToStruct<CharacterSetSpecification>(buffer, offset + 264);
             VolumeAbstractExtent = new ExtentDescriptor();
@@ -73,7 +73,7 @@ namespace RC.Framework.FileSystem.Udf
             ApplicationIdentifier = Utilities.ToStruct<ApplicationEntityIdentifier>(buffer, offset + 344);
             RecordingTime = UdfUtilities.ParseTimestamp(buffer, offset + 376);
             ImplementationIdentifier = Utilities.ToStruct<ImplementationEntityIdentifier>(buffer, offset + 388);
-            ImplementationUse = Utilities.ToByteArray(buffer, offset + 420, 64);
+            ImplementationUse = Utilities.ToByteArray(buffer, offset + 420, length: 64);
             PredecessorVolumeDescriptorSequenceLocation = Utilities.ToUInt32LittleEndian(buffer, offset + 484);
             Flags = Utilities.ToUInt16LittleEndian(buffer, offset + 488);
 

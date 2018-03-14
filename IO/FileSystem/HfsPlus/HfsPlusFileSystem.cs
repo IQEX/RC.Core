@@ -58,9 +58,9 @@ namespace RC.Framework.FileSystem.HfsPlus
 
             stream.Position = 1024;
 
-            byte[] headerBuf = Utilities.ReadFully(stream, 512);
+            byte[] headerBuf = Utilities.ReadFully(stream, count: 512);
             VolumeHeader hdr = new VolumeHeader();
-            hdr.ReadFrom(headerBuf, 0);
+            hdr.ReadFrom(headerBuf, offset: 0);
 
             return hdr.IsValid;
         }

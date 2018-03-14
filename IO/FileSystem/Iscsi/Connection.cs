@@ -152,7 +152,7 @@ namespace RC.Framework.FileSystem.Iscsi
         {
             LogoutRequest req = new LogoutRequest(this);
             byte[] packet = req.GetBytes(reason);
-            _stream.Write(packet, 0, packet.Length);
+            _stream.Write(packet, offset: 0, count: packet.Length);
             _stream.Flush();
 
             ProtocolDataUnit pdu = ReadPdu();
@@ -182,8 +182,8 @@ namespace RC.Framework.FileSystem.Iscsi
             CommandRequest req = new CommandRequest(this, cmd.TargetLun);
 
             int toSend = Math.Min(Math.Min(outBufferCount, _session.ImmediateData ? _session.FirstBurstLength : 0), MaxTargetReceiveDataSegmentLength);
-            byte[] packet = req.GetBytes(cmd, outBuffer, outBufferOffset, toSend, true, inBufferMax != 0, outBufferCount != 0, (uint)(outBufferCount != 0 ? outBufferCount : inBufferMax));
-            _stream.Write(packet, 0, packet.Length);
+            byte[] packet = req.GetBytes(cmd, outBuffer, outBufferOffset, toSend, isFinalData: true, willRead: inBufferMax != 0, willWrite: outBufferCount != 0, expected: (uint)(outBufferCount != 0 ? outBufferCount : inBufferMax));
+            _stream.Write(packet, offset: 0, count: packet.Length);
             _stream.Flush();
 
             int numApproved = 0;
@@ -203,7 +203,7 @@ namespace RC.Framework.FileSystem.Iscsi
 
                     DataOutPacket pkt = new DataOutPacket(this, cmd.TargetLun);
                     packet = pkt.GetBytes(outBuffer, outBufferOffset + numSent, toSend, toSend == numApproved, pktsSent++, (uint)numSent, targetTransferTag);
-                    _stream.Write(packet, 0, packet.Length);
+                    _stream.Write(packet, offset: 0, count: packet.Length);
                     _stream.Flush();
 
                     numApproved -= toSend;
@@ -223,9 +223,9 @@ namespace RC.Framework.FileSystem.Iscsi
 
                     if (resp.StatusPresent && resp.Status == ScsiStatus.CheckCondition)
                     {
-                        ushort senseLength = Utilities.ToUInt16BigEndian(pdu.ContentData, 0);
+                        ushort senseLength = Utilities.ToUInt16BigEndian(pdu.ContentData, offset: 0);
                         byte[] senseData = new byte[senseLength];
-                        Array.Copy(pdu.ContentData, 2, senseData, 0, senseLength);
+                        Array.Copy(pdu.ContentData, sourceIndex: 2, destinationArray: senseData, destinationIndex: 0, length: senseLength);
                         throw new ScsiCommandException(resp.Status, "Target indicated SCSI failure", senseData);
                     }
                     else if (resp.StatusPresent && resp.Status != ScsiStatus.Good)
@@ -246,7 +246,7 @@ namespace RC.Framework.FileSystem.Iscsi
 
                     if (resp.ReadData != null)
                     {
-                        Array.Copy(resp.ReadData, 0, inBuffer, inBufferOffset + resp.BufferOffset, resp.ReadData.Length);
+                        Array.Copy(resp.ReadData, sourceIndex: 0, destinationArray: inBuffer, destinationIndex: inBufferOffset + resp.BufferOffset, length: resp.ReadData.Length);
                         numRead += resp.ReadData.Length;
                     }
 
@@ -264,10 +264,10 @@ namespace RC.Framework.FileSystem.Iscsi
             where T : ScsiResponse, new()
         {
             byte[] tempBuffer = new byte[expected];
-            int numRead = Send(cmd, buffer, offset, count, tempBuffer, 0, expected);
+            int numRead = Send(cmd, buffer, offset, count, tempBuffer, inBufferOffset: 0, inBufferMax: expected);
 
             T result = new T();
-            result.ReadFrom(tempBuffer, 0, numRead);
+            result.ReadFrom(tempBuffer, offset: 0, count: numRead);
             return result;
         }
 
@@ -277,12 +277,12 @@ namespace RC.Framework.FileSystem.Iscsi
             parameters.Add(SendTargetsParameter, "All");
 
             byte[] paramBuffer = new byte[parameters.Size];
-            parameters.WriteTo(paramBuffer, 0);
+            parameters.WriteTo(paramBuffer, offset: 0);
 
             TextRequest req = new TextRequest(this);
-            byte[] packet = req.GetBytes(0, paramBuffer, 0, paramBuffer.Length, true);
+            byte[] packet = req.GetBytes(lun: 0, data: paramBuffer, offset: 0, count: paramBuffer.Length, isFinalData: true);
 
-            _stream.Write(packet, 0, packet.Length);
+            _stream.Write(packet, offset: 0, count: packet.Length);
             _stream.Flush();
 
             ProtocolDataUnit pdu = ReadPdu();
@@ -291,7 +291,7 @@ namespace RC.Framework.FileSystem.Iscsi
             TextBuffer buffer = new TextBuffer();
             if (resp.TextData != null)
             {
-                buffer.ReadFrom(resp.TextData, 0, resp.TextData.Length);
+                buffer.ReadFrom(resp.TextData, offset: 0, length: resp.TextData.Length);
             }
 
             List<TargetInfo> targets = new List<TargetInfo>();
@@ -364,12 +364,12 @@ namespace RC.Framework.FileSystem.Iscsi
             // Send the request...
             //
             byte[] paramBuffer = new byte[parameters.Size];
-            parameters.WriteTo(paramBuffer, 0);
+            parameters.WriteTo(paramBuffer, offset: 0);
 
             LoginRequest req = new LoginRequest(this);
-            byte[] packet = req.GetBytes(paramBuffer, 0, paramBuffer.Length, true);
+            byte[] packet = req.GetBytes(paramBuffer, offset: 0, count: paramBuffer.Length, isFinalData: true);
 
-            _stream.Write(packet, 0, packet.Length);
+            _stream.Write(packet, offset: 0, count: packet.Length);
             _stream.Flush();
 
             //
@@ -388,20 +388,20 @@ namespace RC.Framework.FileSystem.Iscsi
             if (resp.Continue)
             {
                 MemoryStream ms = new MemoryStream();
-                ms.Write(resp.TextData, 0, resp.TextData.Length);
+                ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
 
                 while (resp.Continue)
                 {
                     pdu = ReadPdu();
                     resp = ParseResponse<LoginResponse>(pdu);
-                    ms.Write(resp.TextData, 0, resp.TextData.Length);
+                    ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
                 }
 
-                settings.ReadFrom(ms.GetBuffer(), 0, (int)ms.Length);
+                settings.ReadFrom(ms.GetBuffer(), offset: 0, length: (int)ms.Length);
             }
             else if (resp.TextData != null)
             {
-                settings.ReadFrom(resp.TextData, 0, resp.TextData.Length);
+                settings.ReadFrom(resp.TextData, offset: 0, length: resp.TextData.Length);
             }
 
             Authenticator authenticator = null;
@@ -433,12 +433,12 @@ namespace RC.Framework.FileSystem.Iscsi
                 parameters = new TextBuffer();
                 authenticator.GetParameters(parameters);
                 paramBuffer = new byte[parameters.Size];
-                parameters.WriteTo(paramBuffer, 0);
+                parameters.WriteTo(paramBuffer, offset: 0);
 
                 req = new LoginRequest(this);
-                packet = req.GetBytes(paramBuffer, 0, paramBuffer.Length, true);
+                packet = req.GetBytes(paramBuffer, offset: 0, count: paramBuffer.Length, isFinalData: true);
 
-                _stream.Write(packet, 0, packet.Length);
+                _stream.Write(packet, offset: 0, count: packet.Length);
                 _stream.Flush();
 
                 //
@@ -459,20 +459,20 @@ namespace RC.Framework.FileSystem.Iscsi
                     if (resp.Continue)
                     {
                         MemoryStream ms = new MemoryStream();
-                        ms.Write(resp.TextData, 0, resp.TextData.Length);
+                        ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
 
                         while (resp.Continue)
                         {
                             pdu = ReadPdu();
                             resp = ParseResponse<LoginResponse>(pdu);
-                            ms.Write(resp.TextData, 0, resp.TextData.Length);
+                            ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
                         }
 
-                        settings.ReadFrom(ms.GetBuffer(), 0, (int)ms.Length);
+                        settings.ReadFrom(ms.GetBuffer(), offset: 0, length: (int)ms.Length);
                     }
                     else
                     {
-                        settings.ReadFrom(resp.TextData, 0, resp.TextData.Length);
+                        settings.ReadFrom(resp.TextData, offset: 0, length: resp.TextData.Length);
                     }
 
                     authenticator.SetParameters(settings);
@@ -497,12 +497,12 @@ namespace RC.Framework.FileSystem.Iscsi
             _session.GetParametersToNegotiate(parameters, KeyUsagePhase.OperationalNegotiation);
 
             byte[] paramBuffer = new byte[parameters.Size];
-            parameters.WriteTo(paramBuffer, 0);
+            parameters.WriteTo(paramBuffer, offset: 0);
 
             LoginRequest req = new LoginRequest(this);
-            byte[] packet = req.GetBytes(paramBuffer, 0, paramBuffer.Length, true);
+            byte[] packet = req.GetBytes(paramBuffer, offset: 0, count: paramBuffer.Length, isFinalData: true);
 
-            _stream.Write(packet, 0, packet.Length);
+            _stream.Write(packet, offset: 0, count: packet.Length);
             _stream.Flush();
 
             //
@@ -521,20 +521,20 @@ namespace RC.Framework.FileSystem.Iscsi
             if (resp.Continue)
             {
                 MemoryStream ms = new MemoryStream();
-                ms.Write(resp.TextData, 0, resp.TextData.Length);
+                ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
 
                 while (resp.Continue)
                 {
                     pdu = ReadPdu();
                     resp = ParseResponse<LoginResponse>(pdu);
-                    ms.Write(resp.TextData, 0, resp.TextData.Length);
+                    ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
                 }
 
-                settings.ReadFrom(ms.GetBuffer(), 0, (int)ms.Length);
+                settings.ReadFrom(ms.GetBuffer(), offset: 0, length: (int)ms.Length);
             }
             else if (resp.TextData != null)
             {
-                settings.ReadFrom(resp.TextData, 0, resp.TextData.Length);
+                settings.ReadFrom(resp.TextData, offset: 0, length: resp.TextData.Length);
             }
 
             parameters = new TextBuffer();
@@ -543,12 +543,12 @@ namespace RC.Framework.FileSystem.Iscsi
             while (!resp.Transit || parameters.Count != 0)
             {
                 paramBuffer = new byte[parameters.Size];
-                parameters.WriteTo(paramBuffer, 0);
+                parameters.WriteTo(paramBuffer, offset: 0);
 
                 req = new LoginRequest(this);
-                packet = req.GetBytes(paramBuffer, 0, paramBuffer.Length, true);
+                packet = req.GetBytes(paramBuffer, offset: 0, count: paramBuffer.Length, isFinalData: true);
 
-                _stream.Write(packet, 0, packet.Length);
+                _stream.Write(packet, offset: 0, count: packet.Length);
                 _stream.Flush();
 
                 //
@@ -571,20 +571,20 @@ namespace RC.Framework.FileSystem.Iscsi
                     if (resp.Continue)
                     {
                         MemoryStream ms = new MemoryStream();
-                        ms.Write(resp.TextData, 0, resp.TextData.Length);
+                        ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
 
                         while (resp.Continue)
                         {
                             pdu = ReadPdu();
                             resp = ParseResponse<LoginResponse>(pdu);
-                            ms.Write(resp.TextData, 0, resp.TextData.Length);
+                            ms.Write(resp.TextData, offset: 0, count: resp.TextData.Length);
                         }
 
-                        settings.ReadFrom(ms.GetBuffer(), 0, (int)ms.Length);
+                        settings.ReadFrom(ms.GetBuffer(), offset: 0, length: (int)ms.Length);
                     }
                     else
                     {
-                        settings.ReadFrom(resp.TextData, 0, resp.TextData.Length);
+                        settings.ReadFrom(resp.TextData, offset: 0, length: resp.TextData.Length);
                     }
 
                     ConsumeParameters(settings, parameters);
@@ -622,7 +622,7 @@ namespace RC.Framework.FileSystem.Iscsi
                 ProtocolKeyAttribute attr = (ProtocolKeyAttribute)Attribute.GetCustomAttribute(propInfo, typeof(ProtocolKeyAttribute));
                 if (attr != null)
                 {
-                    object value = propInfo.GetGetMethod(true).Invoke(this, null);
+                    object value = propInfo.GetGetMethod(nonPublic: true).Invoke(this, parameters: null);
 
                     if (attr.ShouldTransmit(value, propInfo.PropertyType, phase, sessionType == SessionType.Discovery))
                     {
@@ -645,12 +645,12 @@ namespace RC.Framework.FileSystem.Iscsi
                     {
                         object value = ProtocolKeyAttribute.GetValueAsObject(inParameters[attr.Name], propInfo.PropertyType);
 
-                        propInfo.GetSetMethod(true).Invoke(this, new object[] { value });
+                        propInfo.GetSetMethod(nonPublic: true).Invoke(this, new object[] { value });
                         inParameters.Remove(attr.Name);
 
                         if (attr.Type == KeyType.Negotiated && !_negotiatedParameters.ContainsKey(attr.Name))
                         {
-                            value = propInfo.GetGetMethod(true).Invoke(this, null);
+                            value = propInfo.GetGetMethod(nonPublic: true).Invoke(this, parameters: null);
                             outParameters.Add(attr.Name, ProtocolKeyAttribute.GetValueAsString(value, propInfo.PropertyType));
                             _negotiatedParameters.Add(attr.Name, string.Empty);
                         }

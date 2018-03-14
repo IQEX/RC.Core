@@ -447,8 +447,8 @@ namespace Ionic.Zlib
         static StaticTree()
         {
             Literals = new StaticTree(lengthAndLiteralsTreeCodes, Tree.ExtraLengthBits, InternalConstants.LITERALS + 1, InternalConstants.L_CODES, InternalConstants.MAX_BITS);
-            Distances = new StaticTree(distTreeCodes, Tree.ExtraDistanceBits, 0, InternalConstants.D_CODES, InternalConstants.MAX_BITS);
-            BitLengths = new StaticTree(null, Tree.extra_blbits, 0, InternalConstants.BL_CODES, InternalConstants.MAX_BL_BITS);
+            Distances = new StaticTree(distTreeCodes, Tree.ExtraDistanceBits, extraBase: 0, elems: InternalConstants.D_CODES, maxLength: InternalConstants.MAX_BITS);
+            BitLengths = new StaticTree(treeCodes: null, extraBits: Tree.extra_blbits, extraBase: 0, elems: InternalConstants.BL_CODES, maxLength: InternalConstants.MAX_BL_BITS);
         }
     }
 

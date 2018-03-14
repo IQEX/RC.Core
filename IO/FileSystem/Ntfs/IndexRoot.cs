@@ -85,19 +85,19 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public int ReadFrom(byte[] buffer, int offset)
         {
-            _attrType = Utilities.ToUInt32LittleEndian(buffer, 0x00);
-            _collationRule = (AttributeCollationRule)Utilities.ToUInt32LittleEndian(buffer, 0x04);
-            _indexAllocationEntrySize = Utilities.ToUInt32LittleEndian(buffer, 0x08);
+            _attrType = Utilities.ToUInt32LittleEndian(buffer, offset: 0x00);
+            _collationRule = (AttributeCollationRule)Utilities.ToUInt32LittleEndian(buffer, offset: 0x04);
+            _indexAllocationEntrySize = Utilities.ToUInt32LittleEndian(buffer, offset: 0x08);
             _rawClustersPerIndexRecord = buffer[0x0C];
             return 16;
         }
 
         public void WriteTo(byte[] buffer, int offset)
         {
-            Utilities.WriteBytesLittleEndian(_attrType, buffer, 0);
-            Utilities.WriteBytesLittleEndian((uint)_collationRule, buffer, 0x04);
-            Utilities.WriteBytesLittleEndian(_indexAllocationEntrySize, buffer, 0x08);
-            Utilities.WriteBytesLittleEndian(_rawClustersPerIndexRecord, buffer, 0x0C);
+            Utilities.WriteBytesLittleEndian(_attrType, buffer, offset: 0);
+            Utilities.WriteBytesLittleEndian((uint)_collationRule, buffer, offset: 0x04);
+            Utilities.WriteBytesLittleEndian(_indexAllocationEntrySize, buffer, offset: 0x08);
+            Utilities.WriteBytesLittleEndian(_rawClustersPerIndexRecord, buffer, offset: 0x0C);
         }
 
         public void Dump(TextWriter writer, string indent)
@@ -125,8 +125,8 @@ namespace RC.Framework.FileSystem.Ntfs
                     return 1;
                 }
 
-                uint xHash = Utilities.ToUInt32LittleEndian(x, 0);
-                uint yHash = Utilities.ToUInt32LittleEndian(y, 0);
+                uint xHash = Utilities.ToUInt32LittleEndian(x, offset: 0);
+                uint yHash = Utilities.ToUInt32LittleEndian(y, offset: 0);
 
                 if (xHash < yHash)
                 {
@@ -137,8 +137,8 @@ namespace RC.Framework.FileSystem.Ntfs
                     return 1;
                 }
 
-                uint xId = Utilities.ToUInt32LittleEndian(x, 4);
-                uint yId = Utilities.ToUInt32LittleEndian(y, 4);
+                uint xId = Utilities.ToUInt32LittleEndian(x, offset: 4);
+                uint yId = Utilities.ToUInt32LittleEndian(y, offset: 4);
                 if (xId < yId)
                 {
                     return -1;
@@ -171,8 +171,8 @@ namespace RC.Framework.FileSystem.Ntfs
                     return 1;
                 }
 
-                uint xVal = Utilities.ToUInt32LittleEndian(x, 0);
-                uint yVal = Utilities.ToUInt32LittleEndian(y, 0);
+                uint xVal = Utilities.ToUInt32LittleEndian(x, offset: 0);
+                uint yVal = Utilities.ToUInt32LittleEndian(y, offset: 0);
 
                 if (xVal < yVal)
                 {
@@ -250,7 +250,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 byte xFnLen = x[0x40];
                 byte yFnLen = y[0x40];
 
-                return _stringComparer.Compare(x, 0x42, xFnLen * 2, y, 0x42, yFnLen * 2);
+                return _stringComparer.Compare(x, xOffset: 0x42, xLength: xFnLen * 2, y: y, yOffset: 0x42, yLength: yFnLen * 2);
             }
         }
 

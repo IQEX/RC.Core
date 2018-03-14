@@ -23,25 +23,25 @@
                 throw new Exception("Length > short.MaxValue");
             byte[] @Byte = Encoding.UTF8.GetBytes(str);
             ((IArchByteBoxWriter)this).wS((short)@Byte.Length);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wS(short sht)
         {
             byte[] @Byte = BitConverter.GetBytes(sht);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wB(byte[] data)
         {
             if (data.Length > short.MaxValue / 2 - 1)
                 throw new Exception("Length > short.MaxValue / 2");
             ((IArchByteBoxWriter)this).wS((short)data.Length);
-            nMStream.Write(data, 0, data.Length);
+            nMStream.Write(data, offset: 0, count: data.Length);
         }
         void IArchByteBoxWriter.wNB(byte[] data)
         {
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (data.Length == 0) throw new ArgumentException("Argument is empty collection", nameof(data));
-            nMStream.Write(data, 0, data.Length);
+            nMStream.Write(data, offset: 0, count: data.Length);
         }
         byte[] IArchByteBoxWriter.toArray()
         {
@@ -50,16 +50,16 @@
         void IArchByteBoxWriter.wF(float flt)
         {
             byte[] @Byte = BitConverter.GetBytes(flt);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wL(long lng)
         {
             byte[] @Byte = BitConverter.GetBytes(lng);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wGUID(Guid g)
         {
-            nMStream.Write(g.ToByteArray(), 0, g.ToByteArray().Length);
+            nMStream.Write(g.ToByteArray(), offset: 0, count: g.ToByteArray().Length);
         }
         IArchByteBoxWriter IArchByteBoxWriter.Clone()
         {
@@ -72,32 +72,32 @@
                 @Byte = BitConverter.GetBytes(DT.ToBinary());
             else
                 @Byte = BitConverter.GetBytes(DT.Ticks);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wI(int it)
         {
             byte[] @Byte = BitConverter.GetBytes(it);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wUl(ulong ulng)
         {
             byte[] @Byte = BitConverter.GetBytes(ulng);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wUI(uint uit)
         {
             byte[] @Byte = BitConverter.GetBytes(uit);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wUS(ushort ushrt)
         {
             byte[] @Byte = BitConverter.GetBytes(ushrt);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
         void IArchByteBoxWriter.wB(bool bo)
         {
             byte[] @Byte = BitConverter.GetBytes(bo);
-            nMStream.Write(@Byte, 0, @Byte.Length);
+            nMStream.Write(@Byte, offset: 0, count: @Byte.Length);
         }
     }
 }

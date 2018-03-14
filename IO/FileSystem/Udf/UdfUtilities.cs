@@ -103,15 +103,15 @@ namespace RC.Framework.FileSystem.Udf
                 minutesWest = (-1 & ~0xFFF) | minutesWest;
             }
 
-            int year = ForceRange(1, 9999, Utilities.ToInt16LittleEndian(buffer, offset + 2));
-            int month = ForceRange(1, 12, buffer[offset + 4]);
-            int day = ForceRange(1, 31, buffer[offset + 5]);
-            int hour = ForceRange(0, 23, buffer[offset + 6]);
-            int min = ForceRange(0, 59, buffer[offset + 7]);
-            int sec = ForceRange(0, 59, buffer[offset + 8]);
-            int csec = ForceRange(0, 99, buffer[offset + 9]);
-            int hmsec = ForceRange(0, 99, buffer[offset + 10]);
-            int msec = ForceRange(0, 99, buffer[offset + 11]);
+            int year = ForceRange(min: 1, max: 9999, val: Utilities.ToInt16LittleEndian(buffer, offset + 2));
+            int month = ForceRange(min: 1, max: 12, val: buffer[offset + 4]);
+            int day = ForceRange(min: 1, max: 31, val: buffer[offset + 5]);
+            int hour = ForceRange(min: 0, max: 23, val: buffer[offset + 6]);
+            int min = ForceRange(min: 0, max: 59, val: buffer[offset + 7]);
+            int sec = ForceRange(min: 0, max: 59, val: buffer[offset + 8]);
+            int csec = ForceRange(min: 0, max: 99, val: buffer[offset + 9]);
+            int hmsec = ForceRange(min: 0, max: 99, val: buffer[offset + 10]);
+            int msec = ForceRange(min: 0, max: 99, val: buffer[offset + 11]);
 
             try
             {

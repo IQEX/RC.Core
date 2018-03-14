@@ -44,13 +44,13 @@ namespace RC.Framework.FileSystem.ApplePartitionMap
             _stream = stream;
 
             stream.Position = 0;
-            byte[] initialBytes = Utilities.ReadFully(stream, 1024);
+            byte[] initialBytes = Utilities.ReadFully(stream, count: 1024);
 
             BlockZero b0 = new BlockZero();
-            b0.ReadFrom(initialBytes, 0);
+            b0.ReadFrom(initialBytes, offset: 0);
 
             PartitionMapEntry initialPart = new PartitionMapEntry(_stream);
-            initialPart.ReadFrom(initialBytes, 512);
+            initialPart.ReadFrom(initialBytes, offset: 512);
 
             byte[] partTableData = Utilities.ReadFully(stream, (int)(initialPart.MapEntries - 1) * 512);
 

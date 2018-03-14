@@ -149,7 +149,7 @@ namespace Ionic.Zip
                     return;
                 }
 
-                Reset(true);
+                Reset(whileSaving: true);
 
                 if (Verbose) StatusMessageTextWriter.WriteLine("saving....");
 
@@ -164,13 +164,13 @@ namespace Ionic.Zip
                 ICollection<ZipEntry> c = (SortEntriesBeforeSaving) ? EntriesSorted : Entries;
                 foreach (ZipEntry e in c) // _entries.Values
                 {
-                    OnSaveEntry(n, e, true);
+                    OnSaveEntry(n, e, before: true);
                     e.Write(WriteStream);
                     if (_saveOperationCanceled)
                         break;
 
                     n++;
-                    OnSaveEntry(n, e, false);
+                    OnSaveEntry(n, e, before: false);
                     if (_saveOperationCanceled)
                         break;
 
@@ -616,7 +616,7 @@ namespace Ionic.Zip
                     }
                 }
                 var a = ms.ToArray();
-                s.Write(a, 0, a.Length);
+                s.Write(a, offset: 0, count: a.Length);
                 aLength = a.Length;
             }
 
@@ -666,7 +666,7 @@ namespace Ionic.Zip
 #if NETCF
                     throw new ZipException("The archive requires a ZIP64 Central Directory. Consider enabling ZIP64 extensions.");
 #else
-                    System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(1);
+                    System.Diagnostics.StackFrame sf = new System.Diagnostics.StackFrame(skipFrames: 1);
                     if (sf.GetMethod().DeclaringType == typeof(ZipFile))
                         throw new ZipException("The archive requires a ZIP64 Central Directory. Consider setting the ZipFile.UseZip64WhenSaving property.");
                     else
@@ -682,24 +682,24 @@ namespace Ionic.Zip
                     UInt32 thisSegment = zss.ComputeSegment(a.Length + a2.Length);
                     int i = 16;
                     // number of this disk
-                    Array.Copy(BitConverter.GetBytes(thisSegment), 0, a, i, 4);
+                    Array.Copy(BitConverter.GetBytes(thisSegment), sourceIndex: 0, destinationArray: a, destinationIndex: i, length: 4);
                     i += 4;
                     // number of the disk with the start of the central directory
                     //Array.Copy(BitConverter.GetBytes(startSegment), 0, a, i, 4);
-                    Array.Copy(BitConverter.GetBytes(thisSegment), 0, a, i, 4);
+                    Array.Copy(BitConverter.GetBytes(thisSegment), sourceIndex: 0, destinationArray: a, destinationIndex: i, length: 4);
 
                     i = 60;
                     // offset 60
                     // number of the disk with the start of the zip64 eocd
-                    Array.Copy(BitConverter.GetBytes(thisSegment), 0, a, i, 4);
+                    Array.Copy(BitConverter.GetBytes(thisSegment), sourceIndex: 0, destinationArray: a, destinationIndex: i, length: 4);
                     i += 4;
                     i += 8;
 
                     // offset 72
                     // total number of disks
-                    Array.Copy(BitConverter.GetBytes(thisSegment), 0, a, i, 4);
+                    Array.Copy(BitConverter.GetBytes(thisSegment), sourceIndex: 0, destinationArray: a, destinationIndex: i, length: 4);
                 }
-                s.Write(a, 0, a.Length);
+                s.Write(a, offset: 0, count: a.Length);
             }
             else
                 a2 = GenCentralDirectoryFooter(Start, Finish, zip64, countOfEntries, comment, container);
@@ -714,15 +714,15 @@ namespace Ionic.Zip
                 UInt16 thisSegment = (UInt16) zss.ComputeSegment(a2.Length);
                 int i = 4;
                 // number of this disk
-                Array.Copy(BitConverter.GetBytes(thisSegment), 0, a2, i, 2);
+                Array.Copy(BitConverter.GetBytes(thisSegment), sourceIndex: 0, destinationArray: a2, destinationIndex: i, length: 2);
                 i += 2;
                 // number of the disk with the start of the central directory
                 //Array.Copy(BitConverter.GetBytes((UInt16)startSegment), 0, a2, i, 2);
-                Array.Copy(BitConverter.GetBytes(thisSegment), 0, a2, i, 2);
+                Array.Copy(BitConverter.GetBytes(thisSegment), sourceIndex: 0, destinationArray: a2, destinationIndex: i, length: 2);
                 i += 2;
             }
 
-            s.Write(a2, 0, a2.Length);
+            s.Write(a2, offset: 0, count: a2.Length);
 
             // reset the contiguous write property if necessary
             if (zss != null)
@@ -747,7 +747,7 @@ namespace Ionic.Zip
             if (t == null) return e;
 
             var bytes = e.GetBytes(t);
-            var t2 = e.GetString(bytes,0,bytes.Length);
+            var t2 = e.GetString(bytes,index: 0,count: bytes.Length);
             if (t2.Equals(t)) return e;
             return container.AlternateEncoding;
         }
@@ -777,7 +777,7 @@ namespace Ionic.Zip
             int i = 0;
             // signature
             byte[] sig = BitConverter.GetBytes(ZipConstants.EndOfCentralDirectorySignature);
-            Array.Copy(sig, 0, bytes, i, 4);
+            Array.Copy(sig, sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 4);
             i+=4;
 
             // number of this disk
@@ -877,7 +877,7 @@ namespace Ionic.Zip
             int i = 0;
             // signature
             byte[] sig = BitConverter.GetBytes(ZipConstants.Zip64EndOfCentralDirectoryRecordSignature);
-            Array.Copy(sig, 0, bytes, i, 4);
+            Array.Copy(sig, sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 4);
             i+=4;
 
             // There is a possibility to include "Extensible" data in the zip64
@@ -885,7 +885,7 @@ namespace Ionic.Zip
             // store, so the size of this record is always fixed.  Maybe it is used for
             // strong encryption data?  That is for another day.
             long DataSize = 44;
-            Array.Copy(BitConverter.GetBytes(DataSize), 0, bytes, i, 8);
+            Array.Copy(BitConverter.GetBytes(DataSize), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 8);
             i += 8;
 
             // offset 12
@@ -905,41 +905,41 @@ namespace Ionic.Zip
 
             // offset 24
             long numberOfEntries = entryCount;
-            Array.Copy(BitConverter.GetBytes(numberOfEntries), 0, bytes, i, 8);
+            Array.Copy(BitConverter.GetBytes(numberOfEntries), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 8);
             i += 8;
-            Array.Copy(BitConverter.GetBytes(numberOfEntries), 0, bytes, i, 8);
+            Array.Copy(BitConverter.GetBytes(numberOfEntries), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 8);
             i += 8;
 
             // offset 40
             Int64 SizeofCentraldirectory = EndOfCentralDirectory - StartOfCentralDirectory;
-            Array.Copy(BitConverter.GetBytes(SizeofCentraldirectory), 0, bytes, i, 8);
+            Array.Copy(BitConverter.GetBytes(SizeofCentraldirectory), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 8);
             i += 8;
-            Array.Copy(BitConverter.GetBytes(StartOfCentralDirectory), 0, bytes, i, 8);
+            Array.Copy(BitConverter.GetBytes(StartOfCentralDirectory), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 8);
             i += 8;
 
             // offset 56
             // now, the locator
             // signature
             sig = BitConverter.GetBytes(ZipConstants.Zip64EndOfCentralDirectoryLocatorSignature);
-            Array.Copy(sig, 0, bytes, i, 4);
+            Array.Copy(sig, sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 4);
             i+=4;
 
             // offset 60
             // number of the disk with the start of the zip64 eocd
             // (this will change later)  (it will?)
             uint x2 = (numSegments==0)?0:(uint)(numSegments-1);
-            Array.Copy(BitConverter.GetBytes(x2), 0, bytes, i, 4);
+            Array.Copy(BitConverter.GetBytes(x2), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 4);
             i+=4;
 
             // offset 64
             // relative offset of the zip64 eocd
-            Array.Copy(BitConverter.GetBytes(EndOfCentralDirectory), 0, bytes, i, 8);
+            Array.Copy(BitConverter.GetBytes(EndOfCentralDirectory), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 8);
             i += 8;
 
             // offset 72
             // total number of disks
             // (this will change later)
-            Array.Copy(BitConverter.GetBytes(numSegments), 0, bytes, i, 4);
+            Array.Copy(BitConverter.GetBytes(numSegments), sourceIndex: 0, destinationArray: bytes, destinationIndex: i, length: 4);
             i+=4;
 
             return bytes;

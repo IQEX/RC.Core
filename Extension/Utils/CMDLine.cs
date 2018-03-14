@@ -259,15 +259,15 @@ namespace RC.Framework.Extension.Utils
 
             while (i < args.Length)
             {
-                if (args[i].Length > 1 && args[i][0] == '-')
+                if (args[i].Length > 1 && args[i][index: 0] == '-')
                 {
                     // The current string is a parameter name
-                    string key = args[i].Substring(1, args[i].Length - 1).ToLower();
+                    string key = args[i].Substring(startIndex: 1, length: args[i].Length - 1).ToLower();
                     string value = "";
                     i++;
                     if (i < args.Length)
                     {
-                        if (args[i].Length > 0 && args[i][0] == '-')
+                        if (args[i].Length > 0 && args[i][index: 0] == '-')
                         {
                             // The next string is a new parameter, do not nothing
                         }
@@ -335,7 +335,7 @@ namespace RC.Framework.Extension.Utils
     {
         public ConsoleCmdLine()
         {
-            base.RegisterParameter(new CmdLineString("help", false, "Prints the help screen."));
+            base.RegisterParameter(new CmdLineString("help", required: false, helpMessage: "Prints the help screen."));
         }
         public new string[] Parse(string[] args)
         {
@@ -355,14 +355,14 @@ namespace RC.Framework.Extension.Utils
                 //foreach(string s in base.HelpScreen().Split('\n'))
                 //    Console.WriteLine(s);
                 Console.WriteLine(base.HelpScreen());
-                System.Environment.Exit(0);
+                System.Environment.Exit(exitCode: 0);
             }
 
             if (error != "")
             {
                 Console.WriteLine(error);
                 Console.WriteLine("Use -help for more information.");
-                System.Environment.Exit(1);
+                System.Environment.Exit(exitCode: 1);
             }
             return ret;
         }

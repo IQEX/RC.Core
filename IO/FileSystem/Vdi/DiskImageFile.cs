@@ -129,7 +129,7 @@ namespace RC.Framework.FileSystem.Vdi
         public static DiskImageFile InitializeFixed(Stream stream, Ownership ownsStream, long capacity)
         {
             PreHeaderRecord preHeader = PreHeaderRecord.Initialized();
-            HeaderRecord header = HeaderRecord.Initialized(ImageType.Fixed, ImageFlags.None, capacity, 1024 * 1024, 0);
+            HeaderRecord header = HeaderRecord.Initialized(ImageType.Fixed, ImageFlags.None, capacity, 1024 * 1024, blockExtra: 0);
 
             byte[] blockTable = new byte[header.BlockCount * 4];
             for (int i = 0; i < header.BlockCount; ++i)
@@ -144,7 +144,7 @@ namespace RC.Framework.FileSystem.Vdi
             header.Write(stream);
 
             stream.Position = header.BlocksOffset;
-            stream.Write(blockTable, 0, blockTable.Length);
+            stream.Write(blockTable, offset: 0, count: blockTable.Length);
 
             long totalSize = header.DataOffset + ((long)header.BlockSize * (long)header.BlockCount);
             if (stream.Length < totalSize)
@@ -165,7 +165,7 @@ namespace RC.Framework.FileSystem.Vdi
         public static DiskImageFile InitializeDynamic(Stream stream, Ownership ownsStream, long capacity)
         {
             PreHeaderRecord preHeader = PreHeaderRecord.Initialized();
-            HeaderRecord header = HeaderRecord.Initialized(ImageType.Dynamic, ImageFlags.None, capacity, 1024 * 1024, 0);
+            HeaderRecord header = HeaderRecord.Initialized(ImageType.Dynamic, ImageFlags.None, capacity, 1024 * 1024, blockExtra: 0);
 
             byte[] blockTable = new byte[header.BlockCount * 4];
             for (int i = 0; i < blockTable.Length; ++i)
@@ -180,7 +180,7 @@ namespace RC.Framework.FileSystem.Vdi
             header.Write(stream);
 
             stream.Position = header.BlocksOffset;
-            stream.Write(blockTable, 0, blockTable.Length);
+            stream.Write(blockTable, offset: 0, count: blockTable.Length);
 
             return new DiskImageFile(stream, ownsStream);
         }

@@ -45,7 +45,7 @@ namespace RC.Framework.Yaml
         public static AttributeType GetAttribute<AttributeType>(this System.Reflection.MemberInfo info)
             where AttributeType: Attribute
         {
-            var attrs = info.GetCustomAttributes(typeof(AttributeType), true);
+            var attrs = info.GetCustomAttributes(typeof(AttributeType), inherit: true);
             if ( attrs.Length > 0 ) {
                 return attrs.Last() as AttributeType;
             } else {

@@ -347,7 +347,7 @@ namespace RC.Framework.FileSystem.Vdi
             EventHandler handler = WriteOccurred;
             if (handler != null)
             {
-                handler(this, null);
+                handler(this, e: null);
             }
         }
 
@@ -367,10 +367,10 @@ namespace RC.Framework.FileSystem.Vdi
         private void WriteBlockTableEntry(int block)
         {
             byte[] buffer = new byte[4];
-            Utilities.WriteBytesLittleEndian(_blockTable[block], buffer, 0);
+            Utilities.WriteBytesLittleEndian(_blockTable[block], buffer, offset: 0);
 
             _fileStream.Position = _fileHeader.BlocksOffset + (block * 4);
-            _fileStream.Write(buffer, 0, 4);
+            _fileStream.Write(buffer, offset: 0, count: 4);
         }
 
         private void CheckDisposed()

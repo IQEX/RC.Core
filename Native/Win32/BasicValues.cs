@@ -10,7 +10,7 @@ namespace RC.Framework.Native.Win32
 		/// <summary>
 		/// Represents the TRUE value as <see cref="IntPtr"/>.
 		/// </summary>
-		public static readonly IntPtr TRUE = new IntPtr(1);
+		public static readonly IntPtr TRUE = new IntPtr(value: 1);
 		/// <summary>
 		/// Represents the FALSE value as <see cref="IntPtr"/>.
 		/// </summary>

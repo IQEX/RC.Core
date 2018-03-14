@@ -67,7 +67,7 @@ namespace RC.Framework.FileSystem.Ntfs
             }
 
             T value = new T();
-            value.ReadFrom(buffer, 0);
+            value.ReadFrom(buffer, offset: 0);
             return value;
         }
         
@@ -80,10 +80,10 @@ namespace RC.Framework.FileSystem.Ntfs
             where T : IByteArraySerializable, IDiagnosticTraceable, new()
         {
             byte[] buffer = new byte[value.Size];
-            value.WriteTo(buffer, 0);
+            value.WriteTo(buffer, offset: 0);
             using (Stream s = Open(FileAccess.Write))
             {
-                s.Write(buffer, 0, buffer.Length);
+                s.Write(buffer, offset: 0, count: buffer.Length);
                 s.SetLength(buffer.Length);
             }
         }
@@ -113,7 +113,7 @@ namespace RC.Framework.FileSystem.Ntfs
             }
             else
             {
-                result.Add(new StreamExtent(_attr.OffsetToAbsolutePos(0), _attr.Length));
+                result.Add(new StreamExtent(_attr.OffsetToAbsolutePos(offset: 0), _attr.Length));
             }
 
             return result.ToArray();

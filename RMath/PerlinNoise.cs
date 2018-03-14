@@ -130,7 +130,7 @@ namespace RC.Framework.RMath
             }
             set
             {
-                this.octaves = Math.Max(1, Math.Min(32, value));
+                this.octaves = Math.Max(val1: 1, val2: Math.Min(val1: 32, val2: value));
             }
         }
         /// <summary>

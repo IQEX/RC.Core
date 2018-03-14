@@ -64,10 +64,10 @@ namespace RC.Framework.FileSystem.Ntfs
         public void Save()
         {
             byte[] buffer = new byte[_structure.Size];
-            _structure.WriteTo(buffer, 0);
+            _structure.WriteTo(buffer, offset: 0);
             using (Stream s = Open(FileAccess.Write))
             {
-                s.Write(buffer, 0, buffer.Length);
+                s.Write(buffer, offset: 0, count: buffer.Length);
                 s.SetLength(buffer.Length);
             }
         }
@@ -94,7 +94,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 using (Stream s = Open(FileAccess.Read))
                 {
                         byte[] buffer = Utilities.ReadFully(s, (int)Length);
-                        _structure.ReadFrom(buffer, 0);
+                        _structure.ReadFrom(buffer, offset: 0);
                         _hasContent = s.Length != 0;
                 }
 

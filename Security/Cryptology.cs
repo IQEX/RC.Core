@@ -42,14 +42,14 @@ namespace RC.Framework.Security.X05h
         {
             hMake h = new hMake();
             hMxCode Code = (hMxCode)Enum.Parse(typeof(hMxCode), hCode.Split('-')[0]);
-            h.isMD5 = hCode.Split('-')[1][0] == 'M' ? true : false;
-            h.CountMD5Hashing = h.isMD5 ? int.Parse(hCode.Split('-')[1][1].ToString()) : 0;
-            h.isRSA = hCode.Split('-')[1][0] == 'R' ? true : false;
-            h.CountRsaHashing = h.isRSA ? int.Parse(hCode.Split('-')[1][1].ToString()) : 0;
-            h.isSHA = hCode.Split('-')[1][0] == 'S' ? true : false;
-            h.CountShaHashing = h.isSHA ? int.Parse(hCode.Split('-')[1][1].ToString()) : 0;
-            h.isSoul = hCode.Split('-')[2][0] == 'S' ? true : false;
-            h.isAssembly = hCode.Split('-')[2][4] == 'A' && hCode.Split('-')[2][5] == 'A' ? true : false;
+            h.isMD5 = hCode.Split('-')[1][index: 0] == 'M' ? true : false;
+            h.CountMD5Hashing = h.isMD5 ? int.Parse(hCode.Split('-')[1][index: 1].ToString()) : 0;
+            h.isRSA = hCode.Split('-')[1][index: 0] == 'R' ? true : false;
+            h.CountRsaHashing = h.isRSA ? int.Parse(hCode.Split('-')[1][index: 1].ToString()) : 0;
+            h.isSHA = hCode.Split('-')[1][index: 0] == 'S' ? true : false;
+            h.CountShaHashing = h.isSHA ? int.Parse(hCode.Split('-')[1][index: 1].ToString()) : 0;
+            h.isSoul = hCode.Split('-')[2][index: 0] == 'S' ? true : false;
+            h.isAssembly = hCode.Split('-')[2][index: 4] == 'A' && hCode.Split('-')[2][index: 5] == 'A' ? true : false;
             h.RawCode = hCode;
             return h;
         }

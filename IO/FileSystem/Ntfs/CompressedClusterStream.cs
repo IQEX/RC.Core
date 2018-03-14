@@ -69,7 +69,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public override void ExpandToClusters(long numVirtualClusters, NonResidentAttributeRecord extent, bool allocate)
         {
-            _rawStream.ExpandToClusters(Utilities.RoundUp(numVirtualClusters, _attr.CompressionUnitSize), extent, false);
+            _rawStream.ExpandToClusters(Utilities.RoundUp(numVirtualClusters, _attr.CompressionUnitSize), extent, allocate: false);
         }
 
         public override void TruncateToClusters(long numVirtualClusters)
@@ -136,7 +136,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
                     Array.Copy(buffer, offset + (totalWritten * _bytesPerCluster), _cacheBuffer, cacheOffset * _bytesPerCluster, toCopy * _bytesPerCluster);
 
-                    totalAllocated += CompressAndWriteClusters(_cacheBufferVcn, _attr.CompressionUnitSize, _cacheBuffer, 0);
+                    totalAllocated += CompressAndWriteClusters(_cacheBufferVcn, _attr.CompressionUnitSize, _cacheBuffer, offset: 0);
 
                     totalWritten += toCopy;
                 }
@@ -177,9 +177,9 @@ namespace RC.Framework.FileSystem.Ntfs
             int numWritten = 0;
             while (numWritten < count)
             {
-                int toWrite = Math.Min(count - numWritten, 16);
+                int toWrite = Math.Min(count - numWritten, val2: 16);
 
-                allocatedClusters += WriteClusters(focusVcn + numWritten, toWrite, zeroBuffer, 0);
+                allocatedClusters += WriteClusters(focusVcn + numWritten, toWrite, zeroBuffer, offset: 0);
 
                 numWritten += toWrite;
             }
@@ -195,7 +195,7 @@ namespace RC.Framework.FileSystem.Ntfs
             int totalAllocated = 0;
 
             int compressedLength = _ioBuffer.Length;
-            var result = compressor.Compress(buffer, offset, _attr.CompressionUnitSize * _bytesPerCluster, _ioBuffer, 0, ref compressedLength);
+            var result = compressor.Compress(buffer, offset, _attr.CompressionUnitSize * _bytesPerCluster, _ioBuffer, compressedOffset: 0, compressedLength: ref compressedLength);
             if (result == CompressionResult.AllZeros)
             {
                 totalAllocated -= _rawStream.ReleaseClusters(focusVcn, count);
@@ -204,7 +204,7 @@ namespace RC.Framework.FileSystem.Ntfs
             {
                 int compClusters = Utilities.Ceil(compressedLength, _bytesPerCluster);
                 totalAllocated += _rawStream.AllocateClusters(focusVcn, compClusters);
-                totalAllocated += _rawStream.WriteClusters(focusVcn, compClusters, _ioBuffer, 0);
+                totalAllocated += _rawStream.WriteClusters(focusVcn, compClusters, _ioBuffer, offset: 0);
                 totalAllocated -= _rawStream.ReleaseClusters(focusVcn + compClusters, _attr.CompressionUnitSize - compClusters);
             }
             else
@@ -229,16 +229,16 @@ namespace RC.Framework.FileSystem.Ntfs
                 if (_rawStream.AreAllClustersStored(cuStart, _attr.CompressionUnitSize))
                 {
                     // Uncompressed data - read straight into cache buffer
-                    _rawStream.ReadClusters(cuStart, _attr.CompressionUnitSize, _cacheBuffer, 0);
+                    _rawStream.ReadClusters(cuStart, _attr.CompressionUnitSize, _cacheBuffer, offset: 0);
                 }
                 else if (_rawStream.IsClusterStored(cuStart))
                 {
                     // Compressed data - read via IO buffer
-                    _rawStream.ReadClusters(cuStart, _attr.CompressionUnitSize, _ioBuffer, 0);
+                    _rawStream.ReadClusters(cuStart, _attr.CompressionUnitSize, _ioBuffer, offset: 0);
 
                     int expected = (int)Math.Min(_attr.Length - (vcn * _bytesPerCluster), _attr.CompressionUnitSize * _bytesPerCluster);
 
-                    int decomp = _context.Options.Compressor.Decompress(_ioBuffer, 0, _ioBuffer.Length, _cacheBuffer, 0);
+                    int decomp = _context.Options.Compressor.Decompress(_ioBuffer, sourceOffset: 0, sourceLength: _ioBuffer.Length, decompressed: _cacheBuffer, decompressedOffset: 0);
                     if (decomp < expected)
                     {
                         throw new IOException("Decompression returned too little data");
@@ -247,7 +247,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 else
                 {
                     // Sparse, wipe cache buffer directly
-                    Array.Clear(_cacheBuffer, 0, _cacheBuffer.Length);
+                    Array.Clear(_cacheBuffer, index: 0, length: _cacheBuffer.Length);
                 }
 
                 _cacheBufferVcn = cuStart;

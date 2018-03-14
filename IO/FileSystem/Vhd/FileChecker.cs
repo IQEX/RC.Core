@@ -351,7 +351,7 @@ namespace RC.Framework.FileSystem.Vhd
             _fileStream.Position = _fileStream.Length - Utilities.SectorSize;
             byte[] sector = Utilities.ReadFully(_fileStream, Utilities.SectorSize);
 
-            _footer = Footer.FromBytes(sector, 0);
+            _footer = Footer.FromBytes(sector, offset: 0);
             if (!_footer.IsValid())
             {
                 ReportError("Invalid VHD footer at end of file");
@@ -363,7 +363,7 @@ namespace RC.Framework.FileSystem.Vhd
             _fileStream.Position = 0;
             byte[] headerSector = Utilities.ReadFully(_fileStream, Utilities.SectorSize);
 
-            Footer header = Footer.FromBytes(headerSector, 0);
+            Footer header = Footer.FromBytes(headerSector, offset: 0);
             if (!header.IsValid())
             {
                 ReportError("Invalid VHD footer at start of file");

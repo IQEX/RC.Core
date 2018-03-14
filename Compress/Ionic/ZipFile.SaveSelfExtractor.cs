@@ -725,8 +725,8 @@ namespace Ionic.Zip
                 {
                     do
                     {
-                        n = instream.Read(bytes, 0, bytes.Length);
-                        outstream.Write(bytes, 0, n);
+                        n = instream.Read(bytes, offset: 0, count: bytes.Length);
+                        outstream.Write(bytes, offset: 0, count: n);
                     } while (n > 0);
                 }
             }
@@ -1037,9 +1037,9 @@ namespace Ionic.Zip
                         int n = 1;
                         while (n != 0)
                         {
-                            n = input.Read(buffer, 0, buffer.Length);
+                            n = input.Read(buffer, offset: 0, count: buffer.Length);
                             if (n != 0)
-                                WriteStream.Write(buffer, 0, n);
+                                WriteStream.Write(buffer, offset: 0, count: n);
                         }
                     }
                 }
@@ -1052,7 +1052,7 @@ namespace Ionic.Zip
                 {
                     if (Directory.Exists(unpackedResourceDir))
                     {
-                        try { Directory.Delete(unpackedResourceDir, true); }
+                        try { Directory.Delete(unpackedResourceDir, recursive: true); }
                         catch (System.IO.IOException exc1)
                         {
                             StatusMessageTextWriter.WriteLine("Warning: Exception: {0}", exc1);

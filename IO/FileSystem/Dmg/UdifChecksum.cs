@@ -39,7 +39,7 @@ namespace RC.Framework.FileSystem.Dmg
         {
             Type = Utilities.ToUInt32BigEndian(buffer, offset + 0);
             ChecksumSize = Utilities.ToUInt32BigEndian(buffer, offset + 4);
-            Data = Utilities.ToByteArray(buffer, offset + 8, 128);
+            Data = Utilities.ToByteArray(buffer, offset + 8, length: 128);
 
             return 136;
         }

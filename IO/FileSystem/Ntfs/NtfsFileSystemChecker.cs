@@ -101,9 +101,9 @@ namespace RC.Framework.FileSystem.Ntfs
             _context.Options = new NtfsOptions();
 
             _context.RawStream.Position = 0;
-            byte[] bytes = Utilities.ReadFully(_context.RawStream, 512);
+            byte[] bytes = Utilities.ReadFully(_context.RawStream, count: 512);
 
-            _context.BiosParameterBlock = BiosParameterBlock.FromBytes(bytes, 0);
+            _context.BiosParameterBlock = BiosParameterBlock.FromBytes(bytes, offset: 0);
 
             _context.Mft = new MasterFileTable(_context);
             File mftFile = new File(_context, _context.Mft.GetBootstrapRecord());
@@ -119,9 +119,9 @@ namespace RC.Framework.FileSystem.Ntfs
         private void DoCheck()
         {
             _context.RawStream.Position = 0;
-            byte[] bytes = Utilities.ReadFully(_context.RawStream, 512);
+            byte[] bytes = Utilities.ReadFully(_context.RawStream, count: 512);
 
-            _context.BiosParameterBlock = BiosParameterBlock.FromBytes(bytes, 0);
+            _context.BiosParameterBlock = BiosParameterBlock.FromBytes(bytes, offset: 0);
 
             //-----------------------------------------------------------------------
             // MASTER FILE TABLE
@@ -144,7 +144,7 @@ namespace RC.Framework.FileSystem.Ntfs
             //
 
             // Need UpperCase in order to verify some indexes (i.e. directories).
-            File ucFile = new File(_context, _context.Mft.GetRecord(MasterFileTable.UpCaseIndex, false));
+            File ucFile = new File(_context, _context.Mft.GetRecord(MasterFileTable.UpCaseIndex, ignoreMagic: false));
             _context.UpperCase = new UpperCase(ucFile);
 
             SelfCheckIndexes();
@@ -180,7 +180,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         private void VerifyWellKnownFilesExist()
         {
-            Directory rootDir = new Directory(_context, _context.Mft.GetRecord(MasterFileTable.RootDirIndex, false));
+            Directory rootDir = new Directory(_context, _context.Mft.GetRecord(MasterFileTable.RootDirIndex, ignoreMagic: false));
 
             DirectoryEntry extendDirEntry = rootDir.GetEntryByName("$Extend");
             if (extendDirEntry == null)
@@ -379,7 +379,7 @@ namespace RC.Framework.FileSystem.Ntfs
             int bytesPerSector = _context.BiosParameterBlock.BytesPerSector;
 
             // Check out the MFT's clusters
-            foreach (var range in file.GetAttribute(AttributeType.Data, null).GetClusters())
+            foreach (var range in file.GetAttribute(AttributeType.Data, name: null).GetClusters())
             {
                 if (!VerifyClusterRange(range))
                 {
@@ -388,7 +388,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
             }
 
-            foreach (var range in file.GetAttribute(AttributeType.Bitmap, null).GetClusters())
+            foreach (var range in file.GetAttribute(AttributeType.Bitmap, name: null).GetClusters())
             {
                 if (!VerifyClusterRange(range))
                 {
@@ -397,8 +397,8 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
             }
 
-            using (Stream mftStream = file.OpenStream(AttributeType.Data, null, FileAccess.Read))
-            using (Stream bitmapStream = file.OpenStream(AttributeType.Bitmap, null, FileAccess.Read))
+            using (Stream mftStream = file.OpenStream(AttributeType.Data, name: null, access: FileAccess.Read))
+            using (Stream bitmapStream = file.OpenStream(AttributeType.Bitmap, name: null, access: FileAccess.Read))
             {
                 Bitmap bitmap = new Bitmap(bitmapStream, long.MaxValue);
 
@@ -407,12 +407,12 @@ namespace RC.Framework.FileSystem.Ntfs
                 {
                     byte[] recordData = Utilities.ReadFully(mftStream, recordLength);
 
-                    string magic = Utilities.BytesToString(recordData, 0, 4);
+                    string magic = Utilities.BytesToString(recordData, offset: 0, count: 4);
                     if (magic != "FILE")
                     {
                         if (bitmap.IsPresent(index))
                         {
-                            ReportError("Invalid MFT record magic at index {0} - was ({2},{3},{4},{5}) \"{1}\"", index, magic.Trim('\0'), (int)magic[0], (int)magic[1], (int)magic[2], (int)magic[3]);
+                            ReportError("Invalid MFT record magic at index {0} - was ({2},{3},{4},{5}) \"{1}\"", index, magic.Trim('\0'), (int)magic[index: 0], (int)magic[index: 1], (int)magic[index: 2], (int)magic[index: 3]);
                         }
                     }
                     else
@@ -479,9 +479,9 @@ namespace RC.Framework.FileSystem.Ntfs
             byte[] tempBuffer = new byte[recordData.Length];
             Array.Copy(recordData, tempBuffer, tempBuffer.Length);
             GenericFixupRecord genericRecord = new GenericFixupRecord(bytesPerSector);
-            genericRecord.FromBytes(tempBuffer, 0);
+            genericRecord.FromBytes(tempBuffer, offset: 0);
 
-            int pos = Utilities.ToUInt16LittleEndian(genericRecord.Content, 0x14);
+            int pos = Utilities.ToUInt16LittleEndian(genericRecord.Content, offset: 0x14);
             while (Utilities.ToUInt32LittleEndian(genericRecord.Content, pos) != 0xFFFFFFFF)
             {
                 int attrLen;
@@ -526,7 +526,7 @@ namespace RC.Framework.FileSystem.Ntfs
             // Now consider record as a whole
             //
             FileRecord record = new FileRecord(bytesPerSector);
-            record.FromBytes(recordData, 0);
+            record.FromBytes(recordData, offset: 0);
 
             bool inUse = (record.Flags & FileRecordFlags.InUse) != 0;
             if (inUse != presentInBitmap)

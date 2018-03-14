@@ -37,7 +37,7 @@ namespace RC.Framework.Net.Nat
         // Finalizer is never used however its destructor, that releases the open ports, is invoked by the
         // process as part of the shuting down step. So, don't remove it!
         private static readonly Finalizer Finalizer = new Finalizer();
-        internal static readonly Timer RenewTimer = new Timer(RenewMappings, null, 5000, 2000);
+        internal static readonly Timer RenewTimer = new Timer(RenewMappings, state: null, dueTime: 5000, period: 2000);
 
         /// <summary>
         /// Discovers and returns an UPnp or Pmp NAT device; otherwise a <see cref="NatDeviceNotFoundException">NatDeviceNotFoundException</see>
@@ -67,7 +67,7 @@ namespace RC.Framework.Net.Nat
             Guard.IsTrue(portMapper.HasFlag(PortMapper.Upnp) || portMapper.HasFlag(PortMapper.Pmp), "portMapper");
             Guard.IsNotNull(cancellationTokenSource, "cancellationTokenSource");
 
-            var devices = await DiscoverAsync(portMapper, true, cancellationTokenSource);
+            var devices = await DiscoverAsync(portMapper, onlyOne: true, cts: cancellationTokenSource);
             var device = devices.FirstOrDefault();
             if(device==null)
             {
@@ -91,7 +91,7 @@ namespace RC.Framework.Net.Nat
             Guard.IsTrue(portMapper.HasFlag(PortMapper.Upnp) || portMapper.HasFlag(PortMapper.Pmp), "portMapper");
             Guard.IsNotNull(cancellationTokenSource, "cancellationTokenSource");
 
-            var devices = await DiscoverAsync(portMapper, false, cancellationTokenSource);
+            var devices = await DiscoverAsync(portMapper, onlyOne: false, cts: cancellationTokenSource);
             return devices.ToArray();
         }
 

@@ -37,7 +37,7 @@ namespace RC.Framework.FileSystem.Fat
         /// <summary>
         /// The Epoch for FAT file systems (1st Jan, 1980).
         /// </summary>
-        public static readonly DateTime Epoch = new DateTime(1980, 1, 1);
+        public static readonly DateTime Epoch = new DateTime(year: 1980, month: 1, day: 1);
 
         private TimeConverter _timeConverter;
         private Stream _data;
@@ -433,43 +433,43 @@ namespace RC.Framework.FileSystem.Fat
             if (type == FloppyDiskType.DoubleDensity)
             {
                 sectors = 1440;
-                WriteBPB(bpb, sectors, FatType.Fat12, 224, 0, 1, 1, new Geometry(80, 2, 9), true, volId, label);
+                WriteBPB(bpb, sectors, FatType.Fat12, maxRootEntries: 224, hiddenSectors: 0, reservedSectors: 1, sectorsPerCluster: 1, diskGeometry: new Geometry(cylinders: 80, headsPerCylinder: 2, sectorsPerTrack: 9), isFloppy: true, volId: volId, label: label);
             }
             else if (type == FloppyDiskType.HighDensity)
             {
                 sectors = 2880;
-                WriteBPB(bpb, sectors, FatType.Fat12, 224, 0, 1, 1, new Geometry(80, 2, 18), true, volId, label);
+                WriteBPB(bpb, sectors, FatType.Fat12, maxRootEntries: 224, hiddenSectors: 0, reservedSectors: 1, sectorsPerCluster: 1, diskGeometry: new Geometry(cylinders: 80, headsPerCylinder: 2, sectorsPerTrack: 18), isFloppy: true, volId: volId, label: label);
             }
             else if (type == FloppyDiskType.Extended)
             {
                 sectors = 5760;
-                WriteBPB(bpb, sectors, FatType.Fat12, 224, 0, 1, 1, new Geometry(80, 2, 36), true, volId, label);
+                WriteBPB(bpb, sectors, FatType.Fat12, maxRootEntries: 224, hiddenSectors: 0, reservedSectors: 1, sectorsPerCluster: 1, diskGeometry: new Geometry(cylinders: 80, headsPerCylinder: 2, sectorsPerTrack: 36), isFloppy: true, volId: volId, label: label);
             }
             else
             {
                 throw new ArgumentException("Unrecognised Floppy Disk type", "type");
             }
 
-            stream.Write(bpb, 0, bpb.Length);
+            stream.Write(bpb, offset: 0, count: bpb.Length);
 
             // Write both FAT copies
-            uint fatSize = CalcFatSize(sectors, FatType.Fat12, 1);
+            uint fatSize = CalcFatSize(sectors, FatType.Fat12, sectorsPerCluster: 1);
             byte[] fat = new byte[fatSize * Utilities.SectorSize];
             FatBuffer fatBuffer = new FatBuffer(FatType.Fat12, fat);
-            fatBuffer.SetNext(0, 0xFFFFFFF0);
-            fatBuffer.SetEndOfChain(1);
-            stream.Write(fat, 0, fat.Length);
-            stream.Write(fat, 0, fat.Length);
+            fatBuffer.SetNext(cluster: 0, next: 0xFFFFFFF0);
+            fatBuffer.SetEndOfChain(cluster: 1);
+            stream.Write(fat, offset: 0, count: fat.Length);
+            stream.Write(fat, offset: 0, count: fat.Length);
 
             // Write the (empty) root directory
             uint rootDirSectors = ((224 * 32) + Utilities.SectorSize - 1) / Utilities.SectorSize;
             byte[] rootDir = new byte[rootDirSectors * Utilities.SectorSize];
-            stream.Write(rootDir, 0, rootDir.Length);
+            stream.Write(rootDir, offset: 0, count: rootDir.Length);
 
             // Write a single byte at the end of the disk to ensure the stream is at least as big
             // as needed for this disk image.
             stream.Position = pos + (sectors * Utilities.SectorSize) - 1;
-            stream.WriteByte(0);
+            stream.WriteByte(value: 0);
 
             // Give the caller access to the new file system
             stream.Position = pos;
@@ -493,7 +493,7 @@ namespace RC.Framework.FileSystem.Fat
                     disk.Geometry,
                     (int)disk.Partitions[partitionIndex].FirstSector,
                     (int)(1 + disk.Partitions[partitionIndex].LastSector - disk.Partitions[partitionIndex].FirstSector),
-                    0);
+                    reservedSectors: 0);
             }
         }
 
@@ -590,8 +590,8 @@ namespace RC.Framework.FileSystem.Fat
                 }
             }
 
-            WriteBPB(bpb, (uint)sectorCount, fatType, maxRootEntries, (uint)firstSector, (ushort)reservedSectors, sectorsPerCluster, diskGeometry, false, volId, label);
-            stream.Write(bpb, 0, bpb.Length);
+            WriteBPB(bpb, (uint)sectorCount, fatType, maxRootEntries, (uint)firstSector, (ushort)reservedSectors, sectorsPerCluster, diskGeometry, isFloppy: false, volId: volId, label: label);
+            stream.Write(bpb, offset: 0, count: bpb.Length);
 
             /*
              * Skip the reserved sectors
@@ -605,17 +605,17 @@ namespace RC.Framework.FileSystem.Fat
 
             byte[] fat = new byte[CalcFatSize((uint)sectorCount, fatType, sectorsPerCluster) * Utilities.SectorSize];
             FatBuffer fatBuffer = new FatBuffer(fatType, fat);
-            fatBuffer.SetNext(0, 0xFFFFFFF8);
-            fatBuffer.SetEndOfChain(1);
+            fatBuffer.SetNext(cluster: 0, next: 0xFFFFFFF8);
+            fatBuffer.SetEndOfChain(cluster: 1);
             if (fatType >= FatType.Fat32)
             {
                 // Mark cluster 2 as End-of-chain (i.e. root directory
                 // is a single cluster in length)
-                fatBuffer.SetEndOfChain(2);
+                fatBuffer.SetEndOfChain(cluster: 2);
             }
 
-            stream.Write(fat, 0, fat.Length);
-            stream.Write(fat, 0, fat.Length);
+            stream.Write(fat, offset: 0, count: fat.Length);
+            stream.Write(fat, offset: 0, count: fat.Length);
 
             /*
              * Write the (empty) root directory
@@ -632,7 +632,7 @@ namespace RC.Framework.FileSystem.Fat
             }
 
             byte[] rootDir = new byte[rootDirSectors * Utilities.SectorSize];
-            stream.Write(rootDir, 0, rootDir.Length);
+            stream.Write(rootDir, offset: 0, count: rootDir.Length);
 
             /*
              * Make sure the stream is at least as large as the partition requires.
@@ -665,8 +665,8 @@ namespace RC.Framework.FileSystem.Fat
             }
 
             stream.Position = 0;
-            byte[] bytes = Utilities.ReadFully(stream, 512);
-            ushort bpbBytesPerSec = Utilities.ToUInt16LittleEndian(bytes, 11);
+            byte[] bytes = Utilities.ReadFully(stream, count: 512);
+            ushort bpbBytesPerSec = Utilities.ToUInt16LittleEndian(bytes, offset: 11);
             if (bpbBytesPerSec != 512)
             {
                 return false;
@@ -678,8 +678,8 @@ namespace RC.Framework.FileSystem.Fat
                 return false;
             }
 
-            ushort bpbTotSec16 = Utilities.ToUInt16LittleEndian(bytes, 19);
-            uint bpbTotSec32 = Utilities.ToUInt32LittleEndian(bytes, 32);
+            ushort bpbTotSec16 = Utilities.ToUInt16LittleEndian(bytes, offset: 19);
+            uint bpbTotSec32 = Utilities.ToUInt32LittleEndian(bytes, offset: 32);
 
             if (!((bpbTotSec16 == 0) ^ (bpbTotSec32 == 0)))
             {
@@ -1080,7 +1080,7 @@ namespace RC.Framework.FileSystem.Fat
                 }
 
                 // Remove the old file
-                destDir.DeleteEntry(destEntryId, true);
+                destDir.DeleteEntry(destEntryId, releaseContents: true);
             }
 
             // Add the new file's entry
@@ -1152,7 +1152,7 @@ namespace RC.Framework.FileSystem.Fat
             else if (parent != null && id >= 0)
             {
                 DirectoryEntry deadEntry = parent.GetEntry(id);
-                parent.DeleteEntry(id, true);
+                parent.DeleteEntry(id, releaseContents: true);
                 ForgetDirectory(deadEntry);
             }
             else
@@ -1180,7 +1180,7 @@ namespace RC.Framework.FileSystem.Fat
                 throw new FileNotFoundException("No such file", path);
             }
 
-            parent.DeleteEntry(id, true);
+            parent.DeleteEntry(id, releaseContents: true);
         }
 
         /// <summary>
@@ -1275,7 +1275,7 @@ namespace RC.Framework.FileSystem.Fat
             Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
             List<string> dirs = new List<string>();
-            DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, true, false);
+            DoSearch(dirs, path, re, searchOption == SearchOption.AllDirectories, dirs: true, files: false);
             return dirs.ToArray();
         }
 
@@ -1311,7 +1311,7 @@ namespace RC.Framework.FileSystem.Fat
             Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
             List<string> results = new List<string>();
-            DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, false, true);
+            DoSearch(results, path, re, searchOption == SearchOption.AllDirectories, dirs: false, files: true);
             return results.ToArray();
         }
 
@@ -1398,7 +1398,7 @@ namespace RC.Framework.FileSystem.Fat
             }
 
             destParent.AttachChildDirectory(FileName.FromPath(destinationDirectoryName, FatOptions.FileNameEncoding), GetDirectory(sourceDirectoryName));
-            sourceParent.DeleteEntry(sourceId, false);
+            sourceParent.DeleteEntry(sourceId, releaseContents: false);
         }
 
         /// <summary>
@@ -1464,22 +1464,22 @@ namespace RC.Framework.FileSystem.Fat
                 }
 
                 // Remove the old file
-                destDir.DeleteEntry(destEntryId, true);
+                destDir.DeleteEntry(destEntryId, releaseContents: true);
             }
 
             // Add the new file's entry and remove the old link to the file's contents
             destDir.AddEntry(newEntry);
-            sourceDir.DeleteEntry(sourceEntryId, false);
+            sourceDir.DeleteEntry(sourceEntryId, releaseContents: false);
         }
 
         internal DateTime ConvertToUtc(DateTime dateTime)
         {
-            return _timeConverter(dateTime, true);
+            return _timeConverter(dateTime, toUtc: true);
         }
 
         internal DateTime ConvertFromUtc(DateTime dateTime)
         {
-            return _timeConverter(dateTime, false);
+            return _timeConverter(dateTime, toUtc: false);
         }
 
         internal Directory GetDirectory(string path)
@@ -1621,7 +1621,7 @@ namespace RC.Framework.FileSystem.Fat
             bootSector[2] = 0x90;
 
             // OEM Name
-            Utilities.StringToBytes("DISCUTIL", bootSector, 3, 8);
+            Utilities.StringToBytes("DISCUTIL", bootSector, offset: 3, count: 8);
 
             // Bytes Per Sector (512)
             bootSector[11] = 0;
@@ -1631,43 +1631,43 @@ namespace RC.Framework.FileSystem.Fat
             bootSector[13] = sectorsPerCluster;
 
             // Reserved Sector Count
-            Utilities.WriteBytesLittleEndian(reservedSectors, bootSector, 14);
+            Utilities.WriteBytesLittleEndian(reservedSectors, bootSector, offset: 14);
 
             // Number of FATs
             bootSector[16] = 2;
 
             // Number of Entries in the root directory
-            Utilities.WriteBytesLittleEndian((ushort)maxRootEntries, bootSector, 17);
+            Utilities.WriteBytesLittleEndian((ushort)maxRootEntries, bootSector, offset: 17);
 
             // Total number of sectors (small)
-            Utilities.WriteBytesLittleEndian((ushort)(sectors < 0x10000 ? sectors : 0), bootSector, 19);
+            Utilities.WriteBytesLittleEndian((ushort)(sectors < 0x10000 ? sectors : 0), bootSector, offset: 19);
 
             // Media
             bootSector[21] = (byte)(isFloppy ? 0xF0 : 0xF8);
 
             // FAT size (FAT12/FAT16)
-            Utilities.WriteBytesLittleEndian((ushort)(fatType < FatType.Fat32 ? fatSectors : 0), bootSector, 22);
+            Utilities.WriteBytesLittleEndian((ushort)(fatType < FatType.Fat32 ? fatSectors : 0), bootSector, offset: 22);
 
             // Sectors Per Track
-            Utilities.WriteBytesLittleEndian((ushort)diskGeometry.SectorsPerTrack, bootSector, 24);
+            Utilities.WriteBytesLittleEndian((ushort)diskGeometry.SectorsPerTrack, bootSector, offset: 24);
 
             // Heads Per Cylinder
-            Utilities.WriteBytesLittleEndian((ushort)diskGeometry.HeadsPerCylinder, bootSector, 26);
+            Utilities.WriteBytesLittleEndian((ushort)diskGeometry.HeadsPerCylinder, bootSector, offset: 26);
 
             // Hidden Sectors
-            Utilities.WriteBytesLittleEndian((uint)hiddenSectors, bootSector, 28);
+            Utilities.WriteBytesLittleEndian((uint)hiddenSectors, bootSector, offset: 28);
 
             // Total number of sectors (large)
-            Utilities.WriteBytesLittleEndian((uint)(sectors >= 0x10000 ? sectors : 0), bootSector, 32);
+            Utilities.WriteBytesLittleEndian((uint)(sectors >= 0x10000 ? sectors : 0), bootSector, offset: 32);
 
             if (fatType < FatType.Fat32)
             {
-                WriteBS(bootSector, 36, isFloppy, volId, label, fatType);
+                WriteBS(bootSector, offset: 36, isFloppy: isFloppy, volId: volId, label: label, fatType: fatType);
             }
             else
             {
                 // FAT size (FAT32)
-                Utilities.WriteBytesLittleEndian((uint)fatSectors, bootSector, 36);
+                Utilities.WriteBytesLittleEndian((uint)fatSectors, bootSector, offset: 36);
 
                 // Ext flags: 0x80 = FAT 1 (i.e. Zero) active, mirroring
                 bootSector[40] = 0x00;
@@ -1678,18 +1678,18 @@ namespace RC.Framework.FileSystem.Fat
                 bootSector[43] = 0;
 
                 // First cluster of the root directory, always 2 since we don't do bad sectors...
-                Utilities.WriteBytesLittleEndian((uint)2, bootSector, 44);
+                Utilities.WriteBytesLittleEndian((uint)2, bootSector, offset: 44);
 
                 // Sector number of FSINFO
-                Utilities.WriteBytesLittleEndian((uint)1, bootSector, 48);
+                Utilities.WriteBytesLittleEndian((uint)1, bootSector, offset: 48);
 
                 // Sector number of the Backup Boot Sector
-                Utilities.WriteBytesLittleEndian((uint)6, bootSector, 50);
+                Utilities.WriteBytesLittleEndian((uint)6, bootSector, offset: 50);
 
                 // Reserved area - must be set to 0
-                Array.Clear(bootSector, 52, 12);
+                Array.Clear(bootSector, index: 52, length: 12);
 
-                WriteBS(bootSector, 64, isFloppy, volId, label, fatType);
+                WriteBS(bootSector, offset: 64, isFloppy: isFloppy, volId: volId, label: label, fatType: fatType);
             }
 
             bootSector[510] = 0x55;
@@ -1733,21 +1733,21 @@ namespace RC.Framework.FileSystem.Fat
             Utilities.WriteBytesLittleEndian(volId, bootSector, offset + 3);
 
             // Volume Label
-            Utilities.StringToBytes(label + "           ", bootSector, offset + 7, 11);
+            Utilities.StringToBytes(label + "           ", bootSector, offset + 7, count: 11);
 
             // File System Type
-            Utilities.StringToBytes(fsType, bootSector, offset + 18, 8);
+            Utilities.StringToBytes(fsType, bootSector, offset + 18, count: 8);
         }
 
         private static FatType DetectFATType(byte[] bpb)
         {
-            uint bpbBytesPerSec = Utilities.ToUInt16LittleEndian(bpb, 11);
-            uint bpbRootEntCnt = Utilities.ToUInt16LittleEndian(bpb, 17);
-            uint bpbFATSz16 = Utilities.ToUInt16LittleEndian(bpb, 22);
-            uint bpbFATSz32 = Utilities.ToUInt32LittleEndian(bpb, 36);
-            uint bpbTotSec16 = Utilities.ToUInt16LittleEndian(bpb, 19);
-            uint bpbTotSec32 = Utilities.ToUInt32LittleEndian(bpb, 32);
-            uint bpbResvdSecCnt = Utilities.ToUInt16LittleEndian(bpb, 14);
+            uint bpbBytesPerSec = Utilities.ToUInt16LittleEndian(bpb, offset: 11);
+            uint bpbRootEntCnt = Utilities.ToUInt16LittleEndian(bpb, offset: 17);
+            uint bpbFATSz16 = Utilities.ToUInt16LittleEndian(bpb, offset: 22);
+            uint bpbFATSz32 = Utilities.ToUInt32LittleEndian(bpb, offset: 36);
+            uint bpbTotSec16 = Utilities.ToUInt16LittleEndian(bpb, offset: 19);
+            uint bpbTotSec32 = Utilities.ToUInt32LittleEndian(bpb, offset: 32);
+            uint bpbResvdSecCnt = Utilities.ToUInt16LittleEndian(bpb, offset: 14);
             uint bpbNumFATs = bpb[16];
             uint bpbSecPerClus = bpb[13];
 
@@ -1828,33 +1828,33 @@ namespace RC.Framework.FileSystem.Fat
 
         private void ReadBPB()
         {
-            _bpbOEMName = Encoding.ASCII.GetString(_bootSector, 3, 8).TrimEnd('\0');
-            _bpbBytesPerSec = Utilities.ToUInt16LittleEndian(_bootSector, 11);
+            _bpbOEMName = Encoding.ASCII.GetString(_bootSector, index: 3, count: 8).TrimEnd('\0');
+            _bpbBytesPerSec = Utilities.ToUInt16LittleEndian(_bootSector, offset: 11);
             _bpbSecPerClus = _bootSector[13];
-            _bpbRsvdSecCnt = Utilities.ToUInt16LittleEndian(_bootSector, 14);
+            _bpbRsvdSecCnt = Utilities.ToUInt16LittleEndian(_bootSector, offset: 14);
             _bpbNumFATs = _bootSector[16];
-            _bpbRootEntCnt = Utilities.ToUInt16LittleEndian(_bootSector, 17);
-            _bpbTotSec16 = Utilities.ToUInt16LittleEndian(_bootSector, 19);
+            _bpbRootEntCnt = Utilities.ToUInt16LittleEndian(_bootSector, offset: 17);
+            _bpbTotSec16 = Utilities.ToUInt16LittleEndian(_bootSector, offset: 19);
             _bpbMedia = _bootSector[21];
-            _bpbFATSz16 = Utilities.ToUInt16LittleEndian(_bootSector, 22);
-            _bpbSecPerTrk = Utilities.ToUInt16LittleEndian(_bootSector, 24);
-            _bpbNumHeads = Utilities.ToUInt16LittleEndian(_bootSector, 26);
-            _bpbHiddSec = Utilities.ToUInt32LittleEndian(_bootSector, 28);
-            _bpbTotSec32 = Utilities.ToUInt32LittleEndian(_bootSector, 32);
+            _bpbFATSz16 = Utilities.ToUInt16LittleEndian(_bootSector, offset: 22);
+            _bpbSecPerTrk = Utilities.ToUInt16LittleEndian(_bootSector, offset: 24);
+            _bpbNumHeads = Utilities.ToUInt16LittleEndian(_bootSector, offset: 26);
+            _bpbHiddSec = Utilities.ToUInt32LittleEndian(_bootSector, offset: 28);
+            _bpbTotSec32 = Utilities.ToUInt32LittleEndian(_bootSector, offset: 32);
 
             if (_type != FatType.Fat32)
             {
-                ReadBS(36);
+                ReadBS(offset: 36);
             }
             else
             {
-                _bpbFATSz32 = Utilities.ToUInt32LittleEndian(_bootSector, 36);
-                _bpbExtFlags = Utilities.ToUInt16LittleEndian(_bootSector, 40);
-                _bpbFSVer = Utilities.ToUInt16LittleEndian(_bootSector, 42);
-                _bpbRootClus = Utilities.ToUInt32LittleEndian(_bootSector, 44);
-                _bpbFSInfo = Utilities.ToUInt16LittleEndian(_bootSector, 48);
-                _bpbBkBootSec = Utilities.ToUInt16LittleEndian(_bootSector, 50);
-                ReadBS(64);
+                _bpbFATSz32 = Utilities.ToUInt32LittleEndian(_bootSector, offset: 36);
+                _bpbExtFlags = Utilities.ToUInt16LittleEndian(_bootSector, offset: 40);
+                _bpbFSVer = Utilities.ToUInt16LittleEndian(_bootSector, offset: 42);
+                _bpbRootClus = Utilities.ToUInt32LittleEndian(_bootSector, offset: 44);
+                _bpbFSInfo = Utilities.ToUInt16LittleEndian(_bootSector, offset: 48);
+                _bpbBkBootSec = Utilities.ToUInt16LittleEndian(_bootSector, offset: 50);
+                ReadBS(offset: 64);
             }
         }
 
@@ -1863,14 +1863,14 @@ namespace RC.Framework.FileSystem.Fat
             _bsDrvNum = _bootSector[offset];
             _bsBootSig = _bootSector[offset + 2];
             _bsVolId = Utilities.ToUInt32LittleEndian(_bootSector, offset + 3);
-            _bsVolLab = Encoding.ASCII.GetString(_bootSector, offset + 7, 11);
-            _bsFilSysType = Encoding.ASCII.GetString(_bootSector, offset + 18, 8);
+            _bsVolLab = Encoding.ASCII.GetString(_bootSector, offset + 7, count: 11);
+            _bsFilSysType = Encoding.ASCII.GetString(_bootSector, offset + 18, count: 8);
         }
 
         private long GetDirectoryEntry(Directory dir, string path, out Directory parent)
         {
             string[] pathElements = path.Split(new char[] { '\\' }, StringSplitOptions.RemoveEmptyEntries);
-            return GetDirectoryEntry(dir, pathElements, 0, out parent);
+            return GetDirectoryEntry(dir, pathElements, pathOffset: 0, parent: out parent);
         }
 
         private long GetDirectoryEntry(Directory dir, string[] pathEntries, int pathOffset, out Directory parent)

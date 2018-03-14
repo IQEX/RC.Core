@@ -90,15 +90,15 @@ namespace RC.Framework.FileSystem.Udf
 
         public static bool TryFromStream(Stream stream, out DescriptorTag result)
         {
-            byte[] next = Utilities.ReadFully(stream, 512);
-            if (!DescriptorTag.IsValid(next, 0))
+            byte[] next = Utilities.ReadFully(stream, count: 512);
+            if (!DescriptorTag.IsValid(next, offset: 0))
             {
                 result = null;
                 return false;
             }
 
             DescriptorTag dt = new DescriptorTag();
-            dt.ReadFrom(next, 0);
+            dt.ReadFrom(next, offset: 0);
 
             result = dt;
             return true;

@@ -138,7 +138,7 @@ namespace RC.Framework.FileSystem.Iso9660
         public static uint CalcLength(string name, Encoding enc)
         {
             int nameBytes;
-            if (name.Length == 1 && name[0] <= 1)
+            if (name.Length == 1 && name[index: 0] <= 1)
             {
                 nameBytes = 1;
             }
@@ -164,14 +164,14 @@ namespace RC.Framework.FileSystem.Iso9660
             IsoUtilities.ToBothFromUInt16(buffer, offset + 28, VolumeSequenceNumber);
             byte lengthOfFileIdentifier;
 
-            if (FileIdentifier.Length == 1 && FileIdentifier[0] <= 1)
+            if (FileIdentifier.Length == 1 && FileIdentifier[index: 0] <= 1)
             {
-                buffer[offset + 33] = (byte)FileIdentifier[0];
+                buffer[offset + 33] = (byte)FileIdentifier[index: 0];
                 lengthOfFileIdentifier = 1;
             }
             else
             {
-                lengthOfFileIdentifier = (byte)IsoUtilities.WriteString(buffer, offset + 33, (int)(length - 33), false, FileIdentifier, enc);
+                lengthOfFileIdentifier = (byte)IsoUtilities.WriteString(buffer, offset + 33, (int)(length - 33), pad: false, str: FileIdentifier, enc: enc);
             }
 
             buffer[offset + 32] = lengthOfFileIdentifier;

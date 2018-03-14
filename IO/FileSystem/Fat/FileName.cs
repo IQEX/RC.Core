@@ -27,9 +27,9 @@ namespace RC.Framework.FileSystem.Fat
 
     internal sealed class FileName : IEquatable<FileName>
     {
-        public static readonly FileName SelfEntryName = new FileName(new byte[] { 0x2E, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, 0);
-        public static readonly FileName ParentEntryName = new FileName(new byte[] { 0x2E, 0x2E, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, 0);
-        public static readonly FileName Null = new FileName(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, 0);
+        public static readonly FileName SelfEntryName = new FileName(new byte[] { 0x2E, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, offset: 0);
+        public static readonly FileName ParentEntryName = new FileName(new byte[] { 0x2E, 0x2E, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, offset: 0);
+        public static readonly FileName Null = new FileName(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, offset: 0);
 
         private static readonly byte[] s_invalidBytes = new byte[] { 0x22, 0x2A, 0x2B, 0x2C, 0x2E, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x5B, 0x5C, 0x5D, 0x7C };
         private const byte SpaceByte = 0x20;
@@ -39,7 +39,7 @@ namespace RC.Framework.FileSystem.Fat
         public FileName(byte[] data, int offset)
         {
             _raw = new byte[11];
-            Array.Copy(data, offset, _raw, 0, 11);
+            Array.Copy(data, offset, _raw, destinationIndex: 0, length: 11);
         }
 
         public FileName(string name, Encoding encoding)
@@ -123,21 +123,21 @@ namespace RC.Framework.FileSystem.Fat
 
         public string GetSearchName(Encoding encoding)
         {
-            return encoding.GetString(_raw, 0, 8).TrimEnd() + "." + encoding.GetString(_raw, 8, 3).TrimEnd();
+            return encoding.GetString(_raw, index: 0, count: 8).TrimEnd() + "." + encoding.GetString(_raw, index: 8, count: 3).TrimEnd();
         }
 
         public string GetRawName(Encoding encoding)
         {
-            return encoding.GetString(_raw, 0, 11).TrimEnd();
+            return encoding.GetString(_raw, index: 0, count: 11).TrimEnd();
         }
 
         public FileName Deleted()
         {
             byte[] data = new byte[11];
-            Array.Copy(_raw, data, 11);
+            Array.Copy(_raw, data, length: 11);
             data[0] = 0xE5;
 
-            return new FileName(data, 0);
+            return new FileName(data, offset: 0);
         }
 
         public bool IsDeleted()
@@ -147,7 +147,7 @@ namespace RC.Framework.FileSystem.Fat
 
         public void GetBytes(byte[] data, int offset)
         {
-            Array.Copy(_raw, 0, data, offset, 11);
+            Array.Copy(_raw, sourceIndex: 0, destinationArray: data, destinationIndex: offset, length: 11);
         }
 
         public override bool Equals(object other)

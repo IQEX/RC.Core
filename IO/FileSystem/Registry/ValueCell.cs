@@ -31,7 +31,7 @@ namespace RC.Framework.FileSystem.Registry
         private string _name;
 
         public ValueCell(string name)
-            : this(-1)
+            : this(index: -1)
         {
             _name = name;
         }
@@ -101,7 +101,7 @@ namespace RC.Framework.FileSystem.Registry
                 nameLen = _name.Length;
             }
 
-            Utilities.StringToBytes("vk", buffer, offset, 2);
+            Utilities.StringToBytes("vk", buffer, offset, count: 2);
             Utilities.WriteBytesLittleEndian(nameLen, buffer, offset + 0x02);
             Utilities.WriteBytesLittleEndian(_dataLength, buffer, offset + 0x04);
             Utilities.WriteBytesLittleEndian(_dataIndex, buffer, offset + 0x08);

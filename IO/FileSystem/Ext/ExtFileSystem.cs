@@ -58,10 +58,10 @@ namespace RC.Framework.FileSystem.Ext
             }
 
             stream.Position = 1024;
-            byte[] superblockData = Utilities.ReadFully(stream, 1024);
+            byte[] superblockData = Utilities.ReadFully(stream, count: 1024);
 
             SuperBlock superblock = new SuperBlock();
-            superblock.ReadFrom(superblockData, 0);
+            superblock.ReadFrom(superblockData, offset: 0);
 
             return superblock.Magic == SuperBlock.Ext2Magic;
         }

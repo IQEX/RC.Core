@@ -112,8 +112,8 @@ namespace RC.Framework.FileSystem.SquashFs
             if (block.Available - _currentOffset < 4)
             {
                 byte[] buffer = new byte[4];
-                Read(buffer, 0, 4);
-                return Utilities.ToUInt32LittleEndian(buffer, 0);
+                Read(buffer, offset: 0, count: 4);
+                return Utilities.ToUInt32LittleEndian(buffer, offset: 0);
             }
             else
             {
@@ -130,8 +130,8 @@ namespace RC.Framework.FileSystem.SquashFs
             if (block.Available - _currentOffset < 4)
             {
                 byte[] buffer = new byte[4];
-                Read(buffer, 0, 4);
-                return Utilities.ToInt32LittleEndian(buffer, 0);
+                Read(buffer, offset: 0, count: 4);
+                return Utilities.ToInt32LittleEndian(buffer, offset: 0);
             }
             else
             {
@@ -148,8 +148,8 @@ namespace RC.Framework.FileSystem.SquashFs
             if (block.Available - _currentOffset < 2)
             {
                 byte[] buffer = new byte[2];
-                Read(buffer, 0, 2);
-                return Utilities.ToUInt16LittleEndian(buffer, 0);
+                Read(buffer, offset: 0, count: 2);
+                return Utilities.ToUInt16LittleEndian(buffer, offset: 0);
             }
             else
             {
@@ -166,8 +166,8 @@ namespace RC.Framework.FileSystem.SquashFs
             if (block.Available - _currentOffset < 2)
             {
                 byte[] buffer = new byte[2];
-                Read(buffer, 0, 2);
-                return Utilities.ToInt16LittleEndian(buffer, 0);
+                Read(buffer, offset: 0, count: 2);
+                return Utilities.ToInt16LittleEndian(buffer, offset: 0);
             }
             else
             {
@@ -184,8 +184,8 @@ namespace RC.Framework.FileSystem.SquashFs
             if (block.Available - _currentOffset < len)
             {
                 byte[] buffer = new byte[len];
-                Read(buffer, 0, len);
-                return Utilities.BytesToString(buffer, 0, len);
+                Read(buffer, offset: 0, count: len);
+                return Utilities.BytesToString(buffer, offset: 0, count: len);
             }
             else
             {

@@ -28,7 +28,7 @@ namespace RC.Framework.FileSystem.Xva
         private long _fileLength;
 
         public TarHeaderExtent(long start, string fileName, long fileLength)
-            : base(start, 512)
+            : base(start, length: 512)
         {
             _fileName = fileName;
             _fileLength = fileLength;
@@ -41,7 +41,7 @@ namespace RC.Framework.FileSystem.Xva
             TarHeader header = new TarHeader();
             header.FileName = _fileName;
             header.FileLength = _fileLength;
-            header.WriteTo(buffer, 0);
+            header.WriteTo(buffer, offset: 0);
 
             return buffer;
         }

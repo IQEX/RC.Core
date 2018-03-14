@@ -38,10 +38,10 @@ namespace RC.Framework.FileSystem.Ext
             : base(new DiscFileSystemOptions())
         {
             stream.Position = 1024;
-            byte[] superblockData = Utilities.ReadFully(stream, 1024);
+            byte[] superblockData = Utilities.ReadFully(stream, count: 1024);
 
             SuperBlock superblock = new SuperBlock();
-            superblock.ReadFrom(superblockData, 0);
+            superblock.ReadFrom(superblockData, offset: 0);
 
             if (superblock.Magic != SuperBlock.Ext2Magic)
             {
@@ -78,7 +78,7 @@ namespace RC.Framework.FileSystem.Ext
                 _blockGroups[i] = bg;
             }
 
-            RootDirectory = new Directory(Context, 2, GetInode(2));
+            RootDirectory = new Directory(Context, inodeNum: 2, inode: GetInode(inodeNum: 2));
         }
 
         public override string VolumeLabel
@@ -157,7 +157,7 @@ namespace RC.Framework.FileSystem.Ext
             Context.RawStream.Position = ((inodeBlockGroup.InodeTableBlock + block) * (long)superBlock.BlockSize) + (blockOffset * superBlock.InodeSize);
             byte[] inodeData = Utilities.ReadFully(Context.RawStream, superBlock.InodeSize);
 
-            return Utilities.ToStruct<Inode>(inodeData, 0);
+            return Utilities.ToStruct<Inode>(inodeData, offset: 0);
         }
 
         private BlockGroup GetBlockGroup(uint index)

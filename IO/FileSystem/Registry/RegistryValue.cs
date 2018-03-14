@@ -113,7 +113,7 @@ namespace RC.Framework.FileSystem.Registry
             {
                 int len = _cell.DataLength & 0x7FFFFFFF;
                 byte[] buffer = new byte[4];
-                Utilities.WriteBytesLittleEndian(_cell.DataIndex, buffer, 0);
+                Utilities.WriteBytesLittleEndian(_cell.DataIndex, buffer, offset: 0);
 
                 byte[] result = new byte[len];
                 Array.Copy(buffer, result, len);
@@ -163,7 +163,7 @@ namespace RC.Framework.FileSystem.Registry
                 _cell.DataType = valueType;
             }
 
-            _hive.UpdateCell(_cell, false);
+            _hive.UpdateCell(_cell, canRelocate: false);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace RC.Framework.FileSystem.Registry
             }
 
             byte[] data = ConvertToData(value, valueType);
-            SetData(data, 0, data.Length, valueType);
+            SetData(data, offset: 0, count: data.Length, valueType: valueType);
         }
 
         /// <summary>
@@ -216,17 +216,17 @@ namespace RC.Framework.FileSystem.Registry
                     return Encoding.Unicode.GetString(data).Trim('\0');
 
                 case RegistryValueType.Dword:
-                    return Utilities.ToInt32LittleEndian(data, 0);
+                    return Utilities.ToInt32LittleEndian(data, offset: 0);
 
                 case RegistryValueType.DwordBigEndian:
-                    return Utilities.ToInt32BigEndian(data, 0);
+                    return Utilities.ToInt32BigEndian(data, offset: 0);
 
                 case RegistryValueType.MultiString:
                     string multiString = Encoding.Unicode.GetString(data).Trim('\0');
                     return multiString.Split('\0');
 
                 case RegistryValueType.QWord:
-                    return string.Empty + Utilities.ToUInt64LittleEndian(data, 0);
+                    return string.Empty + Utilities.ToUInt64LittleEndian(data, offset: 0);
 
                 default:
                     return data;
@@ -247,23 +247,23 @@ namespace RC.Framework.FileSystem.Registry
                 case RegistryValueType.ExpandString:
                     string strValue = value.ToString();
                     data = new byte[(strValue.Length * 2) + 2];
-                    Encoding.Unicode.GetBytes(strValue, 0, strValue.Length, data, 0);
+                    Encoding.Unicode.GetBytes(strValue, charIndex: 0, charCount: strValue.Length, bytes: data, byteIndex: 0);
                     break;
 
                 case RegistryValueType.Dword:
                     data = new byte[4];
-                    Utilities.WriteBytesLittleEndian((int)value, data, 0);
+                    Utilities.WriteBytesLittleEndian((int)value, data, offset: 0);
                     break;
 
                 case RegistryValueType.DwordBigEndian:
                     data = new byte[4];
-                    Utilities.WriteBytesBigEndian((int)value, data, 0);
+                    Utilities.WriteBytesBigEndian((int)value, data, offset: 0);
                     break;
 
                 case RegistryValueType.MultiString:
                     string multiStrValue = string.Join("\0", (string[])value) + "\0";
                     data = new byte[(multiStrValue.Length * 2) + 2];
-                    Encoding.Unicode.GetBytes(multiStrValue, 0, multiStrValue.Length, data, 0);
+                    Encoding.Unicode.GetBytes(multiStrValue, charIndex: 0, charCount: multiStrValue.Length, bytes: data, byteIndex: 0);
                     break;
 
                 default:
@@ -292,7 +292,7 @@ namespace RC.Framework.FileSystem.Registry
                 default:
                     byte[] data = GetData();
                     string result = string.Empty;
-                    for (int i = 0; i < Math.Min(data.Length, 8); ++i)
+                    for (int i = 0; i < Math.Min(data.Length, val2: 8); ++i)
                     {
                         result += string.Format(CultureInfo.InvariantCulture, "{0:X2} ", (int)data[i]);
                     }

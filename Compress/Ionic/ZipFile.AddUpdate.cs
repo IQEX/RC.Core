@@ -82,7 +82,7 @@ namespace Ionic.Zip
         /// <returns>The <c>ZipEntry</c> added.</returns>
         public ZipEntry AddItem(string fileOrDirectoryName)
         {
-            return AddItem(fileOrDirectoryName, null);
+            return AddItem(fileOrDirectoryName, directoryPathInArchive: null);
         }
 
 
@@ -293,7 +293,7 @@ namespace Ionic.Zip
         /// <returns>The <c>ZipEntry</c> corresponding to the File added.</returns>
         public ZipEntry AddFile(string fileName)
         {
-            return AddFile(fileName, null);
+            return AddFile(fileName, directoryPathInArchive: null);
         }
 
 
@@ -516,7 +516,7 @@ namespace Ionic.Zip
         /// <seealso cref="Ionic.Zip.ZipFile.AddSelectedFiles(String, String)" />
         public void AddFiles(System.Collections.Generic.IEnumerable<String> fileNames)
         {
-            this.AddFiles(fileNames, null);
+            this.AddFiles(fileNames, directoryPathInArchive: null);
         }
 
 
@@ -547,7 +547,7 @@ namespace Ionic.Zip
         ///
         public void UpdateFiles(System.Collections.Generic.IEnumerable<String> fileNames)
         {
-            this.UpdateFiles(fileNames, null);
+            this.UpdateFiles(fileNames, directoryPathInArchive: null);
         }
 
 
@@ -595,7 +595,7 @@ namespace Ionic.Zip
         /// <seealso cref="Ionic.Zip.ZipFile.AddSelectedFiles(String, String)" />
         public void AddFiles(System.Collections.Generic.IEnumerable<String> fileNames, String directoryPathInArchive)
         {
-            AddFiles(fileNames, false, directoryPathInArchive);
+            AddFiles(fileNames, preserveDirHierarchy: false, directoryPathInArchive: directoryPathInArchive);
         }
 
 
@@ -680,7 +680,7 @@ namespace Ionic.Zip
                         this.AddFile(f, s);
                     }
                     else
-                        this.AddFile(f, null);
+                        this.AddFile(f, directoryPathInArchive: null);
                 }
             }
             else
@@ -833,7 +833,7 @@ namespace Ionic.Zip
         /// </returns>
         public ZipEntry UpdateFile(string fileName)
         {
-            return UpdateFile(fileName, null);
+            return UpdateFile(fileName, directoryPathInArchive: null);
         }
 
 
@@ -935,7 +935,7 @@ namespace Ionic.Zip
         /// </returns>
         public ZipEntry UpdateDirectory(string directoryName)
         {
-            return UpdateDirectory(directoryName, null);
+            return UpdateDirectory(directoryName, directoryPathInArchive: null);
         }
 
 
@@ -1017,7 +1017,7 @@ namespace Ionic.Zip
         /// </param>
         public void UpdateItem(string itemName)
         {
-            UpdateItem(itemName, null);
+            UpdateItem(itemName, directoryPathInArchive: null);
         }
 
 
@@ -1202,7 +1202,7 @@ namespace Ionic.Zip
             sw.Flush();
 
             // reset to allow reading later
-            ms.Seek(0, SeekOrigin.Begin);
+            ms.Seek(offset: 0, loc: SeekOrigin.Begin);
 
             return AddEntry(entryName, ms);
 
@@ -1817,7 +1817,7 @@ namespace Ionic.Zip
                 throw new ArgumentNullException("entryName");
 
             string directoryPathInArchive = null;
-            if (entryName.IndexOf('\\') != -1)
+            if (entryName.IndexOf(value: '\\') != -1)
             {
                 directoryPathInArchive = Path.GetDirectoryName(entryName);
                 entryName = Path.GetFileName(entryName);
@@ -1932,7 +1932,7 @@ namespace Ionic.Zip
         /// <returns>The <c>ZipEntry</c> added.</returns>
         public ZipEntry AddDirectory(string directoryName)
         {
-            return AddDirectory(directoryName, null);
+            return AddDirectory(directoryName, directoryPathInArchive: null);
         }
 
 
@@ -2060,7 +2060,7 @@ namespace Ionic.Zip
                 rootDirectoryPathInArchive = "";
             }
 
-            return AddOrUpdateDirectoryImpl(directoryName, rootDirectoryPathInArchive, action, true, 0);
+            return AddOrUpdateDirectoryImpl(directoryName, rootDirectoryPathInArchive, action, recurse: true, level: 0);
         }
 
 

@@ -42,13 +42,13 @@ namespace RC.Framework.FileSystem.Vdi
             PreHeaderRecord result = new PreHeaderRecord();
             result.FileInfo = "<<< Sun xVM VirtualBox Disk Image >>>\n";
             result.Signature = VdiSignature;
-            result.Version = new FileVersion(0x00010001);
+            result.Version = new FileVersion(value: 0x00010001);
             return result;
         }
 
         public int Read(byte[] buffer, int offset)
         {
-            FileInfo = Utilities.BytesToString(buffer, offset + 0, 64).TrimEnd(new char[] { '\0' });
+            FileInfo = Utilities.BytesToString(buffer, offset + 0, count: 64).TrimEnd(new char[] { '\0' });
             Signature = Utilities.ToUInt32LittleEndian(buffer, offset + 64);
             Version = new FileVersion(Utilities.ToUInt32LittleEndian(buffer, offset + 68));
             return Size;
@@ -56,20 +56,20 @@ namespace RC.Framework.FileSystem.Vdi
 
         public void Read(Stream s)
         {
-            byte[] buffer = Utilities.ReadFully(s, 72);
-            Read(buffer, 0);
+            byte[] buffer = Utilities.ReadFully(s, count: 72);
+            Read(buffer, offset: 0);
         }
 
         public void Write(Stream s)
         {
             byte[] buffer = new byte[Size];
-            Write(buffer, 0);
-            s.Write(buffer, 0, buffer.Length);
+            Write(buffer, offset: 0);
+            s.Write(buffer, offset: 0, count: buffer.Length);
         }
 
         public void Write(byte[] buffer, int offset)
         {
-            Utilities.StringToBytes(FileInfo, buffer, offset + 0, 64);
+            Utilities.StringToBytes(FileInfo, buffer, offset + 0, count: 64);
             Utilities.WriteBytesLittleEndian(Signature, buffer, offset + 64);
             Utilities.WriteBytesLittleEndian((uint)Version.Value, buffer, offset + 68);
         }

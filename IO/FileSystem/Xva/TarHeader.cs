@@ -37,30 +37,30 @@ namespace RC.Framework.FileSystem.Xva
 
         public void ReadFrom(byte[] buffer, int offset)
         {
-            FileName = ReadNullTerminatedString(buffer, offset + 0, 100);
-            FileLength = OctalToLong(ReadNullTerminatedString(buffer, offset + 124, 12));
+            FileName = ReadNullTerminatedString(buffer, offset + 0, length: 100);
+            FileLength = OctalToLong(ReadNullTerminatedString(buffer, offset + 124, length: 12));
         }
 
         public void WriteTo(byte[] buffer, int offset)
         {
             Array.Clear(buffer, offset, Length);
 
-            Utilities.StringToBytes(FileName, buffer, offset, 99);
-            Utilities.StringToBytes(LongToOctal(0, 7), buffer, offset + 100, 7);
-            Utilities.StringToBytes(LongToOctal(0, 7), buffer, offset + 108, 7);
-            Utilities.StringToBytes(LongToOctal(0, 7), buffer, offset + 116, 7);
-            Utilities.StringToBytes(LongToOctal(FileLength, 11), buffer, offset + 124, 11);
-            Utilities.StringToBytes(LongToOctal(0, 11), buffer, offset + 136, 11);
+            Utilities.StringToBytes(FileName, buffer, offset, count: 99);
+            Utilities.StringToBytes(LongToOctal(value: 0, length: 7), buffer, offset + 100, count: 7);
+            Utilities.StringToBytes(LongToOctal(value: 0, length: 7), buffer, offset + 108, count: 7);
+            Utilities.StringToBytes(LongToOctal(value: 0, length: 7), buffer, offset + 116, count: 7);
+            Utilities.StringToBytes(LongToOctal(FileLength, length: 11), buffer, offset + 124, count: 11);
+            Utilities.StringToBytes(LongToOctal(value: 0, length: 11), buffer, offset + 136, count: 11);
 
             // Checksum
-            Utilities.StringToBytes(new string(' ', 8), buffer, offset + 148, 8);
+            Utilities.StringToBytes(new string(c: ' ', count: 8), buffer, offset + 148, count: 8);
             long checkSum = 0;
             for (int i = 0; i < 512; ++i)
             {
                 checkSum += buffer[offset + i];
             }
 
-            Utilities.StringToBytes(LongToOctal(checkSum, 7), buffer, offset + 148, 7);
+            Utilities.StringToBytes(LongToOctal(checkSum, length: 7), buffer, offset + 148, count: 7);
             buffer[155] = 0;
         }
 
@@ -91,7 +91,7 @@ namespace RC.Framework.FileSystem.Xva
                 value = value / 8;
             }
 
-            return new string('0', length - result.Length) + result;
+            return new string(c: '0', count: length - result.Length) + result;
         }
     }
 }

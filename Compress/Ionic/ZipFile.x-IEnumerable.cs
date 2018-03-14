@@ -144,7 +144,7 @@ namespace Ionic.Zip
         /// <returns>
         /// The IEnumerator over the entries in the ZipFile.
         /// </returns>
-        [System.Runtime.InteropServices.DispId(-4)]
+        [System.Runtime.InteropServices.DispId(dispId: -4)]
         public System.Collections.IEnumerator GetNewEnum()          // the name of this method is not significant
         {
             return GetEnumerator();

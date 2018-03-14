@@ -74,18 +74,18 @@ namespace RC.Framework.FileSystem.Iscsi
             _commandSequenceNumber = _connection.Session.CommandSequenceNumber;
             _expectedStatusSequenceNumber = _connection.ExpectedStatusSequenceNumber;
 
-            byte[] buffer = new byte[Utilities.RoundUp(48 + count, 4)];
-            _basicHeader.WriteTo(buffer, 0);
+            byte[] buffer = new byte[Utilities.RoundUp(48 + count, unit: 4)];
+            _basicHeader.WriteTo(buffer, offset: 0);
             buffer[1] = PackState();
             buffer[2] = 0; // Max Version
             buffer[3] = 0; // Min Version
-            Utilities.WriteBytesBigEndian(_connection.Session.InitiatorSessionId, buffer, 8);
-            Utilities.WriteBytesBigEndian(IsidQualifier, buffer, 12);
-            Utilities.WriteBytesBigEndian(_connection.Session.TargetSessionId, buffer, 14);
-            Utilities.WriteBytesBigEndian(_connectionId, buffer, 20);
-            Utilities.WriteBytesBigEndian(_commandSequenceNumber, buffer, 24);
-            Utilities.WriteBytesBigEndian(_expectedStatusSequenceNumber, buffer, 28);
-            Array.Copy(data, offset, buffer, 48, count);
+            Utilities.WriteBytesBigEndian(_connection.Session.InitiatorSessionId, buffer, offset: 8);
+            Utilities.WriteBytesBigEndian(IsidQualifier, buffer, offset: 12);
+            Utilities.WriteBytesBigEndian(_connection.Session.TargetSessionId, buffer, offset: 14);
+            Utilities.WriteBytesBigEndian(_connectionId, buffer, offset: 20);
+            Utilities.WriteBytesBigEndian(_commandSequenceNumber, buffer, offset: 24);
+            Utilities.WriteBytesBigEndian(_expectedStatusSequenceNumber, buffer, offset: 28);
+            Array.Copy(data, offset, buffer, destinationIndex: 48, length: count);
             return buffer;
         }
 

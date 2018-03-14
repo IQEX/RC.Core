@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem.Compression
             int outputCount = inputCount;
 
             // First find the frequency of each value
-            Array.Clear(_nextPos, 0, _nextPos.Length);
+            Array.Clear(_nextPos, index: 0, length: _nextPos.Length);
             for (int i = inputOffset; i < inputOffset + inputCount; ++i)
             {
                 _nextPos[input[i]]++;

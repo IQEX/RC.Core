@@ -132,20 +132,20 @@ namespace RC.Framework.FileSystem.Ntfs
         {
             get
             {
-                using (Stream mftStream = _self.OpenStream(AttributeType.Data, null, FileAccess.Read))
+                using (Stream mftStream = _self.OpenStream(AttributeType.Data, name: null, access: FileAccess.Read))
                 {
                     uint index = 0;
                     while (mftStream.Position < mftStream.Length)
                     {
                         byte[] recordData = Utilities.ReadFully(mftStream, _recordLength);
 
-                        if (Utilities.BytesToString(recordData, 0, 4) != "FILE")
+                        if (Utilities.BytesToString(recordData, offset: 0, count: 4) != "FILE")
                         {
                             continue;
                         }
 
                         FileRecord record = new FileRecord(_bytesPerSector);
-                        record.FromBytes(recordData, 0);
+                        record.FromBytes(recordData, offset: 0);
                         record.LoadedIndex = index;
 
                         yield return record;
@@ -172,7 +172,7 @@ namespace RC.Framework.FileSystem.Ntfs
             _recordStream.Position = 0;
             byte[] mftSelfRecordData = Utilities.ReadFully(_recordStream, _recordLength);
             FileRecord mftSelfRecord = new FileRecord(_bytesPerSector);
-            mftSelfRecord.FromBytes(mftSelfRecordData, 0);
+            mftSelfRecord.FromBytes(mftSelfRecordData, offset: 0);
             _recordCache[MftIndex] = mftSelfRecord;
             return mftSelfRecord;
         }
@@ -186,10 +186,10 @@ namespace RC.Framework.FileSystem.Ntfs
                 _recordStream.Dispose();
             }
 
-            NtfsStream bitmapStream = _self.GetStream(AttributeType.Bitmap, null);
+            NtfsStream bitmapStream = _self.GetStream(AttributeType.Bitmap, name: null);
             _bitmap = new Bitmap(bitmapStream.Open(FileAccess.ReadWrite), long.MaxValue);
 
-            NtfsStream recordsStream = _self.GetStream(AttributeType.Data, null);
+            NtfsStream recordsStream = _self.GetStream(AttributeType.Data, name: null);
             _recordStream = recordsStream.Open(FileAccess.ReadWrite);
         }
 
@@ -206,28 +206,28 @@ namespace RC.Framework.FileSystem.Ntfs
 
             StandardInformation.InitializeNewFile(_self, FileAttributeFlags.Hidden | FileAttributeFlags.System);
 
-            NtfsStream recordsStream = _self.CreateStream(AttributeType.Data, null, firstRecordsCluster, numRecordsClusters, (uint)bpb.BytesPerCluster);
+            NtfsStream recordsStream = _self.CreateStream(AttributeType.Data, name: null, firstCluster: firstRecordsCluster, numClusters: numRecordsClusters, bytesPerCluster: (uint)bpb.BytesPerCluster);
             _recordStream = recordsStream.Open(FileAccess.ReadWrite);
             Wipe(_recordStream);
 
-            NtfsStream bitmapStream = _self.CreateStream(AttributeType.Bitmap, null, firstBitmapCluster, numBitmapClusters, (uint)bpb.BytesPerCluster);
+            NtfsStream bitmapStream = _self.CreateStream(AttributeType.Bitmap, name: null, firstCluster: firstBitmapCluster, numClusters: numBitmapClusters, bytesPerCluster: (uint)bpb.BytesPerCluster);
             using (Stream s = bitmapStream.Open(FileAccess.ReadWrite))
             {
                 Wipe(s);
-                s.SetLength(8);
+                s.SetLength(value: 8);
                 _bitmap = new Bitmap(s, long.MaxValue);
             }
 
             _recordLength = context.BiosParameterBlock.MftRecordSize;
             _bytesPerSector = context.BiosParameterBlock.BytesPerSector;
 
-            _bitmap.MarkPresentRange(0, 1);
+            _bitmap.MarkPresentRange(index: 0, count: 1);
 
             // Write the MFT's own record to itself
             byte[] buffer = new byte[_recordLength];
-            fileRec.ToBytes(buffer, 0);
+            fileRec.ToBytes(buffer, offset: 0);
             _recordStream.Position = 0;
-            _recordStream.Write(buffer, 0, _recordLength);
+            _recordStream.Write(buffer, offset: 0, count: _recordLength);
             _recordStream.Flush();
 
             return _self;
@@ -243,7 +243,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 // for MFT's own MFT record overflow.
                 for (int i = 15; i > 11; --i)
                 {
-                    FileRecord r = GetRecord(i, false);
+                    FileRecord r = GetRecord(i, ignoreMagic: false);
                     if (r.BaseFile.SequenceNumber == 0)
                     {
                         r.Reset();
@@ -263,7 +263,7 @@ namespace RC.Framework.FileSystem.Ntfs
             if (index * _recordLength >= _recordStream.Length)
             {
                 // Note: 64 is significant, since bitmap extends by 8 bytes (=64 bits) at a time.
-                long newEndIndex = Utilities.RoundUp(index + 1, 64);
+                long newEndIndex = Utilities.RoundUp(index + 1, unit: 64);
                 _recordStream.SetLength(newEndIndex * _recordLength);
                 for (long i = index; i < newEndIndex; ++i)
                 {
@@ -272,7 +272,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 }
             }
 
-            FileRecord newRecord = GetRecord(index, true);
+            FileRecord newRecord = GetRecord(index, ignoreMagic: true);
             newRecord.ReInitialize(_bytesPerSector, _recordLength, (uint)index);
 
             _recordCache[index] = newRecord;
@@ -300,7 +300,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public void RemoveRecord(FileRecordReference fileRef)
         {
-            FileRecord record = GetRecord(fileRef.MftIndex, false);
+            FileRecord record = GetRecord(fileRef.MftIndex, ignoreMagic: false);
             record.Reset();
             WriteRecord(record);
 
@@ -311,7 +311,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public FileRecord GetRecord(FileRecordReference fileReference)
         {
-            FileRecord result = GetRecord(fileReference.MftIndex, false);
+            FileRecord result = GetRecord(fileReference.MftIndex, ignoreMagic: false);
 
             if (result != null)
             {
@@ -329,7 +329,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public FileRecord GetRecord(long index, bool ignoreMagic)
         {
-            return GetRecord(index, ignoreMagic, false);
+            return GetRecord(index, ignoreMagic, ignoreBitmap: false);
         }
 
         public FileRecord GetRecord(long index, bool ignoreMagic, bool ignoreBitmap)
@@ -348,7 +348,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     byte[] recordBuffer = Utilities.ReadFully(_recordStream, _recordLength);
 
                     result = new FileRecord(_bytesPerSector);
-                    result.FromBytes(recordBuffer, 0, ignoreMagic);
+                    result.FromBytes(recordBuffer, offset: 0, ignoreMagic: ignoreMagic);
                     result.LoadedIndex = (uint)index;
                 }
                 else
@@ -372,10 +372,10 @@ namespace RC.Framework.FileSystem.Ntfs
             }
 
             byte[] buffer = new byte[_recordLength];
-            record.ToBytes(buffer, 0);
+            record.ToBytes(buffer, offset: 0);
 
             _recordStream.Position = record.MasterFileTableIndex * (long)_recordLength;
-            _recordStream.Write(buffer, 0, _recordLength);
+            _recordStream.Write(buffer, offset: 0, count: _recordLength);
             _recordStream.Flush();
 
             // We may have modified our own meta-data by extending the data stream, so
@@ -398,10 +398,10 @@ namespace RC.Framework.FileSystem.Ntfs
                 File mftMirror = _self.Context.GetFileByIndex(MftMirrorIndex);
                 if (mftMirror != null)
                 {
-                    using (Stream s = mftMirror.OpenStream(AttributeType.Data, null, FileAccess.ReadWrite))
+                    using (Stream s = mftMirror.OpenStream(AttributeType.Data, name: null, access: FileAccess.ReadWrite))
                     {
                         s.Position = record.MasterFileTableIndex * (long)_recordLength;
-                        s.Write(buffer, 0, _recordLength);
+                        s.Write(buffer, offset: 0, count: _recordLength);
                     }
                 }
             }
@@ -508,7 +508,7 @@ namespace RC.Framework.FileSystem.Ntfs
             while (numWiped < s.Length)
             {
                 int toWrite = (int)Math.Min(buffer.Length, s.Length - s.Position);
-                s.Write(buffer, 0, toWrite);
+                s.Write(buffer, offset: 0, count: toWrite);
                 numWiped += toWrite;
             }
         }

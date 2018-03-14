@@ -70,7 +70,7 @@ namespace Ionic.Zip
         /// <seealso cref="CheckZip(string,bool,System.IO.TextWriter)"/>
         public static bool CheckZip(string zipFileName)
         {
-            return CheckZip(zipFileName, false, null);
+            return CheckZip(zipFileName, fixIfNecessary: false, writer: null);
         }
 
 

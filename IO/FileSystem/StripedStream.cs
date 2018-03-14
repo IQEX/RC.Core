@@ -43,9 +43,9 @@ namespace RC.Framework.FileSystem
             _stripeSize = stripeSize;
             _ownsWrapped = ownsWrapped;
 
-            _canRead = _wrapped[0].CanRead;
-            _canWrite = _wrapped[0].CanWrite;
-            long subStreamLength = _wrapped[0].Length;
+            _canRead = _wrapped[index: 0].CanRead;
+            _canWrite = _wrapped[index: 0].CanWrite;
+            long subStreamLength = _wrapped[index: 0].Length;
 
             foreach (var stream in _wrapped)
             {
@@ -102,7 +102,7 @@ namespace RC.Framework.FileSystem
             {
                 // Temporary, indicate there are no 'unstored' extents.
                 // Consider combining extent information from all wrapped streams in future.
-                yield return new StreamExtent(0, _length);
+                yield return new StreamExtent(start: 0, length: _length);
             }
         }
 

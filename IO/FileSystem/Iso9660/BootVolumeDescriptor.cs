@@ -32,7 +32,7 @@ namespace RC.Framework.FileSystem.Iso9660
         private uint _catalogSector;
 
         public BootVolumeDescriptor(uint catalogSector)
-            : base(VolumeDescriptorType.Boot, 1)
+            : base(VolumeDescriptorType.Boot, version: 1)
         {
             _catalogSector = catalogSector;
         }
@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Iso9660
         public BootVolumeDescriptor(byte[] src, int offset)
             : base(src, offset)
         {
-            _systemId = Utilities.BytesToString(src, offset + 0x7, 0x20).TrimEnd('\0');
+            _systemId = Utilities.BytesToString(src, offset + 0x7, count: 0x20).TrimEnd('\0');
             _catalogSector = Utilities.ToUInt32LittleEndian(src, offset + 0x47);
         }
 
@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             base.WriteTo(buffer, offset);
 
-            Utilities.StringToBytes(ElToritoSystemIdentifier, buffer, offset + 7, 0x20);
+            Utilities.StringToBytes(ElToritoSystemIdentifier, buffer, offset + 7, count: 0x20);
             Utilities.WriteBytesLittleEndian(_catalogSector, buffer, offset + 0x47);
         }
     }

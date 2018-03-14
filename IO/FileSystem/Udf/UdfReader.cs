@@ -74,13 +74,13 @@ namespace RC.Framework.FileSystem.Udf
             while (validDescriptor)
             {
                 data.Position = vdpos;
-                int numRead = Utilities.ReadFully(data, buffer, 0, IsoUtilities.SectorSize);
+                int numRead = Utilities.ReadFully(data, buffer, offset: 0, length: IsoUtilities.SectorSize);
                 if (numRead != IsoUtilities.SectorSize)
                 {
                     break;
                 }
 
-                bvd = new BaseVolumeDescriptor(buffer, 0);
+                bvd = new BaseVolumeDescriptor(buffer, offset: 0);
                 switch (bvd.StandardIdentifier)
                 {
                     case "NSR02":
@@ -126,7 +126,7 @@ namespace RC.Framework.FileSystem.Udf
             private PrimaryVolumeDescriptor _pvd;
 
             public VfsUdfReader(Stream data)
-                : base(null)
+                : base(defaultOptions: null)
             {
                 _data = data;
 
@@ -136,19 +136,19 @@ namespace RC.Framework.FileSystem.Udf
                 }
 
                 // Try a number of possible sector sizes, from most common.
-                if (ProbeSectorSize(2048))
+                if (ProbeSectorSize(size: 2048))
                 {
                     _sectorSize = 2048;
                 }
-                else if (ProbeSectorSize(512))
+                else if (ProbeSectorSize(size: 512))
                 {
                     _sectorSize = 512;
                 }
-                else if (ProbeSectorSize(4096))
+                else if (ProbeSectorSize(size: 4096))
                 {
                     _sectorSize = 4096;
                 }
-                else if (ProbeSectorSize(1024))
+                else if (ProbeSectorSize(size: 1024))
                 {
                     _sectorSize = 1024;
                 }
@@ -161,7 +161,7 @@ namespace RC.Framework.FileSystem.Udf
             }
 
             public VfsUdfReader(Stream data, int sectorSize)
-                : base(null)
+                : base(defaultOptions: null)
             {
                 _data = data;
                 _sectorSize = (uint)sectorSize;
@@ -217,7 +217,7 @@ namespace RC.Framework.FileSystem.Udf
 
                 IBuffer dataBuffer = new StreamBuffer(_data, Ownership.None);
 
-                AnchorVolumeDescriptorPointer avdp = AnchorVolumeDescriptorPointer.FromStream(_data, 256, _sectorSize);
+                AnchorVolumeDescriptorPointer avdp = AnchorVolumeDescriptorPointer.FromStream(_data, sector: 256, sectorSize: _sectorSize);
 
                 uint sector = avdp.MainDescriptorSequence.Location;
                 bool terminatorFound = false;
@@ -277,9 +277,9 @@ namespace RC.Framework.FileSystem.Udf
                 }
 
                 byte[] fsdBuffer = UdfUtilities.ReadExtent(Context, _lvd.FileSetDescriptorLocation);
-                if (DescriptorTag.IsValid(fsdBuffer, 0))
+                if (DescriptorTag.IsValid(fsdBuffer, offset: 0))
                 {
-                    FileSetDescriptor fsd = Utilities.ToStruct<FileSetDescriptor>(fsdBuffer, 0);
+                    FileSetDescriptor fsd = Utilities.ToStruct<FileSetDescriptor>(fsdBuffer, offset: 0);
                     RootDirectory = (Directory)File.FromDescriptor(Context, fsd.RootDirectoryIcb);
                 }
             }

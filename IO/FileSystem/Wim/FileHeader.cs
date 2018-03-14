@@ -57,29 +57,29 @@ namespace RC.Framework.FileSystem.Wim
 
         public void Read(byte[] buffer, int offset)
         {
-            Tag = Utilities.BytesToString(buffer, offset, 8);
-            HeaderSize = Utilities.ToUInt32LittleEndian(buffer, 8);
-            Version = Utilities.ToUInt32LittleEndian(buffer, 12);
-            Flags = (FileFlags)Utilities.ToUInt32LittleEndian(buffer, 16);
-            CompressionSize = Utilities.ToInt32LittleEndian(buffer, 20);
-            WimGuid = Utilities.ToGuidLittleEndian(buffer, 24);
-            PartNumber = Utilities.ToUInt16LittleEndian(buffer, 40);
-            TotalParts = Utilities.ToUInt16LittleEndian(buffer, 42);
-            ImageCount = Utilities.ToUInt32LittleEndian(buffer, 44);
+            Tag = Utilities.BytesToString(buffer, offset, count: 8);
+            HeaderSize = Utilities.ToUInt32LittleEndian(buffer, offset: 8);
+            Version = Utilities.ToUInt32LittleEndian(buffer, offset: 12);
+            Flags = (FileFlags)Utilities.ToUInt32LittleEndian(buffer, offset: 16);
+            CompressionSize = Utilities.ToInt32LittleEndian(buffer, offset: 20);
+            WimGuid = Utilities.ToGuidLittleEndian(buffer, offset: 24);
+            PartNumber = Utilities.ToUInt16LittleEndian(buffer, offset: 40);
+            TotalParts = Utilities.ToUInt16LittleEndian(buffer, offset: 42);
+            ImageCount = Utilities.ToUInt32LittleEndian(buffer, offset: 44);
 
             OffsetTableHeader = new ShortResourceHeader();
-            OffsetTableHeader.Read(buffer, 48);
+            OffsetTableHeader.Read(buffer, offset: 48);
 
             XmlDataHeader = new ShortResourceHeader();
-            XmlDataHeader.Read(buffer, 72);
+            XmlDataHeader.Read(buffer, offset: 72);
 
             BootMetaData = new ShortResourceHeader();
-            BootMetaData.Read(buffer, 96);
+            BootMetaData.Read(buffer, offset: 96);
 
-            BootIndex = Utilities.ToUInt32LittleEndian(buffer, 120);
+            BootIndex = Utilities.ToUInt32LittleEndian(buffer, offset: 120);
 
             IntegrityHeader = new ShortResourceHeader();
-            IntegrityHeader.Read(buffer, 124);
+            IntegrityHeader.Read(buffer, offset: 124);
         }
 
         public bool IsValid()

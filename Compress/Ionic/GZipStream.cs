@@ -343,7 +343,7 @@ namespace Ionic.Zlib
         /// <param name="stream">The stream which will be read or written.</param>
         /// <param name="mode">Indicates whether the GZipStream will compress or decompress.</param>
         public GZipStream(Stream stream, CompressionMode mode)
-            : this(stream, mode, CompressionLevel.Default, false)
+            : this(stream, mode, CompressionLevel.Default, leaveOpen: false)
         {
         }
 
@@ -408,7 +408,7 @@ namespace Ionic.Zlib
         /// <param name="mode">Indicates whether the <c>GZipStream</c> will compress or decompress.</param>
         /// <param name="level">A tuning knob to trade speed for effectiveness.</param>
         public GZipStream(Stream stream, CompressionMode mode, CompressionLevel level)
-            : this(stream, mode, level, false)
+            : this(stream, mode, level, leaveOpen: false)
         {
         }
 
@@ -852,7 +852,7 @@ namespace Ionic.Zlib
         #endregion
 
 
-        internal static readonly System.DateTime _unixEpoch = new System.DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        internal static readonly System.DateTime _unixEpoch = new System.DateTime(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Utc);
 #if SILVERLIGHT || NETCF
         internal static readonly System.Text.Encoding iso8859dash1 = new Ionic.Encoding.Iso8859Dash1Encoding();
 #else
@@ -890,7 +890,7 @@ namespace Ionic.Zlib
             if (!LastModified.HasValue) LastModified = DateTime.Now;
             System.TimeSpan delta = LastModified.Value - _unixEpoch;
             Int32 timet = (Int32)delta.TotalSeconds;
-            Array.Copy(BitConverter.GetBytes(timet), 0, header, i, 4);
+            Array.Copy(BitConverter.GetBytes(timet), sourceIndex: 0, destinationArray: header, destinationIndex: i, length: 4);
             i += 4;
 
             // xflg
@@ -905,7 +905,7 @@ namespace Ionic.Zlib
             // filename
             if (fnLength != 0)
             {
-                Array.Copy(filenameBytes, 0, header, i, fnLength - 1);
+                Array.Copy(filenameBytes, sourceIndex: 0, destinationArray: header, destinationIndex: i, length: fnLength - 1);
                 i += fnLength - 1;
                 header[i++] = 0; // terminate
             }
@@ -913,12 +913,12 @@ namespace Ionic.Zlib
             // comment
             if (cbLength != 0)
             {
-                Array.Copy(commentBytes, 0, header, i, cbLength - 1);
+                Array.Copy(commentBytes, sourceIndex: 0, destinationArray: header, destinationIndex: i, length: cbLength - 1);
                 i += cbLength - 1;
                 header[i++] = 0; // terminate
             }
 
-            _baseStream._stream.Write(header, 0, header.Length);
+            _baseStream._stream.Write(header, offset: 0, count: header.Length);
 
             return header.Length; // bytes written
         }

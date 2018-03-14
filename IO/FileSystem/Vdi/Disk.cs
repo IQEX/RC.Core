@@ -109,7 +109,7 @@ namespace RC.Framework.FileSystem.Vdi
             {
                 if (_content == null)
                 {
-                    _content = _diskImage.OpenContent(null, Ownership.None);
+                    _content = _diskImage.OpenContent(parent: null, ownsParent: Ownership.None);
                 }
 
                 return _content;

@@ -112,9 +112,9 @@ namespace RC.Framework.Yaml
                 return "A";
             } else
             if ( anchor[anchor.Length - 1] != 'Z' ) {
-                return anchor.Substring(0, anchor.Length - 1) + ((char)( anchor[anchor.Length - 1] + 1 )).ToString();
+                return anchor.Substring(startIndex: 0, length: anchor.Length - 1) + ((char)( anchor[anchor.Length - 1] + 1 )).ToString();
             } else {
-                return NextAnchor(anchor.Substring(0, anchor.Length - 1)) + "A";
+                return NextAnchor(anchor.Substring(startIndex: 0, length: anchor.Length - 1)) + "A";
             }
         }
 
@@ -279,18 +279,18 @@ namespace RC.Framework.Yaml
 
             public DoubleQuote()
             {
-                CharEscaping.Add('\x00', @"\0");
-                CharEscaping.Add('\x07', @"\a");
-                CharEscaping.Add('\x08', @"\b");
-                CharEscaping.Add('\x0B', @"\v");
-                CharEscaping.Add('\x0C', @"\f");
-                CharEscaping.Add('\x1B', @"\e");
-                CharEscaping.Add('\x22', @"\""");
-                CharEscaping.Add('\x5C', @"\\");
-                CharEscaping.Add('\x85', @"\N");
-                CharEscaping.Add('\xA0', @"\_");
-                CharEscaping.Add('\u2028', @"\L");
-                CharEscaping.Add('\u2029', @"\P");
+                CharEscaping.Add(key: '\x00', value: @"\0");
+                CharEscaping.Add(key: '\x07', value: @"\a");
+                CharEscaping.Add(key: '\x08', value: @"\b");
+                CharEscaping.Add(key: '\x0B', value: @"\v");
+                CharEscaping.Add(key: '\x0C', value: @"\f");
+                CharEscaping.Add(key: '\x1B', value: @"\e");
+                CharEscaping.Add(key: '\x22', value: @"\""");
+                CharEscaping.Add(key: '\x5C', value: @"\\");
+                CharEscaping.Add(key: '\x85', value: @"\N");
+                CharEscaping.Add(key: '\xA0', value: @"\_");
+                CharEscaping.Add(key: '\u2028', value: @"\L");
+                CharEscaping.Add(key: '\u2029', value: @"\P");
             }
 
             bool nbDoubleSafeChar()
@@ -475,7 +475,7 @@ namespace RC.Framework.Yaml
                 NodeToYaml(node, pres, c);
                 result = yaml.ToString();
             }
-            if ( result.Length < 80 && result.IndexOf('\n') < 0 ) {
+            if ( result.Length < 80 && result.IndexOf(value: '\n') < 0 ) {
                 yaml = yaml_saved;
                 yaml.Write(result);
                 return true;

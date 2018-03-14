@@ -124,7 +124,7 @@ namespace Ionic.Zip
 
         private static string SimplifyFwdSlashPath(string path)
         {
-            if (path.StartsWith("./")) path = path.Substring(2);
+            if (path.StartsWith("./")) path = path.Substring(startIndex: 2);
             path = path.Replace("/./", "/");
 
             // Replace foo/anything/../bar with foo/bar
@@ -146,14 +146,14 @@ namespace Ionic.Zip
             if (String.IsNullOrEmpty(pathName)) return pathName;
 
             // trim volume if necessary
-            if ((pathName.Length >= 2)  && ((pathName[1] == ':') && (pathName[2] == '\\')))
-                pathName =  pathName.Substring(3);
+            if ((pathName.Length >= 2)  && ((pathName[index: 1] == ':') && (pathName[index: 2] == '\\')))
+                pathName =  pathName.Substring(startIndex: 3);
 
             // swap slashes
-            pathName = pathName.Replace('\\', '/');
+            pathName = pathName.Replace(oldChar: '\\', newChar: '/');
 
             // trim all leading slashes
-            while (pathName.StartsWith("/")) pathName = pathName.Substring(1);
+            while (pathName.StartsWith("/")) pathName = pathName.Substring(startIndex: 1);
 
             return SimplifyFwdSlashPath(pathName);
         }
@@ -190,7 +190,7 @@ namespace Ionic.Zip
         internal static string StringFromBuffer(byte[] buf, System.Text.Encoding encoding)
         {
             // this form of the GetString() method is required for .NET CF compatibility
-            string s = encoding.GetString(buf, 0, buf.Length);
+            string s = encoding.GetString(buf, index: 0, count: buf.Length);
             return s;
         }
 
@@ -215,7 +215,7 @@ namespace Ionic.Zip
                 if (x == ZipConstants.ZipEntryDataDescriptorSignature)
                 {
                     // advance past data descriptor - 12 bytes if not zip64
-                    s.Seek(12, SeekOrigin.Current);
+                    s.Seek(offset: 12, origin: SeekOrigin.Current);
                     // workitem 10178
                     Workaround_Ladybug318918(s);
                     x = _ReadFourBytes(s, "n/a");
@@ -223,14 +223,14 @@ namespace Ionic.Zip
                     {
                         // Maybe zip64 was in use for the prior entry.
                         // Therefore, skip another 8 bytes.
-                        s.Seek(8, SeekOrigin.Current);
+                        s.Seek(offset: 8, origin: SeekOrigin.Current);
                         // workitem 10178
                         Workaround_Ladybug318918(s);
                         x = _ReadFourBytes(s, "n/a");
                         if (x != ZipConstants.ZipEntrySignature)
                         {
                             // seek back to the first spot
-                            s.Seek(-24, SeekOrigin.Current);
+                            s.Seek(offset: -24, origin: SeekOrigin.Current);
                             // workitem 10178
                             Workaround_Ladybug318918(s);
                             x = _ReadFourBytes(s, "n/a");
@@ -273,7 +273,7 @@ namespace Ionic.Zip
                 n+= s.Read(block, i, 1);
             }
 #else
-            n = s.Read(block, 0, block.Length);
+            n = s.Read(block, offset: 0, count: block.Length);
 #endif
             if (n != block.Length) throw new BadReadException(String.Format(message, s.Position));
             int data = unchecked((((block[3] * 256 + block[2]) * 256) + block[1]) * 256 + block[0]);
@@ -318,7 +318,7 @@ namespace Ionic.Zip
             bool success = false;
             do
             {
-                n = stream.Read(batch, 0, batch.Length);
+                n = stream.Read(batch, offset: 0, count: batch.Length);
                 if (n != 0)
                 {
                     for (int i = 0; i < n; i++)
@@ -372,10 +372,10 @@ namespace Ionic.Zip
             if (time.Kind == DateTimeKind.Utc) return time;
             DateTime adjusted = time;
             if (DateTime.Now.IsDaylightSavingTime() && !time.IsDaylightSavingTime())
-                adjusted = time - new System.TimeSpan(1, 0, 0);
+                adjusted = time - new System.TimeSpan(hours: 1, minutes: 0, seconds: 0);
 
             else if (!DateTime.Now.IsDaylightSavingTime() && time.IsDaylightSavingTime())
-                adjusted = time + new System.TimeSpan(1, 0, 0);
+                adjusted = time + new System.TimeSpan(hours: 1, minutes: 0, seconds: 0);
 
             return adjusted;
         }
@@ -402,7 +402,7 @@ namespace Ionic.Zip
         {
             // workitem 7074 & workitem 7170
             if (packedDateTime == 0xFFFF || packedDateTime == 0)
-                return new System.DateTime(1995, 1, 1, 0, 0, 0, 0);  // return a fixed date when none is supplied.
+                return new System.DateTime(year: 1995, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0);  // return a fixed date when none is supplied.
 
             Int16 packedTime = unchecked((Int16)(packedDateTime & 0x0000ffff));
             Int16 packedDate = unchecked((Int16)((packedDateTime & 0xffff0000) >> 16));
@@ -426,7 +426,7 @@ namespace Ionic.Zip
             bool success= false;
             try
             {
-                d = new System.DateTime(year, month, day, hour, minute, second, 0);
+                d = new System.DateTime(year, month, day, hour, minute, second, millisecond: 0);
                 success= true;
             }
             catch (System.ArgumentOutOfRangeException)
@@ -435,14 +435,14 @@ namespace Ionic.Zip
                 {
                     try
                     {
-                        d = new System.DateTime(1980, 1, 1, hour, minute, second, 0);
+                        d = new System.DateTime(year: 1980, month: 1, day: 1, hour: hour, minute: minute, second: second, millisecond: 0);
                 success= true;
                     }
                     catch (System.ArgumentOutOfRangeException)
                     {
                         try
                         {
-                            d = new System.DateTime(1980, 1, 1, 0, 0, 0, 0);
+                            d = new System.DateTime(year: 1980, month: 1, day: 1, hour: 0, minute: 0, second: 0, millisecond: 0);
                 success= true;
                         }
                         catch (System.ArgumentOutOfRangeException) { }
@@ -466,7 +466,7 @@ namespace Ionic.Zip
                         while (minute > 59) minute--;
                         while (second < 0) second++;
                         while (second > 59) second--;
-                        d = new System.DateTime(year, month, day, hour, minute, second, 0);
+                        d = new System.DateTime(year, month, day, hour, minute, second, millisecond: 0);
                         success= true;
                     }
                     catch (System.ArgumentOutOfRangeException) { }
@@ -573,7 +573,7 @@ namespace Ionic.Zip
 #else
         public static string InternalGetTempFileName()
         {
-            return "DotNetZip-" + Path.GetRandomFileName().Substring(0, 8) + ".tmp";
+            return "DotNetZip-" + Path.GetRandomFileName().Substring(startIndex: 0, length: 8) + ".tmp";
         }
 
 #endif

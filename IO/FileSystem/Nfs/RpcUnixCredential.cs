@@ -38,7 +38,7 @@ namespace RC.Framework.FileSystem.Nfs
         /// There is no standard UID/GID for nobody.  This default credential
         /// assumes 65534 for both the user and group.
         /// </remarks>
-        public static readonly RpcUnixCredential Default = new RpcUnixCredential(65534, 65534);
+        public static readonly RpcUnixCredential Default = new RpcUnixCredential(user: 65534, primaryGroup: 65534);
 
         private string _machineName;
         private int _uid;

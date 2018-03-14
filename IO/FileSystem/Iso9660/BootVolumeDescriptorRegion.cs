@@ -35,7 +35,7 @@ namespace RC.Framework.FileSystem.Iso9660
         protected override byte[] GetBlockData()
         {
             byte[] buffer = new byte[IsoUtilities.SectorSize];
-            _descriptor.WriteTo(buffer, 0);
+            _descriptor.WriteTo(buffer, offset: 0);
             return buffer;
         }
     }

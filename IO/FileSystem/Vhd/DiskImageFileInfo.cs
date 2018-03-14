@@ -226,7 +226,7 @@ namespace RC.Framework.FileSystem.Vhd
         {
             get
             {
-                List<string> vals = new List<string>(8);
+                List<string> vals = new List<string>(capacity: 8);
                 foreach (var pl in _header.ParentLocators)
                 {
                     if (pl.PlatformCode == ParentLocator.PlatformCodeWindowsAbsoluteUnicode

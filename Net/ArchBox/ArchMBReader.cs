@@ -25,7 +25,7 @@
         string IArchByteBoxReader.rString()
         {
             byte[] @Byte = new byte[((IArchByteBoxReader)this).rShort()];
-            nMStream.Read(@Byte, 0, @Byte.Length);
+            nMStream.Read(@Byte, offset: 0, count: @Byte.Length);
             return Encoding.UTF8.GetString(@Byte);
         }
         /// <summary>
@@ -35,8 +35,8 @@
         short IArchByteBoxReader.rShort()
         {
             byte[] @Byte = new byte[sizeof(short)];
-            nMStream.Read(@Byte, 0, sizeof(short));
-            return BitConverter.ToInt16(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(short));
+            return BitConverter.ToInt16(@Byte, startIndex: 0);
         }
         /// <summary>
         /// Reading <see cref="System.Array"/> of <see cref="byte"/>
@@ -45,7 +45,7 @@
         byte[] IArchByteBoxReader.rByte()
         {
             Byte[] @Byte = new byte[((IArchByteBoxReader)this).rShort()];
-            nMStream.Read(@Byte, 0, @Byte.Length);
+            nMStream.Read(@Byte, offset: 0, count: @Byte.Length);
             return @Byte;
         }
 
@@ -56,8 +56,8 @@
         float IArchByteBoxReader.rFloat()
         {
             byte[] @Byte = new byte[sizeof(float)];
-            nMStream.Read(@Byte, 0, sizeof(float));
-            return BitConverter.ToSingle(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(float));
+            return BitConverter.ToSingle(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -67,8 +67,8 @@
         int IArchByteBoxReader.rInt()
         {
             byte[] @Byte = new byte[sizeof(int)];
-            nMStream.Read(@Byte, 0, sizeof(int));
-            return BitConverter.ToInt32(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(int));
+            return BitConverter.ToInt32(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -78,8 +78,8 @@
         long IArchByteBoxReader.rLong()
         {
             byte[] @Byte = new byte[sizeof(long)];
-            nMStream.Read(@Byte, 0, sizeof(long));
-            return BitConverter.ToInt64(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(long));
+            return BitConverter.ToInt64(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@
         Guid IArchByteBoxReader.rGUID()
         {
             byte[] @Byte = new byte[Guid.Empty.ToByteArray().Length];
-            nMStream.Read(@Byte, 0, Guid.Empty.ToByteArray().Length);
+            nMStream.Read(@Byte, offset: 0, count: Guid.Empty.ToByteArray().Length);
             return new Guid(@Byte);
         }
 
@@ -114,8 +114,8 @@
         DateTime IArchByteBoxReader.rDateTime()
         {
             byte[] @Byte = new byte[sizeof(long)];
-            nMStream.Read(@Byte, 0, sizeof(long));
-            return new DateTime(BitConverter.ToInt64(@Byte, 0));
+            nMStream.Read(@Byte, offset: 0, count: sizeof(long));
+            return new DateTime(BitConverter.ToInt64(@Byte, startIndex: 0));
         }
 
         /// <summary>
@@ -125,8 +125,8 @@
         ulong IArchByteBoxReader.rULong()
         {
             byte[] @Byte = new byte[sizeof(ulong)];
-            nMStream.Read(@Byte, 0, sizeof(ulong));
-            return BitConverter.ToUInt64(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(ulong));
+            return BitConverter.ToUInt64(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -136,8 +136,8 @@
         bool IArchByteBoxReader.rBool()
         {
             byte[] @Byte = new byte[sizeof(bool)];
-            nMStream.Read(@Byte, 0, sizeof(bool));
-            return BitConverter.ToBoolean(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(bool));
+            return BitConverter.ToBoolean(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -147,8 +147,8 @@
         ushort IArchByteBoxReader.rUShort()
         {
             byte[] @Byte = new byte[sizeof(ushort)];
-            nMStream.Read(@Byte, 0, sizeof(ushort));
-            return BitConverter.ToUInt16(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(ushort));
+            return BitConverter.ToUInt16(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -160,8 +160,8 @@
         uint IArchByteBoxReader.rUInt()
         {
             byte[] @Byte = new byte[sizeof(uint)];
-            nMStream.Read(@Byte, 0, sizeof(uint));
-            return BitConverter.ToUInt32(@Byte, 0);
+            nMStream.Read(@Byte, offset: 0, count: sizeof(uint));
+            return BitConverter.ToUInt32(@Byte, startIndex: 0);
         }
 
         /// <summary>
@@ -174,7 +174,7 @@
         {
             long rem = nMStream.Length - nMStream.Position;
             byte[] @Byte = new byte[rem];
-            nMStream.Read(@Byte, 0, @Byte.Length);
+            nMStream.Read(@Byte, offset: 0, count: @Byte.Length);
             return @Byte;
         }
     }

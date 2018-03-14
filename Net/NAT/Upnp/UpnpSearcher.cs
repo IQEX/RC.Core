@@ -73,7 +73,7 @@ namespace RC.Framework.Net.Nat.Upnp
 				{
 					try
 					{
-                        clients.Add(new UdpClient(new IPEndPoint(ipAddress, 0)));
+                        clients.Add(new UdpClient(new IPEndPoint(ipAddress, port: 0)));
 					}
 					catch (Exception)
 					{
@@ -83,18 +83,18 @@ namespace RC.Framework.Net.Nat.Upnp
 			}
 			catch (Exception)
 			{
-				clients.Add(new UdpClient(0));
+				clients.Add(new UdpClient(port: 0));
 			}
 			return clients;
 		}
 
         protected override void Discover(UdpClient client, CancellationToken cancelationToken)
         {
-            NextSearch = DateTime.UtcNow.AddSeconds(1);
+            NextSearch = DateTime.UtcNow.AddSeconds(value: 1);
             var searchEndpoint = new IPEndPoint(
                 WellKnownConstants.IPv4MulticastAddress
                 /*IPAddress.Broadcast*/
-                , 1900);
+                , port: 1900);
 
             foreach (var serviceType in ServiceTypes)
             {
@@ -148,7 +148,7 @@ namespace RC.Framework.Net.Nat.Upnp
 				if (_lastFetched.ContainsKey(endpoint.Address))
 				{
 					var last = _lastFetched[endpoint.Address];
-					if ((DateTime.Now - last) < TimeSpan.FromSeconds(20))
+					if ((DateTime.Now - last) < TimeSpan.FromSeconds(value: 20))
 						return null;
 				}
 				_lastFetched[endpoint.Address] = DateTime.Now;

@@ -201,7 +201,7 @@ namespace RC.Framework.FileSystem.Partitions
         public static BiosPartitionTable Initialize(VirtualDisk disk, WellKnownPartitionType type)
         {
             BiosPartitionTable table = Initialize(disk.Content, disk.BiosGeometry);
-            table.Create(type, true);
+            table.Create(type, active: true);
             return table;
         }
 
@@ -227,14 +227,14 @@ namespace RC.Framework.FileSystem.Partitions
             }
 
             // Wipe all four 16-byte partition table entries
-            Array.Clear(bootSector, 0x01BE, 16 * 4);
+            Array.Clear(bootSector, index: 0x01BE, length: 16 * 4);
 
             // Marker bytes
             bootSector[510] = 0x55;
             bootSector[511] = 0xAA;
 
             data.Position = 0;
-            data.Write(bootSector, 0, bootSector.Length);
+            data.Write(bootSector, offset: 0, count: bootSector.Length);
 
             return new BiosPartitionTable(disk, diskGeometry);
         }
@@ -251,13 +251,13 @@ namespace RC.Framework.FileSystem.Partitions
         {
             Geometry allocationGeometry = new Geometry(_diskData.Length, _diskGeometry.HeadsPerCylinder, _diskGeometry.SectorsPerTrack, _diskGeometry.BytesPerSector);
 
-            ChsAddress start = new ChsAddress(0, 1, 1);
+            ChsAddress start = new ChsAddress(cylinder: 0, head: 1, sector: 1);
             ChsAddress last = allocationGeometry.LastSector;
 
             long startLba = allocationGeometry.ToLogicalBlockAddress(start);
             long lastLba = allocationGeometry.ToLogicalBlockAddress(last);
 
-            return CreatePrimaryByCylinder(0, allocationGeometry.Cylinders - 1, ConvertType(type, (lastLba - startLba) * Utilities.SectorSize), active);
+            return CreatePrimaryByCylinder(first: 0, last: allocationGeometry.Cylinders - 1, type: ConvertType(type, (lastLba - startLba) * Utilities.SectorSize), markActive: active);
         }
 
         /// <summary>
@@ -295,7 +295,7 @@ namespace RC.Framework.FileSystem.Partitions
         {
             Geometry allocationGeometry = new Geometry(_diskData.Length, _diskGeometry.HeadsPerCylinder, _diskGeometry.SectorsPerTrack, _diskGeometry.BytesPerSector);
 
-            ChsAddress start = new ChsAddress(0, 1, 1);
+            ChsAddress start = new ChsAddress(cylinder: 0, head: 1, sector: 1);
 
             long startLba = Utilities.RoundUp(allocationGeometry.ToLogicalBlockAddress(start), alignment / _diskGeometry.BytesPerSector);
             long lastLba = Utilities.RoundDown((_diskData.Length / _diskGeometry.BytesPerSector), alignment / _diskGeometry.BytesPerSector);
@@ -370,7 +370,7 @@ namespace RC.Framework.FileSystem.Partitions
                 throw new ArgumentException("Last cylinder must be greater than first");
             }
 
-            long lbaStart = (first == 0) ? _diskGeometry.ToLogicalBlockAddress(0, 1, 1) : _diskGeometry.ToLogicalBlockAddress(first, 0, 1);
+            long lbaStart = (first == 0) ? _diskGeometry.ToLogicalBlockAddress(cylinder: 0, head: 1, sector: 1) : _diskGeometry.ToLogicalBlockAddress(first, head: 0, sector: 1);
             long lbaLast = _diskGeometry.ToLogicalBlockAddress(last, _diskGeometry.HeadsPerCylinder - 1, _diskGeometry.SectorsPerTrack);
 
             return CreatePrimaryBySector(lbaStart, lbaLast, type, markActive);
@@ -406,12 +406,12 @@ namespace RC.Framework.FileSystem.Partitions
             // the special tuple (1023, 254, 63) is used.
             if (startAddr.Cylinder > 1023)
             {
-                startAddr = new ChsAddress(1023, 254, 63);
+                startAddr = new ChsAddress(cylinder: 1023, head: 254, sector: 63);
             }
 
             if (endAddr.Cylinder > 1023)
             {
-                endAddr = new ChsAddress(1023, 254, 63);
+                endAddr = new ChsAddress(cylinder: 1023, head: 254, sector: 63);
             }
 
             newRecord.StartCylinder = (ushort)startAddr.Cylinder;
@@ -471,7 +471,7 @@ namespace RC.Framework.FileSystem.Partitions
         {
             List<StreamExtent> extents = new List<StreamExtent>();
 
-            extents.Add(new StreamExtent(0, Sizes.Sector));
+            extents.Add(new StreamExtent(start: 0, length: Sizes.Sector));
 
             foreach (BiosPartitionRecord primaryRecord in GetPrimaryRecords())
             {
@@ -507,13 +507,13 @@ namespace RC.Framework.FileSystem.Partitions
                     ChsAddress newStartAddress = geometry.ToChsAddress(record.LBAStartAbsolute);
                     if (newStartAddress.Cylinder > 1023)
                     {
-                        newStartAddress = new ChsAddress(1023, geometry.HeadsPerCylinder - 1, geometry.SectorsPerTrack);
+                        newStartAddress = new ChsAddress(cylinder: 1023, head: geometry.HeadsPerCylinder - 1, sector: geometry.SectorsPerTrack);
                     }
 
                     ChsAddress newEndAddress = geometry.ToChsAddress(record.LBAStartAbsolute + record.LBALength - 1);
                     if (newEndAddress.Cylinder > 1023)
                     {
-                        newEndAddress = new ChsAddress(1023, geometry.HeadsPerCylinder - 1, geometry.SectorsPerTrack);
+                        newEndAddress = new ChsAddress(cylinder: 1023, head: geometry.HeadsPerCylinder - 1, sector: geometry.SectorsPerTrack);
                     }
 
                     record.StartCylinder = (ushort)newStartAddress.Cylinder;
@@ -540,7 +540,7 @@ namespace RC.Framework.FileSystem.Partitions
             BiosPartitionRecord[] records = new BiosPartitionRecord[4];
             for (int i = 0; i < 4; ++i)
             {
-                records[i] = new BiosPartitionRecord(bootSector, 0x01BE + (i * 0x10), 0, i);
+                records[i] = new BiosPartitionRecord(bootSector, 0x01BE + (i * 0x10), lbaOffset: 0, index: i);
             }
 
             return records;
@@ -624,7 +624,7 @@ namespace RC.Framework.FileSystem.Partitions
             byte[] bootSector = Utilities.ReadFully(_diskData, Utilities.SectorSize);
             newRecord.WriteTo(bootSector, 0x01BE + (i * 16));
             _diskData.Position = 0;
-            _diskData.Write(bootSector, 0, bootSector.Length);
+            _diskData.Write(bootSector, offset: 0, count: bootSector.Length);
         }
 
         private int FindCylinderGap(int numCylinders)
@@ -668,7 +668,7 @@ namespace RC.Framework.FileSystem.Partitions
             var list = Utilities.Filter<List<BiosPartitionRecord>, BiosPartitionRecord>(GetPrimaryRecords(), (r) => r.IsValid);
             list.Sort();
 
-            long startSector = Utilities.RoundUp(_diskGeometry.ToLogicalBlockAddress(0, 1, 1), alignmentSectors);
+            long startSector = Utilities.RoundUp(_diskGeometry.ToLogicalBlockAddress(cylinder: 0, head: 1, sector: 1), alignmentSectors);
 
             int idx = 0;
             while (idx < list.Count)

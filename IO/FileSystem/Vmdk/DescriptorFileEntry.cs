@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
         public static DescriptorFileEntry Parse(string value)
         {
-            string[] parts = value.Split(new char[] { '=' }, 2);
+            string[] parts = value.Split(new char[] { '=' }, count: 2);
 
             for (int i = 0; i < parts.Length; ++i)
             {
@@ -84,7 +84,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
         public override string ToString()
         {
-            return ToString(true);
+            return ToString(spaceOut: true);
         }
 
         public string ToString(bool spaceOut)

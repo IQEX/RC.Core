@@ -54,7 +54,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         ~DiscFileSystem()
         {
-            Dispose(false);
+            Dispose(disposing: false);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace RC.Framework.FileSystem
         /// <param name="destinationFile">The destination file</param>
         public virtual void CopyFile(string sourceFile, string destinationFile)
         {
-            CopyFile(sourceFile, destinationFile, false);
+            CopyFile(sourceFile, destinationFile, overwrite: false);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace RC.Framework.FileSystem
             {
                 foreach (string dir in GetDirectories(path))
                 {
-                    DeleteDirectory(dir, true);
+                    DeleteDirectory(dir, recursive: true);
                 }
 
                 foreach (string file in GetFiles(path))
@@ -279,7 +279,7 @@ namespace RC.Framework.FileSystem
         /// <param name="destinationName">The target file name.</param>
         public virtual void MoveFile(string sourceName, string destinationName)
         {
-            MoveFile(sourceName, destinationName, false);
+            MoveFile(sourceName, destinationName, overwrite: false);
         }
 
         /// <summary>
@@ -482,7 +482,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
 

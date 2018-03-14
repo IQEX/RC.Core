@@ -46,12 +46,12 @@ namespace RC.Framework.FileSystem.Ntfs
             IndexView<OwnerKey, OwnerRecord> ownerIndexView = new IndexView<OwnerKey, OwnerRecord>(ownerIndex);
             IndexView<OwnerRecord, QuotaRecord> quotaIndexView = new IndexView<OwnerRecord, QuotaRecord>(quotaIndox);
 
-            OwnerKey adminSid = new OwnerKey(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, null));
-            OwnerRecord adminOwnerId = new OwnerRecord(256);
+            OwnerKey adminSid = new OwnerKey(new SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, domainSid: null));
+            OwnerRecord adminOwnerId = new OwnerRecord(ownerId: 256);
 
             ownerIndexView[adminSid] = adminOwnerId;
 
-            quotaIndexView[new OwnerRecord(1)] = new QuotaRecord(null);
+            quotaIndexView[new OwnerRecord(ownerId: 1)] = new QuotaRecord(sid: null);
             quotaIndexView[adminOwnerId] = new QuotaRecord(adminSid.Sid);
 
             return new Quotas(file);

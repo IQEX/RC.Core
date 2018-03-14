@@ -48,7 +48,7 @@ namespace RC.Framework.FileSystem.Vhd
 
             _footer.DataOffset = FooterSize;
 
-            DynamicHeader dynHeader = new DynamicHeader(-1, FooterSize + DynHeaderSize, _blockSize, _footer.CurrentSize);
+            DynamicHeader dynHeader = new DynamicHeader(dataOffset: -1, tableOffset: FooterSize + DynHeaderSize, blockSize: _blockSize, diskSize: _footer.CurrentSize);
 
             BlockAllocationTableExtent batExtent = new BlockAllocationTableExtent(FooterSize + DynHeaderSize, dynHeader.MaxTableEntries);
 
@@ -73,18 +73,18 @@ namespace RC.Framework.FileSystem.Vhd
             dynHeader.UpdateChecksum();
 
             byte[] footerBuffer = new byte[FooterSize];
-            _footer.ToBytes(footerBuffer, 0);
+            _footer.ToBytes(footerBuffer, offset: 0);
 
             byte[] dynHeaderBuffer = new byte[DynHeaderSize];
-            dynHeader.ToBytes(dynHeaderBuffer, 0);
+            dynHeader.ToBytes(dynHeaderBuffer, offset: 0);
 
             // Add footer (to end)
             extents.Add(new BuilderBufferExtent(streamPos, footerBuffer));
             totalLength = streamPos + FooterSize;
 
-            extents.Insert(0, batExtent);
-            extents.Insert(0, new BuilderBufferExtent(FooterSize, dynHeaderBuffer));
-            extents.Insert(0, new BuilderBufferExtent(0, footerBuffer));
+            extents.Insert(index: 0, item: batExtent);
+            extents.Insert(index: 0, item: new BuilderBufferExtent(FooterSize, dynHeaderBuffer));
+            extents.Insert(index: 0, item: new BuilderBufferExtent(start: 0, buffer: footerBuffer));
 
             return extents;
         }
@@ -95,7 +95,7 @@ namespace RC.Framework.FileSystem.Vhd
             private MemoryStream _dataStream;
 
             public BlockAllocationTableExtent(long start, int maxEntries)
-                : base(start, Utilities.RoundUp(maxEntries * 4, 512))
+                : base(start, Utilities.RoundUp(maxEntries * 4, unit: 512))
             {
                 _entries = new uint[Length / 4];
                 for (int i = 0; i < _entries.Length; ++i)
@@ -118,7 +118,7 @@ namespace RC.Framework.FileSystem.Vhd
                     Utilities.WriteBytesBigEndian(_entries[i], buffer, i * 4);
                 }
 
-                _dataStream = new MemoryStream(buffer, false);
+                _dataStream = new MemoryStream(buffer, writable: false);
             }
 
             internal override int Read(long diskOffset, byte[] block, int offset, int count)
@@ -157,7 +157,7 @@ namespace RC.Framework.FileSystem.Vhd
                     }
                 }
 
-                _bitmapStream = new MemoryStream(bitmap, false);
+                _bitmapStream = new MemoryStream(bitmap, writable: false);
             }
 
             internal override int Read(long diskOffset, byte[] block, int offset, int count)

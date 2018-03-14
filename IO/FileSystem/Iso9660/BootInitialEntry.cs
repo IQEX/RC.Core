@@ -49,7 +49,7 @@ namespace RC.Framework.FileSystem.Iso9660
 
         internal void WriteTo(byte[] buffer, int offset)
         {
-            Array.Clear(buffer, offset, 0x20);
+            Array.Clear(buffer, offset, length: 0x20);
             buffer[offset + 0x00] = BootIndicator;
             buffer[offset + 0x01] = (byte)BootMediaType;
             Utilities.WriteBytesLittleEndian(LoadSegment, buffer, offset + 0x02);

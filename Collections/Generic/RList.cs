@@ -76,7 +76,7 @@ namespace RC.Framework.Collections.Generic
             int max = buffer?.Length << 1 ?? 0;
             if (max < 32) max = 32;
             T[] newList = new T[max];
-            if (buffer != null && size > 0) buffer.CopyTo(newList, 0);
+            if (buffer != null && size > 0) buffer.CopyTo(newList, index: 0);
             buffer = newList;
         }
         /// <summary>
@@ -314,7 +314,7 @@ namespace RC.Framework.Collections.Generic
                 throw new ArgumentNullException(nameof(array));
             if (array.Length < arrayIndex)
                 throw new ArgumentException("array.Length < arrayIndex");
-            Array.Copy(this.buffer, 0, array, arrayIndex, this.size);
+            Array.Copy(this.buffer, sourceIndex: 0, destinationArray: array, destinationIndex: arrayIndex, length: this.size);
         }
 
 

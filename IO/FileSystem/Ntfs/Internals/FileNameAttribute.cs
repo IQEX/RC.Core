@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem.Ntfs.Internals
         {
             byte[] content = Utilities.ReadAll(Content);
             _fnr = new FileNameRecord();
-            _fnr.ReadFrom(content, 0);
+            _fnr.ReadFrom(content, offset: 0);
         }
 
         /// <summary>

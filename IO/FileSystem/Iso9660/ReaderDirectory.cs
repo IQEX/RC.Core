@@ -37,7 +37,7 @@ namespace RC.Framework.FileSystem.Iso9660
             : base(context, dirEntry)
         {
             byte[] buffer = new byte[IsoUtilities.SectorSize];
-            Stream extent = new ExtentStream(_context.DataStream, dirEntry.LocationOfExtent, uint.MaxValue, 0, 0);
+            Stream extent = new ExtentStream(_context.DataStream, dirEntry.LocationOfExtent, uint.MaxValue, fileUnitSize: 0, interleaveGapSize: 0);
 
             _records = new List<DirectoryRecord>();
 
@@ -46,7 +46,7 @@ namespace RC.Framework.FileSystem.Iso9660
             while (totalRead < totalLength)
             {
                 int toRead = (int)Math.Min(buffer.Length, totalLength - totalRead);
-                uint bytesRead = (uint)Utilities.ReadFully(extent, buffer, 0, toRead);
+                uint bytesRead = (uint)Utilities.ReadFully(extent, buffer, offset: 0, length: toRead);
                 if (bytesRead != toRead)
                 {
                     throw new IOException("Failed to read whole directory");
@@ -86,11 +86,11 @@ namespace RC.Framework.FileSystem.Iso9660
 
         public DirectoryRecord GetEntryByName(string name)
         {
-            bool anyVerMatch = name.IndexOf(';') < 0;
+            bool anyVerMatch = name.IndexOf(value: ';') < 0;
             string normName = IsoUtilities.NormalizeFileName(name).ToUpper(CultureInfo.InvariantCulture);
             if (anyVerMatch)
             {
-                normName = normName.Substring(0, normName.LastIndexOf(';') + 1);
+                normName = normName.Substring(startIndex: 0, length: normName.LastIndexOf(value: ';') + 1);
             }
 
             foreach (DirectoryRecord r in _records)

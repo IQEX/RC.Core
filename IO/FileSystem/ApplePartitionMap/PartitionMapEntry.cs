@@ -93,8 +93,8 @@ namespace RC.Framework.FileSystem.ApplePartitionMap
             MapEntries = Utilities.ToUInt32BigEndian(buffer, offset + 4);
             PhysicalBlockStart = Utilities.ToUInt32BigEndian(buffer, offset + 8);
             PhysicalBlocks = Utilities.ToUInt32BigEndian(buffer, offset + 12);
-            Name = Utilities.BytesToString(buffer, offset + 16, 32).TrimEnd('\0');
-            Type = Utilities.BytesToString(buffer, offset + 48, 32).TrimEnd('\0');
+            Name = Utilities.BytesToString(buffer, offset + 16, count: 32).TrimEnd('\0');
+            Type = Utilities.BytesToString(buffer, offset + 48, count: 32).TrimEnd('\0');
             LogicalBlockStart = Utilities.ToUInt32BigEndian(buffer, offset + 80);
             LogicalBlocks = Utilities.ToUInt32BigEndian(buffer, offset + 84);
             Flags = Utilities.ToUInt32BigEndian(buffer, offset + 88);

@@ -43,7 +43,7 @@ namespace RC.Framework.FileSystem.Xva
 
             TarHeader hdr = new TarHeader();
             byte[] hdrBuf = Utilities.ReadFully(_fileStream, TarHeader.Length);
-            hdr.ReadFrom(hdrBuf, 0);
+            hdr.ReadFrom(hdrBuf, offset: 0);
             while (hdr.FileLength != 0 || !string.IsNullOrEmpty(hdr.FileName))
             {
                 FileRecord record = new FileRecord(hdr.FileName, _fileStream.Position, hdr.FileLength);
@@ -51,7 +51,7 @@ namespace RC.Framework.FileSystem.Xva
                 _fileStream.Position += ((hdr.FileLength + 511) / 512) * 512;
 
                 hdrBuf = Utilities.ReadFully(_fileStream, TarHeader.Length);
-                hdr.ReadFrom(hdrBuf, 0);
+                hdr.ReadFrom(hdrBuf, offset: 0);
             }
         }
 

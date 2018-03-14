@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         public static Geometry Null
         {
-            get { return new Geometry(0, 0, 0, 512); }
+            get { return new Geometry(cylinders: 0, headsPerCylinder: 0, sectorsPerTrack: 0, bytesPerSector: 512); }
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace RC.Framework.FileSystem
             }
 
             int sectors = 63;
-            int cylinders = (int)Math.Min(1024, capacity / (sectors * (long)heads * Sizes.Sector));
+            int cylinders = (int)Math.Min(val1: 1024, val2: capacity / (sectors * (long)heads * Sizes.Sector));
             return new Geometry(cylinders, heads, sectors, Sizes.Sector);
         }
 
@@ -385,7 +385,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The translated disk geometry</returns>
         public Geometry TranslateToBios(GeometryTranslation translation)
         {
-            return TranslateToBios(0, translation);
+            return TranslateToBios(capacity: 0, translation: translation);
         }
 
         /// <summary>

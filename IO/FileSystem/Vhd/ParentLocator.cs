@@ -48,7 +48,7 @@ namespace RC.Framework.FileSystem.Vhd
         public static ParentLocator FromBytes(byte[] data, int offset)
         {
             ParentLocator result = new ParentLocator();
-            result.PlatformCode = Utilities.BytesToString(data, offset, 4);
+            result.PlatformCode = Utilities.BytesToString(data, offset, count: 4);
             result.PlatformDataSpace = Utilities.ToInt32BigEndian(data, offset + 4);
             result.PlatformDataLength = Utilities.ToInt32BigEndian(data, offset + 8);
             result.PlatformDataOffset = Utilities.ToInt64BigEndian(data, offset + 16);
@@ -57,7 +57,7 @@ namespace RC.Framework.FileSystem.Vhd
 
         internal void ToBytes(byte[] data, int offset)
         {
-            Utilities.StringToBytes(PlatformCode, data, offset, 4);
+            Utilities.StringToBytes(PlatformCode, data, offset, count: 4);
             Utilities.WriteBytesBigEndian(PlatformDataSpace, data, offset + 4);
             Utilities.WriteBytesBigEndian(PlatformDataLength, data, offset + 8);
             Utilities.WriteBytesBigEndian((uint)0, data, offset + 12);

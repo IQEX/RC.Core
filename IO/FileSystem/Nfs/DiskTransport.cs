@@ -73,7 +73,7 @@ namespace RC.Framework.FileSystem.Nfs
             }
 
             _fileSystem = new NfsFileSystem(uri.Host, bestRoot);
-            _path = fsPath.Substring(bestRoot.Length).Replace('/', '\\');
+            _path = fsPath.Substring(bestRoot.Length).Replace(oldChar: '/', newChar: '\\');
             _extraInfo = uri.Fragment.TrimStart('#');
         }
 

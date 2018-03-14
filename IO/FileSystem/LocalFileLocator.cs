@@ -90,9 +90,9 @@ namespace RC.Framework.FileSystem
             string otherDir = otherLocal._dir;
             if (otherDir.Length >= 2 && _dir.Length >= 2)
             {
-                if (otherDir[1] == ':' && _dir[1] == ':')
+                if (otherDir[index: 1] == ':' && _dir[index: 1] == ':')
                 {
-                    return Char.ToUpperInvariant(otherDir[0]) == Char.ToUpperInvariant(_dir[0]);
+                    return Char.ToUpperInvariant(otherDir[index: 0]) == Char.ToUpperInvariant(_dir[index: 0]);
                 }
             }
 

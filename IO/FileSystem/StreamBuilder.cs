@@ -50,11 +50,11 @@ namespace RC.Framework.FileSystem
             using (Stream src = Build())
             {
                 byte[] buffer = new byte[64 * 1024];
-                int numRead = src.Read(buffer, 0, buffer.Length);
+                int numRead = src.Read(buffer, offset: 0, count: buffer.Length);
                 while (numRead != 0)
                 {
-                    output.Write(buffer, 0, numRead);
-                    numRead = src.Read(buffer, 0, buffer.Length);
+                    output.Write(buffer, offset: 0, count: numRead);
+                    numRead = src.Read(buffer, offset: 0, count: buffer.Length);
                 }
             }
         }

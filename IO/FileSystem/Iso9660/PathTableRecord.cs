@@ -58,7 +58,7 @@ namespace RC.Framework.FileSystem.Iso9660
             buffer[offset + 1] = 0; // ExtendedAttributeRecordLength;
             IsoUtilities.ToBytesFromUInt32(buffer, offset + 2, byteSwap ? Utilities.BitSwap(LocationOfExtent) : LocationOfExtent);
             IsoUtilities.ToBytesFromUInt16(buffer, offset + 6, byteSwap ? Utilities.BitSwap(ParentDirectoryNumber) : ParentDirectoryNumber);
-            IsoUtilities.WriteString(buffer, offset + 8, nameBytes, false, DirectoryIdentifier, enc);
+            IsoUtilities.WriteString(buffer, offset + 8, nameBytes, pad: false, str: DirectoryIdentifier, enc: enc);
             if ((nameBytes & 1) == 1)
             {
                 buffer[offset + 8 + nameBytes] = 0;

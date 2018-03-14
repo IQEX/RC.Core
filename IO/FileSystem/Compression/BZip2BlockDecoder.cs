@@ -48,11 +48,11 @@ namespace RC.Framework.FileSystem.Compression
             _crc = 0;
             for (int i = 0; i < 4; ++i)
             {
-                _crc = (_crc << 8) | bitstream.Read(8);
+                _crc = (_crc << 8) | bitstream.Read(count: 8);
             }
 
-            bool rand = bitstream.Read(1) != 0;
-            int origPtr = (int)bitstream.Read(24);
+            bool rand = bitstream.Read(count: 1) != 0;
+            int origPtr = (int)bitstream.Read(count: 24);
 
             int thisBlockSize = ReadBuffer(bitstream, outputBuffer, outputBufferOffset);
 
@@ -76,14 +76,14 @@ namespace RC.Framework.FileSystem.Compression
             bool[] inUseGroups = new bool[16];
             for (int i = 0; i < 16; ++i)
             {
-                inUseGroups[i] = bitstream.Read(1) != 0;
+                inUseGroups[i] = bitstream.Read(count: 1) != 0;
             }
 
             for (int i = 0; i < 256; ++i)
             {
                 if (inUseGroups[i / 16])
                 {
-                    if (bitstream.Read(1) != 0)
+                    if (bitstream.Read(count: 1) != 0)
                     {
                         moveFrontTransform.Set(numInUse, (byte)i);
                         numInUse++;

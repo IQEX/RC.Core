@@ -55,7 +55,7 @@ namespace RC.Framework.FileSystem.Dmg
                 if (attrString.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
                 {
                     style = NumberStyles.HexNumber;
-                    attrString = attrString.Substring(2);
+                    attrString = attrString.Substring(startIndex: 2);
                 }
 
                 uint attributes;

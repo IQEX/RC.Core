@@ -56,8 +56,8 @@ namespace RC.Framework.Collections
         public void CopyMemory(Stream dst, Stream src, int len)
         {
             var buf = GetBuffer(len);
-            src.Read(buf, 0, len);
-            dst.Write(buf, 0, len);
+            src.Read(buf, offset: 0, count: len);
+            dst.Write(buf, offset: 0, count: len);
         }
         #endregion
         #region ToBytes<T>(), ToValue()
@@ -85,7 +85,7 @@ namespace RC.Framework.Collections
             if (offset < 0 || offset + n > buf.Length)
                 throw new ArgumentOutOfRangeException("offset");
             fixed (byte* dst = &buf[offset])
-                Marshal.StructureToPtr(value, (IntPtr)dst, false);
+                Marshal.StructureToPtr(value, (IntPtr)dst, fDeleteOld: false);
             offset += n;
         }
         /// <summary>
@@ -139,7 +139,7 @@ namespace RC.Framework.Collections
         {
             if (values == null)
                 throw new ArgumentException("values");
-            Write<T>(str, values, 0, values.Length);
+            Write<T>(str, values, offset: 0, count: values.Length);
         }
         /// <summary>
         /// 
@@ -179,7 +179,7 @@ namespace RC.Framework.Collections
             int bufoffset = 0;
             for (int i = 0; i < values.Length; i++)
                 ToBytes(values[offset + i], buf, ref bufoffset);
-            str.Write(buf, 0, bufoffset);
+            str.Write(buf, offset: 0, count: bufoffset);
         }
         /// <summary>
         /// 
@@ -202,7 +202,7 @@ namespace RC.Framework.Collections
                 throw new ArgumentException("str");
             int n = Marshal.SizeOf(typeof(T));
             var buf = GetBuffer(n);
-            str.Read(buf, 0, n);
+            str.Read(buf, offset: 0, count: n);
             int offset = 0;
             return ToValue<T>(buf, ref offset);
         }
@@ -240,7 +240,7 @@ namespace RC.Framework.Collections
                 throw new ArgumentOutOfRangeException("offset");
             int n = Marshal.SizeOf(typeof(T));
             var buf = GetBuffer(n * count);
-            str.Read(buf, 0, n * count);
+            str.Read(buf, offset: 0, count: n * count);
 
             int bufoffset = 0;
             for (int i = 0; i < count; i++)
@@ -274,7 +274,7 @@ namespace RC.Framework.Collections
             if (count < 0)
                 throw new ArgumentOutOfRangeException("count");
             var result = new T[count];
-            Read<T>(str, result, 0, count);
+            Read<T>(str, result, offset: 0, count: count);
             return result;
         }
         #endregion
@@ -295,7 +295,7 @@ namespace RC.Framework.Collections
                 if (length > 0)
                 {
                     array = new TElement[length];
-                    collection.CopyTo(array, 0);
+                    collection.CopyTo(array, arrayIndex: 0);
                 }
             }
             else
@@ -307,7 +307,7 @@ namespace RC.Framework.Collections
                     else if (array.Length == length)
                     {
                         var elementArray = new TElement[checked(length * 2)];
-                        Array.Copy(array, 0, elementArray, 0, length);
+                        Array.Copy(array, sourceIndex: 0, destinationArray: elementArray, destinationIndex: 0, length: length);
                         array = elementArray;
                     }
                     array[length] = element;
@@ -324,7 +324,7 @@ namespace RC.Framework.Collections
             if (items.Length == count)
                 return items;
             var elementArray = new TElement[count];
-            Array.Copy(items, 0, elementArray, 0, count);
+            Array.Copy(items, sourceIndex: 0, destinationArray: elementArray, destinationIndex: 0, length: count);
             return elementArray;
         }
     }

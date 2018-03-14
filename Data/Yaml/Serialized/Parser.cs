@@ -131,7 +131,7 @@ namespace RC.Framework.Yaml
         private void InitializeLines()
         {
             Lines = new List<int>();
-            Lines.Add(0);
+            Lines.Add(item: 0);
             for ( var p = 0; p < text.Length; p++ ) {
                 if ( text[p] == '\r' ) {
                     if ( p + 1 < text.Length - 1 && text[p + 1] == '\n' )
@@ -747,7 +747,7 @@ namespace RC.Framework.Yaml
         /// <returns>A performance-optimized table-based delegate built from the given <paramref name="definition"/>.</returns>
         protected static Func<char, bool> Charset(Func<char, bool> definition)
         {
-            return Charset(0x100, definition);
+            return Charset(table_size: 0x100, definition: definition);
         }
         /// <summary>
         /// <para>Builds a performance-optimized table-based character set definition from a simple 

@@ -35,7 +35,7 @@ namespace RC.Framework.FileSystem.Registry
         private RegistryHive _hive;
 
         public SubKeyHashedListCell(RegistryHive hive, string hashType)
-            : base(-1)
+            : base(index: -1)
         {
             _hive = hive;
             _hashType = hashType;
@@ -61,7 +61,7 @@ namespace RC.Framework.FileSystem.Registry
 
         public override int ReadFrom(byte[] buffer, int offset)
         {
-            _hashType = Utilities.BytesToString(buffer, offset, 2);
+            _hashType = Utilities.BytesToString(buffer, offset, count: 2);
             _numElements = Utilities.ToInt16LittleEndian(buffer, offset + 2);
 
             _subKeyIndexes = new List<int>(_numElements);
@@ -77,7 +77,7 @@ namespace RC.Framework.FileSystem.Registry
 
         public override void WriteTo(byte[] buffer, int offset)
         {
-            Utilities.StringToBytes(_hashType, buffer, offset, 2);
+            Utilities.StringToBytes(_hashType, buffer, offset, count: 2);
             Utilities.WriteBytesLittleEndian(_numElements, buffer, offset + 0x2);
             for (int i = 0; i < _numElements; ++i)
             {
@@ -114,7 +114,7 @@ namespace RC.Framework.FileSystem.Registry
         internal override int FindKey(string name, out int cellIndex)
         {
             // Check first and last, to early abort if the name is outside the range of this list
-            int result = FindKeyAt(name, 0, out cellIndex);
+            int result = FindKeyAt(name, listIndex: 0, cellIndex: out cellIndex);
             if (result <= 0)
             {
                 return result;
@@ -127,7 +127,7 @@ namespace RC.Framework.FileSystem.Registry
             }
 
             KeyFinder finder = new KeyFinder(_hive, name);
-            int idx = _subKeyIndexes.BinarySearch(-1, finder);
+            int idx = _subKeyIndexes.BinarySearch(item: -1, comparer: finder);
             cellIndex = finder.CellIndex;
             return (idx < 0) ? -1 : 0;
         }
@@ -151,7 +151,7 @@ namespace RC.Framework.FileSystem.Registry
         internal override int LinkSubKey(string name, int cellIndex)
         {
             Add(name, cellIndex);
-            return _hive.UpdateCell(this, true);
+            return _hive.UpdateCell(this, canRelocate: true);
         }
 
         internal override int UnlinkSubKey(string name)
@@ -160,7 +160,7 @@ namespace RC.Framework.FileSystem.Registry
             if (index >= 0)
             {
                 RemoveAt(index);
-                return _hive.UpdateCell(this, true);
+                return _hive.UpdateCell(this, canRelocate: true);
             }
 
             return Index;
@@ -173,7 +173,7 @@ namespace RC.Framework.FileSystem.Registry
         /// <returns>The index of the found key, or <c>-1</c>.</returns>
         internal int IndexOf(string name)
         {
-            foreach (var index in Find(name, 0))
+            foreach (var index in Find(name, start: 0))
             {
                 KeyNodeCell cell = _hive.GetCell<KeyNodeCell>(_subKeyIndexes[index]);
                 if (cell.Name.ToUpperInvariant() == name.ToUpperInvariant())
@@ -261,8 +261,8 @@ namespace RC.Framework.FileSystem.Registry
 
         private IEnumerable<int> FindByPrefix(string name, int start)
         {
-            int compChars = Math.Min(name.Length, 4);
-            string compStr = name.Substring(0, compChars).ToUpperInvariant() + "\0\0\0\0";
+            int compChars = Math.Min(name.Length, val2: 4);
+            string compStr = name.Substring(startIndex: 0, length: compChars).ToUpperInvariant() + "\0\0\0\0";
 
             for (int i = start; i < _nameHashes.Count; ++i)
             {

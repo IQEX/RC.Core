@@ -47,7 +47,7 @@ namespace RC.Framework.FileSystem.Ntfs
             if (EntrySize > 0)
             {
                 SecurityDescriptor = new byte[EntrySize - 0x14];
-                Array.Copy(buffer, offset + 0x14, SecurityDescriptor, 0, SecurityDescriptor.Length);
+                Array.Copy(buffer, offset + 0x14, SecurityDescriptor, destinationIndex: 0, length: SecurityDescriptor.Length);
                 return true;
             }
             else
@@ -71,7 +71,7 @@ namespace RC.Framework.FileSystem.Ntfs
             Utilities.WriteBytesLittleEndian(OffsetInFile, buffer, offset + 0x08);
             Utilities.WriteBytesLittleEndian(EntrySize, buffer, offset + 0x10);
 
-            Array.Copy(SecurityDescriptor, 0, buffer, offset + 0x14, SecurityDescriptor.Length);
+            Array.Copy(SecurityDescriptor, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + 0x14, length: SecurityDescriptor.Length);
         }
     }
 }

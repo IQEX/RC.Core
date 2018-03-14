@@ -125,7 +125,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The list of file systems detected.</returns>
         public FileSystemInfo[] DetectFileSystems(Stream stream)
         {
-            return DoDetect(stream, null);
+            return DoDetect(stream, volume: null);
         }
 
         private static List<VfsFileSystemFactory> DetectFactories(Assembly assembly)
@@ -134,7 +134,7 @@ namespace RC.Framework.FileSystem
 
             foreach (var type in assembly.GetTypes())
             {
-                foreach (VfsFileSystemFactoryAttribute attr in Attribute.GetCustomAttributes(type, typeof(VfsFileSystemFactoryAttribute), false))
+                foreach (VfsFileSystemFactoryAttribute attr in Attribute.GetCustomAttributes(type, typeof(VfsFileSystemFactoryAttribute), inherit: false))
                 {
                     factories.Add((VfsFileSystemFactory)Activator.CreateInstance(type));
                 }

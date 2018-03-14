@@ -73,7 +73,7 @@ namespace Colorful
         {
             List<KeyValuePair<string, Color>> styleMap = new List<KeyValuePair<string, Color>>();
 
-            MatchLocation previousLocation = new MatchLocation(0, 0);
+            MatchLocation previousLocation = new MatchLocation(beginning: 0, end: 0);
             int chocolateEnd = 0;
             foreach (KeyValuePair<StyleClass<TextPattern>, MatchLocation> styledLocation in targets)
             {
@@ -81,7 +81,7 @@ namespace Colorful
 
                 if (previousLocation.End > currentLocation.Beginning)
                 {
-                    previousLocation = new MatchLocation(0, 0);
+                    previousLocation = new MatchLocation(beginning: 0, end: 0);
                 }
 
                 int vanillaStart = previousLocation.End;

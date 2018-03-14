@@ -71,7 +71,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         public override void Delete()
         {
-            FileSystem.DeleteDirectory(Path, false);
+            FileSystem.DeleteDirectory(Path, recursive: false);
         }
 
         /// <summary>

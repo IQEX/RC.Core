@@ -63,11 +63,11 @@ namespace RC.Framework.FileSystem.Udf
             FileSetNumber = Utilities.ToUInt32LittleEndian(buffer, offset + 40);
             FileSetDescriptorNumber = Utilities.ToUInt32LittleEndian(buffer, offset + 44);
             LogicalVolumeIdentifierCharset = Utilities.ToStruct<CharacterSetSpecification>(buffer, offset + 48);
-            LogicalVolumeIdentifier = UdfUtilities.ReadDString(buffer, offset + 112, 128);
+            LogicalVolumeIdentifier = UdfUtilities.ReadDString(buffer, offset + 112, count: 128);
             FileSetCharset = Utilities.ToStruct<CharacterSetSpecification>(buffer, offset + 240);
-            FileSetIdentifier = UdfUtilities.ReadDString(buffer, offset + 304, 32);
-            CopyrightFileIdentifier = UdfUtilities.ReadDString(buffer, offset + 336, 32);
-            AbstractFileIdentifier = UdfUtilities.ReadDString(buffer, offset + 368, 32);
+            FileSetIdentifier = UdfUtilities.ReadDString(buffer, offset + 304, count: 32);
+            CopyrightFileIdentifier = UdfUtilities.ReadDString(buffer, offset + 336, count: 32);
+            AbstractFileIdentifier = UdfUtilities.ReadDString(buffer, offset + 368, count: 32);
             RootDirectoryIcb = Utilities.ToStruct<LongAllocationDescriptor>(buffer, offset + 400);
             DomainIdentifier = Utilities.ToStruct<DomainEntityIdentifier>(buffer, offset + 416);
             NextExtent = Utilities.ToStruct<LongAllocationDescriptor>(buffer, offset + 448);

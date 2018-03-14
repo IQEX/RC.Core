@@ -8,7 +8,7 @@ using RC.Framework;
 /// <summary>
 /// Класс расширения конвертации
 /// </summary>
-public static class ExtensionConvert
+internal static class ExtensionConvert
 {
     /// <summary>
     /// Reads all available elements from an enumerator and inserts it into a collection.

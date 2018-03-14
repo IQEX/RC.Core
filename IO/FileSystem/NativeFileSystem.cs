@@ -110,7 +110,7 @@ namespace RC.Framework.FileSystem
         /// <param name="destinationFile">The destination file</param>
         public override void CopyFile(string sourceFile, string destinationFile)
         {
-            CopyFile(sourceFile, destinationFile, true);
+            CopyFile(sourceFile, destinationFile, overwrite: true);
         }
 
         /// <summary>
@@ -128,15 +128,15 @@ namespace RC.Framework.FileSystem
 
             if (sourceFile.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                sourceFile = sourceFile.Substring(1);
+                sourceFile = sourceFile.Substring(startIndex: 1);
             }
 
             if (destinationFile.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                destinationFile = destinationFile.Substring(1);
+                destinationFile = destinationFile.Substring(startIndex: 1);
             }
 
-            File.Copy(Path.Combine(_basePath, sourceFile), Path.Combine(_basePath, destinationFile), true);
+            File.Copy(Path.Combine(_basePath, sourceFile), Path.Combine(_basePath, destinationFile), overwrite: true);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             Directory.CreateDirectory(Path.Combine(_basePath, path));
@@ -171,7 +171,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             Directory.Delete(Path.Combine(_basePath, path));
@@ -188,7 +188,7 @@ namespace RC.Framework.FileSystem
             {
                 foreach (string dir in GetDirectories(path))
                 {
-                    DeleteDirectory(dir, true);
+                    DeleteDirectory(dir, recursive: true);
                 }
 
                 foreach (string file in GetFiles(path))
@@ -213,7 +213,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             File.Delete(Path.Combine(_basePath, path));
@@ -228,7 +228,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return Directory.Exists(Path.Combine(_basePath, path));
@@ -243,7 +243,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return File.Exists(Path.Combine(_basePath, path));
@@ -293,7 +293,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             try
@@ -343,7 +343,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             try
@@ -381,7 +381,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             try
@@ -412,12 +412,12 @@ namespace RC.Framework.FileSystem
 
             if (sourceDirectoryName.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                sourceDirectoryName = sourceDirectoryName.Substring(1);
+                sourceDirectoryName = sourceDirectoryName.Substring(startIndex: 1);
             }
 
             if (destinationDirectoryName.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                destinationDirectoryName = destinationDirectoryName.Substring(1);
+                destinationDirectoryName = destinationDirectoryName.Substring(startIndex: 1);
             }
 
             Directory.Move(Path.Combine(_basePath, sourceDirectoryName), Path.Combine(_basePath, destinationDirectoryName));
@@ -430,7 +430,7 @@ namespace RC.Framework.FileSystem
         /// <param name="destinationName">The target file name.</param>
         public override void MoveFile(string sourceName, string destinationName)
         {
-            MoveFile(sourceName, destinationName, false);
+            MoveFile(sourceName, destinationName, overwrite: false);
         }
 
         /// <summary>
@@ -448,7 +448,7 @@ namespace RC.Framework.FileSystem
 
             if (destinationName.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                destinationName = destinationName.Substring(1);
+                destinationName = destinationName.Substring(startIndex: 1);
             }
 
             if (FileExists(Path.Combine(_basePath, destinationName)))
@@ -465,7 +465,7 @@ namespace RC.Framework.FileSystem
 
             if (sourceName.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                sourceName = sourceName.Substring(1);
+                sourceName = sourceName.Substring(startIndex: 1);
             }
 
             File.Move(Path.Combine(_basePath, sourceName), Path.Combine(_basePath, destinationName));
@@ -498,7 +498,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             FileShare fileShare = FileShare.None;
@@ -519,7 +519,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return File.GetAttributes(Path.Combine(_basePath, path));
@@ -539,7 +539,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             File.SetAttributes(Path.Combine(_basePath, path), newValue);
@@ -574,7 +574,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return File.GetCreationTimeUtc(Path.Combine(_basePath, path));
@@ -594,7 +594,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             File.SetCreationTimeUtc(Path.Combine(_basePath, path), newTime);
@@ -629,7 +629,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return File.GetLastAccessTimeUtc(Path.Combine(_basePath, path));
@@ -649,7 +649,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             File.SetLastAccessTimeUtc(Path.Combine(_basePath, path), newTime);
@@ -684,7 +684,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return File.GetLastWriteTimeUtc(Path.Combine(_basePath, path));
@@ -704,7 +704,7 @@ namespace RC.Framework.FileSystem
 
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             File.SetLastWriteTimeUtc(Path.Combine(_basePath, path), newTime);
@@ -719,7 +719,7 @@ namespace RC.Framework.FileSystem
         {
             if (path.StartsWith(@"\", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(1);
+                path = path.Substring(startIndex: 1);
             }
 
             return new FileInfo(Path.Combine(_basePath, path)).Length;

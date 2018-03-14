@@ -36,7 +36,7 @@ namespace RC.Framework.FileSystem.Vfs
         /// <returns>A list of file systems (may be empty)</returns>
         public RC.Framework.FileSystem.FileSystemInfo[] Detect(Stream stream)
         {
-            return Detect(stream, null);
+            return Detect(stream, volumeInfo: null);
         }
 
         /// <summary>

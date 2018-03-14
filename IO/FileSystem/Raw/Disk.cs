@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem.Raw
         /// <param name="stream">The stream to read</param>
         /// <param name="ownsStream">Indicates if the new instance should control the lifetime of the stream.</param>
         public Disk(Stream stream, Ownership ownsStream)
-            : this(stream, ownsStream, null)
+            : this(stream, ownsStream, geometry: null)
         {
         }
 
@@ -61,7 +61,7 @@ namespace RC.Framework.FileSystem.Raw
         /// <param name="path">The path to the disk image</param>
         public Disk(string path)
         {
-            _file = new DiskImageFile(new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None), Ownership.Dispose, null);
+            _file = new DiskImageFile(new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None), Ownership.Dispose, geometry: null);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace RC.Framework.FileSystem.Raw
         public Disk(string path, FileAccess access)
         {
             FileShare share = (access == FileAccess.Read) ? FileShare.Read : FileShare.None;
-            _file = new DiskImageFile(new FileStream(path, FileMode.Open, access, share), Ownership.Dispose, null);
+            _file = new DiskImageFile(new FileStream(path, FileMode.Open, access, share), Ownership.Dispose, geometry: null);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace RC.Framework.FileSystem.Raw
         /// <returns>An object that accesses the stream as a disk</returns>
         public static Disk Initialize(Stream stream, Ownership ownsStream, long capacity)
         {
-            return Initialize(stream, ownsStream, capacity, null);
+            return Initialize(stream, ownsStream, capacity, geometry: null);
         }
 
         /// <summary>

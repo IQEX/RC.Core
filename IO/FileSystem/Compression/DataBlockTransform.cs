@@ -51,8 +51,8 @@ namespace RC.Framework.FileSystem.Compression
                 {
                     byte[] tempBuffer = new byte[maxOut];
 
-                    int outCount = DoProcess(input, inputOffset, inputCount, tempBuffer, 0);
-                    Array.Copy(tempBuffer, 0, output, outputOffset, outCount);
+                    int outCount = DoProcess(input, inputOffset, inputCount, tempBuffer, outputOffset: 0);
+                    Array.Copy(tempBuffer, sourceIndex: 0, destinationArray: output, destinationIndex: outputOffset, length: outCount);
 
                     return outCount;
                 }

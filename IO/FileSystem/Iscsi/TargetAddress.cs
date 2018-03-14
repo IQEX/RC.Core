@@ -89,7 +89,7 @@ namespace RC.Framework.FileSystem.Iscsi
                 return new TargetAddress(address, DefaultPort, string.Empty);
             }
 
-            string addr = address.Substring(0, addrEnd);
+            string addr = address.Substring(startIndex: 0, length: addrEnd);
             int port = DefaultPort;
             string targetGroupTag = string.Empty;
 
@@ -97,7 +97,7 @@ namespace RC.Framework.FileSystem.Iscsi
             if (address[focus] == ':')
             {
                 int portStart = addrEnd + 1;
-                int portEnd = address.IndexOf(',', portStart);
+                int portEnd = address.IndexOf(value: ',', startIndex: portStart);
 
                 if (portEnd == -1)
                 {

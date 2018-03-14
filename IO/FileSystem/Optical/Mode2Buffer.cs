@@ -61,7 +61,7 @@ namespace RC.Framework.FileSystem.Optical
 
         public IEnumerable<StreamExtent> Extents
         {
-            get { yield return new StreamExtent(0, Capacity); }
+            get { yield return new StreamExtent(start: 0, length: Capacity); }
         }
 
         public int Read(long pos, byte[] buffer, int offset, int count)
@@ -75,7 +75,7 @@ namespace RC.Framework.FileSystem.Optical
                 long sector = thisPos / DiscImageFile.Mode1SectorSize;
                 int sectorOffset = (int)(thisPos - (sector * DiscImageFile.Mode1SectorSize));
 
-                int numRead = Utilities.ReadFully(_wrapped, sector * DiscImageFile.Mode2SectorSize, _iobuffer, 0, DiscImageFile.Mode2SectorSize);
+                int numRead = Utilities.ReadFully(_wrapped, sector * DiscImageFile.Mode2SectorSize, _iobuffer, offset: 0, length: DiscImageFile.Mode2SectorSize);
                 if (numRead < DiscImageFile.Mode2SectorSize)
                 {
                     throw new IOException("Failed to read entire sector");

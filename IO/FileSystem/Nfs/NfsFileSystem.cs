@@ -93,7 +93,7 @@ namespace RC.Framework.FileSystem.Nfs
         /// <returns>An enumeration of exported folders</returns>
         public static IEnumerable<string> GetExports(string address)
         {
-            using (RpcClient rpcClient = new RpcClient(address, null))
+            using (RpcClient rpcClient = new RpcClient(address, credential: null))
             {
                 Nfs3Mount mountClient = new Nfs3Mount(rpcClient);
                 foreach (var export in mountClient.Exports())
@@ -155,11 +155,11 @@ namespace RC.Framework.FileSystem.Nfs
                     int bufferSize = (int)Math.Max(1 * Sizes.OneMiB, Math.Min(_client.FileSystemInfo.WritePreferredBytes, _client.FileSystemInfo.ReadPreferredBytes));
                     byte[] buffer = new byte[bufferSize];
 
-                    int numRead = sourceFs.Read(buffer, 0, bufferSize);
+                    int numRead = sourceFs.Read(buffer, offset: 0, count: bufferSize);
                     while (numRead > 0)
                     {
-                        destFs.Write(buffer, 0, numRead);
-                        numRead = sourceFs.Read(buffer, 0, bufferSize);
+                        destFs.Write(buffer, offset: 0, count: numRead);
+                        numRead = sourceFs.Read(buffer, offset: 0, count: bufferSize);
                     }
                 }
 
@@ -290,7 +290,7 @@ namespace RC.Framework.FileSystem.Nfs
                 Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
                 List<string> dirs = new List<string>();
-                DoSearch(dirs, _client.RootHandle, path, re, searchOption == SearchOption.AllDirectories, true, false);
+                DoSearch(dirs, _client.RootHandle, path, re, searchOption == SearchOption.AllDirectories, dirs: true, files: false);
                 return dirs.ToArray();
             }
             catch (Nfs3Exception ne)
@@ -314,7 +314,7 @@ namespace RC.Framework.FileSystem.Nfs
                 Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
                 List<string> results = new List<string>();
-                DoSearch(results, _client.RootHandle, path, re, searchOption == SearchOption.AllDirectories, false, true);
+                DoSearch(results, _client.RootHandle, path, re, searchOption == SearchOption.AllDirectories, dirs: false, files: true);
                 return results.ToArray();
             }
             catch (Nfs3Exception ne)
@@ -335,7 +335,7 @@ namespace RC.Framework.FileSystem.Nfs
                 Regex re = Utilities.ConvertWildcardsToRegEx("*.*");
 
                 List<string> results = new List<string>();
-                DoSearch(results, _client.RootHandle, path, re, false, true, true);
+                DoSearch(results, _client.RootHandle, path, re, subFolders: false, dirs: true, files: true);
                 return results.ToArray();
             }
             catch (Nfs3Exception ne)
@@ -358,7 +358,7 @@ namespace RC.Framework.FileSystem.Nfs
                 Regex re = Utilities.ConvertWildcardsToRegEx(searchPattern);
 
                 List<string> results = new List<string>();
-                DoSearch(results, _client.RootHandle, path, re, false, true, true);
+                DoSearch(results, _client.RootHandle, path, re, subFolders: false, dirs: true, files: true);
                 return results.ToArray();
             }
             catch (Nfs3Exception ne)
@@ -495,11 +495,11 @@ namespace RC.Framework.FileSystem.Nfs
                     Nfs3FileStream result = new Nfs3FileStream(_client, handle, access);
                     if (mode == FileMode.Append)
                     {
-                        result.Seek(0, SeekOrigin.End);
+                        result.Seek(offset: 0, origin: SeekOrigin.End);
                     }
                     else if (mode == FileMode.Truncate)
                     {
-                        result.SetLength(0);
+                        result.SetLength(value: 0);
                     }
 
                     return result;
@@ -713,7 +713,7 @@ namespace RC.Framework.FileSystem.Nfs
 
         private void DoSearch(List<string> results, Nfs3FileHandle dir, string path, Regex regex, bool subFolders, bool dirs, bool files)
         {
-            foreach (Nfs3DirectoryEntry de in _client.ReadDirectory(dir, true))
+            foreach (Nfs3DirectoryEntry de in _client.ReadDirectory(dir, silentFail: true))
             {
                 if (de.Name == "." || de.Name == "..")
                 {
@@ -724,7 +724,7 @@ namespace RC.Framework.FileSystem.Nfs
 
                 if ((isDir && dirs) || (!isDir && files))
                 {
-                    string searchName = (de.Name.IndexOf('.') == -1) ? de.Name + "." : de.Name;
+                    string searchName = (de.Name.IndexOf(value: '.') == -1) ? de.Name + "." : de.Name;
 
                     if (regex.IsMatch(searchName))
                     {

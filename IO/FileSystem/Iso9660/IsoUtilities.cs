@@ -72,7 +72,7 @@ namespace RC.Framework.FileSystem.Iso9660
             }
 
             ////WriteASCII(buffer, offset, numBytes, true, str);
-            WriteString(buffer, offset, numBytes, true, str, Encoding.ASCII);
+            WriteString(buffer, offset, numBytes, pad: true, str: str, enc: Encoding.ASCII);
         }
 
         internal static void WriteDChars(byte[] buffer, int offset, int numBytes, string str)
@@ -84,7 +84,7 @@ namespace RC.Framework.FileSystem.Iso9660
             }
 
             ////WriteASCII(buffer, offset, numBytes, true, str);
-            WriteString(buffer, offset, numBytes, true, str, Encoding.ASCII);
+            WriteString(buffer, offset, numBytes, pad: true, str: str, enc: Encoding.ASCII);
         }
 
         internal static void WriteA1Chars(byte[] buffer, int offset, int numBytes, string str, Encoding enc)
@@ -95,7 +95,7 @@ namespace RC.Framework.FileSystem.Iso9660
                 throw new IOException("Attempt to write string with invalid a-characters");
             }
 
-            WriteString(buffer, offset, numBytes, true, str, enc);
+            WriteString(buffer, offset, numBytes, pad: true, str: str, enc: enc);
         }
 
         internal static void WriteD1Chars(byte[] buffer, int offset, int numBytes, string str, Encoding enc)
@@ -106,7 +106,7 @@ namespace RC.Framework.FileSystem.Iso9660
                 throw new IOException("Attempt to write string with invalid d-characters");
             }
 
-            WriteString(buffer, offset, numBytes, true, str, enc);
+            WriteString(buffer, offset, numBytes, pad: true, str: str, enc: enc);
         }
 
         internal static string ReadChars(byte[] buffer, int offset, int numBytes, Encoding enc)
@@ -122,8 +122,8 @@ namespace RC.Framework.FileSystem.Iso9660
             else
             {
                 Decoder decoder = enc.GetDecoder();
-                chars = new char[decoder.GetCharCount(buffer, offset, numBytes, false)];
-                decoder.GetChars(buffer, offset, numBytes, chars, 0, false);
+                chars = new char[decoder.GetCharCount(buffer, offset, numBytes, flush: false)];
+                decoder.GetChars(buffer, offset, numBytes, chars, charIndex: 0, flush: false);
             }
 
             return new string(chars).TrimEnd(' ');
@@ -165,19 +165,19 @@ namespace RC.Framework.FileSystem.Iso9660
 
         internal static int WriteString(byte[] buffer, int offset, int numBytes, bool pad, string str, Encoding enc)
         {
-            return WriteString(buffer, offset, numBytes, pad, str, enc, false);
+            return WriteString(buffer, offset, numBytes, pad, str, enc, canTruncate: false);
         }
 
         internal static int WriteString(byte[] buffer, int offset, int numBytes, bool pad, string str, Encoding enc, bool canTruncate)
         {
             Encoder encoder = enc.GetEncoder();
 
-            string paddedString = pad ? str + new string(' ', numBytes) : str; // Assumption: never less than one byte per character
+            string paddedString = pad ? str + new string(c: ' ', count: numBytes) : str; // Assumption: never less than one byte per character
 
             int charsUsed;
             int bytesUsed;
             bool completed;
-            encoder.Convert(paddedString.ToCharArray(), 0, paddedString.Length, buffer, offset, numBytes, false, out charsUsed, out bytesUsed, out completed);
+            encoder.Convert(paddedString.ToCharArray(), charIndex: 0, charCount: paddedString.Length, bytes: buffer, byteIndex: offset, byteCount: numBytes, flush: false, charsUsed: out charsUsed, bytesUsed: out bytesUsed, completed: out completed);
 
             if (!canTruncate && charsUsed < str.Length)
             {
@@ -239,7 +239,7 @@ namespace RC.Framework.FileSystem.Iso9660
 
         internal static bool IsValidDirectoryName(string str)
         {
-            if (str.Length == 1 && (str[0] == 0 || str[0] == 1))
+            if (str.Length == 1 && (str[index: 0] == 0 || str[index: 0] == 1))
             {
                 return true;
             }
@@ -261,11 +261,11 @@ namespace RC.Framework.FileSystem.Iso9660
 
             if (name.Contains("."))
             {
-                int endOfFilePart = name.IndexOf('.');
-                parts[0] = name.Substring(0, endOfFilePart);
+                int endOfFilePart = name.IndexOf(value: '.');
+                parts[0] = name.Substring(startIndex: 0, length: endOfFilePart);
                 if (name.Contains(";"))
                 {
-                    int verSep = name.IndexOf(';', endOfFilePart + 1);
+                    int verSep = name.IndexOf(value: ';', startIndex: endOfFilePart + 1);
                     parts[1] = name.Substring(endOfFilePart + 1, verSep - (endOfFilePart + 1));
                     parts[2] = name.Substring(verSep + 1);
                 }
@@ -278,8 +278,8 @@ namespace RC.Framework.FileSystem.Iso9660
             {
                 if (name.Contains(";"))
                 {
-                    int verSep = name.IndexOf(';');
-                    parts[0] = name.Substring(0, verSep);
+                    int verSep = name.IndexOf(value: ';');
+                    parts[0] = name.Substring(startIndex: 0, length: verSep);
                     parts[2] = name.Substring(verSep + 1);
                 }
             }
@@ -326,7 +326,7 @@ namespace RC.Framework.FileSystem.Iso9660
         {
             if (dateTime == DateTime.MinValue)
             {
-                Array.Clear(data, offset, 7);
+                Array.Clear(data, offset, length: 7);
             }
             else
             {
@@ -362,18 +362,18 @@ namespace RC.Framework.FileSystem.Iso9660
                 return DateTime.MinValue;
             }
 
-            string strForm = Encoding.ASCII.GetString(data, offset, 16);
+            string strForm = Encoding.ASCII.GetString(data, offset, count: 16);
 
             // Work around bugs in burning software that may use zero bytes (rather than '0' characters)
-            strForm = strForm.Replace('\0', '0');
+            strForm = strForm.Replace(oldChar: '\0', newChar: '0');
 
-            int year = SafeParseInt(1, 9999, strForm.Substring(0, 4));
-            int month = SafeParseInt(1, 12, strForm.Substring(4, 2));
-            int day = SafeParseInt(1, 31, strForm.Substring(6, 2));
-            int hour = SafeParseInt(0, 23, strForm.Substring(8, 2));
-            int min = SafeParseInt(0, 59, strForm.Substring(10, 2));
-            int sec = SafeParseInt(0, 59, strForm.Substring(12, 2));
-            int hundredths = SafeParseInt(0, 99, strForm.Substring(14, 2));
+            int year = SafeParseInt(minVal: 1, maxVal: 9999, str: strForm.Substring(startIndex: 0, length: 4));
+            int month = SafeParseInt(minVal: 1, maxVal: 12, str: strForm.Substring(startIndex: 4, length: 2));
+            int day = SafeParseInt(minVal: 1, maxVal: 31, str: strForm.Substring(startIndex: 6, length: 2));
+            int hour = SafeParseInt(minVal: 0, maxVal: 23, str: strForm.Substring(startIndex: 8, length: 2));
+            int min = SafeParseInt(minVal: 0, maxVal: 59, str: strForm.Substring(startIndex: 10, length: 2));
+            int sec = SafeParseInt(minVal: 0, maxVal: 59, str: strForm.Substring(startIndex: 12, length: 2));
+            int hundredths = SafeParseInt(minVal: 0, maxVal: 99, str: strForm.Substring(startIndex: 14, length: 2));
 
             try
             {
@@ -400,13 +400,13 @@ namespace RC.Framework.FileSystem.Iso9660
             }
 
             string strForm = dateTime.ToString("yyyyMMddHHmmssff", CultureInfo.InvariantCulture);
-            Utilities.StringToBytes(strForm, buffer, offset, 16);
+            Utilities.StringToBytes(strForm, buffer, offset, count: 16);
             buffer[offset + 16] = 0;
         }
 
         internal static void EncodingToBytes(Encoding enc, byte[] data, int offset)
         {
-            Array.Clear(data, offset, 32);
+            Array.Clear(data, offset, length: 32);
             if (enc == Encoding.ASCII)
             {
                 // Nothing to do

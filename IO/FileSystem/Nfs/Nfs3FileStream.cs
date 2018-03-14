@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.Nfs
         {
             get
             {
-                return new StreamExtent[] { new StreamExtent(0, Length) };
+                return new StreamExtent[] { new StreamExtent(start: 0, length: Length) };
             }
         }
 
@@ -89,7 +89,7 @@ namespace RC.Framework.FileSystem.Nfs
 
             int toCopy = Math.Min(count, readResult.Count);
 
-            Array.Copy(readResult.Data, 0, buffer, offset, toCopy);
+            Array.Copy(readResult.Data, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset, length: toCopy);
 
             if (readResult.Eof)
             {

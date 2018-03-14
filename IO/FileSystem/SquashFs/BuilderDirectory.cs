@@ -128,8 +128,8 @@ namespace RC.Framework.FileSystem.SquashFs
                     StartBlock = (int)thisBlock
                 };
 
-                hdr.WriteTo(context.IoBuffer, 0);
-                context.DirectoryWriter.Write(context.IoBuffer, 0, hdr.Size);
+                hdr.WriteTo(context.IoBuffer, offset: 0);
+                context.DirectoryWriter.Write(context.IoBuffer, offset: 0, count: hdr.Size);
 
                 for (int i = 0; i < count; ++i)
                 {
@@ -142,8 +142,8 @@ namespace RC.Framework.FileSystem.SquashFs
                         Name = child.Name
                     };
 
-                    record.WriteTo(context.IoBuffer, 0);
-                    context.DirectoryWriter.Write(context.IoBuffer, 0, record.Size);
+                    record.WriteTo(context.IoBuffer, offset: 0);
+                    context.DirectoryWriter.Write(context.IoBuffer, offset: 0, count: record.Size);
 
                     if (child.Node.Inode.Type == InodeType.Directory
                         || child.Node.Inode.Type == InodeType.ExtendedDirectory)
@@ -175,9 +175,9 @@ namespace RC.Framework.FileSystem.SquashFs
 
             InodeRef = context.InodeWriter.Position;
 
-            _inode.WriteTo(context.IoBuffer, 0);
+            _inode.WriteTo(context.IoBuffer, offset: 0);
 
-            context.InodeWriter.Write(context.IoBuffer, 0, _inode.Size);
+            context.InodeWriter.Write(context.IoBuffer, offset: 0, count: _inode.Size);
         }
 
         private class Entry : IComparable<Entry>

@@ -106,7 +106,7 @@ namespace RC.Framework.FileSystem
             get
             {
                 byte[] buffer = new byte[1];
-                if (Read(pos, buffer, 0, 1) != 0)
+                if (Read(pos, buffer, offset: 0, count: 1) != 0)
                 {
                     return buffer[0];
                 }
@@ -120,7 +120,7 @@ namespace RC.Framework.FileSystem
             {
                 byte[] buffer = new byte[1];
                 buffer[0] = value;
-                Write(pos, buffer, 0, 1);
+                Write(pos, buffer, offset: 0, count: 1);
             }
         }
 

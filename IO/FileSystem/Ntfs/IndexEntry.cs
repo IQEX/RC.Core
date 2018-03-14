@@ -102,7 +102,7 @@ namespace RC.Framework.FileSystem.Ntfs
                     size += IsFileIndexEntry ? 0 : _dataBuffer.Length;
                 }
 
-                size = Utilities.RoundUp(size, 8);
+                size = Utilities.RoundUp(size, unit: 8);
 
                 if ((_flags & IndexEntryFlags.Node) != 0)
                 {
@@ -129,18 +129,18 @@ namespace RC.Framework.FileSystem.Ntfs
             if ((_flags & IndexEntryFlags.End) == 0)
             {
                 _keyBuffer = new byte[keyLength];
-                Array.Copy(buffer, offset + 0x10, _keyBuffer, 0, keyLength);
+                Array.Copy(buffer, offset + 0x10, _keyBuffer, destinationIndex: 0, length: keyLength);
 
                 if (IsFileIndexEntry)
                 {
                     // Special case, for file indexes, the MFT ref is held where the data offset & length go
                     _dataBuffer = new byte[8];
-                    Array.Copy(buffer, offset + 0x00, _dataBuffer, 0, 8);
+                    Array.Copy(buffer, offset + 0x00, _dataBuffer, destinationIndex: 0, length: 8);
                 }
                 else
                 {
                     _dataBuffer = new byte[dataLength];
-                    Array.Copy(buffer, offset + 0x10 + keyLength, _dataBuffer, 0, dataLength);
+                    Array.Copy(buffer, offset + 0x10 + keyLength, _dataBuffer, destinationIndex: 0, length: dataLength);
                 }
             }
 
@@ -160,7 +160,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
                 if (IsFileIndexEntry)
                 {
-                    Array.Copy(_dataBuffer, 0, buffer, offset + 0x00, 8);
+                    Array.Copy(_dataBuffer, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + 0x00, length: 8);
                 }
                 else
                 {
@@ -169,11 +169,11 @@ namespace RC.Framework.FileSystem.Ntfs
 
                     Utilities.WriteBytesLittleEndian(dataOffset, buffer, offset + 0x00);
                     Utilities.WriteBytesLittleEndian(dataLength, buffer, offset + 0x02);
-                    Array.Copy(_dataBuffer, 0, buffer, offset + dataOffset, _dataBuffer.Length);
+                    Array.Copy(_dataBuffer, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + dataOffset, length: _dataBuffer.Length);
                 }
 
                 Utilities.WriteBytesLittleEndian(keyLength, buffer, offset + 0x0A);
-                Array.Copy(_keyBuffer, 0, buffer, offset + 0x10, _keyBuffer.Length);
+                Array.Copy(_keyBuffer, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset + 0x10, length: _keyBuffer.Length);
             }
             else
             {

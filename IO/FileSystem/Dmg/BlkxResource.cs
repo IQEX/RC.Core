@@ -31,7 +31,7 @@ namespace RC.Framework.FileSystem.Dmg
         internal BlkxResource(Dictionary<string, object> parts)
             : base("blkx", parts)
         {
-            _block = Utilities.ToStruct<CompressedBlock>(parts["Data"] as byte[], 0);
+            _block = Utilities.ToStruct<CompressedBlock>(parts["Data"] as byte[], offset: 0);
         }
 
         public CompressedBlock Block

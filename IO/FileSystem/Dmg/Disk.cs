@@ -82,7 +82,7 @@ namespace RC.Framework.FileSystem.Dmg
             {
                 if (_content == null)
                 {
-                    _content = _file.OpenContent(null, Ownership.None);
+                    _content = _file.OpenContent(parentStream: null, ownsStream: Ownership.None);
                 }
 
                 return _content;

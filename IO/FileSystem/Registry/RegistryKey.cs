@@ -239,7 +239,7 @@ namespace RC.Framework.FileSystem.Registry
         /// </remarks>
         public object GetValue(string name)
         {
-            return GetValue(name, null, Microsoft.Win32.RegistryValueOptions.None);
+            return GetValue(name, defaultValue: null, options: Microsoft.Win32.RegistryValueOptions.None);
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace RC.Framework.FileSystem.Registry
         /// <param name="name">The name of the value to delete.</param>
         public void DeleteValue(string name)
         {
-            DeleteValue(name, true);
+            DeleteValue(name, throwOnMissingValue: true);
         }
 
         /// <summary>
@@ -409,7 +409,7 @@ namespace RC.Framework.FileSystem.Registry
                         foundValue = true;
                         _hive.FreeCell(valueIndex);
                         _cell.NumValues--;
-                        _hive.UpdateCell(_cell, false);
+                        _hive.UpdateCell(_cell, canRelocate: false);
                         break;
                     }
 
@@ -427,7 +427,7 @@ namespace RC.Framework.FileSystem.Registry
                         ++i;
                     }
 
-                    _hive.WriteRawCellData(_cell.ValueListIndex, valueList, 0, _cell.NumValues * 4);
+                    _hive.WriteRawCellData(_cell.ValueListIndex, valueList, offset: 0, count: _cell.NumValues * 4);
                 }
 
                 // TODO: Update maxbytes for value name and value content if this was the largest value for either.
@@ -483,7 +483,7 @@ namespace RC.Framework.FileSystem.Registry
                 return this;
             }
 
-            string[] split = subkey.Split(new char[] { '\\' }, 2);
+            string[] split = subkey.Split(new char[] { '\\' }, count: 2);
             int cellIndex = FindSubKeyCell(split[0]);
 
             if (cellIndex < 0)
@@ -491,7 +491,7 @@ namespace RC.Framework.FileSystem.Registry
                 KeyNodeCell newKeyCell = new KeyNodeCell(split[0], _cell.Index);
                 newKeyCell.SecurityIndex = _cell.SecurityIndex;
                 ReferenceSecurityCell(newKeyCell.SecurityIndex);
-                _hive.UpdateCell(newKeyCell, true);
+                _hive.UpdateCell(newKeyCell, canRelocate: true);
 
                 LinkSubKey(split[0], newKeyCell.Index);
 
@@ -530,7 +530,7 @@ namespace RC.Framework.FileSystem.Registry
                 return this;
             }
 
-            string[] split = path.Split(new char[] { '\\' }, 2);
+            string[] split = path.Split(new char[] { '\\' }, count: 2);
             int cellIndex = FindSubKeyCell(split[0]);
 
             if (cellIndex < 0)
@@ -582,7 +582,7 @@ namespace RC.Framework.FileSystem.Registry
         /// <param name="subkey">The subkey to delete</param>
         public void DeleteSubKey(string subkey)
         {
-            DeleteSubKey(subkey, true);
+            DeleteSubKey(subkey, throwOnMissingSubKey: true);
         }
 
         /// <summary>
@@ -597,7 +597,7 @@ namespace RC.Framework.FileSystem.Registry
                 throw new ArgumentException("Invalid SubKey", "subkey");
             }
 
-            string[] split = subkey.Split(new char[] { '\\' }, 2);
+            string[] split = subkey.Split(new char[] { '\\' }, count: 2);
 
             int subkeyCellIndex = FindSubKeyCell(split[0]);
             if (subkeyCellIndex < 0)
@@ -646,7 +646,7 @@ namespace RC.Framework.FileSystem.Registry
 
                 UnlinkSubKey(subkey);
                 _hive.FreeCell(subkeyCellIndex);
-                _hive.UpdateCell(_cell, false);
+                _hive.UpdateCell(_cell, canRelocate: false);
             }
             else
             {
@@ -702,17 +702,17 @@ namespace RC.Framework.FileSystem.Registry
 
             // Allocate a new value cell (note _hive.UpdateCell does actual allocation).
             ValueCell valueCell = new ValueCell(name);
-            _hive.UpdateCell(valueCell, true);
+            _hive.UpdateCell(valueCell, canRelocate: true);
 
             // Update the value list, re-allocating if necessary
             byte[] newValueList = new byte[(_cell.NumValues * 4) + 4];
-            Array.Copy(valueList, 0, newValueList, 0, insertIdx * 4);
+            Array.Copy(valueList, sourceIndex: 0, destinationArray: newValueList, destinationIndex: 0, length: insertIdx * 4);
             Utilities.WriteBytesLittleEndian(valueCell.Index, newValueList, insertIdx * 4);
             Array.Copy(valueList, insertIdx * 4, newValueList, (insertIdx * 4) + 4, (_cell.NumValues - insertIdx) * 4);
-            if (_cell.ValueListIndex == -1 || !_hive.WriteRawCellData(_cell.ValueListIndex, newValueList, 0, newValueList.Length))
+            if (_cell.ValueListIndex == -1 || !_hive.WriteRawCellData(_cell.ValueListIndex, newValueList, offset: 0, count: newValueList.Length))
             {
-                int newListCellIndex = _hive.AllocateRawCell(Utilities.RoundUp(newValueList.Length, 8));
-                _hive.WriteRawCellData(newListCellIndex, newValueList, 0, newValueList.Length);
+                int newListCellIndex = _hive.AllocateRawCell(Utilities.RoundUp(newValueList.Length, unit: 8));
+                _hive.WriteRawCellData(newListCellIndex, newValueList, offset: 0, count: newValueList.Length);
 
                 if (_cell.ValueListIndex != -1)
                 {
@@ -724,7 +724,7 @@ namespace RC.Framework.FileSystem.Registry
 
             // Record the new value and save this cell
             _cell.NumValues++;
-            _hive.UpdateCell(_cell, false);
+            _hive.UpdateCell(_cell, canRelocate: false);
 
             // Finally, set the data in the value cell
             return new RegistryValue(_hive, valueCell);
@@ -752,7 +752,7 @@ namespace RC.Framework.FileSystem.Registry
             {
                 SubKeyHashedListCell newListCell = new SubKeyHashedListCell(_hive, "lf");
                 newListCell.Add(name, cellIndex);
-                _hive.UpdateCell(newListCell, true);
+                _hive.UpdateCell(newListCell, canRelocate: true);
                 _cell.NumSubKeys = 1;
                 _cell.SubKeysIndex = newListCell.Index;
             }
@@ -763,7 +763,7 @@ namespace RC.Framework.FileSystem.Registry
                 _cell.NumSubKeys++;
             }
 
-            _hive.UpdateCell(_cell, false);
+            _hive.UpdateCell(_cell, canRelocate: false);
         }
 
         private void UnlinkSubKey(string name)
@@ -782,7 +782,7 @@ namespace RC.Framework.FileSystem.Registry
         {
             SecurityCell sc = _hive.GetCell<SecurityCell>(cellIndex);
             sc.UsageCount++;
-            _hive.UpdateCell(sc, false);
+            _hive.UpdateCell(sc, canRelocate: false);
         }
 
         private void DereferenceSecurityCell(int cellIndex)
@@ -793,17 +793,17 @@ namespace RC.Framework.FileSystem.Registry
             {
                 SecurityCell prev = _hive.GetCell<SecurityCell>(sc.PreviousIndex);
                 prev.NextIndex = sc.NextIndex;
-                _hive.UpdateCell(prev, false);
+                _hive.UpdateCell(prev, canRelocate: false);
 
                 SecurityCell next = _hive.GetCell<SecurityCell>(sc.NextIndex);
                 next.PreviousIndex = sc.PreviousIndex;
-                _hive.UpdateCell(next, false);
+                _hive.UpdateCell(next, canRelocate: false);
 
                 _hive.FreeCell(cellIndex);
             }
             else
             {
-                _hive.UpdateCell(sc, false);
+                _hive.UpdateCell(sc, canRelocate: false);
             }
         }
 

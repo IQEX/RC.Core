@@ -121,7 +121,7 @@ namespace RC.Framework.FileSystem.Optical
         {
             // Note external sector size is always 2048 - 2352 just has extra header
             // & error-correction info
-            get { return new Geometry(1, 1, 1, Mode1SectorSize); }
+            get { return new Geometry(cylinders: 1, headsPerCylinder: 1, sectorsPerTrack: 1, bytesPerSector: Mode1SectorSize); }
         }
 
         internal override long Capacity

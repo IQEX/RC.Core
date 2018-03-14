@@ -87,7 +87,7 @@ namespace RC.Framework.FileSystem.Iscsi
         {
             get
             {
-                yield return new StreamExtent(0, _length);
+                yield return new StreamExtent(start: 0, length: _length);
             }
         }
 
@@ -108,7 +108,7 @@ namespace RC.Framework.FileSystem.Iscsi
             long lastBlock = Utilities.Ceil(_position + maxToRead, _blockSize);
 
             byte[] tempBuffer = new byte[(lastBlock - firstBlock) * _blockSize];
-            int numRead = _session.Read(_lun, firstBlock, (short)(lastBlock - firstBlock), tempBuffer, 0);
+            int numRead = _session.Read(_lun, firstBlock, (short)(lastBlock - firstBlock), tempBuffer, offset: 0);
 
             int numCopied = Math.Min(maxToRead, numRead);
             Array.Copy(tempBuffer, _position - (firstBlock * _blockSize), buffer, offset, numCopied);
@@ -173,7 +173,7 @@ namespace RC.Framework.FileSystem.Iscsi
                     toWrite = (int)Math.Min(toWrite, _blockSize - offsetInBlock);
 
                     byte[] blockBuffer = new byte[_blockSize];
-                    int numRead = _session.Read(_lun, block, 1, blockBuffer, 0);
+                    int numRead = _session.Read(_lun, block, blockCount: 1, buffer: blockBuffer, offset: 0);
 
                     if (numRead != _blockSize)
                     {
@@ -184,7 +184,7 @@ namespace RC.Framework.FileSystem.Iscsi
                     Array.Copy(buffer, offset + numWritten, blockBuffer, offsetInBlock, toWrite);
 
                     // Write the block back
-                    _session.Write(_lun, block, 1, _blockSize, blockBuffer, 0);
+                    _session.Write(_lun, block, blockCount: 1, blockSize: _blockSize, buffer: blockBuffer, offset: 0);
                 }
                 else
                 {

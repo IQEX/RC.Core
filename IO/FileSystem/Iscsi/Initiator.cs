@@ -111,7 +111,7 @@ namespace RC.Framework.FileSystem.Iscsi
         /// <remarks>If you just have an IP address, use this method to discover the available Targets.</remarks>
         public TargetInfo[] GetTargets(TargetAddress address)
         {
-            using (Session session = new Session(SessionType.Discovery, null, _userName, _password, new TargetAddress[] { address }))
+            using (Session session = new Session(SessionType.Discovery, targetName: null, userName: _userName, password: _password, addresses: new TargetAddress[] { address }))
             {
                 return session.EnumerateTargets();
             }

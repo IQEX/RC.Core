@@ -1157,7 +1157,7 @@ namespace Colorful
 
         public static void WriteAscii(string value)
         {
-            WriteAscii(value, null);
+            WriteAscii(value, font: null);
         }
 
         public static void WriteAscii(string value, FigletFont font)
@@ -1167,7 +1167,7 @@ namespace Colorful
 
         public static void WriteAscii(string value, Color color)
         {
-            WriteAscii(value, null, color);
+            WriteAscii(value, font: null, color: color);
         }
 
         public static void WriteAscii(string value, FigletFont font, Color color)
@@ -1177,7 +1177,7 @@ namespace Colorful
 
         public static void WriteAsciiAlternating(string value, ColorAlternator alternator)
         {
-            WriteAsciiAlternating(value, null, alternator);
+            WriteAsciiAlternating(value, font: null, alternator: alternator);
         }
 
         public static void WriteAsciiAlternating(string value, FigletFont font, ColorAlternator alternator)
@@ -1190,7 +1190,7 @@ namespace Colorful
 
         public static void WriteAsciiStyled(string value, StyleSheet styleSheet)
         {
-            WriteAsciiStyled(value, null, styleSheet);
+            WriteAsciiStyled(value, font: null, styleSheet: styleSheet);
         }
 
         public static void WriteAsciiStyled(string value, FigletFont font, StyleSheet styleSheet)

@@ -99,7 +99,7 @@ namespace RC.Framework.FileSystem
         {
             _diskId = diskId;
             _disk = disk;
-            _streamOpener = delegate { return new SubStream(disk.Content, Ownership.None, 0, disk.Capacity); };
+            _streamOpener = delegate { return new SubStream(disk.Content, Ownership.None, first: 0, length: disk.Capacity); };
             _type = PhysicalVolumeType.EntireDisk;
         }
 

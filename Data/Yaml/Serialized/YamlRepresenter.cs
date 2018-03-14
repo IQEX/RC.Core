@@ -140,7 +140,7 @@ namespace RC.Framework.Yaml.Serialization
         private YamlNode CreateArrayNode(Array array)
         {
             Type type = array.GetType();
-            return CreateArrayNodeSub(array, 0, new long[type.GetArrayRank()]);
+            return CreateArrayNodeSub(array, i: 0, indices: new long[type.GetArrayRank()]);
         }
         private YamlNode CreateArrayNodeSub(Array array, int i, long[] indices)
         {
@@ -207,7 +207,7 @@ namespace RC.Framework.Yaml.Serialization
             var sb = new StringBuilder();
             for ( int i = 0; i < s.Length; i += 80 ) {
                 if ( i + 80 < s.Length ) {
-                    sb.AppendLine(s.Substring(i, 80));
+                    sb.AppendLine(s.Substring(i, length: 80));
                 } else {
                     sb.AppendLine(s.Substring(i));
                 }

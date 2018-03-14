@@ -44,13 +44,13 @@ namespace RC.Framework.FileSystem.Vmdk
 
             file.Position = 0;
             byte[] headerSector = Utilities.ReadFully(file, Sizes.Sector);
-            _hostedHeader = HostedSparseExtentHeader.Read(headerSector, 0);
+            _hostedHeader = HostedSparseExtentHeader.Read(headerSector, offset: 0);
             if (_hostedHeader.GdOffset == -1)
             {
                 // Fall back to secondary copy that (should) be at the end of the stream, just before the end-of-stream sector marker
                 file.Position = file.Length - Sizes.OneKiB;
                 headerSector = Utilities.ReadFully(file, Sizes.Sector);
-                _hostedHeader = HostedSparseExtentHeader.Read(headerSector, 0);
+                _hostedHeader = HostedSparseExtentHeader.Read(headerSector, offset: 0);
 
                 if (_hostedHeader.MagicNumber != HostedSparseExtentHeader.VmdkMagicNumber)
                 {
@@ -129,13 +129,13 @@ namespace RC.Framework.FileSystem.Vmdk
 
                 byte[] readBuffer = Utilities.ReadFully(_fileStream, CompressedGrainHeader.Size);
                 CompressedGrainHeader hdr = new CompressedGrainHeader();
-                hdr.Read(readBuffer, 0);
+                hdr.Read(readBuffer, offset: 0);
 
                 readBuffer = Utilities.ReadFully(_fileStream, hdr.DataSize);
 
                 // This is really a zlib stream, so has header and footer.  We ignore this right now, but we sanity
                 // check against expected header values...
-                ushort header = Utilities.ToUInt16BigEndian(readBuffer, 0);
+                ushort header = Utilities.ToUInt16BigEndian(readBuffer, offset: 0);
 
                 if ((header % 31) != 0)
                 {
@@ -152,7 +152,7 @@ namespace RC.Framework.FileSystem.Vmdk
                     throw new NotSupportedException("ZLib compression using preset dictionary");
                 }
 
-                Stream readStream = new MemoryStream(readBuffer, 2, hdr.DataSize - 2, false);
+                Stream readStream = new MemoryStream(readBuffer, index: 2, count: hdr.DataSize - 2, writable: false);
                 DeflateStream deflateStream = new DeflateStream(readStream, CompressionMode.Decompress);
 
                 // Need to skip some bytes, but DefaultStream doesn't support seeking...
@@ -174,7 +174,7 @@ namespace RC.Framework.FileSystem.Vmdk
 
                 byte[] readBuffer = Utilities.ReadFully(_fileStream, CompressedGrainHeader.Size);
                 CompressedGrainHeader hdr = new CompressedGrainHeader();
-                hdr.Read(readBuffer, 0);
+                hdr.Read(readBuffer, offset: 0);
 
                 return new StreamExtent(grainStart + grainOffset, CompressedGrainHeader.Size + hdr.DataSize);
             }
@@ -210,7 +210,7 @@ namespace RC.Framework.FileSystem.Vmdk
             _parentDiskStream.Position = _diskOffset + ((grain + (_header.NumGTEsPerGT * (long)grainTable)) * _header.GrainSize * Sizes.Sector);
             byte[] content = Utilities.ReadFully(_parentDiskStream, (int)_header.GrainSize * Sizes.Sector);
             _fileStream.Position = grainStartPos;
-            _fileStream.Write(content, 0, content.Length);
+            _fileStream.Write(content, offset: 0, count: content.Length);
 
             LoadGrainTable(grainTable);
             SetGrainTableEntry(grain, (uint)(grainStartPos / Sizes.Sector));
@@ -225,12 +225,12 @@ namespace RC.Framework.FileSystem.Vmdk
             }
 
             _fileStream.Position = _globalDirectory[_currentGrainTable] * (long)Sizes.Sector;
-            _fileStream.Write(_grainTable, 0, _grainTable.Length);
+            _fileStream.Write(_grainTable, offset: 0, count: _grainTable.Length);
 
             if (_redundantGlobalDirectory != null)
             {
                 _fileStream.Position = _redundantGlobalDirectory[_currentGrainTable] * (long)Sizes.Sector;
-                _fileStream.Write(_grainTable, 0, _grainTable.Length);
+                _fileStream.Write(_grainTable, offset: 0, count: _grainTable.Length);
             }
         }
     }

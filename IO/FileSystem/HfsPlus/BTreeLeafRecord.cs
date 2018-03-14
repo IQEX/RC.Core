@@ -62,7 +62,7 @@ namespace RC.Framework.FileSystem.HfsPlus
             }
 
             _data = new byte[_size - keySize];
-            Array.Copy(buffer, offset + keySize, _data, 0, _data.Length);
+            Array.Copy(buffer, offset + keySize, _data, destinationIndex: 0, length: _data.Length);
 
             return _size;
         }

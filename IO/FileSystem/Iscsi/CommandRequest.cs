@@ -55,18 +55,18 @@ namespace RC.Framework.FileSystem.Iscsi
             _basicHeader.DataSegmentLength = count;
             _basicHeader.InitiatorTaskTag = _connection.Session.CurrentTaskTag;
 
-            byte[] buffer = new byte[48 + Utilities.RoundUp(count, 4)];
-            _basicHeader.WriteTo(buffer, 0);
+            byte[] buffer = new byte[48 + Utilities.RoundUp(count, unit: 4)];
+            _basicHeader.WriteTo(buffer, offset: 0);
             buffer[1] = PackAttrByte(isFinalData, willRead, willWrite, cmd.TaskAttributes);
-            Utilities.WriteBytesBigEndian(_lun, buffer, 8);
-            Utilities.WriteBytesBigEndian(expected, buffer, 20);
-            Utilities.WriteBytesBigEndian(_connection.Session.CommandSequenceNumber, buffer, 24);
-            Utilities.WriteBytesBigEndian(_connection.ExpectedStatusSequenceNumber, buffer, 28);
-            cmd.WriteTo(buffer, 32);
+            Utilities.WriteBytesBigEndian(_lun, buffer, offset: 8);
+            Utilities.WriteBytesBigEndian(expected, buffer, offset: 20);
+            Utilities.WriteBytesBigEndian(_connection.Session.CommandSequenceNumber, buffer, offset: 24);
+            Utilities.WriteBytesBigEndian(_connection.ExpectedStatusSequenceNumber, buffer, offset: 28);
+            cmd.WriteTo(buffer, offset: 32);
 
             if (immediateData != null && count != 0)
             {
-                Array.Copy(immediateData, offset, buffer, 48, count);
+                Array.Copy(immediateData, offset, buffer, destinationIndex: 48, length: count);
             }
 
             return buffer;

@@ -133,7 +133,7 @@ namespace RC.Framework.Net.Nat
         }
 
 	    internal Mapping(Protocol protocol, IPAddress privateIP, int privatePort, int publicPort)
-            : this(protocol, privateIP, privatePort, publicPort, 0, "RC.Framework.Net.Nat")
+            : this(protocol, privateIP, privatePort, publicPort, lifetime: 0, description: "RC.Framework.Net.Nat")
 		{
 		}
 
@@ -148,9 +148,9 @@ namespace RC.Framework.Net.Nat
         /// <param name="description">The description.</param>
         public Mapping(Protocol protocol, IPAddress privateIP, int privatePort, int publicPort, int lifetime, string description)
         {
-            Guard.IsInRange(privatePort, 0, ushort.MaxValue, "privatePort");
-            Guard.IsInRange(publicPort, 0, ushort.MaxValue, "publicPort");
-            Guard.IsInRange(lifetime, 0, int.MaxValue, "lifetime");
+            Guard.IsInRange(privatePort, lowerBound: 0, upperBound: ushort.MaxValue, paramName: "privatePort");
+            Guard.IsInRange(publicPort, lowerBound: 0, upperBound: ushort.MaxValue, paramName: "publicPort");
+            Guard.IsInRange(lifetime, lowerBound: 0, upperBound: int.MaxValue, paramName: "lifetime");
             Guard.IsTrue(protocol == Protocol.Tcp || protocol == Protocol.Udp, "protocol");
             Guard.IsNotNull(privateIP, "privateIP");
 
@@ -173,7 +173,7 @@ namespace RC.Framework.Net.Nat
         /// This constructor initializes a Permanent mapping. The description by deafult is "RC.Framework.Net.Nat"
         /// </remarks>
         public Mapping(Protocol protocol, int privatePort, int publicPort)
-            : this(protocol, IPAddress.None, privatePort, publicPort, 0, "RC.Framework.Net.Nat")
+            : this(protocol, IPAddress.None, privatePort, publicPort, lifetime: 0, description: "RC.Framework.Net.Nat")
         {
         }
 
@@ -238,10 +238,10 @@ namespace RC.Framework.Net.Nat
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(objA: null, objB: obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             var m = obj as Mapping;
-            if (ReferenceEquals(null, m)) return false;
+            if (ReferenceEquals(objA: null, objB: m)) return false;
             return PublicPort == m.PublicPort && PrivatePort == m.PrivatePort;
         }
 

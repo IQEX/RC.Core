@@ -174,26 +174,26 @@ namespace RC.Framework.Native.Win32
         [StructLayout(LayoutKind.Explicit)]
         public struct IMAGE_SECTION_HEADER
         {
-            [FieldOffset(0)]
+            [FieldOffset(offset: 0)]
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
             public char[] Name;
-            [FieldOffset(8)]
+            [FieldOffset(offset: 8)]
             public UInt32 VirtualSize;
-            [FieldOffset(12)]
+            [FieldOffset(offset: 12)]
             public UInt32 VirtualAddress;
-            [FieldOffset(16)]
+            [FieldOffset(offset: 16)]
             public UInt32 SizeOfRawData;
-            [FieldOffset(20)]
+            [FieldOffset(offset: 20)]
             public UInt32 PointerToRawData;
-            [FieldOffset(24)]
+            [FieldOffset(offset: 24)]
             public UInt32 PointerToRelocations;
-            [FieldOffset(28)]
+            [FieldOffset(offset: 28)]
             public UInt32 PointerToLinenumbers;
-            [FieldOffset(32)]
+            [FieldOffset(offset: 32)]
             public UInt16 NumberOfRelocations;
-            [FieldOffset(34)]
+            [FieldOffset(offset: 34)]
             public UInt16 NumberOfLinenumbers;
-            [FieldOffset(36)]
+            [FieldOffset(offset: 36)]
             public DataSectionFlags Characteristics;
 
             public string Section
@@ -548,7 +548,7 @@ namespace RC.Framework.Native.Win32
             get
             {
                 // Timestamp is a date offset from 1970
-                DateTime returnValue = new DateTime(1970, 1, 1, 0, 0, 0);
+                DateTime returnValue = new DateTime(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0);
 
                 // Add in the number of seconds since 1970/1/1
                 returnValue = returnValue.AddSeconds(fileHeader.TimeDateStamp);

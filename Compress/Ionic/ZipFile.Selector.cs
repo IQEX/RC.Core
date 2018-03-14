@@ -246,7 +246,7 @@ namespace Ionic.Zip
         /// <param name="selectionCriteria">The criteria for file selection</param>
         public void AddSelectedFiles(String selectionCriteria)
         {
-            this.AddSelectedFiles(selectionCriteria, ".", null, false);
+            this.AddSelectedFiles(selectionCriteria, ".", directoryPathInArchive: null, recurseDirectories: false);
         }
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace Ionic.Zip
         /// </param>
         public void AddSelectedFiles(String selectionCriteria, bool recurseDirectories)
         {
-            this.AddSelectedFiles(selectionCriteria, ".", null, recurseDirectories);
+            this.AddSelectedFiles(selectionCriteria, ".", directoryPathInArchive: null, recurseDirectories: recurseDirectories);
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace Ionic.Zip
         /// </param>
         public void AddSelectedFiles(String selectionCriteria, String directoryOnDisk)
         {
-            this.AddSelectedFiles(selectionCriteria, directoryOnDisk, null, false);
+            this.AddSelectedFiles(selectionCriteria, directoryOnDisk, directoryPathInArchive: null, recurseDirectories: false);
         }
 
 
@@ -440,7 +440,7 @@ namespace Ionic.Zip
         /// </param>
         public void AddSelectedFiles(String selectionCriteria, String directoryOnDisk, bool recurseDirectories)
         {
-            this.AddSelectedFiles(selectionCriteria, directoryOnDisk, null, recurseDirectories);
+            this.AddSelectedFiles(selectionCriteria, directoryOnDisk, directoryPathInArchive: null, recurseDirectories: recurseDirectories);
         }
 
 
@@ -507,7 +507,7 @@ namespace Ionic.Zip
                                      String directoryOnDisk,
                                      String directoryPathInArchive)
         {
-            this.AddSelectedFiles(selectionCriteria, directoryOnDisk, directoryPathInArchive, false);
+            this.AddSelectedFiles(selectionCriteria, directoryOnDisk, directoryPathInArchive, recurseDirectories: false);
         }
 
         /// <summary>
@@ -580,7 +580,7 @@ namespace Ionic.Zip
                                       directoryOnDisk,
                                       directoryPathInArchive,
                                       recurseDirectories,
-                                      false);
+                                      wantUpdate: false);
         }
 
         /// <summary>
@@ -632,7 +632,7 @@ namespace Ionic.Zip
                                       directoryOnDisk,
                                       directoryPathInArchive,
                                       recurseDirectories,
-                                      true);
+                                      wantUpdate: true);
         }
 
 
@@ -659,7 +659,7 @@ namespace Ionic.Zip
             }
 
             // workitem 9176
-            while (directoryOnDisk.EndsWith("\\")) directoryOnDisk = directoryOnDisk.Substring(0, directoryOnDisk.Length - 1);
+            while (directoryOnDisk.EndsWith("\\")) directoryOnDisk = directoryOnDisk.Substring(startIndex: 0, length: directoryOnDisk.Length - 1);
             if (Verbose) StatusMessageTextWriter.WriteLine("adding selection '{0}' from dir '{1}'...",
                                                                selectionCriteria, directoryOnDisk);
             Ionic.FileSelector ff = new Ionic.FileSelector(selectionCriteria,
@@ -691,7 +691,7 @@ namespace Ionic.Zip
                 else
                 {
                     // this adds "just" the directory, without recursing to the contained files
-                    AddOrUpdateDirectoryImpl(item, dirInArchive, action, false, 0);
+                    AddOrUpdateDirectoryImpl(item, dirInArchive, action, recurse: false, level: 0);
                 }
             }
 
@@ -1447,7 +1447,7 @@ namespace Ionic
             if (slashSwapped != null)
             {
                 while (slashSwapped.EndsWith("\\"))
-                    slashSwapped = slashSwapped.Substring(0, slashSwapped.Length - 1);
+                    slashSwapped = slashSwapped.Substring(startIndex: 0, length: slashSwapped.Length - 1);
             }
             foreach (Ionic.Zip.ZipEntry e in zip)
             {

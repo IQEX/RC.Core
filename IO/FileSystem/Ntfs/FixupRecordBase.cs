@@ -82,12 +82,12 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public void FromBytes(byte[] buffer, int offset)
         {
-            FromBytes(buffer, offset, false);
+            FromBytes(buffer, offset, ignoreMagic: false);
         }
 
         public void FromBytes(byte[] buffer, int offset, bool ignoreMagic)
         {
-            string diskMagic = Utilities.BytesToString(buffer, offset + 0x00, 4);
+            string diskMagic = Utilities.BytesToString(buffer, offset + 0x00, count: 4);
             if (_magic == null)
             {
                 _magic = diskMagic;
@@ -126,7 +126,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
             ProtectBuffer(buffer, offset);
 
-            Utilities.StringToBytes(_magic, buffer, offset + 0x00, 4);
+            Utilities.StringToBytes(_magic, buffer, offset + 0x00, count: 4);
             Utilities.WriteBytesLittleEndian(_updateSequenceOffset, buffer, offset + 0x04);
             Utilities.WriteBytesLittleEndian(_updateSequenceCount, buffer, offset + 0x06);
 

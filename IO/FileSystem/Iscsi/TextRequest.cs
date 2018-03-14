@@ -54,14 +54,14 @@ namespace RC.Framework.FileSystem.Iscsi
             _commandSequenceNumber = _connection.Session.CommandSequenceNumber;
             _expectedStatusSequenceNumber = _connection.ExpectedStatusSequenceNumber;
 
-            byte[] buffer = new byte[Utilities.RoundUp(48 + count, 4)];
-            _basicHeader.WriteTo(buffer, 0);
+            byte[] buffer = new byte[Utilities.RoundUp(48 + count, unit: 4)];
+            _basicHeader.WriteTo(buffer, offset: 0);
             buffer[1] |= (byte)(_continue ? 0x40 : 0x00);
-            Utilities.WriteBytesBigEndian(lun, buffer, 8);
-            Utilities.WriteBytesBigEndian(_targetTransferTag, buffer, 20);
-            Utilities.WriteBytesBigEndian(_commandSequenceNumber, buffer, 24);
-            Utilities.WriteBytesBigEndian(_expectedStatusSequenceNumber, buffer, 28);
-            Array.Copy(data, offset, buffer, 48, count);
+            Utilities.WriteBytesBigEndian(lun, buffer, offset: 8);
+            Utilities.WriteBytesBigEndian(_targetTransferTag, buffer, offset: 20);
+            Utilities.WriteBytesBigEndian(_commandSequenceNumber, buffer, offset: 24);
+            Utilities.WriteBytesBigEndian(_expectedStatusSequenceNumber, buffer, offset: 28);
+            Array.Copy(data, offset, buffer, destinationIndex: 48, length: count);
             return buffer;
         }
     }

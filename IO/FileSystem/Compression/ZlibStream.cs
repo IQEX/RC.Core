@@ -51,8 +51,8 @@ namespace RC.Framework.FileSystem.Compression
             if (mode == CompressionMode.Decompress)
             {
                 // We just sanity check against expected header values...
-                byte[] headerBuffer = Utilities.ReadFully(stream, 2);
-                ushort header = Utilities.ToUInt16BigEndian(headerBuffer, 0);
+                byte[] headerBuffer = Utilities.ReadFully(stream, count: 2);
+                ushort header = Utilities.ToUInt16BigEndian(headerBuffer, offset: 0);
 
                 if ((header % 31) != 0)
                 {
@@ -78,8 +78,8 @@ namespace RC.Framework.FileSystem.Compression
                 header |= (ushort)(31 - (header % 31));
 
                 byte[] headerBuffer = new byte[2];
-                Utilities.WriteBytesBigEndian(header, headerBuffer, 0);
-                stream.Write(headerBuffer, 0, 2);
+                Utilities.WriteBytesBigEndian(header, headerBuffer, offset: 0);
+                stream.Write(headerBuffer, offset: 0, count: 2);
             }
 
             _deflateStream = new DeflateStream(stream, mode, leaveOpen);
@@ -138,9 +138,9 @@ namespace RC.Framework.FileSystem.Compression
                 // aggresively caches input, it normally has already consumed the footer.
                 if (_stream.CanSeek)
                 {
-                    _stream.Seek(-4, SeekOrigin.End);
-                    byte[] footerBuffer = Utilities.ReadFully(_stream, 4);
-                    if (Utilities.ToInt32BigEndian(footerBuffer, 0) != _adler32.Value)
+                    _stream.Seek(offset: -4, origin: SeekOrigin.End);
+                    byte[] footerBuffer = Utilities.ReadFully(_stream, count: 4);
+                    if (Utilities.ToInt32BigEndian(footerBuffer, offset: 0) != _adler32.Value)
                     {
                         throw new InvalidDataException("Corrupt decompressed data detected");
                     }
@@ -153,8 +153,8 @@ namespace RC.Framework.FileSystem.Compression
                 _deflateStream.Close();
 
                 byte[] footerBuffer = new byte[4];
-                Utilities.WriteBytesBigEndian(_adler32.Value, footerBuffer, 0);
-                _stream.Write(footerBuffer, 0, 4);
+                Utilities.WriteBytesBigEndian(_adler32.Value, footerBuffer, offset: 0);
+                _stream.Write(footerBuffer, offset: 0, count: 4);
             }
         }
 

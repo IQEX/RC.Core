@@ -70,7 +70,7 @@ namespace RC.Framework.FileSystem.Vhd
         {
             _fileStream = stream;
 
-            ReadFooter(true);
+            ReadFooter(fallbackToFront: true);
 
             ReadHeaders();
         }
@@ -85,7 +85,7 @@ namespace RC.Framework.FileSystem.Vhd
             _fileStream = stream;
             _ownsStream = ownsStream;
 
-            ReadFooter(true);
+            ReadFooter(fallbackToFront: true);
 
             ReadHeaders();
         }
@@ -116,7 +116,7 @@ namespace RC.Framework.FileSystem.Vhd
             _fileLocator = locator.GetRelativeLocator(locator.GetDirectoryFromPath(path));
             _fileName = locator.GetFileFromPath(path);
 
-            ReadFooter(true);
+            ReadFooter(fallbackToFront: true);
 
             ReadHeaders();
         }
@@ -230,7 +230,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// <returns>An object that accesses the stream as a VHD file</returns>
         public static DiskImageFile InitializeFixed(Stream stream, Ownership ownsStream, long capacity)
         {
-            return InitializeFixed(stream, ownsStream, capacity, null);
+            return InitializeFixed(stream, ownsStream, capacity, geometry: null);
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// <returns>An object that accesses the stream as a VHD file</returns>
         public static DiskImageFile InitializeDynamic(Stream stream, Ownership ownsStream, long capacity)
         {
-            return InitializeDynamic(stream, ownsStream, capacity, null, DynamicHeader.DefaultBlockSize);
+            return InitializeDynamic(stream, ownsStream, capacity, geometry: null, blockSize: DynamicHeader.DefaultBlockSize);
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace RC.Framework.FileSystem.Vhd
         /// <returns>An object that accesses the stream as a VHD file</returns>
         public static DiskImageFile InitializeDynamic(Stream stream, Ownership ownsStream, long capacity, long blockSize)
         {
-            return InitializeDynamic(stream, ownsStream, capacity, null, blockSize);
+            return InitializeDynamic(stream, ownsStream, capacity, geometry: null, blockSize: blockSize);
         }
 
         /// <summary>
@@ -419,7 +419,7 @@ namespace RC.Framework.FileSystem.Vhd
                     parent.Dispose();
                 }
 
-                return new SubStream(_fileStream, 0, _fileStream.Length - 512);
+                return new SubStream(_fileStream, first: 0, length: _fileStream.Length - 512);
             }
             else if (_footer.DiskType == FileType.Dynamic)
             {
@@ -471,9 +471,9 @@ namespace RC.Framework.FileSystem.Vhd
             footer.UpdateChecksum();
 
             byte[] sector = new byte[Utilities.SectorSize];
-            footer.ToBytes(sector, 0);
+            footer.ToBytes(sector, offset: 0);
             stream.Position = Utilities.RoundUp(capacity, Utilities.SectorSize);
-            stream.Write(sector, 0, sector.Length);
+            stream.Write(sector, offset: 0, count: sector.Length);
             stream.SetLength(stream.Position);
 
             stream.Position = 0;
@@ -495,12 +495,12 @@ namespace RC.Framework.FileSystem.Vhd
             footer.DataOffset = 512; // Offset of Dynamic Header
             footer.UpdateChecksum();
             byte[] footerBlock = new byte[512];
-            footer.ToBytes(footerBlock, 0);
+            footer.ToBytes(footerBlock, offset: 0);
 
-            DynamicHeader dynamicHeader = new DynamicHeader(-1, 1024 + 512, (uint)blockSize, capacity);
+            DynamicHeader dynamicHeader = new DynamicHeader(dataOffset: -1, tableOffset: 1024 + 512, blockSize: (uint)blockSize, diskSize: capacity);
             dynamicHeader.UpdateChecksum();
             byte[] dynamicHeaderBlock = new byte[1024];
-            dynamicHeader.ToBytes(dynamicHeaderBlock, 0);
+            dynamicHeader.ToBytes(dynamicHeaderBlock, offset: 0);
 
             int batSize = (((dynamicHeader.MaxTableEntries * 4) + Utilities.SectorSize - 1) / Utilities.SectorSize) * Utilities.SectorSize;
             byte[] bat = new byte[batSize];
@@ -510,10 +510,10 @@ namespace RC.Framework.FileSystem.Vhd
             }
 
             stream.Position = 0;
-            stream.Write(footerBlock, 0, 512);
-            stream.Write(dynamicHeaderBlock, 0, 1024);
-            stream.Write(bat, 0, batSize);
-            stream.Write(footerBlock, 0, 512);
+            stream.Write(footerBlock, offset: 0, count: 512);
+            stream.Write(dynamicHeaderBlock, offset: 0, count: 1024);
+            stream.Write(bat, offset: 0, count: batSize);
+            stream.Write(footerBlock, offset: 0, count: 512);
         }
 
         private static void InitializeDifferencingInternal(Stream stream, DiskImageFile parent, string parentAbsolutePath, string parentRelativePath, DateTime parentModificationTimeUtc)
@@ -523,13 +523,13 @@ namespace RC.Framework.FileSystem.Vhd
             footer.OriginalSize = parent._footer.OriginalSize;
             footer.UpdateChecksum();
             byte[] footerBlock = new byte[512];
-            footer.ToBytes(footerBlock, 0);
+            footer.ToBytes(footerBlock, offset: 0);
 
             long tableOffset = 512 + 1024; // Footer + Header
 
             uint blockSize = (parent._dynamicHeader == null) ? DynamicHeader.DefaultBlockSize : parent._dynamicHeader.BlockSize;
 
-            DynamicHeader dynamicHeader = new DynamicHeader(-1, tableOffset, blockSize, footer.CurrentSize);
+            DynamicHeader dynamicHeader = new DynamicHeader(dataOffset: -1, tableOffset: tableOffset, blockSize: blockSize, diskSize: footer.CurrentSize);
             int batSize = (((dynamicHeader.MaxTableEntries * 4) + Utilities.SectorSize - 1) / Utilities.SectorSize) * Utilities.SectorSize;
             dynamicHeader.ParentUniqueId = parent.UniqueId;
             dynamicHeader.ParentTimestamp = parentModificationTimeUtc;
@@ -544,12 +544,12 @@ namespace RC.Framework.FileSystem.Vhd
             dynamicHeader.ParentLocators[6].PlatformDataOffset = tableOffset + batSize + 512;
             dynamicHeader.UpdateChecksum();
             byte[] dynamicHeaderBlock = new byte[1024];
-            dynamicHeader.ToBytes(dynamicHeaderBlock, 0);
+            dynamicHeader.ToBytes(dynamicHeaderBlock, offset: 0);
 
             byte[] platformLocator1 = new byte[512];
-            Encoding.Unicode.GetBytes(parentAbsolutePath, 0, parentAbsolutePath.Length, platformLocator1, 0);
+            Encoding.Unicode.GetBytes(parentAbsolutePath, charIndex: 0, charCount: parentAbsolutePath.Length, bytes: platformLocator1, byteIndex: 0);
             byte[] platformLocator2 = new byte[512];
-            Encoding.Unicode.GetBytes(parentRelativePath, 0, parentRelativePath.Length, platformLocator2, 0);
+            Encoding.Unicode.GetBytes(parentRelativePath, charIndex: 0, charCount: parentRelativePath.Length, bytes: platformLocator2, byteIndex: 0);
 
             byte[] bat = new byte[batSize];
             for (int i = 0; i < bat.Length; ++i)
@@ -558,12 +558,12 @@ namespace RC.Framework.FileSystem.Vhd
             }
 
             stream.Position = 0;
-            stream.Write(footerBlock, 0, 512);
-            stream.Write(dynamicHeaderBlock, 0, 1024);
-            stream.Write(bat, 0, batSize);
-            stream.Write(platformLocator1, 0, 512);
-            stream.Write(platformLocator2, 0, 512);
-            stream.Write(footerBlock, 0, 512);
+            stream.Write(footerBlock, offset: 0, count: 512);
+            stream.Write(dynamicHeaderBlock, offset: 0, count: 1024);
+            stream.Write(bat, offset: 0, count: batSize);
+            stream.Write(platformLocator1, offset: 0, count: 512);
+            stream.Write(platformLocator2, offset: 0, count: 512);
+            stream.Write(footerBlock, offset: 0, count: 512);
         }
 
         /// <summary>
@@ -584,8 +584,8 @@ namespace RC.Framework.FileSystem.Vhd
                 fileLocator = new LocalFileLocator(string.Empty);
             }
 
-            List<string> absPaths = new List<string>(8);
-            List<string> relPaths = new List<string>(8);
+            List<string> absPaths = new List<string>(capacity: 8);
+            List<string> relPaths = new List<string>(capacity: 8);
             foreach (var pl in _dynamicHeader.ParentLocators)
             {
                 if (pl.PlatformCode == ParentLocator.PlatformCodeWindowsAbsoluteUnicode
@@ -625,7 +625,7 @@ namespace RC.Framework.FileSystem.Vhd
             _fileStream.Position = _fileStream.Length - Utilities.SectorSize;
             byte[] sector = Utilities.ReadFully(_fileStream, Utilities.SectorSize);
 
-            _footer = Footer.FromBytes(sector, 0);
+            _footer = Footer.FromBytes(sector, offset: 0);
 
             if (!_footer.IsValid())
             {
@@ -635,9 +635,9 @@ namespace RC.Framework.FileSystem.Vhd
                 }
 
                 _fileStream.Position = 0;
-                Utilities.ReadFully(_fileStream, sector, 0, Utilities.SectorSize);
+                Utilities.ReadFully(_fileStream, sector, offset: 0, length: Utilities.SectorSize);
 
-                _footer = Footer.FromBytes(sector, 0);
+                _footer = Footer.FromBytes(sector, offset: 0);
                 if (!_footer.IsValid())
                 {
                     throw new IOException("Failed to find a valid VHD footer at start or end of file - VHD file is corrupt");

@@ -42,7 +42,7 @@ namespace RC.Framework.FileSystem.Nfs
         public void NullProc()
         {
             MemoryStream ms = new MemoryStream();
-            XdrDataWriter writer = StartCallMessage(ms, null, 0);
+            XdrDataWriter writer = StartCallMessage(ms, credentials: null, procedure: 0);
             RpcReply reply = DoSend(ms);
             if (reply.Header.IsSuccess)
             {

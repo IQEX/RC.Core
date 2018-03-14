@@ -39,7 +39,7 @@ namespace RC.Framework.Net.Nat.Utils
         internal static string ReadAsMany(this StreamReader stream, int bytesToRead)
         {
             var buffer = new char[bytesToRead];
-            stream.ReadBlock(buffer, 0, bytesToRead);
+            stream.ReadBlock(buffer, index: 0, count: bytesToRead);
             return new string(buffer);
         }
 
@@ -56,17 +56,17 @@ namespace RC.Framework.Net.Nat.Utils
 
         internal static void LogInfo(this TraceSource source, string format, params object[] args)
         {
-            source.TraceEvent(TraceEventType.Information, 0, format, args);
+            source.TraceEvent(TraceEventType.Information, id: 0, format: format, args: args);
         }
 
         internal static void LogWarn(this TraceSource source, string format, params object[] args)
         {
-            source.TraceEvent(TraceEventType.Warning, 0, format, args);
+            source.TraceEvent(TraceEventType.Warning, id: 0, format: format, args: args);
         }
 
         internal static void LogError(this TraceSource source, string format, params object[] args)
         {
-            source.TraceEvent(TraceEventType.Error, 0, format, args);
+            source.TraceEvent(TraceEventType.Error, id: 0, format: format, args: args);
         }
 
         internal static string ToPrintableXml(this XmlDocument document)

@@ -96,10 +96,10 @@ namespace RC.Framework.FileSystem.Udf
             if (eaData != null && eaData.Length != 0)
             {
                 DescriptorTag eaTag = new DescriptorTag();
-                eaTag.ReadFrom(eaData, 0);
+                eaTag.ReadFrom(eaData, offset: 0);
 
-                int implAttrLocation = Utilities.ToInt32LittleEndian(eaData, 16);
-                int appAttrLocation = Utilities.ToInt32LittleEndian(eaData, 20);
+                int implAttrLocation = Utilities.ToInt32LittleEndian(eaData, offset: 16);
+                int appAttrLocation = Utilities.ToInt32LittleEndian(eaData, offset: 20);
 
                 List<ExtendedAttributeRecord> extendedAttrs = new List<ExtendedAttributeRecord>();
                 int pos = 24;

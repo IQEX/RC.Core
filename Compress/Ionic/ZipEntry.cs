@@ -38,7 +38,7 @@ namespace Ionic.Zip
     /// </summary>
 
     [Interop.GuidAttribute("ebc25cf6-9120-4283-b972-0e5520d00004")]
-    [Interop.ComVisible(true)]
+    [Interop.ComVisible(visibility: true)]
 #if !NETCF
     [Interop.ClassInterface(Interop.ClassInterfaceType.AutoDispatch)]  // AutoDual
 #endif
@@ -869,7 +869,7 @@ namespace Ionic.Zip
                 // rename the entry!
                 if (String.IsNullOrEmpty(value)) throw new ZipException("The FileName must be non empty and non-null.");
 
-                var filename = ZipEntry.NameInArchive(value, null);
+                var filename = ZipEntry.NameInArchive(value, directoryPathInArchive: null);
                 // workitem 8180
                 if (_FileNameInArchive == filename) return; // nothing to do
 
@@ -2163,7 +2163,7 @@ namespace Ionic.Zip
         /// </para>
         ///
         /// </remarks>
-        [Obsolete("This property is obsolete since v1.9.1.6. Use AlternateEncoding and AlternateEncodingUsage instead.", true)]
+        [Obsolete("This property is obsolete since v1.9.1.6. Use AlternateEncoding and AlternateEncodingUsage instead.", error: true)]
         public System.Text.Encoding ProvisionalAlternateEncoding
         {
             get; set;
@@ -2305,22 +2305,22 @@ namespace Ionic.Zip
         // workitem 9073
         internal static ZipEntry CreateFromNothing(String nameInArchive)
         {
-            return Create(nameInArchive, ZipEntrySource.None, null, null);
+            return Create(nameInArchive, ZipEntrySource.None, arg1: null, arg2: null);
         }
 
         internal static ZipEntry CreateFromFile(String filename, string nameInArchive)
         {
-            return Create(nameInArchive, ZipEntrySource.FileSystem, filename, null);
+            return Create(nameInArchive, ZipEntrySource.FileSystem, filename, arg2: null);
         }
 
         internal static ZipEntry CreateForStream(String entryName, Stream s)
         {
-            return Create(entryName, ZipEntrySource.Stream, s, null);
+            return Create(entryName, ZipEntrySource.Stream, s, arg2: null);
         }
 
         internal static ZipEntry CreateForWriter(String entryName, WriteDelegate d)
         {
-            return Create(entryName, ZipEntrySource.WriteDelegate, d, null);
+            return Create(entryName, ZipEntrySource.WriteDelegate, d, arg2: null);
         }
 
         internal static ZipEntry CreateForJitStreamProvider(string nameInArchive, OpenDelegate opener, CloseDelegate closer)
@@ -2330,7 +2330,7 @@ namespace Ionic.Zip
 
         internal static ZipEntry CreateForZipOutputStream(string nameInArchive)
         {
-            return Create(nameInArchive, ZipEntrySource.ZipOutputStream, null, null);
+            return Create(nameInArchive, ZipEntrySource.ZipOutputStream, arg1: null, arg2: null);
         }
 
 
@@ -2558,7 +2558,7 @@ namespace Ionic.Zip
                     if (_container.ZipFile != null)
                     {
                         var zf = _container.ZipFile;
-                        zf.Reset(false);
+                        zf.Reset(whileSaving: false);
                         _archiveStream = zf.StreamForDiskNumber(_diskNumber);
                     }
                     else
@@ -2593,7 +2593,7 @@ namespace Ionic.Zip
             }
 
             byte[] block = new byte[30];
-            this.ArchiveStream.Read(block, 0, block.Length);
+            this.ArchiveStream.Read(block, offset: 0, count: block.Length);
 
             // At this point we could verify the contents read from the local header
             // with the contents read from the central header.  We could, but don't need to.
@@ -2749,9 +2749,9 @@ namespace Ionic.Zip
         private bool _IsText; // workitem 7801
         private ZipEntryTimestamp _timestamp;
 
-        private static System.DateTime _unixEpoch = new System.DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        private static System.DateTime _win32Epoch = System.DateTime.FromFileTimeUtc(0L);
-        private static System.DateTime _zeroHour = new System.DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static System.DateTime _unixEpoch = new System.DateTime(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Utc);
+        private static System.DateTime _win32Epoch = System.DateTime.FromFileTimeUtc(fileTime: 0L);
+        private static System.DateTime _zeroHour = new System.DateTime(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0, kind: DateTimeKind.Utc);
 
         private WriteDelegate _WriteDelegate;
         private OpenDelegate _OpenDelegate;

@@ -88,7 +88,7 @@ namespace RC.Framework.FileSystem.Fat
 
             _stream.Position = firstSector * _bytesPerSector;
 
-            _stream.Write(new byte[_clusterSize], 0, _clusterSize);
+            _stream.Write(new byte[_clusterSize], offset: 0, count: _clusterSize);
         }
     }
 }

@@ -44,15 +44,15 @@ namespace RC.Framework.RMath
         /// <summary>
         ///  A double-precision complex number that represents zero.
         /// </summary>
-        public static readonly Complex Zero = new Complex(0.0, 0.0);
+        public static readonly Complex Zero = new Complex(re: 0.0, im: 0.0);
         /// <summary>
         ///  A double-precision complex number that represents one.
         /// </summary>
-        public static readonly Complex One = new Complex(1.0, 0.0);
+        public static readonly Complex One = new Complex(re: 1.0, im: 0.0);
         /// <summary>
         ///  A double-precision complex number that represents the squere root of (-1).
         /// </summary>
-        public static readonly Complex I = new Complex(0.0, 1.0);
+        public static readonly Complex I = new Complex(re: 0.0, im: 1.0);
         /// <summary>
         /// Magnitude value of the complex number.
         /// </summary>
@@ -429,7 +429,7 @@ namespace RC.Framework.RMath
         /// <remarks><para>The default tolerance value, which is used for the test, equals to 8.8817841970012523233891E-16.</para></remarks>
         public static bool ApproxEqual(Complex a, Complex b)
         {
-            return Complex.ApproxEqual(a, b, 8.8817841970012523E-16);
+            return Complex.ApproxEqual(a, b, tolerance: 8.8817841970012523E-16);
         }
         /// <summary>
         /// Tests whether two complex numbers are approximately equal given a tolerance value.
@@ -864,7 +864,7 @@ namespace RC.Framework.RMath
         /// real part initialized to the specified value.</returns>
         public static explicit operator Complex(float value)
         {
-            return new Complex((double)value, 0.0);
+            return new Complex((double)value, im: 0.0);
         }
         /// <summary>
         /// Converts from a double-precision real number to a complex number. 
@@ -876,7 +876,7 @@ namespace RC.Framework.RMath
         /// real part initialized to the specified value.</returns>
         public static explicit operator Complex(double value)
         {
-            return new Complex(value, 0.0);
+            return new Complex(value, im: 0.0);
         }
         /// <summary>
         /// Creates an exact copy of this <see cref="Complex" /> object.

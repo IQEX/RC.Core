@@ -346,14 +346,14 @@ namespace RC.Framework.FileSystem.SquashFs
             if (end != output.Position)
             {
                 byte[] padding = new byte[(int)(end - output.Position)];
-                output.Write(padding, 0, padding.Length);
+                output.Write(padding, offset: 0, count: padding.Length);
             }
 
             // Go back and write the superblock
             output.Position = 0;
             byte[] buffer = new byte[superBlock.Size];
-            superBlock.WriteTo(buffer, 0);
-            output.Write(buffer, 0, buffer.Length);
+            superBlock.WriteTo(buffer, offset: 0);
+            output.Write(buffer, offset: 0, count: buffer.Length);
             output.Position = end;
         }
 
@@ -391,7 +391,7 @@ namespace RC.Framework.FileSystem.SquashFs
         private uint WriteDataBlock(byte[] buffer, int offset, int count)
         {
             MemoryStream compressed = new MemoryStream();
-            using (ZlibStream compStream = new ZlibStream(compressed, CompressionMode.Compress, true))
+            using (ZlibStream compStream = new ZlibStream(compressed, CompressionMode.Compress, leaveOpen: true))
             {
                 compStream.Write(buffer, offset, count);
             }
@@ -457,7 +457,7 @@ namespace RC.Framework.FileSystem.SquashFs
                 }
                 else if (nextDir == null)
                 {
-                    throw new FileNotFoundException("Found " + nextDirAsNode.Inode.Type + ", expecting Directory", string.Join("\\", elems, 0, i + 1));
+                    throw new FileNotFoundException("Found " + nextDirAsNode.Inode.Type + ", expecting Directory", string.Join("\\", elems, startIndex: 0, count: i + 1));
                 }
 
                 currentDir = nextDir;

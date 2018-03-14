@@ -50,12 +50,12 @@ namespace RC.Framework.FileSystem.Udf
             PartitionFlags = Utilities.ToUInt16LittleEndian(buffer, offset + 20);
             PartitionNumber = Utilities.ToUInt16LittleEndian(buffer, offset + 22);
             PartitionContents = Utilities.ToStruct<ApplicationEntityIdentifier>(buffer, offset + 24);
-            PartitionContentsUse = Utilities.ToByteArray(buffer, offset + 56, 128);
+            PartitionContentsUse = Utilities.ToByteArray(buffer, offset + 56, length: 128);
             AccessType = Utilities.ToUInt32LittleEndian(buffer, offset + 184);
             PartitionStartingLocation = Utilities.ToUInt32LittleEndian(buffer, offset + 188);
             PartitionLength = Utilities.ToUInt32LittleEndian(buffer, offset + 192);
             ImplementationIdentifier = Utilities.ToStruct<ImplementationEntityIdentifier>(buffer, offset + 196);
-            ImplementationUse = Utilities.ToByteArray(buffer, offset + 228, 128);
+            ImplementationUse = Utilities.ToByteArray(buffer, offset + 228, length: 128);
 
             return 512;
         }

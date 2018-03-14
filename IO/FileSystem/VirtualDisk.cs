@@ -25,7 +25,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         ~VirtualDisk()
         {
-            Dispose(false);
+            Dispose(disposing: false);
         }
 
         /// <summary>
@@ -110,13 +110,13 @@ namespace RC.Framework.FileSystem
         {
             get
             {
-                return Utilities.ToInt32LittleEndian(GetMasterBootRecord(), 0x01B8);
+                return Utilities.ToInt32LittleEndian(GetMasterBootRecord(), offset: 0x01B8);
             }
 
             set
             {
                 byte[] mbr = GetMasterBootRecord();
-                Utilities.WriteBytesLittleEndian(value, mbr, 0x01B8);
+                Utilities.WriteBytesLittleEndian(value, mbr, offset: 0x01B8);
                 SetMasterBootRecord(mbr);
             }
         }
@@ -151,7 +151,7 @@ namespace RC.Framework.FileSystem
                 }
                 else if (tables.Count == 1)
                 {
-                    return tables[0];
+                    return tables[index: 0];
                 }
                 else
                 {
@@ -246,7 +246,7 @@ namespace RC.Framework.FileSystem
 
                     foreach (var type in typeof(VirtualDisk).Assembly.GetTypes())
                     {
-                        foreach (VirtualDiskTransportAttribute attr in Attribute.GetCustomAttributes(type, typeof(VirtualDiskTransportAttribute), false))
+                        foreach (VirtualDiskTransportAttribute attr in Attribute.GetCustomAttributes(type, typeof(VirtualDiskTransportAttribute), inherit: false))
                         {
                             transports.Add(attr.Scheme.ToUpperInvariant(), (VirtualDiskTransport)Activator.CreateInstance(type));
                         }
@@ -325,7 +325,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The newly created disk</returns>
         public static VirtualDisk CreateDisk(string type, string variant, string path, long capacity, Geometry geometry, Dictionary<string, string> parameters)
         {
-            return CreateDisk(type, variant, path, capacity, geometry, null, null, parameters);
+            return CreateDisk(type, variant, path, capacity, geometry, user: null, password: null, parameters: parameters);
         }
 
         /// <summary>
@@ -421,7 +421,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The Virtual Disk, or <c>null</c> if an unknown disk format</returns>
         public static VirtualDisk OpenDisk(string path, FileAccess access)
         {
-            return OpenDisk(path, null, access, null, null);
+            return OpenDisk(path, forceType: null, access: access, user: null, password: null);
         }
 
         /// <summary>
@@ -434,7 +434,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The Virtual Disk, or <c>null</c> if an unknown disk format</returns>
         public static VirtualDisk OpenDisk(string path, FileAccess access, string user, string password)
         {
-            return OpenDisk(path, null, access, user, password);
+            return OpenDisk(path, forceType: null, access: access, user: user, password: password);
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace RC.Framework.FileSystem
                         string extension = Path.GetExtension(uri.AbsolutePath).ToUpperInvariant();
                         if (extension.StartsWith(".", StringComparison.Ordinal))
                         {
-                            extension = extension.Substring(1);
+                            extension = extension.Substring(startIndex: 1);
                         }
 
                         foundFactory = ExtensionMap.TryGetValue(extension, out factory);
@@ -529,7 +529,7 @@ namespace RC.Framework.FileSystem
             string extension = Path.GetExtension(path).ToUpperInvariant();
             if (extension.StartsWith(".", StringComparison.Ordinal))
             {
-                extension = extension.Substring(1);
+                extension = extension.Substring(startIndex: 1);
             }
 
             VirtualDiskFactory factory;
@@ -546,7 +546,7 @@ namespace RC.Framework.FileSystem
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
 
@@ -560,7 +560,7 @@ namespace RC.Framework.FileSystem
 
             long oldPos = Content.Position;
             Content.Position = 0;
-            Utilities.ReadFully(Content, sector, 0, Sizes.Sector);
+            Utilities.ReadFully(Content, sector, offset: 0, length: Sizes.Sector);
             Content.Position = oldPos;
 
             return sector;
@@ -583,7 +583,7 @@ namespace RC.Framework.FileSystem
 
             long oldPos = Content.Position;
             Content.Position = 0;
-            Content.Write(data, 0, Sizes.Sector);
+            Content.Write(data, offset: 0, count: Sizes.Sector);
             Content.Position = oldPos;
         }
 
@@ -607,7 +607,7 @@ namespace RC.Framework.FileSystem
             string extension = Path.GetExtension(path).ToUpperInvariant();
             if (extension.StartsWith(".", StringComparison.Ordinal))
             {
-                extension = extension.Substring(1);
+                extension = extension.Substring(startIndex: 1);
             }
 
             VirtualDiskFactory factory;
@@ -652,9 +652,9 @@ namespace RC.Framework.FileSystem
 
             // Built-in Uri class does cope well with query params on file Uris, so do some
             // parsing ourselves...
-            if (path.Length >= 1 && path[0] == '\\')
+            if (path.Length >= 1 && path[index: 0] == '\\')
             {
-                UriBuilder builder = new UriBuilder("file:" + path.Replace('\\', '/'));
+                UriBuilder builder = new UriBuilder("file:" + path.Replace(oldChar: '\\', newChar: '/'));
                 return builder.Uri;
             }
             else if (path.StartsWith("//", StringComparison.OrdinalIgnoreCase))
@@ -662,9 +662,9 @@ namespace RC.Framework.FileSystem
                 UriBuilder builder = new UriBuilder("file:" + path);
                 return builder.Uri;
             }
-            else if (path.Length >= 2 && path[1] == ':')
+            else if (path.Length >= 2 && path[index: 1] == ':')
             {
-                UriBuilder builder = new UriBuilder("file:///" + path.Replace('\\', '/'));
+                UriBuilder builder = new UriBuilder("file:///" + path.Replace(oldChar: '\\', newChar: '/'));
                 return builder.Uri;
             }
             else
@@ -680,7 +680,7 @@ namespace RC.Framework.FileSystem
 
             foreach (var type in typeof(VirtualDisk).Assembly.GetTypes())
             {
-                VirtualDiskFactoryAttribute attr = (VirtualDiskFactoryAttribute)Attribute.GetCustomAttribute(type, typeof(VirtualDiskFactoryAttribute), false);
+                VirtualDiskFactoryAttribute attr = (VirtualDiskFactoryAttribute)Attribute.GetCustomAttribute(type, typeof(VirtualDiskFactoryAttribute), inherit: false);
                 if (attr != null)
                 {
                     VirtualDiskFactory factory = (VirtualDiskFactory)Activator.CreateInstance(type);

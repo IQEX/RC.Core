@@ -549,7 +549,7 @@ namespace RC.Framework.RMath
         /// </remarks>
         public Vector4 ToVector4()
         {
-            return new Vector4(this.X, this.Y, this.Z, 1f);
+            return new Vector4(this.X, this.Y, this.Z, w: 1f);
         }
     }
 }

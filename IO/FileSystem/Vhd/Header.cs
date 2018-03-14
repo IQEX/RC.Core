@@ -31,13 +31,13 @@ namespace RC.Framework.FileSystem.Vhd
 
         public static Header FromStream(Stream stream)
         {
-            return FromBytes(Utilities.ReadFully(stream, 16), 0);
+            return FromBytes(Utilities.ReadFully(stream, count: 16), offset: 0);
         }
 
         public static Header FromBytes(byte[] data, int offset)
         {
             Header result = new Header();
-            result.Cookie = Utilities.BytesToString(data, offset, 8);
+            result.Cookie = Utilities.BytesToString(data, offset, count: 8);
             result.DataOffset = Utilities.ToInt64BigEndian(data, offset + 8);
             return result;
         }

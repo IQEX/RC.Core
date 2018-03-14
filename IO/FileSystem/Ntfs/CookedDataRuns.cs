@@ -154,7 +154,7 @@ namespace RC.Framework.FileSystem.Ntfs
                 throw new ArgumentException("Run is already sparse", "index");
             }
 
-            _runs[index] = new CookedDataRun(new DataRun(0, run.Length, true), run.StartVcn, prevLcn, run.AttributeExtent);
+            _runs[index] = new CookedDataRun(new DataRun(offset: 0, length: run.Length, isSparse: true), run.StartVcn, prevLcn, run.AttributeExtent);
             run.AttributeExtent.ReplaceRun(run.DataRun, _runs[index].DataRun);
 
             for (int i = index + 1; i < _runs.Count; ++i)

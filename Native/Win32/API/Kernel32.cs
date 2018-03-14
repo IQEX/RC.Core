@@ -70,7 +70,7 @@ namespace RC.Framework.Native.Win32.API
             Screen scr = Screen.FromPoint(new Point(rc.left, rc.top));
             int x = scr.WorkingArea.Left + (scr.WorkingArea.Width - (rc.right - rc.left)) / 2;
             int y = scr.WorkingArea.Top + (scr.WorkingArea.Height - (rc.bottom - rc.top)) / 2;
-            User32.MoveWindow(hWin, x, y, rc.right - rc.left, rc.bottom - rc.top, false);
+            User32.MoveWindow(hWin, x, y, rc.right - rc.left, rc.bottom - rc.top, repaint: false);
         }
 
         public static bool AllocConsole() => NativeMethods.AllocConsole();
@@ -136,7 +136,7 @@ namespace RC.Framework.Native.Win32.API
             ulong mask = NativeMethods.VerSetConditionMask(
                 NativeMethods.VerSetConditionMask(
                 NativeMethods.VerSetConditionMask(
-                    0, VersionTypeMask.VER_MAJORVERSION, VersionConditionMask.VER_GREATER_EQUAL),
+                    dwlConditionMask: 0, dwTypeBitMask: VersionTypeMask.VER_MAJORVERSION, dwConditionMask: VersionConditionMask.VER_GREATER_EQUAL),
                        VersionTypeMask.VER_MINORVERSION, VersionConditionMask.VER_GREATER_EQUAL),
                        VersionTypeMask.VER_SERVICEPACKMAJOR, VersionConditionMask.VER_GREATER_EQUAL);
             return NativeMethods.VerifyVersionInfo(ref vi, VersionTypeMask.VER_MAJORVERSION | VersionTypeMask.VER_MINORVERSION | VersionTypeMask.VER_SERVICEPACKMINOR, mask);

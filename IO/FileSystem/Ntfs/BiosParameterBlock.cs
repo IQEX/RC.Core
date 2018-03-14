@@ -123,7 +123,7 @@ namespace RC.Framework.FileSystem.Ntfs
         internal static BiosParameterBlock FromBytes(byte[] bytes, int offset)
         {
             BiosParameterBlock bpb = new BiosParameterBlock();
-            bpb.OemId = Utilities.BytesToString(bytes, offset + 0x03, 8);
+            bpb.OemId = Utilities.BytesToString(bytes, offset + 0x03, count: 8);
             bpb.BytesPerSector = Utilities.ToUInt16LittleEndian(bytes, offset + 0x0B);
             bpb.SectorsPerCluster = bytes[offset + 0x0D];
             bpb.ReservedSectors = Utilities.ToUInt16LittleEndian(bytes, offset + 0x0E);
@@ -152,7 +152,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         internal void ToBytes(byte[] buffer, int offset)
         {
-            Utilities.StringToBytes(OemId, buffer, offset + 0x03, 8);
+            Utilities.StringToBytes(OemId, buffer, offset + 0x03, count: 8);
             Utilities.WriteBytesLittleEndian(BytesPerSector, buffer, offset + 0x0B);
             buffer[offset + 0x0D] = SectorsPerCluster;
             Utilities.WriteBytesLittleEndian(ReservedSectors, buffer, offset + 0x0E);
@@ -194,7 +194,7 @@ namespace RC.Framework.FileSystem.Ntfs
             byte[] buffer = new byte[8];
             Random rng = new Random();
             rng.NextBytes(buffer);
-            return Utilities.ToUInt64LittleEndian(buffer, 0);
+            return Utilities.ToUInt64LittleEndian(buffer, offset: 0);
         }
 
         private byte CodeRecordSize(int size)

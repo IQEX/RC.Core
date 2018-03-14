@@ -73,7 +73,7 @@ namespace RC.Framework.FileSystem.HfsPlus
 
         public override void VisitRange(BTreeVisitor<TKey> visitor)
         {
-            int nextResult = visitor(_records[0].Key, null);
+            int nextResult = visitor(_records[0].Key, data: null);
 
             int idx = 0;
             while (idx < _records.Length)
@@ -82,7 +82,7 @@ namespace RC.Framework.FileSystem.HfsPlus
 
                 if (idx + 1 < _records.Length)
                 {
-                    nextResult = visitor(_records[idx + 1].Key, null);
+                    nextResult = visitor(_records[idx + 1].Key, data: null);
                 }
                 else
                 {

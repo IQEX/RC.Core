@@ -74,9 +74,9 @@ namespace RC.Framework.FileSystem.Vhd
                 footer.UpdateChecksum();
 
                 byte[] footerSector = new byte[Sizes.Sector];
-                footer.ToBytes(footerSector, 0);
+                footer.ToBytes(footerSector, offset: 0);
 
-                SparseStream footerStream = SparseStream.FromStream(new MemoryStream(footerSector, false), Ownership.None);
+                SparseStream footerStream = SparseStream.FromStream(new MemoryStream(footerSector, writable: false), Ownership.None);
                 Stream imageStream = new ConcatStream(Ownership.None, Content, footerStream);
                 fileSpecs.Add(new DiskImageFileSpecification(baseName + ".vhd", new PassthroughStreamBuilder(imageStream)));
             }

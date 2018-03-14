@@ -80,7 +80,7 @@ namespace RC.Framework.FileSystem.Vhd
             // Detect where next block should go (cope if the footer is missing)
             _fileStream.Position = Utilities.RoundDown(_fileStream.Length, Utilities.SectorSize) - Utilities.SectorSize;
             byte[] footerBytes = Utilities.ReadFully(_fileStream, Utilities.SectorSize);
-            Footer footer = Footer.FromBytes(footerBytes, 0);
+            Footer footer = Footer.FromBytes(footerBytes, offset: 0);
             _nextBlockStart = _fileStream.Position - (footer.IsValid() ? Utilities.SectorSize : 0);
         }
 
@@ -155,7 +155,7 @@ namespace RC.Framework.FileSystem.Vhd
 
         public override IEnumerable<StreamExtent> Extents
         {
-            get { return GetExtentsInRange(0, Length); }
+            get { return GetExtentsInRange(start: 0, count: Length); }
         }
 
         public override void Flush()
@@ -430,7 +430,7 @@ namespace RC.Framework.FileSystem.Vhd
 
                     // Write the sector back
                     _fileStream.Position = sectorStart;
-                    _fileStream.Write(sectorBuffer, 0, Utilities.SectorSize);
+                    _fileStream.Write(sectorBuffer, offset: 0, count: Utilities.SectorSize);
 
                     // Update the in-memory block bitmap
                     if ((_blockBitmaps[block][sectorInBlock / 8] & sectorMask) == 0)
@@ -647,7 +647,7 @@ namespace RC.Framework.FileSystem.Vhd
             // Create and write new sector bitmap
             byte[] bitmap = new byte[_blockBitmapSize];
             _fileStream.Position = newBlockStart;
-            _fileStream.Write(bitmap, 0, _blockBitmapSize);
+            _fileStream.Write(bitmap, offset: 0, count: _blockBitmapSize);
             _blockBitmaps[block] = bitmap;
 
             _nextBlockStart += _blockBitmapSize + _dynamicHeader.BlockSize;
@@ -658,9 +658,9 @@ namespace RC.Framework.FileSystem.Vhd
 
             // Update the BAT entry for the new block
             byte[] entryBuffer = new byte[4];
-            Utilities.WriteBytesBigEndian((uint)(newBlockStart / 512), entryBuffer, 0);
+            Utilities.WriteBytesBigEndian((uint)(newBlockStart / 512), entryBuffer, offset: 0);
             _fileStream.Position = _dynamicHeader.TableOffset + (block * 4);
-            _fileStream.Write(entryBuffer, 0, 4);
+            _fileStream.Write(entryBuffer, offset: 0, count: 4);
             _blockAllocationTable[block] = (uint)(newBlockStart / 512);
 
             if (_autoCommitFooter)
@@ -672,7 +672,7 @@ namespace RC.Framework.FileSystem.Vhd
         private void WriteBlockBitmap(long block)
         {
             _fileStream.Position = ((long)_blockAllocationTable[block]) * Utilities.SectorSize;
-            _fileStream.Write(_blockBitmaps[block], 0, _blockBitmapSize);
+            _fileStream.Write(_blockBitmaps[block], offset: 0, count: _blockBitmapSize);
         }
 
         private void CheckDisposed()
@@ -695,7 +695,7 @@ namespace RC.Framework.FileSystem.Vhd
                 }
 
                 _fileStream.Position = _nextBlockStart;
-                _fileStream.Write(_footerCache, 0, _footerCache.Length);
+                _fileStream.Write(_footerCache, offset: 0, count: _footerCache.Length);
             }
         }
     }

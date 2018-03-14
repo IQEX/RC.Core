@@ -48,7 +48,7 @@ namespace RC.Framework.FileSystem.Wim
         {
             get
             {
-                if (FileName.IndexOf('.') == -1)
+                if (FileName.IndexOf(value: '.') == -1)
                 {
                     return FileName + ".";
                 }
@@ -74,12 +74,12 @@ namespace RC.Framework.FileSystem.Wim
             result.Attributes = (FileAttributes)reader.ReadUInt32();
             result.SecurityId = reader.ReadUInt32();
             result.SubdirOffset = reader.ReadInt64();
-            reader.Skip(16);
+            reader.Skip(bytes: 16);
             result.CreationTime = reader.ReadInt64();
             result.LastAccessTime = reader.ReadInt64();
             result.LastWriteTime = reader.ReadInt64();
-            result.Hash = reader.ReadBytes(20);
-            reader.Skip(4);
+            result.Hash = reader.ReadBytes(count: 20);
+            reader.Skip(bytes: 4);
             result.ReparseTag = reader.ReadUInt32();
             result.HardLink = reader.ReadUInt32();
             result.StreamCount = reader.ReadUInt16();
@@ -127,7 +127,7 @@ namespace RC.Framework.FileSystem.Wim
         {
             if (string.IsNullOrEmpty(streamName))
             {
-                if (!Utilities.IsAllZeros(Hash, 0, 20))
+                if (!Utilities.IsAllZeros(Hash, offset: 0, count: 20))
                 {
                     return Hash;
                 }

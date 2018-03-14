@@ -57,7 +57,7 @@ namespace RC.Framework.FileSystem.Ntfs
         public uint CalcHash()
         {
             byte[] buffer = new byte[Size];
-            WriteTo(buffer, 0);
+            WriteTo(buffer, offset: 0);
             uint hash = 0;
             for (int i = 0; i < buffer.Length / 4; ++i)
             {

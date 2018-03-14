@@ -216,7 +216,7 @@ namespace RC.Framework.FileSystem.Xva
             {
                 if (fileInfo.Length == 0)
                 {
-                    string path = fileInfo.Name.Replace('/', '\\');
+                    string path = fileInfo.Name.Replace(oldChar: '/', newChar: '\\');
                     int index;
                     if (int.TryParse(Utilities.GetFileFromPath(path), NumberStyles.Integer, CultureInfo.InvariantCulture, out index))
                     {

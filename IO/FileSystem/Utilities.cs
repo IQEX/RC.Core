@@ -40,7 +40,7 @@ namespace RC.Framework.FileSystem
         /// <summary>
         /// The Epoch common to most (all?) Unix systems.
         /// </summary>
-        internal static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1);
+        internal static readonly DateTime UnixEpoch = new DateTime(year: 1970, month: 1, day: 1);
 
         /// <summary>
         /// Round up a value to a multiple of a unit size.
@@ -355,7 +355,7 @@ namespace RC.Framework.FileSystem
         public static void WriteBytesLittleEndian(Guid val, byte[] buffer, int offset)
         {
             byte[] le = val.ToByteArray();
-            Array.Copy(le, 0, buffer, offset, 16);
+            Array.Copy(le, sourceIndex: 0, destinationArray: buffer, destinationIndex: offset, length: 16);
         }
 
         public static void WriteBytesBigEndian(ushort val, byte[] buffer, int offset)
@@ -402,10 +402,10 @@ namespace RC.Framework.FileSystem
         public static void WriteBytesBigEndian(Guid val, byte[] buffer, int offset)
         {
             byte[] le = val.ToByteArray();
-            WriteBytesBigEndian(ToUInt32LittleEndian(le, 0), buffer, offset + 0);
-            WriteBytesBigEndian(ToUInt16LittleEndian(le, 4), buffer, offset + 4);
-            WriteBytesBigEndian(ToUInt16LittleEndian(le, 6), buffer, offset + 6);
-            Array.Copy(le, 8, buffer, offset + 8, 8);
+            WriteBytesBigEndian(ToUInt32LittleEndian(le, offset: 0), buffer, offset + 0);
+            WriteBytesBigEndian(ToUInt16LittleEndian(le, offset: 4), buffer, offset + 4);
+            WriteBytesBigEndian(ToUInt16LittleEndian(le, offset: 6), buffer, offset + 6);
+            Array.Copy(le, sourceIndex: 8, destinationArray: buffer, destinationIndex: offset + 8, length: 8);
         }
 
         public static ushort ToUInt16LittleEndian(byte[] buffer, int offset)
@@ -474,7 +474,7 @@ namespace RC.Framework.FileSystem
         public static Guid ToGuidLittleEndian(byte[] buffer, int offset)
         {
             byte[] temp = new byte[16];
-            Array.Copy(buffer, offset, temp, 0, 16);
+            Array.Copy(buffer, offset, temp, destinationIndex: 0, length: 16);
             return new Guid(temp);
         }
 
@@ -497,7 +497,7 @@ namespace RC.Framework.FileSystem
         public static byte[] ToByteArray(byte[] buffer, int offset, int length)
         {
             byte[] result = new byte[length];
-            Array.Copy(buffer, offset, result, 0, length);
+            Array.Copy(buffer, offset, result, destinationIndex: 0, length: length);
             return result;
         }
 
@@ -575,7 +575,7 @@ namespace RC.Framework.FileSystem
                 byte ch = data[i + offset];
                 if (ch == 0)
                 {
-                    return new string(result, 0, i);
+                    return new string(result, startIndex: 0, length: i);
                 }
 
                 result[i] = (char)ch;
@@ -596,13 +596,13 @@ namespace RC.Framework.FileSystem
         {
             string trimmed = path.TrimEnd('\\');
 
-            int index = trimmed.LastIndexOf('\\');
+            int index = trimmed.LastIndexOf(value: '\\');
             if (index < 0)
             {
                 return string.Empty; // No directory, just a file name
             }
 
-            return trimmed.Substring(0, index);
+            return trimmed.Substring(startIndex: 0, length: index);
         }
 
         /// <summary>
@@ -614,7 +614,7 @@ namespace RC.Framework.FileSystem
         {
             string trimmed = path.Trim('\\');
 
-            int index = trimmed.LastIndexOf('\\');
+            int index = trimmed.LastIndexOf(value: '\\');
             if (index < 0)
             {
                 return trimmed; // No directory, just a file name
@@ -631,7 +631,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The combined path</returns>
         public static string CombinePaths(string a, string b)
         {
-            if (string.IsNullOrEmpty(a) || (b.Length > 0 && b[0] == '\\'))
+            if (string.IsNullOrEmpty(a) || (b.Length > 0 && b[index: 0] == '\\'))
             {
                 return b;
             }
@@ -671,7 +671,7 @@ namespace RC.Framework.FileSystem
                 {
                     pathElements.RemoveAt(pos);
                 }
-                else if (pathElements[pos] == ".." && pos > 0 && pathElements[pos - 1][0] != '.')
+                else if (pathElements[pos] == ".." && pos > 0 && pathElements[pos - 1][index: 0] != '.')
                 {
                     pathElements.RemoveAt(pos);
                     pathElements.RemoveAt(pos - 1);
@@ -804,7 +804,7 @@ namespace RC.Framework.FileSystem
         public static byte[] ReadFully(Stream stream, int count)
         {
             byte[] buffer = new byte[count];
-            if (ReadFully(stream, buffer, 0, count) == count)
+            if (ReadFully(stream, buffer, offset: 0, length: count) == count)
             {
                 return buffer;
             }
@@ -851,7 +851,7 @@ namespace RC.Framework.FileSystem
         public static byte[] ReadFully(IBuffer buffer, long pos, int count)
         {
             byte[] result = new byte[count];
-            if (ReadFully(buffer, pos, result, 0, count) == count)
+            if (ReadFully(buffer, pos, result, offset: 0, length: count) == count)
             {
                 return result;
             }
@@ -868,7 +868,7 @@ namespace RC.Framework.FileSystem
         /// <returns>The data read from the stream</returns>
         public static byte[] ReadAll(IBuffer buffer)
         {
-            return ReadFully(buffer, 0, (int)buffer.Capacity);
+            return ReadFully(buffer, pos: 0, count: (int)buffer.Capacity);
         }
 
         /// <summary>
@@ -891,11 +891,11 @@ namespace RC.Framework.FileSystem
         {
             byte[] buffer = new byte[64 * 1024];
 
-            int numRead = source.Read(buffer, 0, buffer.Length);
+            int numRead = source.Read(buffer, offset: 0, count: buffer.Length);
             while (numRead != 0)
             {
-                dest.Write(buffer, 0, numRead);
-                numRead = source.Read(buffer, 0, buffer.Length);
+                dest.Write(buffer, offset: 0, count: numRead);
+                numRead = source.Read(buffer, offset: 0, count: buffer.Length);
             }
         }
 

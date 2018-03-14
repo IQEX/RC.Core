@@ -31,7 +31,7 @@ namespace RC.Framework.FileSystem.Iscsi
         private uint _expected;
 
         public ScsiReportLunsCommand(uint expected)
-            : base(0)
+            : base(targetLun: 0)
         {
             _expected = expected;
         }

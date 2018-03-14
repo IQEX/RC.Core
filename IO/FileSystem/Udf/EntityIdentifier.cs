@@ -75,8 +75,8 @@ namespace RC.Framework.FileSystem.Udf
         public int ReadFrom(byte[] buffer, int offset)
         {
             Flags = buffer[offset];
-            Identifier = Encoding.ASCII.GetString(buffer, offset + 1, 23).TrimEnd('\0');
-            Suffix = Utilities.ToByteArray(buffer, offset + 24, 8);
+            Identifier = Encoding.ASCII.GetString(buffer, offset + 1, count: 23).TrimEnd('\0');
+            Suffix = Utilities.ToByteArray(buffer, offset + 24, length: 8);
 
             return 32;
         }

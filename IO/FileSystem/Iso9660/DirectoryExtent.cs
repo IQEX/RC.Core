@@ -45,7 +45,7 @@ namespace RC.Framework.FileSystem.Iso9660
         internal override void PrepareForRead()
         {
             _readCache = new byte[Length];
-            _dirInfo.Write(_readCache, 0, _locationTable, _enc);
+            _dirInfo.Write(_readCache, offset: 0, locationTable: _locationTable, enc: _enc);
         }
 
         internal override int Read(long diskOffset, byte[] buffer, int offset, int count)

@@ -113,7 +113,7 @@ namespace RC.Framework.FileSystem.Ntfs.Internals
         {
             get
             {
-                FileRecord mftRecord = _mft.GetRecord(index, true, true);
+                FileRecord mftRecord = _mft.GetRecord(index, ignoreMagic: true, ignoreBitmap: true);
                 if (mftRecord != null)
                 {
                     return new MasterFileTableEntry(_context, mftRecord);

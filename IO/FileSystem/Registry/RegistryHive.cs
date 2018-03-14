@@ -65,7 +65,7 @@ namespace RC.Framework.FileSystem.Registry
             byte[] buffer = Utilities.ReadFully(_fileStream, HiveHeader.HeaderSize);
 
             _header = new HiveHeader();
-            _header.ReadFrom(buffer, 0);
+            _header.ReadFrom(buffer, offset: 0);
 
             _bins = new List<BinHeader>();
             int pos = 0;
@@ -74,7 +74,7 @@ namespace RC.Framework.FileSystem.Registry
                 _fileStream.Position = BinStart + pos;
                 byte[] headerBuffer = Utilities.ReadFully(_fileStream, BinHeader.HeaderSize);
                 BinHeader header = new BinHeader();
-                header.ReadFrom(headerBuffer, 0);
+                header.ReadFrom(headerBuffer, offset: 0);
                 _bins.Add(header);
 
                 pos += header.BinSize;
@@ -126,45 +126,45 @@ namespace RC.Framework.FileSystem.Registry
             stream.Position = 0;
 
             byte[] buffer = new byte[hiveHeader.Size];
-            hiveHeader.WriteTo(buffer, 0);
-            stream.Write(buffer, 0, buffer.Length);
+            hiveHeader.WriteTo(buffer, offset: 0);
+            stream.Write(buffer, offset: 0, count: buffer.Length);
 
             buffer = new byte[binHeader.Size];
-            binHeader.WriteTo(buffer, 0);
+            binHeader.WriteTo(buffer, offset: 0);
             stream.Position = BinStart;
-            stream.Write(buffer, 0, buffer.Length);
+            stream.Write(buffer, offset: 0, count: buffer.Length);
 
             buffer = new byte[4];
-            Utilities.WriteBytesLittleEndian(binHeader.BinSize - binHeader.Size, buffer, 0);
-            stream.Write(buffer, 0, buffer.Length);
+            Utilities.WriteBytesLittleEndian(binHeader.BinSize - binHeader.Size, buffer, offset: 0);
+            stream.Write(buffer, offset: 0, count: buffer.Length);
 
             // Make sure the file is initialized out to the end of the firs bin
             stream.Position = BinStart + binHeader.BinSize - 1;
-            stream.WriteByte(0);
+            stream.WriteByte(value: 0);
 
             // Temporary hive to perform construction of higher-level structures
             RegistryHive newHive = new RegistryHive(stream);
-            KeyNodeCell rootCell = new KeyNodeCell("root", -1);
+            KeyNodeCell rootCell = new KeyNodeCell("root", parentCellIndex: -1);
             rootCell.Flags = RegistryKeyFlags.Normal | RegistryKeyFlags.Root;
-            newHive.UpdateCell(rootCell, true);
+            newHive.UpdateCell(rootCell, canRelocate: true);
 
             RegistrySecurity sd = new RegistrySecurity();
             sd.SetSecurityDescriptorSddlForm("O:BAG:BAD:PAI(A;;KA;;;SY)(A;CI;KA;;;BA)", AccessControlSections.All);
             SecurityCell secCell = new SecurityCell(sd);
-            newHive.UpdateCell(secCell, true);
+            newHive.UpdateCell(secCell, canRelocate: true);
             secCell.NextIndex = secCell.Index;
             secCell.PreviousIndex = secCell.Index;
-            newHive.UpdateCell(secCell, false);
+            newHive.UpdateCell(secCell, canRelocate: false);
 
             rootCell.SecurityIndex = secCell.Index;
-            newHive.UpdateCell(rootCell, false);
+            newHive.UpdateCell(rootCell, canRelocate: false);
 
             // Ref the root cell from the hive header
             hiveHeader.RootCell = rootCell.Index;
             buffer = new byte[hiveHeader.Size];
-            hiveHeader.WriteTo(buffer, 0);
+            hiveHeader.WriteTo(buffer, offset: 0);
             stream.Position = 0;
-            stream.Write(buffer, 0, buffer.Length);
+            stream.Write(buffer, offset: 0, count: buffer.Length);
 
             // Finally, return the new hive
             return new RegistryHive(stream, ownership);
@@ -287,7 +287,7 @@ namespace RC.Framework.FileSystem.Registry
 
         internal int AllocateRawCell(int capacity)
         {
-            int minSize = Utilities.RoundUp(capacity + 4, 8); // Allow for size header and ensure multiple of 8
+            int minSize = Utilities.RoundUp(capacity + 4, unit: 8); // Allow for size header and ensure multiple of 8
 
             // Incredibly inefficient algorithm...
             foreach (var binHeader in _bins)
@@ -308,7 +308,7 @@ namespace RC.Framework.FileSystem.Registry
 
         private BinHeader FindBin(int index)
         {
-            int binsIdx = _bins.BinarySearch(null, new BinFinder(index));
+            int binsIdx = _bins.BinarySearch(item: null, comparer: new BinFinder(index));
             if (binsIdx >= 0)
             {
                 return _bins[binsIdx];
@@ -344,13 +344,13 @@ namespace RC.Framework.FileSystem.Registry
             newBinHeader.BinSize = Utilities.RoundUp(minSize + newBinHeader.Size, 4 * (int)Sizes.OneKiB);
 
             byte[] buffer = new byte[newBinHeader.Size];
-            newBinHeader.WriteTo(buffer, 0);
+            newBinHeader.WriteTo(buffer, offset: 0);
             _fileStream.Position = BinStart + newBinHeader.FileOffset;
-            _fileStream.Write(buffer, 0, buffer.Length);
+            _fileStream.Write(buffer, offset: 0, count: buffer.Length);
 
             byte[] cellHeader = new byte[4];
-            Utilities.WriteBytesLittleEndian(newBinHeader.BinSize - newBinHeader.Size, cellHeader, 0);
-            _fileStream.Write(cellHeader, 0, 4);
+            Utilities.WriteBytesLittleEndian(newBinHeader.BinSize - newBinHeader.Size, cellHeader, offset: 0);
+            _fileStream.Write(cellHeader, offset: 0, count: 4);
 
             // Update hive with new length
             _header.Length = newBinHeader.FileOffset + newBinHeader.BinSize;
@@ -359,13 +359,13 @@ namespace RC.Framework.FileSystem.Registry
             _header.Sequence2++;
             _fileStream.Position = 0;
             byte[] hiveHeader = Utilities.ReadFully(_fileStream, _header.Size);
-            _header.WriteTo(hiveHeader, 0);
+            _header.WriteTo(hiveHeader, offset: 0);
             _fileStream.Position = 0;
-            _fileStream.Write(hiveHeader, 0, hiveHeader.Length);
+            _fileStream.Write(hiveHeader, offset: 0, count: hiveHeader.Length);
 
             // Make sure the file is initialized to desired position
             _fileStream.Position = BinStart + _header.Length - 1;
-            _fileStream.WriteByte(0);
+            _fileStream.WriteByte(value: 0);
 
             _bins.Add(newBinHeader);
             return newBinHeader;

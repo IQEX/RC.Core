@@ -12,13 +12,13 @@ namespace RC.Framework.Native.Win32
         {
             if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                IsWin2kUp = Kernel32.IsWindowsVersionOrGreater(5, 0, 0);
-                IsWinXPUp = Kernel32.IsWindowsVersionOrGreater(5, 1, 0);
-                IsWinVistaUp = Kernel32.IsWindowsVersionOrGreater(6, 0, 0);
-                IsWin7Up = Kernel32.IsWindowsVersionOrGreater(6, 1, 0);
-                IsWin8Up = Kernel32.IsWindowsVersionOrGreater(6, 2, 0);
-                IsWin81Up = Kernel32.IsWindowsVersionOrGreater(6, 2, 1);
-                IsWin10Up = Kernel32.IsWindowsVersionOrGreater(6, 3, 0);
+                IsWin2kUp = Kernel32.IsWindowsVersionOrGreater(majorVersion: 5, minorVersion: 0, servicePackMajorVersion: 0);
+                IsWinXPUp = Kernel32.IsWindowsVersionOrGreater(majorVersion: 5, minorVersion: 1, servicePackMajorVersion: 0);
+                IsWinVistaUp = Kernel32.IsWindowsVersionOrGreater(majorVersion: 6, minorVersion: 0, servicePackMajorVersion: 0);
+                IsWin7Up = Kernel32.IsWindowsVersionOrGreater(majorVersion: 6, minorVersion: 1, servicePackMajorVersion: 0);
+                IsWin8Up = Kernel32.IsWindowsVersionOrGreater(majorVersion: 6, minorVersion: 2, servicePackMajorVersion: 0);
+                IsWin81Up = Kernel32.IsWindowsVersionOrGreater(majorVersion: 6, minorVersion: 2, servicePackMajorVersion: 1);
+                IsWin10Up = Kernel32.IsWindowsVersionOrGreater(majorVersion: 6, minorVersion: 3, servicePackMajorVersion: 0);
             }
 
             Is64BitProcess = IntPtr.Size == 8;

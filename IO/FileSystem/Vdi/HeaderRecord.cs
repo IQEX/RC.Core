@@ -55,7 +55,7 @@ namespace RC.Framework.FileSystem.Vdi
         {
             HeaderRecord result = new HeaderRecord();
 
-            result._fileVersion = new FileVersion(0x00010001);
+            result._fileVersion = new FileVersion(value: 0x00010001);
             result.HeaderSize = 400;
             result.ImageType = type;
             result.Flags = flags;
@@ -92,12 +92,12 @@ namespace RC.Framework.FileSystem.Vdi
             else
             {
                 long savedPos = s.Position;
-                headerSize = Utilities.ToInt32LittleEndian(Utilities.ReadFully(s, 4), 0);
+                headerSize = Utilities.ToInt32LittleEndian(Utilities.ReadFully(s, count: 4), offset: 0);
                 s.Position = savedPos;
             }
 
             byte[] buffer = Utilities.ReadFully(s, headerSize);
-            Read(version, buffer, 0);
+            Read(version, buffer, offset: 0);
         }
 
         public int Read(FileVersion version, byte[] buffer, int offset)
@@ -106,7 +106,7 @@ namespace RC.Framework.FileSystem.Vdi
             {
                 ImageType = (ImageType)Utilities.ToUInt32LittleEndian(buffer, offset + 0);
                 Flags = (ImageFlags)Utilities.ToUInt32LittleEndian(buffer, offset + 4);
-                Comment = Utilities.BytesToString(buffer, offset + 8, 256).TrimEnd(new char[] { '\0' });
+                Comment = Utilities.BytesToString(buffer, offset + 8, count: 256).TrimEnd(new char[] { '\0' });
                 LegacyGeometry = new GeometryRecord();
                 LegacyGeometry.Read(buffer, offset + 264);
                 DiskSize = Utilities.ToInt64LittleEndian(buffer, offset + 280);
@@ -127,7 +127,7 @@ namespace RC.Framework.FileSystem.Vdi
                 HeaderSize = Utilities.ToUInt32LittleEndian(buffer, offset + 0);
                 ImageType = (ImageType)Utilities.ToUInt32LittleEndian(buffer, offset + 4);
                 Flags = (ImageFlags)Utilities.ToUInt32LittleEndian(buffer, offset + 8);
-                Comment = Utilities.BytesToString(buffer, offset + 12, 256).TrimEnd(new char[] { '\0' });
+                Comment = Utilities.BytesToString(buffer, offset + 12, count: 256).TrimEnd(new char[] { '\0' });
                 BlocksOffset = Utilities.ToUInt32LittleEndian(buffer, offset + 268);
                 DataOffset = Utilities.ToUInt32LittleEndian(buffer, offset + 272);
                 LegacyGeometry = new GeometryRecord();
@@ -159,8 +159,8 @@ namespace RC.Framework.FileSystem.Vdi
         public void Write(Stream s)
         {
             byte[] buffer = new byte[HeaderSize];
-            Write(buffer, 0);
-            s.Write(buffer, 0, buffer.Length);
+            Write(buffer, offset: 0);
+            s.Write(buffer, offset: 0, count: buffer.Length);
         }
 
         public int Write(byte[] buffer, int offset)
@@ -169,7 +169,7 @@ namespace RC.Framework.FileSystem.Vdi
             {
                 Utilities.WriteBytesLittleEndian((uint)ImageType, buffer, offset + 0);
                 Utilities.WriteBytesLittleEndian((uint)Flags, buffer, offset + 4);
-                Utilities.StringToBytes(Comment, buffer, offset + 8, 256);
+                Utilities.StringToBytes(Comment, buffer, offset + 8, count: 256);
                 LegacyGeometry.Write(buffer, offset + 264);
                 Utilities.WriteBytesLittleEndian(DiskSize, buffer, offset + 280);
                 Utilities.WriteBytesLittleEndian(BlockSize, buffer, offset + 288);
@@ -184,7 +184,7 @@ namespace RC.Framework.FileSystem.Vdi
                 Utilities.WriteBytesLittleEndian(HeaderSize, buffer, offset + 0);
                 Utilities.WriteBytesLittleEndian((uint)ImageType, buffer, offset + 4);
                 Utilities.WriteBytesLittleEndian((uint)Flags, buffer, offset + 8);
-                Utilities.StringToBytes(Comment, buffer, offset + 12, 256);
+                Utilities.StringToBytes(Comment, buffer, offset + 12, count: 256);
                 Utilities.WriteBytesLittleEndian(BlocksOffset, buffer, offset + 268);
                 Utilities.WriteBytesLittleEndian(DataOffset, buffer, offset + 272);
                 LegacyGeometry.Write(buffer, offset + 276);

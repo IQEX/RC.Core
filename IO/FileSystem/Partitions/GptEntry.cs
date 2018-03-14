@@ -91,7 +91,7 @@ namespace RC.Framework.FileSystem.Partitions
             FirstUsedLogicalBlock = Utilities.ToInt64LittleEndian(buffer, offset + 32);
             LastUsedLogicalBlock = Utilities.ToInt64LittleEndian(buffer, offset + 40);
             Attributes = Utilities.ToUInt64LittleEndian(buffer, offset + 48);
-            Name = Encoding.Unicode.GetString(buffer, offset + 56, 72).TrimEnd(new char[] { '\0' });
+            Name = Encoding.Unicode.GetString(buffer, offset + 56, count: 72).TrimEnd(new char[] { '\0' });
         }
 
         public void WriteTo(byte[] buffer, int offset)
@@ -101,7 +101,7 @@ namespace RC.Framework.FileSystem.Partitions
             Utilities.WriteBytesLittleEndian(FirstUsedLogicalBlock, buffer, offset + 32);
             Utilities.WriteBytesLittleEndian(LastUsedLogicalBlock, buffer, offset + 40);
             Utilities.WriteBytesLittleEndian(Attributes, buffer, offset + 48);
-            Encoding.Unicode.GetBytes(Name + new string('\0', 36), 0, 36, buffer, offset + 56);
+            Encoding.Unicode.GetBytes(Name + new string(c: '\0', count: 36), charIndex: 0, charCount: 36, bytes: buffer, byteIndex: offset + 56);
         }
 
         public int CompareTo(GptEntry other)

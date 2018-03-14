@@ -136,7 +136,7 @@ namespace Ionic.Zlib
             readAt = writeAt = 0;
 
             if (checkfn != null)
-                _codec._Adler32 = check = Adler.Adler32(0, null, 0, 0);
+                _codec._Adler32 = check = Adler.Adler32(adler: 0, buf: null, index: 0, len: 0);
             return oldCheck;
         }
 
@@ -207,7 +207,7 @@ namespace Ionic.Zlib
                                 int[][] tl = new int[1][];
                                 int[][] td = new int[1][];
                                 InfTree.inflate_trees_fixed(bl, bd, tl, td, _codec);
-                                codes.Init(bl[0], bd[0], tl[0], 0, td[0], 0);
+                                codes.Init(bl[0], bd[0], tl[0], tl_index: 0, td: td[0], td_index: 0);
                                 b >>= 3; k -= 3;
                                 mode = InflateBlockMode.CODES;
                                 break;
@@ -368,7 +368,7 @@ namespace Ionic.Zlib
                         }
                         else
                         {
-                            Array.Clear(blens, 0, t);
+                            Array.Clear(blens, index: 0, length: t);
                             // for (int i = 0; i < t; i++)
                             // {
                             //     blens[i] = 0;
@@ -662,7 +662,7 @@ namespace Ionic.Zlib
 
         internal void SetDictionary(byte[] d, int start, int n)
         {
-            Array.Copy(d, start, window, 0, n);
+            Array.Copy(d, start, window, destinationIndex: 0, length: n);
             readAt = writeAt = n;
         }
 
@@ -1275,7 +1275,7 @@ namespace Ionic.Zlib
                                     }
                                     else
                                     {
-                                        Array.Copy(s.window, r, s.window, q, 2);
+                                        Array.Copy(s.window, r, s.window, q, length: 2);
                                         q += 2; r += 2; c -= 2;
                                     }
                                 }
@@ -1705,12 +1705,12 @@ namespace Ionic.Zlib
             if (mode != InflateManagerMode.DICT0)
                 throw new ZlibException("Stream error.");
 
-            if (Adler.Adler32(1, dictionary, 0, dictionary.Length) != _codec._Adler32)
+            if (Adler.Adler32(adler: 1, buf: dictionary, index: 0, len: dictionary.Length) != _codec._Adler32)
             {
                 return ZlibConstants.Z_DATA_ERROR;
             }
 
-            _codec._Adler32 = Adler.Adler32(0, null, 0, 0);
+            _codec._Adler32 = Adler.Adler32(adler: 0, buf: null, index: 0, len: 0);
 
             if (length >= (1 << wbits))
             {

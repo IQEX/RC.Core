@@ -87,7 +87,7 @@ namespace RC.Framework.FileSystem.Vhd
         public static DynamicHeader FromBytes(byte[] data, int offset)
         {
             DynamicHeader result = new DynamicHeader();
-            result.Cookie = Utilities.BytesToString(data, offset, 8);
+            result.Cookie = Utilities.BytesToString(data, offset, count: 8);
             result.DataOffset = Utilities.ToInt64BigEndian(data, offset + 8);
             result.TableOffset = Utilities.ToInt64BigEndian(data, offset + 16);
             result.HeaderVersion = Utilities.ToUInt32BigEndian(data, offset + 24);
@@ -96,7 +96,7 @@ namespace RC.Framework.FileSystem.Vhd
             result.Checksum = Utilities.ToUInt32BigEndian(data, offset + 36);
             result.ParentUniqueId = Utilities.ToGuidBigEndian(data, offset + 40);
             result.ParentTimestamp = Footer.EpochUtc.AddSeconds(Utilities.ToUInt32BigEndian(data, offset + 56));
-            result.ParentUnicodeName = Encoding.BigEndianUnicode.GetString(data, offset + 64, 512).TrimEnd('\0');
+            result.ParentUnicodeName = Encoding.BigEndianUnicode.GetString(data, offset + 64, count: 512).TrimEnd('\0');
 
             result.ParentLocators = new ParentLocator[8];
             for (int i = 0; i < 8; ++i)
@@ -109,7 +109,7 @@ namespace RC.Framework.FileSystem.Vhd
 
         public void ToBytes(byte[] data, int offset)
         {
-            Utilities.StringToBytes(Cookie, data, offset, 8);
+            Utilities.StringToBytes(Cookie, data, offset, count: 8);
             Utilities.WriteBytesBigEndian(DataOffset, data, offset + 8);
             Utilities.WriteBytesBigEndian(TableOffset, data, offset + 16);
             Utilities.WriteBytesBigEndian(HeaderVersion, data, offset + 24);
@@ -119,15 +119,15 @@ namespace RC.Framework.FileSystem.Vhd
             Utilities.WriteBytesBigEndian(ParentUniqueId, data, offset + 40);
             Utilities.WriteBytesBigEndian((uint)(ParentTimestamp - Footer.EpochUtc).TotalSeconds, data, offset + 56);
             Utilities.WriteBytesBigEndian((uint)0, data, offset + 60);
-            Array.Clear(data, offset + 64, 512);
-            Encoding.BigEndianUnicode.GetBytes(ParentUnicodeName, 0, ParentUnicodeName.Length, data, offset + 64);
+            Array.Clear(data, offset + 64, length: 512);
+            Encoding.BigEndianUnicode.GetBytes(ParentUnicodeName, charIndex: 0, charCount: ParentUnicodeName.Length, bytes: data, byteIndex: offset + 64);
 
             for (int i = 0; i < 8; ++i)
             {
                 ParentLocators[i].ToBytes(data, offset + 576 + (i * 24));
             }
 
-            Array.Clear(data, offset + 1024 - 256, 256);
+            Array.Clear(data, offset + 1024 - 256, length: 256);
         }
 
         public bool IsValid()
@@ -150,7 +150,7 @@ namespace RC.Framework.FileSystem.Vhd
 
         internal static DynamicHeader FromStream(Stream stream)
         {
-            return FromBytes(Utilities.ReadFully(stream, 1024), 0);
+            return FromBytes(Utilities.ReadFully(stream, count: 1024), offset: 0);
         }
 
         private uint CalculateChecksum()
@@ -159,7 +159,7 @@ namespace RC.Framework.FileSystem.Vhd
             copy.Checksum = 0;
 
             byte[] asBytes = new byte[1024];
-            copy.ToBytes(asBytes, 0);
+            copy.ToBytes(asBytes, offset: 0);
             uint checksum = 0;
             foreach (uint value in asBytes)
             {

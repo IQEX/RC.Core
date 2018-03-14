@@ -42,11 +42,11 @@ namespace RC.Framework.FileSystem.Iso9660
         public BootValidationEntry(byte[] src, int offset)
         {
             _data = new byte[32];
-            Array.Copy(src, offset, _data, 0, 32);
+            Array.Copy(src, offset, _data, destinationIndex: 0, length: 32);
 
             HeaderId = _data[0];
             PlatformId = _data[1];
-            ManfId = Utilities.BytesToString(_data, 4, 24).TrimEnd('\0').TrimEnd(' ');
+            ManfId = Utilities.BytesToString(_data, offset: 4, count: 24).TrimEnd('\0').TrimEnd(' ');
         }
 
         public bool ChecksumValid
@@ -65,10 +65,10 @@ namespace RC.Framework.FileSystem.Iso9660
 
         internal void WriteTo(byte[] buffer, int offset)
         {
-            Array.Clear(buffer, offset, 0x20);
+            Array.Clear(buffer, offset, length: 0x20);
             buffer[offset + 0x00] = HeaderId;
             buffer[offset + 0x01] = PlatformId;
-            Utilities.StringToBytes(ManfId, buffer, offset + 0x04, 24);
+            Utilities.StringToBytes(ManfId, buffer, offset + 0x04, count: 24);
             buffer[offset + 0x1E] = 0x55;
             buffer[offset + 0x1F] = 0xAA;
             Utilities.WriteBytesLittleEndian(CalcChecksum(buffer, offset), buffer, offset + 0x1C);

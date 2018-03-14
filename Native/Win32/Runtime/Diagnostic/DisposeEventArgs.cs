@@ -14,12 +14,12 @@ namespace RC.Framework.Native.Runtime.Diagnostic
         /// <summary>
         /// DisposeEventArgs with Disposing flag set to true.
         /// </summary>
-        public static readonly DisposeEventArgs DisposingEventArgs = new DisposeEventArgs(true);
+        public static readonly DisposeEventArgs DisposingEventArgs = new DisposeEventArgs(disposing: true);
 
         /// <summary>
         /// DisposeEventArgs with Disposing flag set to false.
         /// </summary>
-        public static readonly DisposeEventArgs NotDisposingEventArgs = new DisposeEventArgs(false);
+        public static readonly DisposeEventArgs NotDisposingEventArgs = new DisposeEventArgs(disposing: false);
 
         /// <summary>
         /// True when disposing, otherwise false.

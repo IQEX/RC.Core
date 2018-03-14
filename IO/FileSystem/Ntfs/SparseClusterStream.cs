@@ -52,7 +52,7 @@ namespace RC.Framework.FileSystem.Ntfs
 
         public override void ExpandToClusters(long numVirtualClusters, NonResidentAttributeRecord extent, bool allocate)
         {
-            _rawStream.ExpandToClusters(CompressionStart(numVirtualClusters), extent, false);
+            _rawStream.ExpandToClusters(CompressionStart(numVirtualClusters), extent, allocate: false);
         }
 
         public override void TruncateToClusters(long numVirtualClusters)

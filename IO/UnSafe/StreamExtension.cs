@@ -19,7 +19,7 @@ namespace RC.Framework.IO.UnSafe
         {
             int n = System.Runtime.InteropServices.Marshal.SizeOf(typeof(T));
             var buf = new byte[n];
-            s.Read(buf, 0, n);
+            s.Read(buf, offset: 0, count: n);
             fixed (byte* pbuf = &buf[0])
                 return (T)System.Runtime.InteropServices.Marshal.PtrToStructure((System.IntPtr)pbuf, typeof(T));
         }
