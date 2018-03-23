@@ -35,7 +35,6 @@ namespace RC.Framework.Yaml.Serialization
     /// }
     /// </code>
     /// </example>
-    [Obsolete("User \"nameof(type)\"")]
     internal class EasyTypeConverter
     {
         internal CultureInfo Culture;
