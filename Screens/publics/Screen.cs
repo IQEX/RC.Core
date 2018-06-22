@@ -11,37 +11,10 @@ namespace RC.Framework.Screens
 
     public static partial class Screen
     {
-        internal struct ConsoleBox
+        static Screen()
         {
-            private readonly Color ForeGroundColor;
-            private readonly Color BackGroundColor;
-
-            public ConsoleBox(Color foreground, Color back)
-            {
-                this.ForeGroundColor = foreground;
-                this.BackGroundColor = back;
-            }
-
-            public bool IsNamedColor => ForeGroundColor.IsNamedColor && BackGroundColor.IsNamedColor;
-
-            public Color Foreground() => this.ForeGroundColor;
-            public Color Background() => this.BackGroundColor;
-        }
-        internal struct ConsoleText
-        {
-            private readonly ConsoleBox _box;
-            private readonly string _text;
-
-            public ConsoleText(ConsoleBox box, string text)
-            {
-                _box = box;
-                _text = text;
-            }
-
-            public bool IsNamedColor => _box.IsNamedColor;
-
-            public string Text() => this._text;
-            public ConsoleBox Box() => this._box;
+            #if LINUX
+            #endif
         }
 
         private static readonly Regex RegexColorGroup  = new Regex(@"&([a-zA-Z]{3,})[;]{1}([a-zA-Z]{3,}|[0]{1,})[;]{1}");
@@ -52,9 +25,9 @@ namespace RC.Framework.Screens
             var saval = RegexColorGroup.Match(c.Value).Groups;
             try
             {
-                string fore = saval[groupnum: 1].Value;
-                string back = saval[groupnum: 2].Value;
-                return new ConsoleBox(Color.FromName(fore), Color.FromName(back)); ;
+                var fore = saval[groupnum: 1].Value;
+                var back = saval[groupnum: 2].Value;
+                return new ConsoleBox(Color.FromName(fore), Color.FromName(back));
             }
             catch(Exception e)
             {
@@ -153,19 +126,17 @@ namespace RC.Framework.Screens
             if (foreground == default(Color))
                 foreground = Color.White;
 
-           
-
             var dic = new Dictionary<int, ConsoleText>();
 
             var coll = RegexColoredText.Matches(s);
 
-            int index = 0;
+            var index = 0;
 
             foreach (Match grt in coll)
             {
-                string fullData = grt.Value;
-                ConsoleBox clr = grt.Groups[groupnum: 1].getColor();
-                string coloredText = grt.Groups[groupnum: 3].Value;
+                var fullData = grt.Value;
+                var clr = grt.Groups[groupnum: 1].getColor();
+                var coloredText = grt.Groups[groupnum: 3].Value;
 
                 if (!clr.IsNamedColor)
                     throw new CustomColorException("Custom color is not allowed");
@@ -174,13 +145,16 @@ namespace RC.Framework.Screens
                 s = s.Replace(fullData, $"{{{index++}}}");
             }
 
-            List<Formatter> formsForeFormatters = new List<Formatter>();
-            List<Formatter> formsBackFormatters = new List<Formatter>();
+            var formsForeFormatters = new List<Formatter>();
+            var formsBackFormatters = new List<Formatter>();
 
             foreach (var styleClass in dic) formsForeFormatters.Add(new Formatter(styleClass.Value.Text(), styleClass.Value.Box().Foreground()));
             foreach (var styleClass in dic) formsBackFormatters.Add(new Formatter(styleClass.Value.Text(), styleClass.Value.Box().Background()));
-
+            #if LINUX
+            System.Console.Write(s);
+            #else
             Colorful.Console.WriteMixFormatted(s, foreground, formsForeFormatters.ToArray(), formsBackFormatters.ToArray());
+            #endif
         }
     }
 }

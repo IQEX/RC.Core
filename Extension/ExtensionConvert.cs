@@ -11,19 +11,6 @@ using RC.Framework;
 internal static class ExtensionConvert
 {
     /// <summary>
-    /// Reads all available elements from an enumerator and inserts it into a collection.
-    /// </summary>
-    /// <typeparam name="T">Type of the collection.</typeparam>
-    /// <param name="enumerator">The enumerator.</param>
-    /// <returns>List</returns>
-    public static RC.Framework.Collections.Generic.RList<T> ToList<T>(this System.Collections.IEnumerator enumerator)
-    {
-        RC.Framework.Collections.Generic.RList<T> collection = new RC.Framework.Collections.Generic.RList<T>();
-        while (enumerator.MoveNext())
-            collection.Add((T)enumerator.Current);
-        return collection;
-    }
-    /// <summary>
     /// Конвертация строки в <see cref="Guid"/>
     /// </summary>
     /// <param name="t">строка содержащие <see cref="Guid"/> для преобразования.</param>

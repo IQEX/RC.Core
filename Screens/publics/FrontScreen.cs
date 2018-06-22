@@ -63,5 +63,39 @@
             get { return System.Console.CursorVisible; }
             set { System.Console.CursorVisible = value; }
         }
+
+        internal struct ConsoleBox
+        {
+            private readonly Color ForeGroundColor;
+            private readonly Color BackGroundColor;
+
+            public ConsoleBox(Color foreground, Color back)
+            {
+                this.ForeGroundColor = foreground;
+                this.BackGroundColor = back;
+            }
+
+            public bool IsNamedColor => ForeGroundColor.IsNamedColor && BackGroundColor.IsNamedColor;
+
+            public Color Foreground() => this.ForeGroundColor;
+            public Color Background() => this.BackGroundColor;
+        }
+
+        internal struct ConsoleText
+        {
+            private readonly ConsoleBox _box;
+            private readonly string _text;
+
+            public ConsoleText(ConsoleBox box, string text)
+            {
+                _box = box;
+                _text = text;
+            }
+
+            public bool IsNamedColor => _box.IsNamedColor;
+
+            public string Text() => this._text;
+            public ConsoleBox Box() => this._box;
+        }
     }
 }

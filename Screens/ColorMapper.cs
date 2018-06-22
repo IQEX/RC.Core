@@ -58,7 +58,7 @@ namespace Colorful
 
         private const int STD_OUTPUT_HANDLE = -11;                               // per WinBase.h
         private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(value: -1);    // per WinBase.h
-
+#if WINDOWS
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetStdHandle(int nStdHandle);
 
@@ -231,7 +231,7 @@ namespace Colorful
                 throw CreateException(Marshal.GetLastWin32Error());
             }
         }
-
+#endif
         private Exception CreateException(int errorCode)
         {
             int ERROR_INVALID_HANDLE = 6;

@@ -52,6 +52,7 @@ namespace Colorful
         /// <param name="input">The text to be styled.</param>
         /// <param name="args">A collection of objects that will replace the format tokens in the
         /// input string.</param>
+        /// <param name="colors"></param>
         /// <returns>Returns a map relating pieces of text to their corresponding styles.</returns>
         public List<KeyValuePair<string, Color>> GetFormatMap(string input, object[] args, Color[] colors)
         {

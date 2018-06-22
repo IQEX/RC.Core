@@ -20,7 +20,7 @@ namespace Colorful
         /// </summary>
         public string AbstractValue { get; private set; }
         /// <summary>
-        /// The n-dimensional (n &le; 2, in this case) representation of the StyledString.  
+        /// The n-dimensional (n le; 2, in this case) representation of the StyledString.  
         /// In the case of FIGlet fonts, for example, this would be the string's two-dimensional FIGlet representation.
         /// </summary>
         public string ConcreteValue { get; private set; }

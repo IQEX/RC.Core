@@ -106,7 +106,7 @@
                 return RejectedResponse.IsNotAnniversaryUpdate;
             }
             if (isEnabledVirtualTerminalProc) return RejectedResponse.HardDisabledVTP;
-
+#if WINDOWS
             using (var tree = Registry.CurrentUser.OpenSubKey("Console"))
             {
                 var valKey = tree?.GetValue("VirtualTerminalLevel")?.ToString();
@@ -128,7 +128,7 @@
                 }
             }
 
-
+#endif
             var handle = GetStdHandle((int)ConsoleHandle.Output);
             OnOut($"Getting handle 'Output' -> [0x{handle}] HANDLE x64");
             GetConsoleMode(handle, out var mode);
@@ -190,14 +190,18 @@
             if (ThrowCustomColor)
             if (!c.IsNamedColor)
                 throw new CustomColorException("Custom color is not allowed!");
-
+#if !LINUX
             if (isEnabledVirtualTerminalProc)
             {
+#endif
                 if (c == Color.White)
                     return "\x1b[39m";
                 return $"\x1b[38;2;{c.R};{c.G};{c.B}m";
+#if !LINUX
             }
+
             return $"&{c.Name};{back.Name};";
+#endif
 #endif
         }
 

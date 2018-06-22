@@ -10,10 +10,12 @@ namespace RC.Framework.Security
     /// </summary>
     public class Rule
     {
+        #if WINDOWS
         /// <summary>
         /// is Admin rule?
         /// </summary>
         /// <returns>rule</returns>
         public static bool isProcessAdmin() => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
+        #endif
     }
 }

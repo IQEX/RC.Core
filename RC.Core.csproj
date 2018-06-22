@@ -1,40 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net471</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>RC.Core</PackageId>
+    <Version>12.0</Version>
+    <IncludeProjectPriFile>false</IncludeProjectPriFile>
     <Platforms>AnyCPU;x86</Platforms>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-    <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  <PropertyGroup>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <LangVersion>latest</LangVersion>
-      <DebugType>full</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-      <LangVersion>latest</LangVersion>
-      <DebugType>full</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <LangVersion>latest</LangVersion>
-      <DebugType>full</DebugType>
-      <DebugSymbols>true</DebugSymbols>
-    </PropertyGroup>
-    <ItemGroup>
-      <None Remove=".git" />
-      <None Remove=".gitignore" />
-      <None Remove="LICENSE" />
-      <None Remove="RC.Core.pfx" />
-      <None Remove="RC.Core.snk" />
-      <None Remove="README.md" />
-      <None Remove="sign.ps1" />
-    </ItemGroup>
-    <ItemGroup>
-      <Reference Include="Microsoft.CSharp" />
-      <Reference Include="System.Management" />
-      <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-      <Reference Include="System.Windows.Forms" />
-    </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD;NETSTANDARD2_0;LINUX</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+  </ItemGroup>
 </Project>

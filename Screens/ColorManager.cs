@@ -34,6 +34,7 @@ namespace Colorful
         /// necessary to keep track of this, because the Windows console can only display 16 different colors in
         /// a given session.</param>
         /// <param name="initialColorChangeCountValue">The number of color changes which have already occurred.</param>
+        /// <param name="isInCompatibilityMode"></param>
         public ColorManager(ColorStore colorStore, ColorMapper colorMapper, int maxColorChanges , int initialColorChangeCountValue, bool isInCompatibilityMode)
         {
             this.colorStore = colorStore;
@@ -61,11 +62,13 @@ namespace Colorful
         /// <param name="newColor">The replacement color.</param>
         public void ReplaceColor(Color oldColor, Color newColor)
         {
+            #if WINDOWS
             if (!IsInCompatibilityMode)
             {
                 ConsoleColor consoleColor = colorStore.Replace(oldColor, newColor);
                 colorMapper.MapColor(consoleColor, newColor);
             }
+            #endif
         }
 
         /// <summary>
@@ -80,13 +83,13 @@ namespace Colorful
 
             try
             {
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
 #endif
                     return GetConsoleColorNative(color);
 
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 }
                 else
                 {
@@ -106,8 +109,9 @@ namespace Colorful
             if (CanChangeColor() && colorStore.RequiresUpdate(color))
             {
                 ConsoleColor oldColor = (ConsoleColor)colorChangeCount;
-
+                #if WINDOWS
                 colorMapper.MapColor(oldColor, color);
+                #endif
                 colorStore.Update(oldColor, color);
 
                 colorChangeCount++;
