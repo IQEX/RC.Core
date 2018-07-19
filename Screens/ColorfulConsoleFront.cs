@@ -297,7 +297,8 @@ namespace Colorful
         
         static Console()
         {
-            bool isInCompatibilityMode = false;
+            #if WINDOWS
+bool isInCompatibilityMode = false;
             try
             {
                 defaultColorMap = new ColorMapper().GetBufferColors();
@@ -306,7 +307,9 @@ namespace Colorful
             {
                 isInCompatibilityMode = true;
             }
-
+    #else
+            bool isInCompatibilityMode = true;
+#endif
             ReplaceAllColorsWithDefaults(isInCompatibilityMode);
             System.Console.CancelKeyPress += Console_CancelKeyPress;
         }
@@ -1330,7 +1333,9 @@ namespace Colorful
             // There's no need to do this if in compatibility mode, as more than 16 colors won't be used, anyway.
             if (!colorManager.IsInCompatibilityMode)
             {
+                #if WINDOWS
                 new ColorMapper().SetBatchBufferColors(defaultColorMap);
+                #endif
             }
         }
 

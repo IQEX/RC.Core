@@ -14,8 +14,6 @@ namespace Colorful
         /// <summary>
         /// Represents a collection of TextPattern objects.
         /// </summary>
-        /// <param name="firstPattern">The first pattern to be added to the collection.</param>
-        /// <param name="morePatterns">Other patterns to be added to the collection.</param>
         public TextPatternCollection(string[] patterns)
             : base()
         {
