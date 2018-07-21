@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Runtime.InteropServices;
 
 namespace RC.Framework.Screens
 {
@@ -150,11 +151,14 @@ namespace RC.Framework.Screens
 
             foreach (var styleClass in dic) formsForeFormatters.Add(new Formatter(styleClass.Value.Text(), styleClass.Value.Box().Foreground()));
             foreach (var styleClass in dic) formsBackFormatters.Add(new Formatter(styleClass.Value.Text(), styleClass.Value.Box().Background()));
-            #if LINUX
-            System.Console.Write(s);
-            #else
-            Colorful.Console.WriteMixFormatted(s, foreground, formsForeFormatters.ToArray(), formsBackFormatters.ToArray());
-            #endif
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Colorful.Console.WriteMixFormatted(s, foreground, formsForeFormatters.ToArray(), formsBackFormatters.ToArray());
+            }
+            else
+            {
+                System.Console.Write(s);
+            }
         }
     }
 }

@@ -4,10 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Drawing;
-#if !LITE
     using System.Runtime.InteropServices;
     using Microsoft.Win32;
-#endif
     public static class RCL
     {
         public delegate void OutputRCL(string str, Exception ex);
@@ -37,8 +35,6 @@
         public static string Wrap(object text, Color foreground) => Wrap(text, foreground, Color.Empty);
         public static string Wrap(object text, Color foreground, Color background) => $"{foreground.getValue(background)}{text}{ConsoleColor.White.getValue().getValue(Color.Empty)}";
 
-
-#if !LITE
 
         /// <summary>
         /// Escape symbol
@@ -106,29 +102,29 @@
                 return RejectedResponse.IsNotAnniversaryUpdate;
             }
             if (isEnabledVirtualTerminalProc) return RejectedResponse.HardDisabledVTP;
-#if WINDOWS
-            using (var tree = Registry.CurrentUser.OpenSubKey("Console"))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var valKey = tree?.GetValue("VirtualTerminalLevel")?.ToString();
-                switch (valKey)
+                using (var tree = Registry.CurrentUser.OpenSubKey("Console"))
                 {
-                    case null:
-                        OnOut("Registry Key 'VirtualTerminalLevel' not found.");
-                        break;
-                    case "1":
-                        OnOut("Registry Key 'VirtualTerminalLevel' is enabled! [0x0000001] DWORD x32");
-                        isEnabledVirtualTerminalProc = true;
-                        return RejectedResponse.AlreadyEnabledFromRegistry;
-                    case "0":
-                        OnOut("Registry Key 'VirtualTerminalLevel' is disabled! [0x0000000] DWORD x32");
-                        return RejectedResponse.RegistryDisabledVTP;
-                    default:
-                        OnOut($"Registry Key 'VirtualTerminalLevel' has been unknown value [0x000000{valKey}] DWORD x32");
-                        return RejectedResponse.Unknown;
+                    var valKey = tree?.GetValue("VirtualTerminalLevel")?.ToString();
+                    switch (valKey)
+                    {
+                        case null:
+                            OnOut("Registry Key 'VirtualTerminalLevel' not found.");
+                            break;
+                        case "1":
+                            OnOut("Registry Key 'VirtualTerminalLevel' is enabled! [0x0000001] DWORD x32");
+                            isEnabledVirtualTerminalProc = true;
+                            return RejectedResponse.AlreadyEnabledFromRegistry;
+                        case "0":
+                            OnOut("Registry Key 'VirtualTerminalLevel' is disabled! [0x0000000] DWORD x32");
+                            return RejectedResponse.RegistryDisabledVTP;
+                        default:
+                            OnOut($"Registry Key 'VirtualTerminalLevel' has been unknown value [0x000000{valKey}] DWORD x32");
+                            return RejectedResponse.Unknown;
+                    }
                 }
             }
-
-#endif
             var handle = GetStdHandle((int)ConsoleHandle.Output);
             OnOut($"Getting handle 'Output' -> [0x{handle}] HANDLE x64");
             GetConsoleMode(handle, out var mode);
@@ -151,8 +147,8 @@
             OnOut($"Already set [{(ConsoleModeOutputFlags.ENABLE_VIRTUAL_TERMINAL_PROCESSING)}] from console handle [0xB x64] -> [{(ConsoleModeOutputFlags)mode}]");
             isEnabledVirtualTerminalProc = true;
             return RejectedResponse.AlreadyEnabled;
+
         }
-#endif
         // for < Windows 10 Anniversary Update
         internal static bool isEnabledVirtualTerminalProc = false;
         private static bool ThrowCustomColor = true;
@@ -190,18 +186,23 @@
             if (ThrowCustomColor)
             if (!c.IsNamedColor)
                 throw new CustomColorException("Custom color is not allowed!");
-#if !LINUX
-            if (isEnabledVirtualTerminalProc)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-#endif
+                if (isEnabledVirtualTerminalProc)
+                {
+                    if (c == Color.White)
+                        return "\x1b[39m";
+                    return $"\x1b[38;2;{c.R};{c.G};{c.B}m";
+                }
+
+                return $"&{c.Name};{back.Name};";
+            }
+            else
+            {
                 if (c == Color.White)
                     return "\x1b[39m";
                 return $"\x1b[38;2;{c.R};{c.G};{c.B}m";
-#if !LINUX
             }
-
-            return $"&{c.Name};{back.Name};";
-#endif
 #endif
         }
 
